@@ -1,0 +1,35 @@
+#loginbox{
+    padding: 3rem;
+    border-radius: 10px;
+    box-shadow: 2px 3px 7px rgb(203 203 203);
+}
+#loginbox h4{
+    text-align: center;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing:1px;
+    font-weight:600;
+    color: var(--main-color);
+}
+.form-container .form-label{
+    font-size:0.8rem;
+    margin-bottom:2px;
+}
+.form-container .btn,
+.form-container .form-control{
+    font-size:0.85rem;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 12px 10px;
+}
+.form-container .input-group{
+    border: 1px solid #ced4da;
+}
+.form-container .input-group .form-control{
+    border: none;
+}
+.form-container .input-group .btn{
+    font-size: 0.85rem;
+    background-color: transparent;
+    border-radius: 0;
+}
