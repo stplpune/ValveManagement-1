@@ -1,13 +1,11 @@
 <div class="wrapper">    
-    <app-sidebar></app-sidebar>
-    <header>
-        <app-navbar></app-navbar>
-    </header>
-    <div id="content">        
+    <app-sidebar></app-sidebar>    
+    <div id="content"> 
+        <header>
+            <app-navbar></app-navbar>
+        </header>       
         <div class="main-content">
-            <div class="container-fluid">
-                <router-outlet></router-outlet>
-            </div>
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>
