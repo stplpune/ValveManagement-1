@@ -1,0 +1,112 @@
+<div class="card plain-card">
+    <div class="card-header">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-sm-4">Valve List</div>
+            <div class="col-sm-4 text-end">
+                <button class="btn btn-light-main text-main btn-sm" type="submit" data-bs-toggle="modal" data-bs-target="#AddValveModal"><i
+                        class="fa-solid fa-plus me-2"></i>Add Valve</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table align-middle dashboard-table">
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Valve Name</th>
+                    <th>Valve ID</th>
+                    <th>Company Name</th>
+                    <th>Status</th>
+                    <th>Status Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Valve - 1</td>
+                    <td>A1343</td>
+                    <td>STPL</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                checked>
+                        </div>
+                    </td>
+                    <td>12-02-2022</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn bg-danger bg-opacity-10 text-danger rounded">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Valve - 1</td>
+                    <td>A1343</td>
+                    <td>STPL</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+                        </div>
+                    </td>
+                    <td>12-02-2022</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn bg-danger bg-opacity-10 text-danger rounded">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal for adding new valve -->
+<div class="modal fade" id="AddValveModal" tabindex="-1" aria-labelledby="AddValveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0">
+        <div class="modal-header bg-main">
+          <p class="modal-title mb-0" id="AddValveModalLabel">Add Valve</p>
+          <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-container">
+            <div class="mb-3">
+                <label class="form-label">Valve Name</label>
+                <input type="text" class="form-control" placeholder="Valve Name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Valve ID</label>
+                <input type="text" class="form-control" placeholder="Valve ID">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Company Name</label>
+                <input type="text" class="form-control" placeholder="Company Name">
+            </div>
+            <div class="mb-0">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" placeholder="Description" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="d-flex justify-content-between align-items-center w-100 form-container">
+            <button type="button" class="btn btn-light-main" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-main">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
