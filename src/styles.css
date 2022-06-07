@@ -4,7 +4,7 @@ body{
 :root{
     --main-color:rgb(74,72,240);
     --main-dark-color:rgb(59,57,192);
-    --main-light-color:rgb(218,218,252);
+    --main-light-color:rgb(223, 223, 248);
 }
 .text-main{
     color: var(--main-color);
@@ -13,7 +13,69 @@ body{
     background-color: var(--main-color);
     color: #fff;
 }
+.text-dark-main{
+    color: var(--main-dark-color);
+}
+.btn-dark-main, .bg-dark-main{
+    background-color: var(--main-dark-color);
+    color: #fff;
+}
+.text-light-main{
+    color: var(--main-light-color);
+}
+.btn-light-main, .bg-light-main{
+    background-color: var(--main-light-color);
+}
+.btn-light-main:hover{
+    background-color: var(--main-color);
+    color: #fff;
+}
 .btn-main:hover{
     background-color: var(--main-dark-color);
     color: #fff;
+}
+.plain-card{
+    font-size: 0.85rem;
+    border: none;
+}
+.plain-card .card-header{
+    background-color:transparent;
+    border-bottom: none;
+    font-weight: 600;
+}
+.plain-card .card-header .btn{
+    font-size: 0.8rem;
+    box-shadow: none;
+    border: none;
+}
+.dashboard-table{
+    font-size: 0.85rem;
+}
+.dashboard-table thead th{
+    background-color: #eee;
+}
+.dashboard-table tbody td .btn{
+    font-size: 0.8rem;
+    box-shadow: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    padding: 0;
+}
+.form-container{
+    font-size: 0.85rem;
+}
+.form-container .form-label{
+    font-size: 0.75rem;
+    color: #999;
+    margin-bottom: 2px;
+}
+.form-container .btn,
+.form-container .form-control{
+    font-size: 0.85rem;
+    box-shadow: none;
+}
+.btn-close-inverse{
+    filter: invert(1);
 }
