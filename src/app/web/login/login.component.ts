@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
 
   loginFormSubmit() {
     this.submitted = true;
-    this.spinner.show();
     let formValue = this.loginForm.value;
     if (this.loginForm.invalid) {
       return;
@@ -55,6 +54,7 @@ export class LoginComponent implements OnInit {
         "userName": formValue.UserName,
         "password": formValue.Password
       }
+      this.spinner.show();
       this.apiService.setHttp('POST', "Login/GetLoginWebsite", false, obj, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: (res: any) => {

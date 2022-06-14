@@ -7,14 +7,12 @@
                     <form [formGroup]="loginForm">
                     <div class="mb-3">
                         <label class="form-label">User Name</label>
-                        <div class="input-group">
                             <input type="text" class="form-control" formControlName="UserName" placeholder="User Name" autocomplete="off"
                                 [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
-                        </div>
-                        <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
+                        <!-- <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
                             <div class="text-danger" *ngIf="f.UserName.errors?.required">User Name is required.
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Password</label>
@@ -27,9 +25,9 @@
                             <i class="eye-icon-pos" [class]="show_eye ? 'fa fa-eye' : 'fa fa-eye-slash'"> </i>
                         </button>
                         </div>  
-                        <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
+                        <!-- <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
                             <div class="text-danger" *ngIf="f.Password.errors.required">Password is required.</div>
-                        </div>                      
+                        </div>                       -->
                     </div>
                     <div class="mb-0">
                         <button type="submit" class="btn btn-main w-100" (click)="loginFormSubmit()"> LOGIN </button>

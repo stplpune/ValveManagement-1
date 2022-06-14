@@ -33,3 +33,7 @@
     background-color: transparent;
     border-radius: 0;
 }
+
+.input-group .form-control.is-invalid {
+    border: solid 1px #dc3545 !important;
+}
