@@ -101,7 +101,7 @@ export class ValveListComponent implements OnInit {
         "description": formData.description,
         "createdBy": this.localStorage.userId(),
         "statusId": 0,
-        "valveStatus": "string",
+        "valveStatus": "Off",
         "statusDate": new Date()
       }
       this.spinner.show();
