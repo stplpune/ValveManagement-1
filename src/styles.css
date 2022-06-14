@@ -86,11 +86,9 @@ body{
     border-color: var(--main-color);
 }
 
-
 ngx-select.ng-untouched.ng-invalid.is-invalid .ngx-select__toggle {
     border: solid 1px red !important;
 }
-
 
 .ngx-pagination {
     padding: 0 !important;
@@ -152,3 +150,5 @@ tr.active {
     display: block !important;
     margin: 0px auto !important;
 }
+
+
