@@ -1,21 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './core/auth/auth.guard';
+import { AuthorizationGuard } from './core/auth/authorization.guard';
+import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { PartialLayoutComponent } from './partial/partial-layout.component';
+import { WebLayoutComponent } from './web/web-layout/web-layout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', loadChildren: () => import('./web/login/login-routing.module').then(m => m.LoginRoutingModule) ,data: { title: 'Login' } },
+  // { path: 'login', loadChildren: () => import('./web/login/login-routing.module').then(m => m.LoginRoutingModule) ,data: { title: 'Login' } },
+  { path: '', component: WebLayoutComponent,  loadChildren: () => import('./web/web-layout/web-layout.module').then(m => m.WebLayoutModule) },
   {
     path: '',
-    // canActivate: [AuthGuard], // for admin only
-    // canActivateChild: [AuthorizationGuard],
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthorizationGuard],
     component: PartialLayoutComponent,
-    children: [
-      { path: '', loadChildren: () => import('./partial/partial-layout.module').then(m => m.PartialLayoutModule), data: { title: 'Login' } },
-      // /partial/layouts/partial-layout/partial-layout.module
-    ]
+    loadChildren: () => import('./partial/partial-layout.module').then(m => m.PartialLayoutModule)
   },
-  
+  { path: '**', component: PageNotFoundComponent},
   
 ];
 

@@ -4,24 +4,37 @@
             <div class="card card-body" id="loginbox">
                 <h4>Admin Login</h4>
                 <div class="form-container">
+                    <form [formGroup]="loginForm">
                     <div class="mb-3">
                         <label class="form-label">User Name</label>
-                        <input type="text" class="form-control" placeholder="User Name" />
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="UserName" placeholder="User Name" autocomplete="off"
+                                [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
+                        </div>
+                        <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
+                            <div class="text-danger" *ngIf="f.UserName.errors?.required">User Name is required.
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Password</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" placeholder="Password" />
-                            <button class="btn text-dark">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </div>                        
+                            <input autocomplete="off" [type]="show_button ? 'text' : 'password'" class="form-control"
+                            placeholder="Password" formControlName="Password"
+                            [ngClass]="{ 'is-invalid': submitted && f.Password.errors }">
+                        <button type="button" class="btn btn-light bg-transparent border-0 btn-sm"
+                            (click)="showPassword()">
+                            <i class="eye-icon-pos" [class]="show_eye ? 'fa fa-eye' : 'fa fa-eye-slash'"> </i>
+                        </button>
+                        </div>  
+                        <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
+                            <div class="text-danger" *ngIf="f.Password.errors.required">Password is required.</div>
+                        </div>                      
                     </div>
                     <div class="mb-0">
-                        <button class="btn btn-main w-100">
-                            LOGIN
-                        </button>
+                        <button type="submit" class="btn btn-main w-100" (click)="loginFormSubmit()"> LOGIN </button>
                     </div>
+                </form>
                 </div>
             </div>
         </div>

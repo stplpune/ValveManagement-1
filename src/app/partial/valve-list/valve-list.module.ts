@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ValveListRoutingModule } from './valve-list-routing.module';
 import { ValveListComponent } from './valve-list.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,9 @@ import { ValveListComponent } from './valve-list.component';
   ],
   imports: [
     CommonModule,
-    ValveListRoutingModule
+    ValveListRoutingModule,
+    NgxPaginationModule,
+    ReactiveFormsModule,
   ]
 })
 export class ValveListModule { }

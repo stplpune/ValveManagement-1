@@ -1,19 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PartialLayoutRoutes } from './partial-layout.routing';
+import { PartialLayoutComponent } from './partial-layout.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { NavbarComponent } from './layout/navbar/navbar.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { PartialLayoutRoutingModule } from './partial-layout-routing.module';
 
 
 @NgModule({
   declarations: [
+    PartialLayoutComponent,
+    SidebarComponent,
+    NavbarComponent,
+    FooterComponent,
   ],
 
   imports: [
     CommonModule,
-    RouterModule.forChild(PartialLayoutRoutes),
-
+    PartialLayoutRoutingModule
   ],
-
   providers: [DatePipe]
 })
 

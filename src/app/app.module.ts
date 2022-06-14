@@ -1,26 +1,37 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FooterComponent } from './partial/layout/footer/footer.component';
-import { NavbarComponent } from './partial/layout/navbar/navbar.component';
-import { SidebarComponent } from './partial/layout/sidebar/sidebar.component';
-import { PartialLayoutComponent } from './partial/partial-layout.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
+import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { TitleCasePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PartialLayoutComponent,
-    SidebarComponent,
-    NavbarComponent,
-    FooterComponent
+    AccessDeniedComponent,
+    PageNotFoundComponent,
+    ServerErrorComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    HttpClientModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      closeButton: true,
+      progressBar:true,
+      preventDuplicates: true,
+    }),
+    NgxSpinnerModule,
   ],
-  providers: [],
+  providers: [TitleCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
