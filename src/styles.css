@@ -146,3 +146,9 @@ tr.active {
 .invalid-feedback{
     font-size: 0.65rem;
 }
+
+.modal-body svg {
+    width: 100px !important;
+    display: block !important;
+    margin: 0px auto !important;
+}

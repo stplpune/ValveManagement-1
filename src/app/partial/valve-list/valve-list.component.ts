@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -24,7 +24,7 @@ export class ValveListComponent implements OnInit {
   totalRows: any;
   @ViewChild('addValveModel') addValveModel: any;
   HighlightRow!: number;
-  deleteValveId:any;
+  deleteValveId: any;
 
   constructor(
     public commonService: CommonService,
@@ -46,10 +46,10 @@ export class ValveListComponent implements OnInit {
   defaultForm() {
     this.valveListForm = this.fb.group({
       Id: [0],
-      valveName: ['', Validators.required],
-      valveId: ['', Validators.required],
-      companyName: ['', Validators.required],
-      description: ['', Validators.required],
+      valveName: ['', [Validators.required, , Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'\/\\]\\]{}][a-zA-Z.\\s]+$')]],
+      valveId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
+      companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'\/\\]\\]{}][a-zA-Z.\\s]+$')]],
+      description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
     })
   }
 
@@ -60,11 +60,11 @@ export class ValveListComponent implements OnInit {
     this.headingText = 'Add Valve';
 
   }
- 
+
   getAllValveData() {
     this.spinner.show();
     let obj = "UserId=" + this.pageNumber + "&Search=" + this.pagesize;
-    this.apiService.setHttp('get', "ValveMaster/GetAllValveStatus?" , false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', "ValveMaster/GetAllValveStatus?", false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
@@ -90,7 +90,7 @@ export class ValveListComponent implements OnInit {
   onSubmit() {
     let formData = this.valveListForm.value;
     this.submitted = true;
-    if (this.valveListForm.invalid) {     
+    if (this.valveListForm.invalid) {
       return;
     } else {
       let obj = {
@@ -122,7 +122,7 @@ export class ValveListComponent implements OnInit {
         this.errorSerivce.handelError(error.status); this.spinner.hide();
       });
     }
-  } 
+  }
 
   updateValveData(obj: any) {
     this.btnText = 'Update Changes';
