@@ -3,6 +3,5 @@
 }
 
 .modal-sm {
-    --bs-modal-width: 350px;
+    max-width: 350px !important;
 }
-
