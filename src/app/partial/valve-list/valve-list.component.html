@@ -3,7 +3,9 @@
         <div class="row justify-content-between align-items-center">
             <div class="col-sm-4">Valve List</div>
             <div class="col-sm-4 text-end">
-                <button class="btn btn-light-main text-main btn-sm" type="submit" data-bs-toggle="modal" data-bs-target="#AddValveModal"><i
+                <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+                    class="fas fa-sync-alt"></i></button>
+                <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal" data-bs-target="#AddValveModal"><i
                         class="fa-solid fa-plus me-2"></i>Add Valve</button>
             </div>
         </div>
@@ -31,7 +33,7 @@
                     <td>{{valveStatus?.companyName}}</td>
                     <td>
                         <span *ngIf="valveStatus?.valveStatus == 'On'" class="badge px-3 py-2 bg-success bg-opacity-10 text-success rounded-pill">ON</span>
-                        <span *ngIf="valveStatus?.valveStatus == 'Off'" class="badge px-3 py-2 bg-danger bg-opacity-10 text-success rounded-pill">Off</span>
+                        <span *ngIf="valveStatus?.valveStatus == 'Off'" class="badge px-3 py-2 bg-danger bg-opacity-10 text-danger rounded-pill">Off</span>
                     </td>
                     <td>{{valveStatus?.statusDate | date: 'dd/MM/yyyy'}}</td>
                     <td>

@@ -101,7 +101,7 @@ export class ValveListComponent implements OnInit {
         "description": formData.description,
         "createdBy": this.localStorage.userId(),
         "statusId": 0,
-        "valveStatus": "Off",
+        "valveStatus": "",
         "statusDate": new Date()
       }
       this.spinner.show();
@@ -160,6 +160,24 @@ export class ValveListComponent implements OnInit {
         }
       },
       error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+    });
+  }
+
+  refreshValveStatus() {
+    this.spinner.show();
+    this.apiService.setHttp('get', "ValveMaster/RefreshValveStatus?UserId=" + this.localStorage.userId(), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === "200") {
+          this.spinner.hide();
+          this.valveStatusArray = res.responseData;
+        } else {
+          this.spinner.hide();
+          this.valveStatusArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: ((error: any) => { this.errorSerivce.handelError(error.status),this.spinner.hide(); })
     });
   }
 
