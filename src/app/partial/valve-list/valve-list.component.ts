@@ -38,7 +38,7 @@ export class ValveListComponent implements OnInit {
 
   ngOnInit() {
     this.defaultForm();
-    this.refreshValveStatus();
+    this.getAllValveData();
   }
 
   get f() { return this.valveListForm.controls }
@@ -58,7 +58,6 @@ export class ValveListComponent implements OnInit {
     this.defaultForm();
     this.btnText = 'Save Changes';
     this.headingText = 'Add Valve';
-
   }
 
   getAllValveData() {
@@ -128,7 +127,6 @@ export class ValveListComponent implements OnInit {
     this.btnText = 'Update Changes';
     this.headingText = 'Update Valve';
     this.HighlightRow = obj.id;
-
     this.valveListForm.patchValue({
       Id: obj.id,
       valveName: obj.valveName,
