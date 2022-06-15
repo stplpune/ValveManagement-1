@@ -146,7 +146,7 @@ tr.active {
 }
 
 .modal-body svg {
-    width: 100px !important;
+    width: 50px !important;
     display: block !important;
     margin: 0px auto !important;
 }

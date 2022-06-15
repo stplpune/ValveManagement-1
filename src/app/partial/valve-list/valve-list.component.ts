@@ -38,7 +38,7 @@ export class ValveListComponent implements OnInit {
 
   ngOnInit() {
     this.defaultForm();
-    this.getAllValveData();
+    this.refreshValveStatus();
   }
 
   get f() { return this.valveListForm.controls }
@@ -170,10 +170,11 @@ export class ValveListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === "200") {
           this.spinner.hide();
-          this.valveStatusArray = res.responseData;
+          this.getAllValveData();
+          // this.valveStatusArray = res.responseData;
         } else {
           this.spinner.hide();
-          this.valveStatusArray = [];
+          // this.valveStatusArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
       },

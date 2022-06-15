@@ -35,7 +35,7 @@
                         <span *ngIf="valveStatus?.valveStatus == 'On'" class="badge px-3 py-2 bg-success bg-opacity-10 text-success rounded-pill">ON</span>
                         <span *ngIf="valveStatus?.valveStatus == 'Off'" class="badge px-3 py-2 bg-danger bg-opacity-10 text-danger rounded-pill">Off</span>
                     </td>
-                    <td>{{valveStatus?.statusDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{valveStatus?.statusDate | date: 'dd/MM/yyyy hh:mm a'}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
