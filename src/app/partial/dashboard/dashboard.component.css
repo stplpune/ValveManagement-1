@@ -8,3 +8,12 @@
     width: 100%;
     opacity: .1;
 }
+
+.valvePiChart{
+    width:'100%';
+    height: 332px
+}
+
+agm-map {
+    height: 312px;
+  }

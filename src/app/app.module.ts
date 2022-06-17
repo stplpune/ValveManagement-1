@@ -10,6 +10,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TitleCasePipe } from '@angular/common';
+import { AgmCoreModule} from '@agm/core';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,11 @@ import { TitleCasePipe } from '@angular/common';
       preventDuplicates: true,
     }),
     NgxSpinnerModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
+      language: 'en',
+      libraries: ['places', 'geometry'],
+    }),
   ],
   providers: [TitleCasePipe],
   bootstrap: [AppComponent]
