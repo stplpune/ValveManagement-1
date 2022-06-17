@@ -60,6 +60,15 @@ export class DashboardComponent implements OnInit {
       valveChart.push({ 'Category': key, 'categoryCount': chartArray[key] })
     })
 
+    valveChart.map((ele:any)=>{
+      switch(ele.Category){
+          case 'totalOn': ele.Category = 'Total On' ;return;
+          case 'totalOff': ele.Category = 'Total Off' ;return;
+          case 'totalWaitedOn': ele.Category = 'Total Waited On' ;return;
+          case 'totalWaitedOff': ele.Category = 'Total Waited Off' ;return;
+      }
+    })
+
     am4core.useTheme(am4themes_animated);
 
     // Create chart instance
