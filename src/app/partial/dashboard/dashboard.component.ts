@@ -62,10 +62,10 @@ export class DashboardComponent implements OnInit {
 
     valveChart.map((ele:any)=>{
       switch(ele.Category){
-          case 'totalOn': ele.Category = 'Total On' ;return;
-          case 'totalOff': ele.Category = 'Total Off' ;return;
-          case 'totalWaitedOn': ele.Category = 'Total Waited On' ;return;
-          case 'totalWaitedOff': ele.Category = 'Total Waited Off' ;return;
+          case 'totalOn': ele.Category = 'On' ;return;
+          case 'totalOff': ele.Category = 'Off' ;return;
+          case 'totalWaitedOn': ele.Category = 'Waited On' ;return;
+          case 'totalWaitedOff': ele.Category = 'Waited Off' ;return;
       }
     })
 
