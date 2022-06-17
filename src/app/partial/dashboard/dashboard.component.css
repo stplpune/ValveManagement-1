@@ -1,0 +1,10 @@
+.cardImgOuter {
+    position: absolute;
+    width: 50px;
+    right: 12px;
+    bottom: 8px;
+}
+.cardImgOuter img {
+    width: 100%;
+    opacity: .1;
+}
