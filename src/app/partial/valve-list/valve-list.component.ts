@@ -6,14 +6,14 @@ import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import {  } from '@agm/core/services/google-maps-types';
 
 @Component({
   selector: 'app-valve-list',
   templateUrl: './valve-list.component.html',
-  styleUrls: ['./valve-list.component.css']
+  styleUrls: ['./valve-list.component.css'],
 })
 export class ValveListComponent implements OnInit {
-
   valveListForm: FormGroup | any;
   submitted = false;
   btnText = 'Save Changes';
@@ -26,6 +26,11 @@ export class ValveListComponent implements OnInit {
   HighlightRow!: number;
   deleteValveId: any;
 
+  lat: any = 19.7515;
+  lng: any = 75.7139;
+
+  getCoder:any;
+
   constructor(
     public commonService: CommonService,
     public apiService: ApiService,
@@ -33,24 +38,57 @@ export class ValveListComponent implements OnInit {
     private errorSerivce: ErrorsService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
-    private localStorage: LocalstorageService,
-  ) { }
+    private localStorage: LocalstorageService
+  ) {}
 
   ngOnInit() {
     this.defaultForm();
     this.getAllValveData();
   }
 
-  get f() { return this.valveListForm.controls }
+  get f() {
+    return this.valveListForm.controls;
+  }
 
   defaultForm() {
     this.valveListForm = this.fb.group({
       Id: [0],
-      valveName: ['', [Validators.required, , Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'\/\\]\\]{}][a-zA-Z.\\s]+$')]],
-      valveId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
-      companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'\/\\]\\]{}][a-zA-Z.\\s]+$')]],
-      description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
-    })
+      valveName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'
+          ),
+        ],
+      ],
+      pipeDiameter: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9.]*$')],
+      ],
+      noOfConnections: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*$')],
+      ],
+      address: ['', [Validators.required]],
+      valveId: [
+        '',
+        [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],
+      ],
+      companyName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'
+          ),
+        ],
+      ],
+      description: [
+        '',
+        [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],
+      ],
+    });
   }
 
   clearForm() {
@@ -62,11 +100,18 @@ export class ValveListComponent implements OnInit {
 
   getAllValveData() {
     this.spinner.show();
-    let obj = "UserId=" + this.pageNumber + "&Search=" + this.pagesize;
-    this.apiService.setHttp('get', "ValveMaster/GetAllValveStatus?", false, false, false, 'valvemgt');
+    let obj = 'UserId=' + this.pageNumber + '&Search=' + this.pagesize;
+    this.apiService.setHttp(
+      'get',
+      'ValveMaster/GetAllValveStatus?',
+      false,
+      false,
+      false,
+      'valvemgt'
+    );
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === "200") {
+        if (res.statusCode === '200') {
           this.spinner.hide();
           this.valveStatusArray = res.responseData;
           // this.valveStatusArray = res.responseData.responseData1;
@@ -74,10 +119,14 @@ export class ValveListComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.valveStatusArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
     });
   }
 
@@ -93,33 +142,44 @@ export class ValveListComponent implements OnInit {
       return;
     } else {
       let obj = {
-        "id": formData.Id,
-        "valveName": formData.valveName,
-        "valveId": formData.valveId,
-        "companyName": formData.companyName,
-        "description": formData.description,
-        "createdBy": this.localStorage.userId(),
-        "statusId": 0,
-        "valveStatus": "",
-        "statusDate": new Date()
-      }
+        id: formData.Id,
+        valveName: formData.valveName,
+        valveId: formData.valveId,
+        companyName: formData.companyName,
+        description: formData.description,
+        createdBy: this.localStorage.userId(),
+        statusId: 0,
+        valveStatus: '',
+        statusDate: new Date(),
+      };
       this.spinner.show();
       let urlType;
-      formData.Id == 0 ? urlType = 'POST' : urlType = 'PUT'
-      this.apiService.setHttp(urlType, 'ValveMaster', false, JSON.stringify(obj), false, 'valvemgt');
-      this.apiService.getHttp().subscribe((res: any) => {
-        if (res.statusCode == "200") {
-          this.spinner.hide();
-          this.toastrService.success(res.statusMessage);
-          this.addValveModel.nativeElement.click();
-          this.getAllValveData();
-        } else {
-          this.toastrService.error(res.statusMessage);
+      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
+      this.apiService.setHttp(
+        urlType,
+        'ValveMaster',
+        false,
+        JSON.stringify(obj),
+        false,
+        'valvemgt'
+      );
+      this.apiService.getHttp().subscribe(
+        (res: any) => {
+          if (res.statusCode == '200') {
+            this.spinner.hide();
+            this.toastrService.success(res.statusMessage);
+            this.addValveModel.nativeElement.click();
+            this.getAllValveData();
+          } else {
+            this.toastrService.error(res.statusMessage);
+            this.spinner.hide();
+          }
+        },
+        (error: any) => {
+          this.errorSerivce.handelError(error.status);
           this.spinner.hide();
         }
-      }, (error: any) => {
-        this.errorSerivce.handelError(error.status); this.spinner.hide();
-      });
+      );
     }
   }
 
@@ -133,7 +193,7 @@ export class ValveListComponent implements OnInit {
       valveId: obj.valveId,
       companyName: obj.companyName,
       description: obj.description,
-    })
+    });
   }
 
   deleteConformation(id: any) {
@@ -143,41 +203,84 @@ export class ValveListComponent implements OnInit {
 
   deleteJobPost() {
     let obj = {
-      "id": parseInt(this.deleteValveId),
-      "deletedBy": this.localStorage.userId()
-    }
-    this.apiService.setHttp('DELETE', "ValveMaster", false, JSON.stringify(obj), false, 'valvemgt');
+      id: parseInt(this.deleteValveId),
+      deletedBy: this.localStorage.userId(),
+    };
+    this.apiService.setHttp(
+      'DELETE',
+      'ValveMaster',
+      false,
+      JSON.stringify(obj),
+      false,
+      'valvemgt'
+    );
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === "200") {
+        if (res.statusCode === '200') {
           this.toastrService.success(res.statusMessage);
           this.getAllValveData();
           this.clearForm();
         } else {
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
     });
   }
 
   refreshValveStatus() {
     this.spinner.show();
-    this.apiService.setHttp('get', "ValveMaster/RefreshValveStatus?UserId=" + this.localStorage.userId(), false, false, false, 'valvemgt');
+    this.apiService.setHttp(
+      'get',
+      'ValveMaster/RefreshValveStatus?UserId=' + this.localStorage.userId(),
+      false,
+      false,
+      false,
+      'valvemgt'
+    );
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === "200") {
+        if (res.statusCode === '200') {
           this.spinner.hide();
           this.getAllValveData();
           // this.valveStatusArray = res.responseData;
         } else {
           this.spinner.hide();
           // this.valveStatusArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status),this.spinner.hide(); })
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status), this.spinner.hide();
+      },
     });
   }
 
+  getAddress(event: any) {
+    console.log(event);
+    this.lat = event.coords.lat;
+    this.lng = event.coords.lng;
+    this.getCoder=new google.maps.Geocoder;
+    // let geocoder = new google.maps.Geocoder();
+    let latlng = {
+      lat: this.lat,
+      lng: this.lng,
+    };
+    // geocoder.geocode(
+    //   {
+    //     location: latlng,
+    //   },
+    //   (res: any) => {
+    //     if (res[0]) {
+    //       alert(res[0].formatted_address);
+    //     } else alert('Not Found');
+    //   }
+    // );
+  }
 }
