@@ -19,6 +19,7 @@ import { AgmCoreModule} from '@agm/core';
       language: 'en',
       libraries: ['places', 'geometry'],
     }),
+
   ]
 })
 export class ValveListModule { }

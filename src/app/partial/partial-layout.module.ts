@@ -6,6 +6,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { PartialLayoutRoutingModule } from './partial-layout-routing.module';
+import { AgmCoreModule } from '@agm/core/core.module';
 
 
 @NgModule({

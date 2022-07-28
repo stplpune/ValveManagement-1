@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MapsAPILoader } from '@agm/core';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
-import {  } from '@agm/core/services/google-maps-types';
 
 @Component({
   selector: 'app-valve-list',
@@ -23,15 +23,16 @@ export class ValveListComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   @ViewChild('addValveModel') addValveModel: any;
+  @ViewChild('addValveModal', {static: false}) addValveModal: any;
   HighlightRow!: number;
   deleteValveId: any;
 
   lat: any = 19.7515;
   lng: any = 75.7139;
 
-  getCoder:any;
-
+  geoCoder: any;
   constructor(
+    private mapsAPILoader: MapsAPILoader,
     public commonService: CommonService,
     public apiService: ApiService,
     private toastrService: ToastrService,
@@ -44,6 +45,9 @@ export class ValveListComponent implements OnInit {
   ngOnInit() {
     this.defaultForm();
     this.getAllValveData();
+    this.mapsAPILoader.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder();
+    });
   }
 
   get f() {
@@ -266,21 +270,21 @@ export class ValveListComponent implements OnInit {
     console.log(event);
     this.lat = event.coords.lat;
     this.lng = event.coords.lng;
+    this.geoCoder.geocode(
+      { location: { lat: this.lat, lng: this.lng } },
+      (results: any, status: any) => {
+        if (status === 'OK') {
+          if (results[0]) {
+            this.addValveModal.nativeElement.click();
 
-    // let geocoder = new google.maps.Geocoder();
-    let latlng = {
-      lat: this.lat,
-      lng: this.lng,
-    };
-    // geocoder.geocode(
-    //   {
-    //     location: latlng,
-    //   },
-    //   (res: any) => {
-    //     if (res[0]) {
-    //       alert(res[0].formatted_address);
-    //     } else alert('Not Found');
-    //   }
-    // );
+            this.valveListForm.patchValue({
+              address:results[0].formatted_address
+            })
+          } else {
+            console.log('No results found');
+          }
+        }
+      }
+    );
   }
 }
