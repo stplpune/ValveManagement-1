@@ -81,7 +81,7 @@
       <form [formGroup]="valveListForm">
         <div class="modal-body">
           <div class="form-container">
-            <div class="mb-3">
+            <div class="mb-2">
               <label class="form-label">Valve ID</label>
               <input type="text" class="form-control" formControlName="valveId" placeholder="Valve ID"
                 [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }">
@@ -92,7 +92,7 @@
                   Valid Valve ID.</div>
               </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-2">
               <label class="form-label">Valve Name</label>
               <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
                 [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }">
@@ -104,29 +104,31 @@
               </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label">Pipe Diameter</label>
-              <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
-                [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }">
-              <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
-                  required.</div>
-                <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.pattern">Please enter
-                  Valid Pipe Diameter Value.</div>
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <label class="form-label">Pipe Diameter</label>
+                <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
+                  [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }">
+                <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
+                    required.</div>
+                  <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.pattern">Please enter
+                    Valid Pipe Diameter Value.</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">No. of Connection</label>
+                <input type="text" class="form-control" formControlName="noOfConnections" placeholder="No. of Connection"
+                  [ngClass]="{ 'is-invalid': submitted && f.noOfConnections.errors }">
+                <div *ngIf="submitted && f.noOfConnections.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.noOfConnections.errors?.required">No. of Connection is
+                    required.</div>
+                  <div class="text-danger" *ngIf="f.noOfConnections.errors?.pattern">Please enter
+                    Valid No. of Connection Value.</div>
+                </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">No.Of Connection</label>
-              <input type="text" class="form-control" formControlName="noOfConnections" placeholder="No.Of Connection"
-                [ngClass]="{ 'is-invalid': submitted && f.noOfConnections.errors }">
-              <div *ngIf="submitted && f.noOfConnections.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.noOfConnections.errors?.required">Pipe Diameter is
-                  required.</div>
-                <div class="text-danger" *ngIf="f.noOfConnections.errors?.pattern">Please enter
-                  Valid Pipe Diameter Value.</div>
-              </div>
-            </div>
-            <div class="mb-3">
+            <div class="mb-2">
               <label class="form-label">Company Name</label>
               <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name"
                 [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }">
@@ -136,29 +138,33 @@
                 <div class="text-danger" *ngIf="f.companyName.errors?.pattern">Please enter
                   Valid Company Name.</div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Address</label>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Address</label>
+              <div class="input-group">
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
-                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
-                <i class="fa fa-map-marker" data-bs-toggle="modal" data-bs-target="#MapModal"></i>
-                <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
-                </div>
+                [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+                <button class="btn btn-success" type="button"  data-bs-toggle="modal" data-bs-target="#MapModal">
+                  <i class="fa-solid fa-location-dot"></i>
+                </button>
               </div>
-              <div class="mb-0">
-                <label class="form-label">Description</label>
-                <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
-                  [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
-                <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                  <span class="text-danger" *ngIf="f.description.errors?.required">
-                    Job Description is required.</span>
-                  <span class="text-danger" *ngIf="f.description.errors?.pattern">
-                    Please enter Valid Description.</span>
-                </div>
+              <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
+              </div>
+            </div>
+            <div class="mb-0">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
+                [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+              <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                <span class="text-danger" *ngIf="f.description.errors?.required">
+                  Job Description is required.</span>
+                <span class="text-danger" *ngIf="f.description.errors?.pattern">
+                  Please enter Valid Description.</span>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm()">Clear</button>
               <button type="submit" class="btn btn-main" (click)="onSubmit()">{{btnText}}</button>
