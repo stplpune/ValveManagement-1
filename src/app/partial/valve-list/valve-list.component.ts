@@ -266,7 +266,7 @@ export class ValveListComponent implements OnInit {
     console.log(event);
     this.lat = event.coords.lat;
     this.lng = event.coords.lng;
-    this.getCoder=new google.maps.Geocoder;
+
     // let geocoder = new google.maps.Geocoder();
     let latlng = {
       lat: this.lat,
