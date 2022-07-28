@@ -4,14 +4,17 @@ import { AccessDeniedComponent } from 'src/app/errors/access-denied/access-denie
 
 const routes: Routes = [
   {
-      path: 'dashboard', loadChildren: () => import('../partial/dashboard/dashboard.module').then(m => m.DashboardModule),
-      data: { breadcrumb: [{ title: 'Dashboard', active: true }] }
+    path: 'dashboard', loadChildren: () => import('../partial/dashboard/dashboard.module').then(m => m.DashboardModule),
+    data: { breadcrumb: [{ title: 'Dashboard', active: true }] }
   },
   {
-      path: 'valve-list', loadChildren: () => import('../partial/valve-list/valve-list.module').then(m => m.ValveListModule),
-      data: { breadcrumb: [{ title: 'Valve List', active: true }] }
+    path: 'valve-list', loadChildren: () => import('../partial/valve-list/valve-list.module').then(m => m.ValveListModule),
+    data: { breadcrumb: [{ title: 'Valve List', active: true }] }
   },
-
+  {
+    path: 'sim-list', loadChildren: () => import('../partial/sim-list/sim-list.module').then(m => m.SimListModule),
+    data: { breadcrumb: [{ title: 'SIM List', active: true }] }
+  },
   { path: 'access-denied', component: AccessDeniedComponent, data: { title: 'Access Denied' } },
 
 ];
