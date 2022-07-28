@@ -118,8 +118,8 @@
               </div>
               <div class="col-sm-6">
                 <label class="form-label">No. of Connection</label>
-                <input type="text" class="form-control" formControlName="noOfConnections" placeholder="No. of Connection"
-                  [ngClass]="{ 'is-invalid': submitted && f.noOfConnections.errors }">
+                <input type="text" class="form-control" formControlName="noOfConnections"
+                  placeholder="No. of Connection" [ngClass]="{ 'is-invalid': submitted && f.noOfConnections.errors }">
                 <div *ngIf="submitted && f.noOfConnections.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.noOfConnections.errors?.required">No. of Connection is
                     required.</div>
@@ -143,8 +143,8 @@
               <label class="form-label">Address</label>
               <div class="input-group">
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
-                [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
-                <button class="btn btn-success" type="button"  data-bs-toggle="modal" data-bs-target="#MapModal">
+                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
               </div>
@@ -177,17 +177,16 @@
 </div>
 <div class="modal fade" id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <div class="col-sm-12">
-        <div class="card dashboardChart">
-          <div class="card-header">Location</div>
-          <div class="card-body text-center pt-0 h-100">
-            <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="getAddress($event)">
-              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-            </agm-map>
-          </div>
-        </div>
+      <div class="modal-header">
+        <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="getAddress($event)">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
       </div>
     </div>
   </div>
