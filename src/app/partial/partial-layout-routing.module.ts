@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'sim-list', loadChildren: () => import('../partial/sim-list/sim-list.module').then(m => m.SimListModule),
     data: { breadcrumb: [{ title: 'SIM List', active: true }] }
   },
+  {
+    path: 'user-registration', loadChildren: () => import('../partial/user-registration/user-registration.module').then(m => m.UserRegistrationModule),
+    data: { breadcrumb: [{ title: 'User Registration', active: true }] }
+  },
   { path: 'access-denied', component: AccessDeniedComponent, data: { title: 'Access Denied' } },
 
 ];
