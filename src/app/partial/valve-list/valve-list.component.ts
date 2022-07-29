@@ -155,6 +155,13 @@ export class ValveListComponent implements OnInit {
         statusId: 0,
         valveStatus: '',
         statusDate: new Date(),
+        valvePipeDiameter:formData.pipeDiameter,
+        noOfConnection:formData.noOfConnections,
+        simid:0,
+        latitude:this.lat,
+        longitude:this.lng,
+        simNo:'',
+        valveAddress:formData.address
       };
       this.spinner.show();
       let urlType;
@@ -267,7 +274,6 @@ export class ValveListComponent implements OnInit {
   }
 
   getAddress(event: any) {
-    console.log(event);
     this.lat = event.coords.lat;
     this.lng = event.coords.lng;
     this.geoCoder.geocode(
@@ -276,7 +282,6 @@ export class ValveListComponent implements OnInit {
         if (status === 'OK') {
           if (results[0]) {
             this.addValveModal.nativeElement.click();
-
             this.valveListForm.patchValue({
               address:results[0].formatted_address
             })
