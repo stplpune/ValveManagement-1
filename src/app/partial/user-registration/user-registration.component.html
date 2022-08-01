@@ -1,110 +1,125 @@
 <div class="card plain-card">
-    <div class="card-header">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-sm-4">User Registration</div>
-            <div class="col-sm-4 text-end">
-                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-                        class="fas fa-sync-alt"></i></button>
-                <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-                    data-bs-target="#AddUserModal"><i class="fa-solid fa-plus me-2"></i>Add User</button>
+  <div class="card-header">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-sm-4">User Registration</div>
+      <div class="col-sm-4 text-end">
+        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
+        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
+          data-bs-target="#AddUserModal"><i class="fa-solid fa-plus me-2"></i>Add User</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table align-middle dashboard-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Full Name</th>
+          <th>Mobile No.</th>
+          <th>Address</th>
+          <th>Is Block</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userData of userListArray;let i = index">
+          <td>{{i+1}}</td>
+          <td>{{userData.fullName}}</td>
+          <td>{{userData.mobileNo}}</td>
+          <td>{{userData.address}}</td>
+          <td>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" [checked]="getBlockUser(userData.isUserBlock)"
+                role="switch" id="flexSwitchCheckDefault">
             </div>
-        </div>
-    </div>
-    <div class="card-body">
-        <table class="table align-middle dashboard-table">
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Full Name</th>
-                    <th>Mobile No.</th>
-                    <th>Address</th>
-                    <th>Is Block</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Anil Kumbale</td>
-                    <td>98654210</td>
-                    <td>Swargate, Pune</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#AddUserModal">
-                                <i class="fa-regular fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                                data-bs-toggle="modal" data-bs-target="#deleteModel">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
+                data-bs-target="#AddUserModal" (click)="updateUserData(userData)">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+                data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(userData.id)">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 
 <!-- Modal for adding new valve -->
 <div class="modal fade" id="AddUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="AddUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0">
-            <div class="modal-header bg-main">
-                <p class="modal-title mb-0" id="AddUserModalLabel">User Registration</p>
-                <button type="button" class="btn-close btn-close-inverse" #addSimData data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+  aria-labelledby="AddUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+      <div class="modal-header bg-main">
+        <p class="modal-title mb-0" id="AddUserModalLabel">User Registration</p>
+        <button type="button" #addUserModel class="btn-close btn-close-inverse" #addSimData data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userDetails">
+          <div class="form-container">
+            <div class="mb-3">
+              <label class="form-label">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
+                [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }" />
+              <div *ngIf="submitted && f.fullName.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.fullName.errors?.required">Name is
+                  required.</div>
+              </div>
             </div>
-            <div class="modal-body">
-                <div class="form-container">
-                    <div class="mb-3">
-                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" placeholder="Full Name" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mobile No.<span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" placeholder="Mobile No." />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Address</label>
-                        <textarea class="form-control" placeholder="Address" rows="4"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer px-0 pb-0">
-                    <div class="d-flex justify-content-between align-items-center w-100 form-container">
-                        <button type="button" class="btn btn-light-main">Clear</button>
-                        <button type="submit" class="btn btn-main">Submit</button>
-                    </div>
-                </div>
+            <div class="mb-3">
+              <label class="form-label">Mobile No.<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Mobile No." maxlength="10" formControlName="mobileNo"
+                [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" />
+              <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.mobileNo.errors?.required">Mobile No is
+                  required.</div>
+                <div class="text-danger" *ngIf="f.mobileNo.errors?.pattern">Please enter
+                  Valid Mobile No.</div>
+              </div>
+
             </div>
-        </div>
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer px-0 pb-0">
+            <div class="d-flex justify-content-between align-items-center w-100 form-container">
+              <button type="button" class="btn btn-light-main" (click)="clearForm()">Clear</button>
+              <button type="submit" class="btn btn-main" (click)="onSubmit()">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Delete modal pop up -->
 <div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-transparent border-bottom-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center pb-5">
-                <h3 class="my-3">Are You Sure?</h3>
-                <p class="mb-4">Do you really want to This process can not be undone.</p>
-                <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
-                    aria-label="Close">Cancel</button>
-                <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
-                    data-bs-dismiss="modal" aria-label="Close">I'm
-                    Sure</button>
-            </div>
-        </div>
+  aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-transparent border-bottom-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center pb-5">
+        <h3 class="my-3">Are You Sure?</h3>
+        <p class="mb-4">Do you really want to This process can not be undone.</p>
+        <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
+          aria-label="Close">Cancel</button>
+        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
+          data-bs-dismiss="modal" aria-label="Close" (click)="deleteUser()">I'm
+          Sure</button>
+      </div>
     </div>
+  </div>
 </div>
