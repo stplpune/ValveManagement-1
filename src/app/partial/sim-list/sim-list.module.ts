@@ -12,7 +12,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
   imports: [
     CommonModule,
     SimListRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class SimListModule { }

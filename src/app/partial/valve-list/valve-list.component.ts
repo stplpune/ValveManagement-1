@@ -20,7 +20,7 @@ export class ValveListComponent implements OnInit {
   headingText = 'Add Valve';
   valveStatusArray: any;
   pageNumber: number = 1;
-  pagesize: number = 10;
+  pagesize: number = 10000000000;
   totalRows: any;
   @ViewChild('addValveModel') addValveModel: any;
   @ViewChild('addValveModal', {static: false}) addValveModal: any;

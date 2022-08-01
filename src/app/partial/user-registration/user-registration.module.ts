@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserRegistrationRoutingModule } from './user-registration-routing.module';
 import { UserRegistrationComponent } from './user-registration.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { UserRegistrationComponent } from './user-registration.component';
   imports: [
     CommonModule,
     UserRegistrationRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class UserRegistrationModule { }

@@ -10,6 +10,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TitleCasePipe } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { TitleCasePipe } from '@angular/common';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NgxPaginationModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       closeButton: true,

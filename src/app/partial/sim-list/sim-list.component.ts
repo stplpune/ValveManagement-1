@@ -29,6 +29,7 @@ export class SimListComponent implements OnInit {
     operatorName: string;
     createdBy: number;
   }[] = [];
+  listCount!:number;
   headerText: string = 'Add Sim';
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
@@ -168,7 +169,7 @@ export class SimListComponent implements OnInit {
       'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp(
       'get',
-      'SimMaster?',
+      'SimMaster?'+obj,
       false,
       false,
       false,
@@ -179,8 +180,7 @@ export class SimListComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.simArray = res.responseData.responseData1;
-          // this.valveStatusArray = res.responseData.responseData1;
-          // this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+          this.listCount = res.responseData.responseData2?.totalCount;
         } else {
           this.spinner.hide();
           this.simArray = [];
@@ -193,6 +193,11 @@ export class SimListComponent implements OnInit {
         this.errorSerivce.handelError(error.status);
       },
     });
+  }
+
+  selPagination(pagNo:number){
+    this.pageNumber = pagNo;
+    this.getAllSimData();
   }
 
   //Update Sim Data

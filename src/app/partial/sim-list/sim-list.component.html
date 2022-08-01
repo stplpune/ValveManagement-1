@@ -21,8 +21,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let simData of simArray;let i = index">
-          <td>{{i+1}}</td>
+        <tr *ngFor="let simData of simArray | paginate: { itemsPerPage: pagesize, currentPage: pageNumber, totalItems:listCount };let i = index ">
+          <td>{{(+(pageNumber-1+"0")+i+1)}}</td>
           <td>{{simData.operatorName}}</td>
           <td>{{simData.simNo}}</td>
           <td> {{simData.imsiNo}} </td>
@@ -41,6 +41,7 @@
         </tr>
       </tbody>
     </table>
+    <pagination-controls (pageChange)="pageNumber = $event" (click)="selPagination(pageNumber)"></pagination-controls>
   </div>
 </div>
 

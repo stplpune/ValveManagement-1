@@ -18,7 +18,7 @@ export class UserRegistrationComponent implements OnInit {
   submitted = false;
   @ViewChild('addUserModel') addUserModel: any;
   pageNumber: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 20;
   userListArray: {
     id: number;
     fullName: string;
@@ -27,7 +27,8 @@ export class UserRegistrationComponent implements OnInit {
     address: number;
   }[] = [];
   deleteUserId: number = 0;
-
+  blockUserId:number=0;
+  listCount!: number;
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -97,6 +98,7 @@ export class UserRegistrationComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.addUserModel.nativeElement.click();
+            this.getUserRegistrationList();
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
@@ -127,6 +129,7 @@ export class UserRegistrationComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.userListArray = res.responseData.responseData1;
+          this.listCount = res.responseData.responseData2?.totalCount;
           //console.log(this.userListArray);
         } else {
           this.spinner.hide();
@@ -191,4 +194,40 @@ export class UserRegistrationComponent implements OnInit {
   getBlockUser(status: number): boolean {
     return status == 1 ? true : false;
   }
+
+  //Applying Pagination
+  selPagination(pagNo: number) {
+    this.pageNumber = pagNo;
+    this.getUserRegistrationList();
+  }
+
+  //Set User Block
+  // blockUserDetails(blockUserId:number) {
+  //   let obj =
+  //     'Id=' + blockUserId + '&ModifiedBy=' + this.localStorage.userId();
+  //   this.apiService.setHttp(
+  //     'DELETE',
+  //     'UserRegistration/BlockUser?' + obj,
+  //     false,
+  //     false,
+  //     false,
+  //     'valvemgt'
+  //   );
+  //   this.apiService.getHttp().subscribe({
+  //     next: (res: any) => {
+  //       if (res.statusCode === '200') {
+  //         this.toastrService.success(res.statusMessage);
+  //         this.getUserRegistrationList();
+  //         this.clearForm();
+  //       } else {
+  //         this.commonService.checkDataType(res.statusMessage) == false
+  //           ? this.errorSerivce.handelError(res.statusCode)
+  //           : this.toastrService.error(res.statusMessage);
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       this.errorSerivce.handelError(error.status);
+  //     },
+  //   });
+  // }
 }
