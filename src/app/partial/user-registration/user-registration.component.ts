@@ -32,6 +32,7 @@ export class UserRegistrationComponent implements OnInit {
   listCount!: number;
   blockUserText: string = 'Block';
   preventEvent!: any;
+  isBlockStatus: number = 0;
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -214,6 +215,7 @@ export class UserRegistrationComponent implements OnInit {
     this.blockUserText = blockStaus == 1 ? 'UnBlock' : 'Block';
     this.blockUserId = blockUserId;
     this.preventEvent = event;
+    this.isBlockStatus = this.preventEvent.target.checked ? 1 : 0;
     this.blockUserModel.nativeElement.click();
   }
 
@@ -228,7 +230,13 @@ export class UserRegistrationComponent implements OnInit {
 
   //Block User Call API
   blockUser() {
-     let obj = 'Id=' + this.blockUserId + '&ModifiedBy=' + this.localStorage.userId();
+    let obj =
+      'Id=' +
+      this.blockUserId +
+      '&ModifiedBy=' +
+      this.localStorage.userId() +
+      '&isBlock=' +
+      this.isBlockStatus;
     this.apiService.setHttp(
       'DELETE',
       'UserRegistration/BlockUser?' + obj,
