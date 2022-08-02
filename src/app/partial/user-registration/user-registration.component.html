@@ -3,7 +3,8 @@
     <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">User Registration</div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
+        <button (click)="refreshData()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+            class="fas fa-sync-alt"></i></button>
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
           data-bs-target="#AddUserModal"><i class="fa-solid fa-plus me-2"></i>Add User</button>
       </div>
@@ -22,15 +23,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let userData of userListArray| paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount};let i = index">
+        <tr
+          *ngFor="let userData of userListArray| paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount};let i = index">
           <td>{{(+(pageNumber-1+"0")+i+1)}}</td>
           <td>{{userData.fullName}}</td>
           <td>{{userData.mobileNo}}</td>
           <td>{{userData.address}}</td>
           <td>
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox"  [checked]="getBlockUser(userData.isUserBlock)"
-                role="switch" id="flexSwitchCheckDefault">
+              <input class="form-check-input" type="checkbox"
+                (change)="blockUserDetails(userData.id,userData.isUserBlock,$event)"
+                [checked]="getBlockUser(userData.isUserBlock)" role="switch" id="flexSwitchCheckDefault">
             </div>
           </td>
           <td>
@@ -119,6 +122,27 @@
           aria-label="Close">Cancel</button>
         <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
           data-bs-dismiss="modal" aria-label="Close" (click)="deleteUser()">I'm
+          Sure</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button [style.display]="'none'" #openBlockUserPopup data-bs-toggle="modal" data-bs-target="#blockUser"></button>
+<div class="modal fade" id="blockUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-transparent border-bottom-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center pb-5">
+        <h3 class="my-3">Are You Sure {{blockUserText}} the User Details?</h3>
+        <p class="mb-4">Do you really want to This process can not be undone.</p>
+        <button class="btn btn-secondary me-2" (click)="preventCheck()" data-bs-dismiss="modal" type="button"
+          data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
+          data-bs-dismiss="modal" aria-label="Close" (click)="blockUser()">I'm
           Sure</button>
       </div>
     </div>

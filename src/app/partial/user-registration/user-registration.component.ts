@@ -17,6 +17,7 @@ export class UserRegistrationComponent implements OnInit {
   userDetails: FormGroup | any;
   submitted = false;
   @ViewChild('addUserModel') addUserModel: any;
+  @ViewChild('openBlockUserPopup') blockUserModel: any;
   pageNumber: number = 1;
   pageSize: number = 20;
   userListArray: {
@@ -27,8 +28,10 @@ export class UserRegistrationComponent implements OnInit {
     address: number;
   }[] = [];
   deleteUserId: number = 0;
-  blockUserId:number=0;
+  blockUserId: number = 0;
   listCount!: number;
+  blockUserText: string = 'Block';
+  preventEvent!: any;
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -201,33 +204,54 @@ export class UserRegistrationComponent implements OnInit {
     this.getUserRegistrationList();
   }
 
+  //Refresh the Value
+  refreshData() {
+    this.getUserRegistrationList();
+  }
+
   //Set User Block
-  // blockUserDetails(blockUserId:number) {
-  //   let obj =
-  //     'Id=' + blockUserId + '&ModifiedBy=' + this.localStorage.userId();
-  //   this.apiService.setHttp(
-  //     'DELETE',
-  //     'UserRegistration/BlockUser?' + obj,
-  //     false,
-  //     false,
-  //     false,
-  //     'valvemgt'
-  //   );
-  //   this.apiService.getHttp().subscribe({
-  //     next: (res: any) => {
-  //       if (res.statusCode === '200') {
-  //         this.toastrService.success(res.statusMessage);
-  //         this.getUserRegistrationList();
-  //         this.clearForm();
-  //       } else {
-  //         this.commonService.checkDataType(res.statusMessage) == false
-  //           ? this.errorSerivce.handelError(res.statusCode)
-  //           : this.toastrService.error(res.statusMessage);
-  //       }
-  //     },
-  //     error: (error: any) => {
-  //       this.errorSerivce.handelError(error.status);
-  //     },
-  //   });
-  // }
+  blockUserDetails(blockUserId: number, blockStaus: number, event: any) {
+    this.blockUserText = blockStaus == 1 ? 'UnBlock' : 'Block';
+    this.blockUserId = blockUserId;
+    this.preventEvent = event;
+    this.blockUserModel.nativeElement.click();
+  }
+
+  //Prevent Check
+  preventCheck() {
+    this.preventEvent.target.checked = (<HTMLInputElement>(
+      this.preventEvent.target
+    )).checked
+      ? false
+      : true;
+  }
+
+  //Block User Call API
+  blockUser() {
+     let obj = 'Id=' + this.blockUserId + '&ModifiedBy=' + this.localStorage.userId();
+    this.apiService.setHttp(
+      'DELETE',
+      'UserRegistration/BlockUser?' + obj,
+      false,
+      false,
+      false,
+      'valvemgt'
+    );
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === '200') {
+          this.toastrService.success(res.statusMessage);
+          this.getUserRegistrationList();
+          this.clearForm();
+        } else {
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    });
+  }
 }

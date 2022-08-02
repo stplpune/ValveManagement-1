@@ -136,6 +136,7 @@ export class SimListComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.addSimData.nativeElement.click();
+            this.getAllSimData();
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
@@ -246,5 +247,10 @@ export class SimListComponent implements OnInit {
         this.errorSerivce.handelError(error.status);
       },
     });
+  }
+
+  //Refresh the Value
+  refreshData(){
+    this.getAllSimData();
   }
 }
