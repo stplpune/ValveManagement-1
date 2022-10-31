@@ -69,7 +69,7 @@
 
 
 <!-- Modal for adding new valve -->
-<div class="modal fade"  id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="AddValveModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
@@ -125,6 +125,17 @@
                     required.</div>
                   <div class="text-danger" *ngIf="f.noOfConnections.errors?.pattern">Please enter
                     Valid No. of Connection Value.</div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <label class="form-label">Sim Number</label>
+                <select class="form-control" formControlName="simNumber"
+                  [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
+                  <option value="0">Select Sim</option>
+                  <option *ngFor="let simData of simArray" value={{simData.id}}>{{simData.simNo}}</option>
+                </select>
+                <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.simNumber.errors?.pattern">Sim Number Is Required</div>
                 </div>
               </div>
             </div>
@@ -184,7 +195,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
-        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="getAddress($event)" >
+        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="getAddress($event)">
           <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
         </agm-map>
       </div>

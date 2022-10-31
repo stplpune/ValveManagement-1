@@ -11,7 +11,8 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
   templateUrl: './sim-list.component.html',
   styleUrls: ['./sim-list.component.css'],
 })
-export class SimListComponent implements OnInit {
+export class SimListComponent implements OnInit
+{
   //Initialize variable
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] =
     [];
@@ -29,7 +30,7 @@ export class SimListComponent implements OnInit {
     operatorName: string;
     createdBy: number;
   }[] = [];
-  listCount!:number;
+  listCount!: number;
   headerText: string = 'Add Sim';
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
@@ -42,16 +43,18 @@ export class SimListComponent implements OnInit {
     private toastrService: ToastrService,
     private fb: FormBuilder,
     private localStorage: LocalstorageService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
     this.getSimOperator();
     this.defaultForm();
     this.getAllSimData();
   }
 
   //Get Sim Operator
-  getSimOperator() {
+  getSimOperator()
+  {
     this.spinner.show();
     this.apiService.setHttp(
       'get',
@@ -62,11 +65,14 @@ export class SimListComponent implements OnInit {
       'valvemgt'
     );
     this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
+      next: (res: any) =>
+      {
+        if (res.statusCode === '200')
+        {
           this.spinner.hide();
           this.simOperatorList = res.responseData;
-        } else {
+        } else
+        {
           this.spinner.hide();
           this.simOperatorList = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -74,14 +80,16 @@ export class SimListComponent implements OnInit {
             : this.toastrService.error(res.statusMessage);
         }
       },
-      error: (error: any) => {
+      error: (error: any) =>
+      {
         this.errorSerivce.handelError(error.status);
       },
     });
   }
 
   //Form Initialize
-  defaultForm() {
+  defaultForm()
+  {
     this.simFormData = this.fb.group({
       Id: [0],
       SimNo: [
@@ -97,19 +105,23 @@ export class SimListComponent implements OnInit {
   }
 
   //Clear Form Data
-  clearForm() {
+  clearForm()
+  {
     this.headerText = 'Add Sim';
     this.submitted = false;
     this.defaultForm();
   }
 
   //To Submit the Data
-  onSubmit() {
+  onSubmit()
+  {
     let formData = this.simFormData.value;
     this.submitted = true;
-    if (this.simFormData.invalid) {
+    if (this.simFormData.invalid)
+    {
       return;
-    } else {
+    } else
+    {
       console.log(this.simFormData);
       let obj = {
         id: formData.Id,
@@ -131,18 +143,22 @@ export class SimListComponent implements OnInit {
         'valvemgt'
       );
       this.apiService.getHttp().subscribe(
-        (res: any) => {
-          if (res.statusCode == '200') {
+        (res: any) =>
+        {
+          if (res.statusCode == '200')
+          {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.addSimData.nativeElement.click();
             this.getAllSimData();
-          } else {
+          } else
+          {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
           }
         },
-        (error: any) => {
+        (error: any) =>
+        {
           this.errorSerivce.handelError(error.status);
           this.spinner.hide();
         }
@@ -151,12 +167,14 @@ export class SimListComponent implements OnInit {
   }
 
   //Get Form Data using Validation Purpose
-  get f() {
+  get f()
+  {
     return this.simFormData.controls;
   }
 
   //Get Operator Name
-  getOperatorName(event: any) {
+  getOperatorName(event: any)
+  {
     let selectedOptions = event.target['options'];
     let selectedIndex = selectedOptions.selectedIndex;
     let selectElementText = selectedOptions[selectedIndex].text;
@@ -164,25 +182,29 @@ export class SimListComponent implements OnInit {
   }
 
   //Get Sim Details
-  getAllSimData() {
+  getAllSimData()
+  {
     this.spinner.show();
     let obj =
       'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp(
       'get',
-      'SimMaster?'+obj,
+      'SimMaster?' + obj,
       false,
       false,
       false,
       'valvemgt'
     );
     this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
+      next: (res: any) =>
+      {
+        if (res.statusCode === '200')
+        {
           this.spinner.hide();
           this.simArray = res.responseData.responseData1;
           this.listCount = res.responseData.responseData2?.totalCount;
-        } else {
+        } else
+        {
           this.spinner.hide();
           this.simArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -190,19 +212,22 @@ export class SimListComponent implements OnInit {
             : this.toastrService.error(res.statusMessage);
         }
       },
-      error: (error: any) => {
+      error: (error: any) =>
+      {
         this.errorSerivce.handelError(error.status);
       },
     });
   }
 
-  selPagination(pagNo:number){
+  selPagination(pagNo: number)
+  {
     this.pageNumber = pagNo;
     this.getAllSimData();
   }
 
   //Update Sim Data
-  updateSimData(simData: any) {
+  updateSimData(simData: any)
+  {
     this.headerText = 'Update Sim';
     this.simFormData.patchValue({
       Id: simData.id,
@@ -213,12 +238,14 @@ export class SimListComponent implements OnInit {
   }
 
   //Bind We need to deleted Id
-  deleteConformation(id: any) {
+  deleteConformation(id: any)
+  {
     this.deleteSimId = id;
   }
 
   //Delete Sim Data
-  deleteSim() {
+  deleteSim()
+  {
     let obj = {
       id: this.deleteSimId,
       deletedBy: this.localStorage.userId(),
@@ -232,25 +259,30 @@ export class SimListComponent implements OnInit {
       'valvemgt'
     );
     this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
+      next: (res: any) =>
+      {
+        if (res.statusCode === '200')
+        {
           this.toastrService.success(res.statusMessage);
           this.getAllSimData();
           this.clearForm();
-        } else {
+        } else
+        {
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
             : this.toastrService.error(res.statusMessage);
         }
       },
-      error: (error: any) => {
+      error: (error: any) =>
+      {
         this.errorSerivce.handelError(error.status);
       },
     });
   }
 
   //Refresh the Value
-  refreshData(){
+  refreshData()
+  {
     this.getAllSimData();
   }
 }
