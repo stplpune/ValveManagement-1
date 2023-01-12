@@ -19,14 +19,15 @@
             <thead>
                 <tr>
                     <th>Sr. No.</th>
-                    <th>Segment ID</th>
+                    <th>Segment Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>12214</td>
+                <tr *ngFor="let segMaster of segmentMasterArray | paginate: {itemsPerPage: pagesize,
+                    currentPage: pageNumber, totalItems:totalRows}; let i = index">
+                    <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                    <td>{{segMaster?.segmentName}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
@@ -34,7 +35,7 @@
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                                data-bs-toggle="modal" data-bs-target="#deleteModel">
+                                data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(segMaster.id)">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -42,7 +43,10 @@
                 </tr>
             </tbody>
         </table>
-
+        <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length == 0">
+            <div class="alert alert-danger text-center py-2">No Data Found..!
+            </div>
+          </div>
     </div>
 </div>
 
@@ -52,7 +56,8 @@
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="SegmentModal">Map</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div>
@@ -60,9 +65,7 @@
                         <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
                     </agm-map>
                 </div>
-
                 <hr>
-
                 <div class="form-container d-flex gap-2 float-end">
                     <div class="mb-3">
                         <input type="text" class="form-control" placeholder="Segment Name">
@@ -83,7 +86,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>
@@ -91,8 +95,7 @@
                 <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
                     aria-label="Close">Cancel</button>
                 <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
-                    data-bs-dismiss="modal" aria-label="Close">I'm
-                    Sure</button>
+                    data-bs-dismiss="modal" aria-label="Close" (click)="deleteSegMaster()">I'm Sure</button>
             </div>
         </div>
     </div>
