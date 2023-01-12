@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -23,6 +23,9 @@ export class NetworkMasterComponent implements OnInit {
   editFlag:boolean = false;
   deleteSegmentId: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  get f(){
+    return this.networkRegForm.controls;
+  }
   constructor(private apiService: ApiService,
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -40,13 +43,13 @@ export class NetworkMasterComponent implements OnInit {
   controlForm(){
     this.networkRegForm = this.fb.group({
       id:[0],
-      networkName : [''],
-      yojanaId: []
+      networkName : ['', Validators.required],
+      yojanaId: +['', Validators.required]
     })
   }
 
   getAllYojana() {
-      this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=0', false, false, false, 'valvemgt');
+      this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: (res: any) => {
           if (res.statusCode == '200') {
@@ -65,7 +68,7 @@ export class NetworkMasterComponent implements OnInit {
       next: (res: any) => {
         this.spinner.hide();
         if (res.statusCode == "200") {
-          this.allNetworkArray = res.responseData;
+          this.allNetworkArray = res.responseData.responseData1;
         } else {
           this.spinner.hide();
           this.allNetworkArray = [];
@@ -143,7 +146,7 @@ deleteNetworkMaster(){
     modifiedBy: this.localStorage.userId(),
     modifiedDate: new Date()
   }
-  this.apiService.setHttp('DELETE', 'api/SegmentMaster', false, deleteObj, false, 'valvemgt');
+  this.apiService.setHttp('DELETE', 'ValveManagement/Network/DeleteNetwork', false, deleteObj, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       if (res.statusCode === '200') {
