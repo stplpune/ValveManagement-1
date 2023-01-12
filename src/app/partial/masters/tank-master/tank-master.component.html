@@ -4,8 +4,7 @@
       <div class="col-sm-4">Tank Master
       </div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-            class="fas fa-sync-alt"></i></button>
+        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Master
         </button>
@@ -34,11 +33,11 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                 data-bs-target="#AddValveModal">
+                data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                data-bs-toggle="modal"  data-bs-target="#deleteModel">
+                data-bs-toggle="modal" data-bs-target="#deleteModel">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -62,16 +61,14 @@
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Master
         </p>
-        <button type="button" class="btn-close btn-close-inverse"
-          data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form>
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
               <label class="form-label">Tank Name</label>
-              <input type="text" class="form-control" placeholder="Tank Name"
-                >
+              <input type="text" class="form-control" placeholder="Tank Name">
             </div>
             <div class="mb-2">
               <label class="form-label">Address</label>
@@ -82,27 +79,30 @@
                 </button>
               </div>
             </div>
-            <div class="mb-2">
-              <!-- <label class="form-label">Yojana</label>
-              <input type="text" class="form-control" placeholder="Yojana"> -->
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Yojana</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-
-            </div>
-            <div class="mb-2">
-              <!-- <label class="form-label">Network</label>
-              <input type="text" class="form-control" placeholder="Network"> -->
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Network</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-              <div class="invalid-feedback">
+            <div class="row">
+              <div class="col-6">
+                <div class="mb-2">
+                  <label class="form-label">Yojana</label>
+                  <select class="form-select" class="form-control" aria-label="Default select example">
+                    <option selected>Yojana</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mb-2">
+                  <label class="form-label">Network</label>
+                  <select class="form-select" class="form-control" aria-label="Default select example">
+                    <option selected>Network</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                  <div class="invalid-feedback">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -149,5 +149,3 @@
     </div>
   </div>
 </div>
-
-
