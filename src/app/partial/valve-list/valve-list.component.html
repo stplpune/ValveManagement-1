@@ -163,6 +163,48 @@
                 <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
               </div>
             </div>
+            <div class="mb-3 d-flex gap-3">
+              <label class="form-label">Is Preceding Valve Radio:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                 Yes
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                 No
+                </label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Valve List</label>
+              <select class="form-control" aria-label="Default select example">
+                <option selected>District</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="" class="form-label">Yojana Id</label>
+              <select class="form-control" aria-label="Default select example">
+                <option selected>Yojana</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="" class="form-label">Network Id</label>
+              <select class="form-control" aria-label="Default select example">
+                <option selected>Yojana</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
             <div class="mb-0">
               <label class="form-label">Description</label>
               <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
