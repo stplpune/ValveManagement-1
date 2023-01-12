@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="card-body">
-       
+
         <table class="table align-middle dashboard-table">
             <thead>
                 <tr>
@@ -50,17 +50,25 @@
 <div class="modal fade " id="SegmentModal" tabindex="-1" aria-labelledby="SegmentModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="SegmentModal">Map</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="form-container d-flex gap-2">
+                <div>
+                    <agm-map [latitude]="lat" [longitude]="lng">
+                        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                    </agm-map>
+                </div>
+
+                <hr>
+
+                <div class="form-container d-flex gap-2 float-end">
                     <div class="mb-3">
                         <input type="text" class="form-control" placeholder="Segment Name">
                     </div>
                     <div class="mb-0">
-                        <button class="btn btn-main">Add</button>
+                        <button class="btn btn-main">Save</button>
                     </div>
                 </div>
                 Map
@@ -74,8 +82,8 @@
     aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-transparent border-bottom-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-main border-bottom-0">
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>

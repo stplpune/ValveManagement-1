@@ -48,14 +48,14 @@
 
 <!-- Network Modal -->
 <div class="modal fade " id="NetworkModal" tabindex="-1" aria-labelledby="NetworkModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered  modal-xl">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="form-container d-flex gap-2">
+                <div class="form-container ">
                     <div class="mb-3">
                         <input type="text" class="form-control" placeholder="Network Name">
                     </div>
@@ -67,8 +67,9 @@
                             <option value="3">Three</option>
                           </select>
                     </div>
-                    <div class="mb-0">
-                        <button class="btn btn-main">Save</button>
+                    <div class="d-flex justify-content-end gap-2 mb-0">
+                        <button class="btn btn-light-main">Clear</button>
+                        <button class="btn btn-main">Submit</button>
                     </div>
                 </div>
             </div>
@@ -82,8 +83,8 @@
     aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-transparent border-bottom-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-main border-bottom-0">
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>
