@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="card-body">
-       
+
         <table class="table align-middle dashboard-table">
             <thead>
                 <tr>
@@ -55,12 +55,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="form-container d-flex gap-2">
+                <div>
+                    <agm-map [latitude]="lat" [longitude]="lng">
+                        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                    </agm-map>
+                </div>
+
+                <hr>
+
+                <div class="form-container d-flex gap-2 float-end">
                     <div class="mb-3">
                         <input type="text" class="form-control" placeholder="Segment Name">
                     </div>
                     <div class="mb-0">
-                        <button class="btn btn-main">Add</button>
+                        <button class="btn btn-main">Save</button>
                     </div>
                 </div>
                 Map

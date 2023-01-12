@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SegmentMasterComponent implements OnInit {
 
+  lat: any = 19.7515;
+  lng: any = 75.7139;
+
   constructor() { }
 
   ngOnInit(): void {
