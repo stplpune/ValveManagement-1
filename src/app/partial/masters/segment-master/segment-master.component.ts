@@ -27,6 +27,7 @@ export class SegmentMasterComponent implements OnInit {
   lng: any = 75.7139;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   deleteSegmentId: any;
+  @ViewChild('addSegmentModel') addSegmentModel: any;
 
   constructor(
     private mapsAPILoader: MapsAPILoader,
@@ -34,7 +35,7 @@ export class SegmentMasterComponent implements OnInit {
     public apiService: ApiService,
     private toastrService: ToastrService,
     private errorSerivce: ErrorsService,
-    private fb: FormBuilder,
+    // private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     private localStorage: LocalstorageService
   ) { }
@@ -55,7 +56,7 @@ export class SegmentMasterComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.segmentMasterArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
       error: (error: any) => {
@@ -63,6 +64,49 @@ export class SegmentMasterComponent implements OnInit {
       },
     });
   }
+
+  onSubmit() {
+      let obj = {
+        "id": 0,
+        "segmentName": "string",
+        "startPoints": "string",
+        "endPoints": "string",
+        "midpoints": "string",
+        "createdBy": this.localStorage.userId(),
+        "createdDate": new Date(),
+        "modifiedby": this.localStorage.userId(),
+        "modifiedDate": new Date(),
+        "isDeleted": false,
+        "timestamp": new Date(),
+        "yojanaId": this.getAllLocalStorageData.yojanaId,
+        "networkId": this.getAllLocalStorageData.networkId
+      }
+
+      this.spinner.show();
+      
+      let id:any;
+      let urlType = id == 0 ? 'POST' : 'PUT';
+      let UrlName = id == 0 ? 'api/SegmentMaster/Add' : 'api/SegmentMaster/Update';
+      this.apiService.setHttp(urlType,UrlName,false,JSON.stringify(obj),false,'valvemgt');
+      this.apiService.getHttp().subscribe(
+        (res: any) => {
+          if (res.statusCode == '200') {
+            this.spinner.hide();
+            this.toastrService.success(res.statusMessage);
+            this.addSegmentModel.nativeElement.click();
+            this.getAllSegmentMaster();
+          } else {
+            this.toastrService.error(res.statusMessage);
+            this.spinner.hide();
+          }
+        },
+        (error: any) => {
+          this.errorSerivce.handelError(error.status);
+          this.spinner.hide();
+        }
+      );
+  }
+
 
   deleteConformation(id: any) {
     this.deleteSegmentId = id;
