@@ -24,18 +24,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Network Data</td>
+                <tr *ngFor="let showAllNetwork of allNetworkArray; let i = index">
+                    <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                    <td>{{showAllNetwork?.networkName}}</td>
                     <td>Vocalbulary Data</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
+                            <button type="button" (click)="onEdit(showAllNetwork)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
                                 data-bs-toggle="modal" data-bs-target="#NetworkModal">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                                data-bs-toggle="modal" data-bs-target="#deleteModel">
+                                data-bs-toggle="modal" (click)="deleteConformation(showAllNetwork.id)" data-bs-target="#deleteModel">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -50,29 +50,30 @@
 <div class="modal fade " id="NetworkModal" tabindex="-1" aria-labelledby="NetworkModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-main">
-                <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-container ">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Network Name">
-                    </div>
-                    <div class="mb-3">
-                        <select class="form-control" aria-label="Default select example">
-                            <option selected>Yojana</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                    </div>
-                    <div class="d-flex justify-content-end gap-2 mb-0">
-                        <button class="btn btn-light-main">Clear</button>
-                        <button class="btn btn-main">Submit</button>
+            <form [formGroup]="networkRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
+                <div class="modal-header bg-main">
+                    <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
+                    <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-container ">
+                        <div class="mb-3">
+                            <label class="form-label">Network Name</label>
+                            <input type="text" class="form-control" formControlName="networkName" placeholder="Network Name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select Yojana</label>
+                            <select class="form-control" formControlName="yojanaId" aria-label="Default select example">
+                                <option *ngFor="let showYojanaDropdown of allYojanaArray" [value]="showYojanaDropdown.yojanaId">{{showYojanaDropdown.yojanaName}}</option>
+                              </select>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mb-0">
+                            <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
+                            <button type="submit" class="btn btn-main">Submit</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
