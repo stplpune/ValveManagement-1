@@ -24,11 +24,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
-          <td>4</td>
+        <tr *ngFor="let data of responseArray;let i=index">
+          <td>{{i+1}}</td>
+          <td>{{data.tankName}}</td>
+          <td>{{data.yojanId}}</td>
+          <td>{{data.networkId}}</td>
           <td>5</td>
           <td>
             <div class="btn-group">
@@ -63,17 +63,17 @@
         </p>
         <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form>
+      <form [formGroup]="tankForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
               <label class="form-label">Tank Name</label>
-              <input type="text" class="form-control" placeholder="Tank Name">
+              <input type="text" class="form-control" placeholder="Tank Name" formControlName="tankName">
             </div>
             <div class="mb-2">
               <label class="form-label">Address</label>
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="Address">
+                <input type="text" class="form-control" placeholder="Address" formControlName="address"> 
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
@@ -83,22 +83,18 @@
               <div class="col-6">
                 <div class="mb-2">
                   <label class="form-label">Yojana</label>
-                  <select class="form-select" class="form-control" aria-label="Default select example">
-                    <option selected>Yojana</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                  <select class="form-select" class="form-control" aria-label="Default select example" (selectionchange)="getNetwork()" formControlName="yojanaId">
+                    <!-- <option selected>Yojana</option> -->
+                    <option *ngFor="let yoj of yojanaArray" [value]="yoj.yojanaId">{{yoj.yojanaName}}</option>
                   </select>
                 </div>
               </div>
               <div class="col-6">
                 <div class="mb-2">
                   <label class="form-label">Network</label>
-                  <select class="form-select" class="form-control" aria-label="Default select example">
-                    <option selected>Network</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                  <select class="form-select" class="form-control" aria-label="Default select example" formControlName="networkId">
+                    <!-- <option selected>Network</option> -->
+                    <option *ngFor="let net of networkArray" [value]="net.networkId">{{net.networkName}}</option>
                   </select>
                   <div class="invalid-feedback">
                   </div>
@@ -109,7 +105,7 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center">Submit</button>
+              <button type="submit" class="btn btn-main text-center">{{this.editFlag ? 'Update' : 'Submit'}}</button>
             </div>
           </div>
         </div>
