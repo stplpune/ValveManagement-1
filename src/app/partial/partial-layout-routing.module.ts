@@ -32,6 +32,10 @@ const routes: Routes = [
     data: { breadcrumb: [{ title: 'Yojana Master', active: true }] }
   },
   {
+    path: 'valve-connection', loadChildren: () => import('../partial/masters/valve-connection/valve-connection.module').then(m => m.ValveConnectionModule),
+    data: { breadcrumb: [{ title: 'Valve Connection', active: true }] }
+  },
+  {
     path: 'valve-segment-assignment', loadChildren: () => import('../partial/masters/valve-segment-assignment/valve-segment-assignment.module').then(m => m.ValveSegmentAssignmentModule),
     data: { breadcrumb: [{ title: 'Valve/Tank Segment Assignment', active: true }] }
   },

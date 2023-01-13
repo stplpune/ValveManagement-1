@@ -1,0 +1,158 @@
+<div class="card plain-card">
+    <div class="card-header">
+        <div class="row justify-content-between align-items-center">
+            <!-- <div class="col-sm-6">
+                <div class="d-flex justify-content-between">
+                </div>
+                Valve Connection
+            </div>
+            <div class="text-end">
+                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+                        class="fas fa-sync-alt"></i></button>
+
+            </div> -->
+            <div class="col-sm-6">
+                <div class="d-flex justify-content-between">
+                    Valve Connection
+                    <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+                        class="fas fa-sync-alt"></i></button>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                Valve Remark
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-container">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Valve</label>
+                        <select class="form-control" aria-label="Default select example">
+                            <option selected>Yojana</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Person Name</label>
+                        <input type="text" class="form-control" placeholder="Person Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" placeholder="Mobile Number">
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Number of Connection</label>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control" placeholder="Person Name">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addconnectionmodal">
+                                <i class="fa-solid fa-plus me-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="floatingTextarea" class="form-label">Comments</label>
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <table class="table align-middle dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Person Name</th>
+                            <th>Mobile Number</th>
+                            <th>Remark</th>
+                            <th>Total Connection</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Yojanan Name</td>
+                            <td>866926467</td>
+                            <td>Some Reamrk</td>
+                            <td>
+                                <button type="button" class="btn" data-bs-toggle="modal"
+                                    data-bs-target="#totalconnectionmodal">
+                                    2
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Total Connection Modal -->
+<div class="modal fade" id="totalconnectionmodal" tabindex="-1" aria-labelledby="totalconnectionmodalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-main">
+                <h1 class="modal-title fs-5" id="totalconnectionmodalLabel">Modal title</h1>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table align-middle dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Connection No.</th>
+                            <th>Pipe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2.5</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>2.3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Add Connection Modal -->
+<div class="modal fade" id="addconnectionmodal" tabindex="-1" aria-labelledby="addconnectionmodalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-main">
+                <h1 class="modal-title fs-5" id="addconnectionmodalLabel">Pipe Diameter</h1>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="" class="form-label">Pipe Diameter</label>
+                    <select class="form-control" aria-label="Default select example">
+                        <option selected>Pipe Diameter</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-light-main">Clear</button>
+                    <button type="submit" class="btn btn-main">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

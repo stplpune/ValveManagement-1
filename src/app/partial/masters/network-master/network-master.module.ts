@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { NetworkMasterRoutingModule } from './network-master-routing.module';
 import { NetworkMasterComponent } from './network-master.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,9 @@ import { NetworkMasterComponent } from './network-master.component';
   ],
   imports: [
     CommonModule,
-    NetworkMasterRoutingModule
+    NetworkMasterRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class NetworkMasterModule { }
