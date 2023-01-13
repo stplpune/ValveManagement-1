@@ -24,8 +24,9 @@
             </thead>
             <tbody>
                 <tr
-                    *ngFor="let yojana of yojanaListArray | paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount}; let i=index">
-                    <td>{{i+1}}</td>
+                    *ngFor="let yojana of yojanaListArray | paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount}; let i=index"
+                    [class.active]="yojana.id == highlitedRow">
+                    <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{yojana.yojanaName}}</td>
                     <td>
                         <div class="btn-group">
@@ -55,7 +56,7 @@
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="YojanaModal">Yojana Master</h1>
                 <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
-                    #yojanaModal (click)="clearForm()"></button>
+                    #yojanaModal (click)="clearForm();highlitedRow=0;"></button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="yojanaForm">
@@ -125,7 +126,7 @@
         <div class="modal-content">
             <div class="modal-header bg-main border-bottom-0">
                 <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                    aria-label="Close" (click)="highlitedRow=0;"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>

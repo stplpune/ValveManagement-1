@@ -25,10 +25,9 @@ export class YojanaMasterComponent implements OnInit {
   villageListArray = new Array();
   editFlag: boolean = false;
   updatedObj: any;
-  yojanaId: any;
   data: any;
-  btnText: any;
   onSelFlag:boolean = true;
+  highlitedRow:any;
 
   @ViewChild('yojanaModal') yojanaModal: any;
   constructor(
@@ -84,7 +83,6 @@ export class YojanaMasterComponent implements OnInit {
   }
 
   getTaluka(districtId: number) {
-    debugger;
     this.apiService.setHttp('get','api/MasterDropdown/GetAllTaluka?DistrictId=' + districtId, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -155,6 +153,7 @@ export class YojanaMasterComponent implements OnInit {
           this.yojanaListArray = res.responseData.responseData1;
           this.listCount = res.responseData.responseData2?.totalCount;
           //console.log(this.userListArray);
+          this.highlitedRow=0;
         } else {
           this.spinner.hide();
           this.yojanaListArray = [];
@@ -221,6 +220,7 @@ export class YojanaMasterComponent implements OnInit {
   updateYojana(yojana: any) {
     this.editFlag = true;
     this.updatedObj = yojana
+    this.highlitedRow=yojana.id;
     this.yojanaForm.patchValue({
       yojanaName: this.updatedObj.yojanaName,
     })
@@ -229,6 +229,7 @@ export class YojanaMasterComponent implements OnInit {
 
   deleteConformation(ele: number) {
     this.data = ele;
+    this.highlitedRow = this.data.id;
   }
 
   deleteYojana() {
