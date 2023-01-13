@@ -39,6 +39,10 @@ const routes: Routes = [
     path: 'valve-segment-assignment', loadChildren: () => import('../partial/masters/valve-segment-assignment/valve-segment-assignment.module').then(m => m.ValveSegmentAssignmentModule),
     data: { breadcrumb: [{ title: 'Valve/Tank Segment Assignment', active: true }] }
   },
+  { 
+    path: 'tank-segment-assignment', loadChildren: () => import('../partial/masters/tank-segment-assignment/tank-segment-assignment.module').then(m => m.TankSegmentAssignmentModule),
+    data: { breadcrumb: [{ title: 'Valve/Tank Segment Assignment', active: true }] }
+  },
   {
     path: 'tank-sensor-device-master', loadChildren: () => import('../partial/masters/tank-sensor-device-master/tank-sensor-device-master.module').then(m => m.TankSensorDeviceMasterModule),
     data: { breadcrumb: [{ title: 'Tank Sensor Device Master', active: true }] }

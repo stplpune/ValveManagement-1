@@ -18,15 +18,16 @@ export class YojanaMasterComponent implements OnInit {
   pageNumber: number = 1;
   pageSize: number = 10;
   listCount!: number;
-  yojanaListArray=new Array();
+  yojanaListArray = new Array();
   submitted = false;
   districtListArray = new Array();
   talukaListArray = new Array();
   villageListArray = new Array();
-  editFlag:boolean = false;
-  updatedObj:any;
-  yojanaId:any;
-  data:any;
+  editFlag: boolean = false;
+  updatedObj: any;
+  data: any;
+  onSelFlag:boolean = true;
+  highlitedRow:any;
 
   @ViewChild('yojanaModal') yojanaModal: any;
   constructor(
@@ -59,20 +60,15 @@ export class YojanaMasterComponent implements OnInit {
   }
 
   getAllDistrict() {
-    this.districtListArray = [];
-    this.apiService.setHttp(
-      'get',
-      'api/MasterDropdown/GetAllDistrict',
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('get','api/MasterDropdown/GetAllDistrict', false, false, false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.districtListArray = res.responseData;
-          this.editFlag ? (this.yojanaForm.controls['districtId'].setValue(this.updatedObj.districtId), this.getTaluka(this.updatedObj.districtId)) : this.editFlag=false;
+          if (this.editFlag && this.onSelFlag) {
+            this.yojanaForm.controls['districtId'].setValue(this.updatedObj.districtId);
+            this.getTaluka(this.updatedObj.districtId);
+          }
         } else {
           this.districtListArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -87,22 +83,16 @@ export class YojanaMasterComponent implements OnInit {
   }
 
   getTaluka(districtId: number) {
-    this.talukaListArray = [];
-    this.apiService.setHttp(
-      'get',
-      'api/MasterDropdown/GetAllTaluka?DistrictId=' + districtId,
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('get','api/MasterDropdown/GetAllTaluka?DistrictId=' + districtId, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.talukaListArray = res.responseData;
-          this.editFlag ? (this.yojanaForm.controls['talukaId'].setValue(this.updatedObj.talukaId), this.getVillage(this.updatedObj.districtId,this.updatedObj.talukaId)) : '';
+          if (this.editFlag && this.onSelFlag) {
+            this.yojanaForm.controls['talukaId'].setValue(this.updatedObj.talukaId);
+            this.getVillage(this.updatedObj.talukaId);
+          }
         } else {
-
           this.talukaListArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
@@ -115,22 +105,15 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
-  getVillage(districtId:number,talukaId: number) {
-    console.log(districtId,talukaId);
-    this.villageListArray = [];
-    this.apiService.setHttp(
-      'get',
-      'api/MasterDropdown/GetAllVillage?DistrictId='+ districtId + '&TalukaId=' + talukaId,
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+  getVillage(talukaId: number) {
+    this.apiService.setHttp('get','api/MasterDropdown/GetAllVillage?DistrictId=0&TalukaId=' + talukaId, false,false,false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.villageListArray = res.responseData;
-          this.editFlag ? (this.yojanaForm.controls['villageId'].setValue(this.updatedObj.villageId)) : '';
+          if (this.editFlag && this.onSelFlag) {
+            this.yojanaForm.controls['villageId'].setValue(this.updatedObj.villageId);
+          }
         } else {
           this.villageListArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -145,42 +128,32 @@ export class YojanaMasterComponent implements OnInit {
 
   }
 
-  clearDropdown(flag:any){
-    //  this.editFlag = false;
-    switch(flag){
-      case 'district': this.yojanaForm.controls['talukaId'].setValue('');
-                        this.yojanaForm.controls['villageId'].setValue('');
-                        this.talukaListArray=[];
-                        this.villageListArray=[];
-                        break;
+  clearDropdown(flag: any) {
+    debugger;
+    switch (flag) {
+      case 'district':
+        this.yojanaForm.controls['talukaId'].setValue('');
+        this.yojanaForm.controls['villageId'].setValue('');
+        break;
       case 'taluka':
-                        this.yojanaForm.controls['villageId'].setValue('');
-                        this.villageListArray=[];
-                        break;
+        this.yojanaForm.controls['villageId'].setValue('');
+        break;
     }
-    
-    
   }
 
 
   getAllYojanaList() {
     this.spinner.show();
     let obj = 'pageno=' + this.pageNumber + '&pagesize=' + this.pageSize;
-    this.apiService.setHttp(
-      'get',
-      'ValveManagement/Yojana-Master/GetAllYojana?'+ obj,
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + obj, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode =='200') {
+        if (res.statusCode == '200') {
           this.spinner.hide();
           this.yojanaListArray = res.responseData.responseData1;
           this.listCount = res.responseData.responseData2?.totalCount;
           //console.log(this.userListArray);
+          this.highlitedRow=0;
         } else {
           this.spinner.hide();
           this.yojanaListArray = [];
@@ -206,73 +179,66 @@ export class YojanaMasterComponent implements OnInit {
       return;
     } else {
       let formData = this.yojanaForm.value;
-      console.log(formData);
       let urlType = this.editFlag ? 'PUT' : 'POST'
       let url = this.editFlag ? 'ValveManagement/Yojana-Master/UpdateYojana' : 'ValveManagement/Yojana-Master/AddYojana'
       let obj = {
-      "id": this.editFlag ? this.updatedObj.id : 0,
-      "yojanaName": formData.yojanaName,
-      "districtId": formData.districtId,
-      "talukaId": formData.talukaId,
-      "villageId":formData.villageId,
-      "isDeleted": false,
-      "createdBy": this.localStorage.userId(),
-      "createdDate": new Date(),
-      "modifiedBy": this.localStorage.userId(),
-      "modifiedDate": new Date(),
-      "timestamp": new Date()
-    }
+        "id": this.editFlag ? this.updatedObj.id : 0,
+        "yojanaName": formData.yojanaName,
+        "districtId": formData.districtId,
+        "talukaId": formData.talukaId,
+        "villageId": formData.villageId,
+        "isDeleted": false,
+        "createdBy": this.localStorage.userId(),
+        "createdDate": new Date(),
+        "modifiedBy": this.localStorage.userId(),
+        "modifiedDate": new Date(),
+        "timestamp": new Date()
+      }
 
-    this.apiService.setHttp(
-      urlType,
-      url,
-      false,
-      obj,
-      false,
-      'valvemgt'
-    );
-    this.apiService.getHttp().subscribe(
-      (res: any) => {
-        if (res.statusCode == '200') {
-          this.spinner.hide();
-          this.toastrService.success(res.statusMessage);
-          this.yojanaModal.nativeElement.click();
-          this.getAllYojanaList();
-          this.clearForm();
-        } else {
-          this.toastrService.error(res.statusMessage);
+      this.apiService.setHttp(urlType,url,false,obj, false,'valvemgt');
+      this.apiService.getHttp().subscribe(
+        (res: any) => {
+          if (res.statusCode == '200') {
+            this.onSelFlag = true;
+            this.spinner.hide();
+            this.toastrService.success(res.statusMessage);
+            this.yojanaModal.nativeElement.click();
+            this.getAllYojanaList();
+          } else {
+            this.toastrService.error(res.statusMessage);
+            this.spinner.hide();
+          }
+        },
+        (error: any) => {
+          this.errorSerivce.handelError(error.status);
           this.spinner.hide();
         }
-      },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-        this.spinner.hide();
-      }
-    );
-   }
+      );
+    }
   }
 
-  updateYojana(yojana:any){
-    console.log('yojana:',yojana)
+  updateYojana(yojana: any) {
     this.editFlag = true;
     this.updatedObj = yojana
+    this.highlitedRow=yojana.id;
     this.yojanaForm.patchValue({
-      yojanaName:this.updatedObj.yojanaName,
+      yojanaName: this.updatedObj.yojanaName,
     })
-     this.getAllDistrict();
+    this.getAllDistrict();
   }
 
   deleteConformation(ele: number) {
     this.data = ele;
+    this.highlitedRow = this.data.id;
   }
 
-  deleteYojana(){
+  deleteYojana() {
     let obj = {
       "id": this.data.id,
       "yojanaName": '',
       "districtId": 0,
       "talukaId": 0,
-      "villageId":0,
+      "villageId": 0,
       "isDeleted": true,
       "createdBy": this.localStorage.userId(),
       "createdDate": new Date(),
@@ -281,20 +247,12 @@ export class YojanaMasterComponent implements OnInit {
       "timestamp": new Date()
     }
 
-    this.apiService.setHttp(
-      'DELETE',
-      'ValveManagement/Yojana-Master/DeleteYojana',
-      false,
-      obj,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('DELETE','ValveManagement/Yojana-Master/DeleteYojana',false,obj,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.toastrService.success(res.statusMessage);
           this.getAllYojanaList();
-          this.clearForm();
         } else {
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
@@ -307,16 +265,13 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
-  refreshData()
-  {
+  refreshData() {
     this.getAllYojanaList();
   }
 
   clearForm() {
     this.submitted = false;
-    this.editFlag=false;
+    this.editFlag = false;
     this.defaultForm();
-    this.talukaListArray=[];
-    this.villageListArray=[];
   }
 }
