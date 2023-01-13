@@ -199,10 +199,6 @@ onMapReady(map:any) {
   });
 })
 
-
-
-
-
   google.maps.event.addListener(drawingManager,'polylinecomplete',(e:any) => {
 
     this.setSelection(e);
@@ -271,18 +267,10 @@ getCenterLanLongFromPolyline(polyline: any) {
 
 clearSelection(isAllClear: any) {
   
-  // this.newRecord.polyline && (this.newRecord.polyline.setEditable(false), this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
+  this.newRecord.polyline && (this.newRecord.polyline.setEditable(false), this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
 
-  // this.centerMarkerLatLng = "";
-  // this.centerMarkerRadius = "";
-  // this.newRecord.geofenceType = "";
-  // this.newRecord.polygontext = "";
-  // this.newRecord.radius = 0;
-  // if (this.selectedRecord && !isAllClear) {
-  //   if (this.selectedRecord.geofenceData) {
-
-  //   }
-  // }
+  this.centerMarkerLatLng = "";
+  this.newRecord.polylinetext = "";
 }
 
 deleteSelectedShape() {
@@ -291,6 +279,7 @@ deleteSelectedShape() {
 
 
 removeShape() {
+  this.isShapeDrawn = false;
   this.clearSelection(false);
 }
 setZoomLevel(radius: number) {
