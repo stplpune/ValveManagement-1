@@ -46,7 +46,11 @@
         <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length == 0">
             <div class="alert alert-danger text-center py-2">No Data Found..!
             </div>
-          </div>
+        </div>
+        <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length != 0">
+            <pagination-controls previousLabel="" nextLabel=""
+                (pageChange)="onClickPagintion(pagesize = $event)"> </pagination-controls>
+        </div>
     </div>
 </div>
 
@@ -60,9 +64,19 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div>
-                    <agm-map [latitude]="lat" [longitude]="lng">
-                        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                <div class="mapsearch my-3">
+                    <div class="form-container">
+                    <input class="form-control" type="text" placeholder="Search Location"
+                        (keydown.enter)="$event.preventDefault()" placeholder="Search Location" autocorrect="off"
+                        autocapitalize="off" spellcheck="off" type="text" #search>
+                    </div>
+                </div>
+
+                <div class="gmap_canvas position-relative">
+                    <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape" class="closebtn">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    <agm-map [latitude]="23.7541318" [zoom]="6" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
                     </agm-map>
                 </div>
                 <hr>

@@ -7,7 +7,6 @@ import { AgmCoreModule } from '@agm/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 
-
 @NgModule({
   declarations: [
     SegmentMasterComponent
@@ -20,7 +19,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
       language: 'en',
-      libraries: ['places', 'geometry'],
+      libraries: ['places', 'drawing', 'geometry'],
     }),
   ]
 })
