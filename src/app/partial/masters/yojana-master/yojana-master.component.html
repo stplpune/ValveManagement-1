@@ -69,13 +69,19 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">District <span class="text-danger">*</span></label>
-                            <select class="form-control" formControlName="districtId"
+                            <!-- <select class="form-control" formControlName="districtId"
                                 [ngClass]="{ 'is-invalid': submitted && f.districtId.errors }"
                               (change)="clearDropdown('district');getTaluka(yojanaForm.value.districtId)">
                                 <option [value]="0" disabled>Select District</option>
                                 <option *ngFor="let district of districtListArray" [value]="district.id">
                                     {{district.districtName}}</option>
-                            </select>
+                            </select> -->
+                            <ngx-select [allowClear]="true" [items]="districtListArray" formControlName="districtId"
+                             placeholder="Select District" optionValueField="id"
+                             (select)="clearDropdown('district');getTaluka(yojanaForm.value.districtId)"
+                            optionTextField="districtName" (remove)="clearDropdown('district')">
+                        </ngx-select>
+
                             <div *ngIf="submitted && f.districtId.errors" class="invalid-feedback">
                                 <div class="text-danger" *ngIf="f.districtId.errors?.required">District Is Required</div>
                             </div>

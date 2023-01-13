@@ -23,6 +23,7 @@
     "@angular/router": "~13.0.0",
     "@types/googlemaps": "^3.43.3",
     "ngx-pagination": "^6.0.3",
+    "ngx-select-ex": "^6.1.1",
     "ngx-spinner": "^13.1.1",
     "ngx-toastr": "^14.3.0",
     "rxjs": "~7.4.0",

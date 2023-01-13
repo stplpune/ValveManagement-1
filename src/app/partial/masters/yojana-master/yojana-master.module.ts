@@ -5,7 +5,7 @@ import { YojanaMasterRoutingModule } from './yojana-master-routing.module';
 import { YojanaMasterComponent } from './yojana-master.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CommonModule,
     YojanaMasterRoutingModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgxSelectModule
   ]
 })
 export class YojanaMasterModule { }

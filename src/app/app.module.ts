@@ -13,6 +13,7 @@ import { TitleCasePipe } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AgmDrawingModule } from '@agm/drawing';
 import { AgmCoreModule } from '@agm/core';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AgmCoreModule } from '@agm/core';
     AppRoutingModule,
     BrowserAnimationsModule,
     NgxPaginationModule,
+    NgxSelectModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       closeButton: true,
