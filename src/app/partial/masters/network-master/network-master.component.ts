@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -6,6 +6,11 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+export interface PagingConfig {
+  currentPage: number;
+  itemsPerPage: number;
+  totalItems: number;
+}
 
 @Component({
   selector: 'app-network-master',
@@ -17,12 +22,18 @@ export class NetworkMasterComponent implements OnInit {
   networkRegForm!:FormGroup;
   allNetworkArray = new Array();
   allYojanaArray = new Array();
-  pageNumber: number = 1;
-  pagesize: number = 10;
-  totalRows: any;
+  currentPage:number  = 1;
+  itemsPerPage: number = 5;
+  totalItems: number = 0;
+  // pageNumber: number = 1;
+  // pagesize: number = 10;
+  // totalPages!:number;
+  // totalRows: any;
   editFlag:boolean = false;
   deleteSegmentId: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  @ViewChild('closebutton') closebutton:any;
+  pagingConfig: PagingConfig = {} as PagingConfig;
   get f(){
     return this.networkRegForm.controls;
   }
@@ -32,7 +43,13 @@ export class NetworkMasterComponent implements OnInit {
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
     private toastrService: ToastrService,
-    private errorSerivce: ErrorsService,) { }
+    private errorSerivce: ErrorsService,) {
+      this.pagingConfig = {
+        itemsPerPage: this.itemsPerPage,
+        currentPage: this.currentPage,
+        totalItems: this.totalItems
+      }
+     }
 
   ngOnInit(): void {
     this.controlForm();
@@ -62,13 +79,16 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   getAllNetworkTableData() {
+    // ValveManagement/Network/GetAllNetwork?YojanaId=1&pageno=1&pagesize=10
     this.spinner.show();
-    this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&pageno=' + this.currentPage + '&pagesize=' + this.itemsPerPage, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         this.spinner.hide();
         if (res.statusCode == "200") {
           this.allNetworkArray = res.responseData.responseData1;
+          // this.totalPages = res.responseData.responseData2.totalPages;
+          this.pagingConfig.totalItems = res.responseData.responseData2.totalCount;
         } else {
           this.spinner.hide();
           this.allNetworkArray = [];
@@ -105,6 +125,7 @@ export class NetworkMasterComponent implements OnInit {
           this.spinner.hide();
           this.toastrService.success(res.statusMessage);
           this.getAllNetworkTableData();
+          this.closebutton.nativeElement.click();
           this.clearForm();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -160,6 +181,14 @@ deleteNetworkMaster(){
       this.errorSerivce.handelError(error.status);
     },
   });
+}
+
+onTableDataChange(event: any) {
+  console.log(event);
+  this.pagingConfig.currentPage = event;
+  // this.getAllNetworkTableData();
+  // this.pageNumber = event;
+  // this.fetchPosts();
 }
 
 }

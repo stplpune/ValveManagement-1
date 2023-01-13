@@ -24,8 +24,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let showAllNetwork of allNetworkArray; let i = index">
-                    <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                <tr *ngFor="let showAllNetwork of allNetworkArray | paginate: pagingConfig; let i = index">
+                    <td>{{((currentPage + 1) * 10 + i + 1)-20}}</td>
                     <td>{{showAllNetwork?.networkName}}</td>
                     <td>Vocalbulary Data</td>
                     <td>
@@ -42,7 +42,13 @@
                     </td>
                 </tr>
             </tbody>
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
         </table>
+        <div class="mt-2 text-end" *ngIf="allNetworkArray?.length == 0">
+            <div class="alert alert-danger text-center py-2">No Data Found..!
+            </div>
+          </div>
     </div>
 </div>
 
@@ -53,7 +59,7 @@
             <form [formGroup]="networkRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
                 <div class="modal-header bg-main">
                     <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
-                    <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button"  #closebutton class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-container ">
