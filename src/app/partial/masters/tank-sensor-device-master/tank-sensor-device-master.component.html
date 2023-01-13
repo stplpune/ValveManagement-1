@@ -4,10 +4,10 @@
       <div class="col-sm-4">Tank Sensor Device Master
       </div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-            class="fas fa-sync-alt"></i></button>
+        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Sensor Device Master
+          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Sensor Device
+          Master
         </button>
       </div>
     </div>
@@ -19,32 +19,32 @@
           <th>Sr. No.</th>
           <th>Deivce Id</th>
           <th>Deivce Name</th>
-          <th>SIM No</th>
+          <!-- <th>SIM No</th> -->
           <th>Description</th>
           <th>Tank</th>
-          <th>Yojana</th>
-          <th>Network</th>
+          <!-- <th>Yojana</th> -->
+          <!-- <th>Network</th> -->
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let allSensorDeviceInfo of allSensorDeviceArray">
           <td>1</td>
-          <td>2</td>
-          <td>Mobile</td>
-          <td>Jio</td>
-          <td>Mobile Paradise in Bezonbagh</td>
-          <td>Tank</td>
-          <td>MObile Yojana</td>
-          <td>network</td>
+          <td>{{allSensorDeviceInfo.deviceId}}</td>
+          <td>{{allSensorDeviceInfo.deviceName}}</td>
+          <!-- <td>{{allSensorDeviceInfo.simId}}</td> -->
+          <td>{{allSensorDeviceInfo.deviceDescription}}</td>
+          <td>{{allSensorDeviceInfo.tankName}}</td>
+          <!-- <td>{{allSensorDeviceInfo.yojanaId}}</td> -->
+          <!-- <td>{{allSensorDeviceInfo.networkId}}</td> -->
           <td>
             <div class="btn-group">
-              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                 data-bs-target="#AddValveModal">
+              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" (click)="onEdit(allSensorDeviceInfo)" title="Edit Valve" data-bs-toggle="modal"
+                data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                data-bs-toggle="modal"  data-bs-target="#deleteModel">
+                data-bs-toggle="modal" data-bs-target="#deleteModel">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -67,70 +67,60 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Sensor Device Master</p>
-        <button type="button" class="btn-close btn-close-inverse"
-          data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form>
+      <form [formGroup]="tankSensorDeviceFrm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-3">
               <label class="form-label">Device Id</label>
-              <input type="text" class="form-control" placeholder="Deivce Id"
-                >
+              <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id">
             </div>
             <div class="mb-3">
               <label class="form-label">Device Name</label>
-              <input type="text" class="form-control" placeholder="Device Name">
+              <input type="text" class="form-control" formControlName="deviceName" placeholder="Device Name">
             </div>
             <div class="mb-3">
               <label class="form-label">SIM No</label>
-              <select class="form-select" class="form-control" aria-label="Default select example" >
-                <option value="0">Select Sim</option>
-                <option *ngFor="let simArray of getAllSimArray">{{simArray.simNo}}</option>
-              </select>
+              <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId" placeholder="Select Sim Number"
+                optionValueField="id" optionTextField="simNo" (remove)="clearDropdown('simNo')">
+              </ngx-select>
             </div>
             <div class="mb-3">
               <label class="form-label">Description</label>
-              <textarea class="form-control" placeholder="Description" rows="5"></textarea>
+              <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"></textarea>
               <div class="invalid-feedback">
               </div>
             </div>
             <div class="mb-3">
-            <label class="form-label">Tank</label>
-              <select class="form-select" class="form-control" aria-label="Default select example" >
-                <option value="0">Select Tank</option>
-                <option *ngFor="let tankArray of getAllTankArray">{{tankArray.tankName}}</option>
-              </select>
+              <label class="form-label">Tank</label>
+              <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId" placeholder="Select Tank" optionValueField="id"
+                optionTextField="tankName" (remove)="clearDropdown('tankName')">
+              </ngx-select>
             </div>
 
             <div class="row">
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Yojana</label>
-                    <select class="form-select" class="form-control" aria-label="Default select example" >
-                      <option selected>Yojana</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div>
+                  <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
+                    optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearDropdown('yojanaName')">
+                  </ngx-select>
+                </div>
               </div>
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Network</label>
-                   <select class="form-select" class="form-control" aria-label="Default select example" >
-                     <option selected>Network</option>
-                     <option value="1">One</option>
-                     <option value="2">Two</option>
-                     <option value="3">Three</option>
-                   </select>
-                 </div>
+                  <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" placeholder="Select Network"
+                    optionValueField="networkId" optionTextField="networkName" (remove)="clearDropdown('networkName')">
+                  </ngx-select>
+                </div>
               </div>
-              </div>
+            </div>
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
-              <button type="button" class="btn btn-light-main">Clear</button>
+              <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
               <button type="submit" class="btn btn-main text-center">Submit</button>
             </div>
           </div>
@@ -171,4 +161,3 @@
     </div>
   </div>
 </div>
-

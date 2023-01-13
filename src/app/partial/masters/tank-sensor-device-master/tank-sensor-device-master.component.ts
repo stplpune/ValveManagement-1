@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -14,10 +14,16 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class TankSensorDeviceMasterComponent implements OnInit {
 
+  editFlag:boolean = false;
+  tankSensorDeviceFrm!:FormGroup;
   getAllSimArray = new Array();
   getAllTankArray = new Array();
+  getAllYojanaArray = new Array();
+  getAllNetworkArray = new Array();
+  allSensorDeviceArray = new Array();
+  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   constructor(private apiService: ApiService,
-    // private fb: FormBuilder,
+    private fb: FormBuilder,
     private localStorage: LocalstorageService,
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
@@ -25,8 +31,25 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     private errorSerivce: ErrorsService) { }
 
   ngOnInit(): void {
+    this.controlForm();
     this.getAllSim();
     this.getAllTank();
+    this.getAllYojana();
+    this.getAllNetwork();
+    this.getAllSensorDeviceTableData();
+  }
+
+  controlForm(){
+    this.tankSensorDeviceFrm = this.fb.group({
+      id:[0],
+      deviceId: [''],
+      deviceName: [''],
+      simId: +[''],
+      deviceDescription: [''],
+      tankId: +[''],
+      yojanaId: +[''],
+      networkId: +['']
+    })
   }
 
   getAllSim() {
@@ -55,4 +78,133 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     })
   }
 
+  getAllYojana() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == '200') {
+          this.getAllYojanaArray = res.responseData;
+        }
+      },  error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    })
+}
+
+// api/MasterDropdown/GetAllNetwork?YojanaId=1
+getAllNetwork() {
+  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=1', false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode == '200') {
+        this.getAllNetworkArray = res.responseData;
+      }
+    },  error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  })
+}
+
+clearForm(formDirective?:any){
+  formDirective?.resetForm();
+  this.editFlag = false;
+  this.controlForm();
+}
+
+getAllSensorDeviceTableData() {
+  let networkIds = this.tankSensorDeviceFrm.value.networkId;
+  console.log(networkIds,'re');
+  
+  // ValveManagement/Network/GetAllNetwork?YojanaId=1&pageno=1&pagesize=10
+  // this.spinner.show();
+  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.localStorage.userId() + '&pageno=1&pagesize=10&YojanaId='+ '1' +'&NetworkId='+ '16' +'&TankId=' + '14' , false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      // this.spinner.hide();
+      if (res.statusCode == "200") {
+        this.allSensorDeviceArray = res.responseData.responseData1;
+        console.log(this.allSensorDeviceArray);
+        
+        // this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+      } else {
+        // this.spinner.hide();
+        // this.allNetworkArray = [];
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+      }
+    },
+    error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  });
+}
+
+onSubmit() {
+  console.log('submit');
+  
+  let formData = this.tankSensorDeviceFrm.value;
+  let obj = {
+    ...formData,
+    "createdBy": this.localStorage.userId(),
+    // "createdDate": new Date(),
+    // "modifiedby": this.localStorage.userId(),
+    // "modifiedDate": new Date(),
+    "tankName": "string",
+    "isDeleted": true,
+    "modifiedBy": this.localStorage.userId(),
+  }
+  this.spinner.show();
+  let id:any;
+  let urlType
+  // this.editFlag ? (urlType = 'PUT') : (urlType = 'POST');
+  let urlName 
+  // this.editFlag ? (urlName = 'ValveManagement/Network/UpdateNetwork') : (urlName = 'ValveManagement/Network/AddNetwork');
+  this.apiService.setHttp('POST','DeviceInfo/AddDeviceDetails',false,obj,false,'valvemgt');
+  this.apiService.getHttp().subscribe(
+    (res: any) => {
+      if (res.statusCode == '200') {
+        this.spinner.hide();
+        this.toastrService.success(res.statusMessage);
+        // this.getAllNetworkTableData();
+        // this.closebutton.nativeElement.click();
+        this.clearForm();
+      } else {
+        this.toastrService.error(res.statusMessage);
+        this.spinner.hide();
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+      this.spinner.hide();
+    }
+  );
+}
+
+onEdit(data?:any){
+  this.editFlag = true;
+  console.log(data,'editData');
+  
+  this.tankSensorDeviceFrm.patchValue({
+    id: data.id,
+  deviceId: data.deviceId,
+  deviceName: data.deviceName,
+  deviceDescription: data.deviceDescription,
+  simId: data.simId,
+  tankId: data.tankId,
+  tankName: data.tankName,
+  isDeleted: true,
+  createdBy: data.createdBy,
+  modifiedBy: data.modifiedBy,
+  yojanaId: data.yojanaId,
+  networkId: data.networkId
+  })
+}
+
+
+  clearDropdown(flag:any){
+    // this.editFlag = false;
+  //  switch(flag){
+  //    case 'simNo': this.networkRegForm.controls['yojanaId'].setValue('');
+  //                      break;
+  //  }
+ }
 }
