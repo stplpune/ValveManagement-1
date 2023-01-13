@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TankMasterRoutingModule } from './tank-master-routing.module';
 import { TankMasterComponent } from './tank-master.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     TankMasterRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSelectModule
   ]
 })
 export class TankMasterModule { }

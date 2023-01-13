@@ -27,10 +27,18 @@
         <tr *ngFor="let data of responseArray;let i=index">
           <td>{{i+1}}</td>
           <td>{{data.tankName}}</td>
+          <td>{{data.address}}</td>
           <td>{{data.yojanId}}</td>
           <td>{{data.networkId}}</td>
-          <td>5</td>
-          <td>
+          <td> <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
+            data-bs-toggle="modal" data-bs-target="#SegmentModal">
+            <i class="fa-regular fa-pen-to-square"></i>
+        </button>
+        <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+            data-bs-toggle="modal" data-bs-target="#deleteModel">
+            <i class="fa-solid fa-trash-can"></i>
+        </button></td>
+          <!-- <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
                 data-bs-target="#AddValveModal">
@@ -41,7 +49,7 @@
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -80,22 +88,34 @@
               </div>
             </div>
             <div class="row">
+              
+            
+
               <div class="col-6">
-                <div class="mb-2">
-                  <label class="form-label">Yojana</label>
-                  <select class="form-select" class="form-control" aria-label="Default select example" (selectionchange)="getNetwork()" formControlName="yojanaId">
-                    <!-- <option selected>Yojana</option> -->
-                    <option *ngFor="let yoj of yojanaArray" [value]="yoj.yojanaId">{{yoj.yojanaName}}</option>
-                  </select>
-                </div>
+                  <!-- <label class="form-label">Yojana</label>
+                  <ngx-select  [allowClear]="true"  [items]="yojanaArray" class="form-select" class="form-control"
+                   aria-label="Default select example"optionValueField="yojanaId" optionTextField="yojanaName"  (select)="getNetwork()" formControlName="yojanaId">
+                    <option selected>Yojana</option>
+                    <option *ngFor="let yoj of yojanaArray" value="yoj.yojanaId">{{yoj.yojanaName}}</option>
+                  </ngx-select> -->
+                  <label class="form-label">Yojana <span class="text-danger">*</span></label>
+                  <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
+                  placeholder="Select Yojana" optionValueField="yojanaId"
+                  (select)="getNetwork()"
+                 optionTextField="yojanaName">
+             </ngx-select>
               </div>
               <div class="col-6">
                 <div class="mb-2">
                   <label class="form-label">Network</label>
-                  <select class="form-select" class="form-control" aria-label="Default select example" formControlName="networkId">
-                    <!-- <option selected>Network</option> -->
-                    <option *ngFor="let net of networkArray" [value]="net.networkId">{{net.networkName}}</option>
-                  </select>
+                  <!-- <select class="form-select" class="form-control" aria-label="Default select example" formControlName="networkId">
+                    <option selected>Network</option>
+                    <option *ngFor="let net of networkArray" value="net.networkId">{{net.networkName}}</option>
+                  </select> -->
+                  <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
+                  placeholder="Select Network" optionValueField="networkId"
+                 optionTextField="networkName">
+             </ngx-select>
                   <div class="invalid-feedback">
                   </div>
                 </div>
