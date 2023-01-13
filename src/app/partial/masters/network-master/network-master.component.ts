@@ -171,4 +171,12 @@ onClickPagintion(pageNo: number) {
   this.getAllNetworkTableData();
 }
 
+clearDropdown(flag:any){
+   this.editFlag = false;
+  switch(flag){
+    case 'yojana': this.networkRegForm.controls['yojanaId'].setValue('');
+                      break;
+  }
+}
+
 }
