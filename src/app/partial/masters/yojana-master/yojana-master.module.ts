@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { YojanaMasterRoutingModule } from './yojana-master-routing.module';
 import { YojanaMasterComponent } from './yojana-master.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { YojanaMasterComponent } from './yojana-master.component';
   ],
   imports: [
     CommonModule,
-    YojanaMasterRoutingModule
+    YojanaMasterRoutingModule,
+    ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class YojanaMasterModule { }
