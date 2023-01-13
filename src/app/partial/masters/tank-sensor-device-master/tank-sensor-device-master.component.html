@@ -84,11 +84,9 @@
             </div>
             <div class="mb-3">
               <label class="form-label">SIM No</label>
-              <select class="form-select" class="form-control"  aria-label="Default select example" >
-                <option selected>SIM No</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-select" class="form-control" aria-label="Default select example" >
+                <option value="0">Select Sim</option>
+                <option *ngFor="let simArray of getAllSimArray">{{simArray.simNo}}</option>
               </select>
             </div>
             <div class="mb-3">
@@ -100,10 +98,8 @@
             <div class="mb-3">
             <label class="form-label">Tank</label>
               <select class="form-select" class="form-control" aria-label="Default select example" >
-                <option selected>Tank</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="0">Select Tank</option>
+                <option *ngFor="let tankArray of getAllTankArray">{{tankArray.tankName}}</option>
               </select>
             </div>
 
