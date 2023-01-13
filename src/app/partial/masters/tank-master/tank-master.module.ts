@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { TankMasterRoutingModule } from './tank-master-routing.module';
 import { TankMasterComponent } from './tank-master.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { TankMasterComponent } from './tank-master.component';
   ],
   imports: [
     CommonModule,
-    TankMasterRoutingModule
+    TankMasterRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class TankMasterModule { }

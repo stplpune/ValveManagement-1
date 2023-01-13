@@ -3,7 +3,7 @@
         <div class="row justify-content-between align-items-center">
             <div class="col-sm-4">Yojana Master</div>
             <div class="col-sm-4 text-end">
-                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
                         class="fas fa-sync-alt"></i></button>
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
                     data-bs-target="#YojanaModal">
@@ -23,17 +23,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Yojanan Name</td>
+                <tr *ngFor="let yojana of yojanaListArray | paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount}; let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{yojana.yojanaName}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#YojanaModal">
+                                data-bs-toggle="modal" data-bs-target="#YojanaModal" (click)="updateYojana(yojana)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                                data-bs-toggle="modal" data-bs-target="#deleteModel">
+                                data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(yojana)">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -41,6 +41,7 @@
                 </tr>
             </tbody>
         </table>
+        <pagination-controls (pageChange)="pageNumber = $event" (click)="selPagination(pageNumber)"></pagination-controls>
     </div>
 </div>
 
@@ -50,42 +51,73 @@
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="YojanaModal">Yojana Master</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close" #yojanaModal (click)="clearForm()"></button>
             </div>
             <div class="modal-body">
-                <div class="form-container">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Yoajana Name">
+                <form [formGroup]="yojanaForm">
+                    <div class="form-container">
+                        <div class="mb-3">
+                            <label class="form-label">Yojana Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="Name"
+                                formControlName="yojanaName"
+                                [ngClass]="{ 'is-invalid': submitted && f.yojanaName.errors }" />
+                            <div *ngIf="submitted && f.yojanaName.errors" class="invalid-feedback">
+                                <div class="text-danger" *ngIf="f.yojanaName.errors?.required">Name is
+                                    required.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">District <span class="text-danger">*</span></label>
+                            <!-- <select class="form-control" formControlName="districtId"
+                                [ngClass]="{ 'is-invalid': submitted && f.districtId.errors }"
+                              (change)="clearDropdown('district');getTaluka(yojanaForm.value.districtId)">
+                                <option [value]="0" disabled>Select District</option>
+                                <option *ngFor="let district of districtListArray" [value]="district.id">
+                                    {{district.districtName}}</option>
+                            </select> -->
+                            <ngx-select [allowClear]="true" [items]="districtListArray" formControlName="districtId"
+                             placeholder="Select District" optionValueField="id"
+                             (select)="clearDropdown('district');getTaluka(yojanaForm.value.districtId)"
+                            optionTextField="districtName" (remove)="clearDropdown('district')">
+                        </ngx-select>
+
+                            <div *ngIf="submitted && f.districtId.errors" class="invalid-feedback">
+                                <div class="text-danger" *ngIf="f.districtId.errors?.required">District Is Required</div>
+                            </div>
+                        </div>
+                         <div class="mb-3 ">
+                            <label class="form-label">Taluka <span class="text-danger">*</span></label>
+                            <select class="form-control" formControlName="talukaId"
+                                [ngClass]="{ 'is-invalid': submitted && f.talukaId.errors }" 
+                                (change)="clearDropdown('taluka');getVillage(yojanaForm.value.districtId,yojanaForm.value.talukaId);" >            
+                                <option  [value]="0" disabled>Select Taluka</option>
+                                 <option *ngFor="let taluka of talukaListArray" [value]="taluka.id">
+                                    {{taluka.talukaName}}</option>
+                            </select>
+                            <div *ngIf="submitted && f.talukaId.errors" class="invalid-feedback">
+                                <div class="text-danger" *ngIf="f.talukaId.errors?.required">Taluka Is Required</div>
+                            </div>
+                        </div>
+                         <div class="mb-3">
+                            <label class="form-label">Village <span class="text-danger">*</span></label>
+                            <select class="form-control" formControlName="villageId"
+                                [ngClass]="{ 'is-invalid': submitted && f.villageId.errors }"
+                                   >
+                                <option selected [value]="0" disabled>Select Village</option>
+                                 <option *ngFor="let village of villageListArray" [value]="village.id">
+                                    {{village.villageName}}</option>
+                            </select>
+                            <div *ngIf="submitted && f.villageId.errors" class="invalid-feedback">
+                                <div class="text-danger" *ngIf="f.villageId.errors?.required">Village Is Required</div>
+                            </div>
+                        </div> 
+                        <div class="mb-0 d-flex justify-content-end gap-2">
+                            <button class="btn btn-light-main" type="button" (click)="clearForm()">Clear</button>
+                            <button class="btn btn-main" type="submit" (click)="onSubmit()">{{editFlag ? 'Update' : 'Submit'}}</button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <select class="form-control" aria-label="Default select example">
-                            <option selected>District</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                    </div>
-                    <div class="mb-3 ">
-                        <select class="form-control" aria-label="Default select example">
-                            <option selected>Taluka</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                    </div>
-                    <div class="mb-3">
-                        <select class="form-control" aria-label="Default select example">
-                            <option selected>Village</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                          </select>
-                    </div>
-                    <div class="mb-0 d-flex justify-content-end gap-2">
-                        <button class="btn btn-light-main">Clear</button>
-                        <button class="btn btn-main">Save</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -98,7 +130,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>
@@ -106,7 +139,7 @@
                 <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
                     aria-label="Close">Cancel</button>
                 <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
-                    data-bs-dismiss="modal" aria-label="Close">I'm
+                    data-bs-dismiss="modal" aria-label="Close" (click)="deleteYojana()">I'm
                     Sure</button>
             </div>
         </div>
