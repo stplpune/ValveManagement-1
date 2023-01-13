@@ -203,10 +203,11 @@ onMapReady(map:any) {
 
 
 
-  google.maps.event.addListener(drawingManager,'overlaycomplete',(e:any) => {
-    this.setSelection(e.overlay);
+  google.maps.event.addListener(drawingManager,'polylinecomplete',(e:any) => {
+
+    this.setSelection(e);
       this.isShapeDrawn = true;
-      var newShape = e.overlay;
+      var newShape:any = e;
       drawingManager.setDrawingMode(null);
       google.maps.event.addListener(newShape, 'radius_changed', () => {
         this.ngZone.run(() => {
@@ -228,6 +229,11 @@ setSelection(shape: any) {
   this.newRecord.polyline.setMap(this.map);
   this.newRecord.polyline.setEditable(true);
   this.newRecord.centerMarkerLatLng = this.getCenterLanLongFromPolyline(shape);
+
+
+console.log(this.newRecord.centerMarkerLatLng,'222');
+
+
   try {
     var ll = new google.maps.LatLng(+this.centerMarkerLatLng.split(',')[1], +this.centerMarkerLatLng.split(',')[0]);
     this.map.panTo(ll);
@@ -238,19 +244,21 @@ setSelection(shape: any) {
 
 getCenterLanLongFromPolyline(polyline: any) {
   let bounds = new google.maps.LatLngBounds();
-debugger
-  console.log(this.centerMarkerLatLng,'bbbb')
+  let paths:any = polyline.getPath();
+//   let polylines = paths.getArray();
+// console.log((JSON.stringify(polylines)),'aaa');
 
-  var paths = polyline.getPaths();
+// console.log(paths,'aaa');
   this.newRecord.polylinetext = "";
-  var tempPolylineText: any[] = [];
-  paths.forEach(function (path: any) {
-    var ar = path.getArray();
+  let tempPolylineText: any[] = [];
+    let ar = paths.getArray(); 
+
+    console.log(JSON.stringify(ar),'aaa');
+
     for (var i = 0, l = ar.length; i < l; i++) {
       tempPolylineText[tempPolylineText.length] = ar[i].lng().toFixed(8) + ' ' + ar[i].lat().toFixed(8);
       bounds.extend(ar[i]);
     }
-  })
   tempPolylineText[tempPolylineText.length] = tempPolylineText[0];
   this.newRecord.polylinetext = tempPolylineText.join();
   // this.createGeofence.controls['geofenceTypeId'].setValue(1);
