@@ -6,6 +6,7 @@ import { NetworkMasterComponent } from './network-master.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FormsModule,
     NgxPaginationModule,
     NgxSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSelectModule
   ]
 })
 export class NetworkMasterModule { }

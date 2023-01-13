@@ -33,7 +33,7 @@ export class NetworkMasterComponent implements OnInit {
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
     private toastrService: ToastrService,
-    private errorSerivce: ErrorsService,) {}
+    private errorSerivce: ErrorsService) {}
 
   ngOnInit(): void {
     this.controlForm();
@@ -169,6 +169,14 @@ deleteNetworkMaster(){
 onClickPagintion(pageNo: number) {
   this.pageNumber = pageNo;
   this.getAllNetworkTableData();
+}
+
+clearDropdown(flag:any){
+   this.editFlag = false;
+  switch(flag){
+    case 'yojana': this.networkRegForm.controls['yojanaId'].setValue('');
+                      break;
+  }
 }
 
 }
