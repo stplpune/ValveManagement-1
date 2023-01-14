@@ -10,7 +10,7 @@ agm-map {
 .closebtn{
   position: absolute;
   top: 5px;
-  left: 80px;
+  left: 50px;
   z-index: 9;
   background: none padding-box rgb(255, 255, 255);
   border: 0px;
@@ -24,4 +24,8 @@ agm-map {
 }
 .closebtn:hover{
   background-color: #eee;
+}
+
+::ng-deep .pac-container {   
+  z-index: 9999;
 }

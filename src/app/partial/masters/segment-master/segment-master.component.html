@@ -6,7 +6,7 @@
                 <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
                         class="fas fa-sync-alt"></i></button> -->
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                    data-bs-target="#SegmentModal">
+                    data-bs-target="#SegmentModal" (click)="onEditData = false">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Segment
                 </button>
@@ -31,7 +31,7 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditMapData()">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -60,13 +60,13 @@
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="SegmentModal">Map</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" (click)="mapModelClose()"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mapsearch my-3">
                     <div class="form-container">
-                    <input class="form-control" type="text" placeholder="Search Location"
+                    <input class="form-control" type="text" 
                         (keydown.enter)="$event.preventDefault()" placeholder="Search Location" autocorrect="off"
                         autocapitalize="off" spellcheck="off" type="text" #search>
                     </div>

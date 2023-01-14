@@ -22,7 +22,7 @@ export class SegmentMasterComponent implements OnInit {
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   deleteSegmentId: any;
   @ViewChild('addSegmentModel') addSegmentModel: any;
-  map:any;
+
 
   constructor(
     private mapsAPILoader: MapsAPILoader,
@@ -69,45 +69,45 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   onSubmit() {
-      let obj = {
-        "id": 0,
-        "segmentName": "string",
-        "startPoints": "string",
-        "endPoints": "string",
-        "midpoints": "string",
-        "createdBy": this.localStorage.userId(),
-        "createdDate": new Date(),
-        "modifiedby": this.localStorage.userId(),
-        "modifiedDate": new Date(),
-        "isDeleted": false,
-        "timestamp": new Date(),
-        "yojanaId": this.getAllLocalStorageData.yojanaId,
-        "networkId": this.getAllLocalStorageData.networkId
-      }
+    let obj = {
+      "id": 0,
+      "segmentName": "string",
+      "startPoints": "string",
+      "endPoints": "string",
+      "midpoints": "string",
+      "createdBy": this.localStorage.userId(),
+      "createdDate": new Date(),
+      "modifiedby": this.localStorage.userId(),
+      "modifiedDate": new Date(),
+      "isDeleted": false,
+      "timestamp": new Date(),
+      "yojanaId": this.getAllLocalStorageData.yojanaId,
+      "networkId": this.getAllLocalStorageData.networkId
+    }
 
-      this.spinner.show();
-      
-      let id:any;
-      let urlType = id == 0 ? 'POST' : 'PUT';
-      let UrlName = id == 0 ? 'api/SegmentMaster/Add' : 'api/SegmentMaster/Update';
-      this.apiService.setHttp(urlType,UrlName,false,JSON.stringify(obj),false,'valvemgt');
-      this.apiService.getHttp().subscribe(
-        (res: any) => {
-          if (res.statusCode == '200') {
-            this.spinner.hide();
-            this.toastrService.success(res.statusMessage);
-            this.addSegmentModel.nativeElement.click();
-            this.getAllSegmentMaster();
-          } else {
-            this.toastrService.error(res.statusMessage);
-            this.spinner.hide();
-          }
-        },
-        (error: any) => {
-          this.errorSerivce.handelError(error.status);
+    this.spinner.show();
+
+    let id: any;
+    let urlType = id == 0 ? 'POST' : 'PUT';
+    let UrlName = id == 0 ? 'api/SegmentMaster/Add' : 'api/SegmentMaster/Update';
+    this.apiService.setHttp(urlType, UrlName, false, JSON.stringify(obj), false, 'valvemgt');
+    this.apiService.getHttp().subscribe(
+      (res: any) => {
+        if (res.statusCode == '200') {
+          this.spinner.hide();
+          this.toastrService.success(res.statusMessage);
+          this.addSegmentModel.nativeElement.click();
+          this.getAllSegmentMaster();
+        } else {
+          this.toastrService.error(res.statusMessage);
           this.spinner.hide();
         }
-      );
+      },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+        this.spinner.hide();
+      }
+    );
   }
 
 
@@ -137,174 +137,158 @@ export class SegmentMasterComponent implements OnInit {
     });
   }
 
-//............................................... Agm Map Code Start Here ..................................//
+  //............................................... Agm Map Code Start Here ..................................//
 
+  onEditData:boolean = false;
 
-latLongArray:any;
-centerMarker:any;
-@ViewChild('search') searchElementRef: any;
-centerMarkerLatLng: string = "";
-isShapeDrawn: boolean = false;
+  map: any;
+  latLongArray: any;
+  centerMarker: any;
+  @ViewChild('search') searchElementRef: any;
+  centerMarkerLatLng: string = "";
+  isShapeDrawn: boolean = false;
 
-newRecord: any = {
-  dataObj: undefined,
-  polyline: undefined,
-  polylinetext: '',
-};
-
-onMapReady(map:any) {
-  this.map = map;
-  const options:any = {
-    drawingControl: true,
-    drawingControlOptions: { drawingModes: ["polyline"]},
-    polylineOptions: {
-      draggable: true,
-      editable: true,
-      strokeColor: "#FF0000",
-      fillColor: "#FF0000", 
-      fillOpacity: 0.35
-    },
-    drawingMode: google.maps.drawing.OverlayType.POLYLINE,
-    map: map
+  newRecord: any = {
+    dataObj: undefined,
+    polyline: undefined,
+    polylinetext: '',
   };
 
- let drawingManager = new google.maps.drawing.DrawingManager(options);
+  onEditMapData(){
+    this.onEditData = true;
+    this.onMapReady(this.map)
+  }
 
+  onMapReady(map: any) {
+    this.map = map;
+    const options: any = {
+      drawingControl: true,
+      drawingControlOptions: { drawingModes: ["polyline"] },
+      polylineOptions: { draggable: true, editable: true, strokeColor: "#FF0000", fillColor: "#FF0000", fillOpacity: 0.35 },
+      drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+      map: map,
+    };
 
+    let drawingManager = new google.maps.drawing.DrawingManager(options);
+    //  drawingManager.setMap(this.map);
 
-
- this.mapsAPILoader.load().then(() => {
-  let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef?.nativeElement);
-  autocomplete.addListener("place_changed", () => {
-    this.ngZone.run(() => {
-      let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-      if (place.geometry === undefined || place.geometry === null) {
-        return;
-      }
-      map.setZoom(16);
-      map.setCenter({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() })
-      if (this.centerMarker == undefined) {
-        this.centerMarker = new google.maps.Marker({
-          map: map,
-          draggable: true
-        })
-        this.centerMarker.addListener('dragend', (evt: any) => {
-          this.centerMarkerLatLng = "Long, Lat:" + evt.latLng.lng().toFixed(6) + ", " + evt.latLng.lat().toFixed(6);
-          this.centerMarker.panTo(evt.latLng);
+    this.mapsAPILoader.load().then(() => { //search Field Code Here
+      let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef?.nativeElement);
+      autocomplete.addListener("place_changed", () => {
+        this.ngZone.run(() => {
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          map.setZoom(16);
+          map.setCenter({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() })
+          if (this.centerMarker == undefined) {
+            this.centerMarker = new google.maps.Marker({
+              map: map,
+              draggable: false
+            })
+            // this.centerMarker.addListener('dragend', (evt: any) => {
+            //   this.centerMarkerLatLng = "Long, Lat:" + evt.latLng.lng().toFixed(6) + ", " + evt.latLng.lat().toFixed(6);
+            //   this.centerMarker.panTo(evt.latLng);
+            // });
+          }
+          this.centerMarker.setPosition({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+          this.centerMarkerLatLng = "Long, Lat:" + place.geometry.location.lng().toFixed(6) + ", " + place.geometry.location.lat().toFixed(6);
         });
-      }
-      this.centerMarker.setPosition({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
-      this.centerMarkerLatLng = "Long, Lat:" + place.geometry.location.lng().toFixed(6) + ", " + place.geometry.location.lat().toFixed(6);
+      });
+    })
+
+    //............................   Edit Code Start Here ..................  //
+    if(this.onEditData == true){
+    this.newRecord.centerMarkerLatLng = [
+      { lat: 24.06091303609314, lng: 79.2068660991788 },
+      { lat: 23.43975495077554, lng: 80.0747860210538 },
+      { lat: 34.024499048616796, lng: 79.8053768413663 },
+      { lat: 24.56906317545367, lng: 77.5032528179288 },
+      { lat: 34.45137407574619, lng: 75.6518123882413 },
+    ];
+
+    const editPatchShape = new google.maps.Polyline({
+      path: this.newRecord.centerMarkerLatLng,
+      geodesic: true,
+      strokeColor: "#FF0000",
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
     });
-  });
-})
+    this.setSelection(editPatchShape);
+  }
+    //............................   Edit Code End Here ..................  //
 
-  google.maps.event.addListener(drawingManager,'polylinecomplete',(e:any) => {
 
-    this.setSelection(e);
+    google.maps.event.addListener(drawingManager, 'polylinecomplete', (newShape: any) => {
+      this.setSelection(newShape);
       this.isShapeDrawn = true;
-      var newShape:any = e;
-      drawingManager.setDrawingMode(null);
-      google.maps.event.addListener(newShape, 'radius_changed', () => {
-        this.ngZone.run(() => {
-          this.setSelection(newShape);
-        })
-      });
-      google.maps.event.addListener(newShape, 'dragend', (e:any) => {
+      google.maps.event.addListener(newShape, 'dragend', (e: any) => {
         this.ngZone.run(() => {
           this.setSelection(newShape);
         })
       });
     }
-  );
+    );
 
-}
-
-setSelection(shape: any) {
-  this.newRecord.polyline = shape;
-  this.newRecord.polyline.setMap(this.map);
-  this.newRecord.polyline.setEditable(true);
-  this.newRecord.centerMarkerLatLng = this.getCenterLanLongFromPolyline(shape);
-
-
-console.log(this.newRecord.centerMarkerLatLng,'222');
-
-
-  try {
-    var ll = new google.maps.LatLng(+this.centerMarkerLatLng.split(',')[1], +this.centerMarkerLatLng.split(',')[0]);
-    this.map.panTo(ll);
   }
-  catch (e) { }
-}
 
-
-getCenterLanLongFromPolyline(polyline: any) {
-  let bounds = new google.maps.LatLngBounds();
-  let paths:any = polyline.getPath();
-//   let polylines = paths.getArray();
-// console.log((JSON.stringify(polylines)),'aaa');
-
-// console.log(paths,'aaa');
-  this.newRecord.polylinetext = "";
-  let tempPolylineText: any[] = [];
-    let ar = paths.getArray(); 
-
-    console.log(JSON.stringify(ar),'aaa');
-
-    for (var i = 0, l = ar.length; i < l; i++) {
-      tempPolylineText[tempPolylineText.length] = ar[i].lng().toFixed(8) + ' ' + ar[i].lat().toFixed(8);
-      bounds.extend(ar[i]);
+  setSelection(shape: any) {
+    if (this.newRecord.polyline) { // new polyline Add then before polyline map data clear 
+      this.newRecord.polyline.setMap(null);
     }
-  tempPolylineText[tempPolylineText.length] = tempPolylineText[0];
-  this.newRecord.polylinetext = tempPolylineText.join();
-  // this.createGeofence.controls['geofenceTypeId'].setValue(1);
-  // this.createGeofence.controls['longitude'].setValue(bounds.getCenter().lng().toFixed(8));
-  // this.createGeofence.controls['latitude'].setValue(bounds.getCenter().lat().toFixed(8));
-  return bounds.getCenter().lng().toFixed(8) + ',' + bounds.getCenter().lat().toFixed(8);
-}
-
-
-
-clearSelection(isAllClear: any) {
-  
-  this.newRecord.polyline && (this.newRecord.polyline.setEditable(false), this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
-
-  this.centerMarkerLatLng = "";
-  this.newRecord.polylinetext = "";
-}
-
-deleteSelectedShape() {
-  // this.clearSelection(false);
-}
-
-
-removeShape() {
-  this.isShapeDrawn = false;
-  this.clearSelection(false);
-}
-setZoomLevel(radius: number) {
-  let zoom = 8;
-  if (radius < 500) {
-    zoom = 16;
+    this.newRecord.polyline = shape;
+    this.newRecord.polyline.setMap(this.map);
+    this.newRecord.centerMarkerLatLng = this.getAllLatLongFromPolyline(shape);
+    console.log(this.newRecord.centerMarkerLatLng,'11');
+    
   }
-  else if (radius < 1000) {
-    zoom = 14;
-  }
-  else if (radius < 2000) {
-    zoom = 14;
-  }
-  else if (radius < 3000) {
-    zoom = 12;
-  }
-  else if (radius < 5000) {
-    zoom = 10;
-  }
-  else if (radius < 15000) {
-    zoom = 10;
-  }
-  // this.map.setZoom(zoom)
-}
 
+  getAllLatLongFromPolyline(polyline: any) {
+    let paths: any = polyline.getPath();
+    this.newRecord.polylinetext = "";
+    let latlongArray = JSON.stringify(paths.getArray());
+    return latlongArray;
+  }
+
+
+  clearSelection() {
+    this.newRecord.polyline && (this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
+    this.centerMarkerLatLng = "";
+    this.newRecord.polylinetext = "";
+  }
+
+  removeShape() {
+    this.isShapeDrawn = false;
+    this.clearSelection();
+  }
+
+  mapModelClose() {
+    this.removeShape();
+  }
+
+  setZoomLevel(radius: number) {
+    let zoom = 8;
+    if (radius < 500) {
+      zoom = 16;
+    }
+    else if (radius < 1000) {
+      zoom = 14;
+    }
+    else if (radius < 2000) {
+      zoom = 14;
+    }
+    else if (radius < 3000) {
+      zoom = 12;
+    }
+    else if (radius < 5000) {
+      zoom = 10;
+    }
+    else if (radius < 15000) {
+      zoom = 10;
+    }
+    // this.map.setZoom(zoom)
+  }
 
 
 }
