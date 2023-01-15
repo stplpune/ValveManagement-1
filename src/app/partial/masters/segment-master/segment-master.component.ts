@@ -6,7 +6,7 @@ import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-segment-master',
@@ -15,6 +15,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class SegmentMasterComponent implements OnInit {
 
+  segmentMasterForm: FormGroup | any;
+  submited: boolean = false;
+  textName = 'Submit';
   segmentMasterArray: any;
   pageNumber: number = 1;
   pagesize: number = 10;
@@ -38,12 +41,26 @@ export class SegmentMasterComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.defaultForm();
     this.getAllSegmentMaster();
   }
 
+  defaultForm() {
+    this.segmentMasterForm = this.fb.group({
+      id: [0],
+      segmentName: ['', [Validators.required]],
+      startPoints: [''],
+      endPoints: [''],
+      midpoints: [''],
+    })
+  }
+
+  get f() { return this.segmentMasterForm.controls }
+
   getAllSegmentMaster() {
     this.spinner.show();
-    let obj: any = 'YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId;
+    let obj: any = 'YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId 
+    + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'api/SegmentMaster/GetAll?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -69,47 +86,60 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   onSubmit() {
-    let obj = {
-      "id": 0,
-      "segmentName": "string",
-      "startPoints": "string",
-      "endPoints": "string",
-      "midpoints": "string",
-      "createdBy": this.localStorage.userId(),
-      "createdDate": new Date(),
-      "modifiedby": this.localStorage.userId(),
-      "modifiedDate": new Date(),
-      "isDeleted": false,
-      "timestamp": new Date(),
-      "yojanaId": this.getAllLocalStorageData.yojanaId,
-      "networkId": this.getAllLocalStorageData.networkId
-    }
+    this.submited = true;
+    if (this.segmentMasterForm.invalid) {
+      return;
+    } else if (this.commonService.checkDataType(this.newRecord.polyline) == false) {
+      this.toastrService.error('Please Draw Map Segment Point...');
+      return;
+    } else {
+      let formData = this.segmentMasterForm.value;
+      let obj = {
+        "id": formData.id,
+        "segmentName": formData.segmentName,
+        "startPoints": formData.startPoints,
+        "endPoints": formData.endPoints,
+        "midpoints": formData.midpoints,
+        "createdBy": this.localStorage.userId(),
+        "createdDate": new Date(),
+        "modifiedby": this.localStorage.userId(),
+        "modifiedDate": new Date(),
+        "isDeleted": false,
+        "timestamp": new Date(),
+        "yojanaId": this.getAllLocalStorageData.yojanaId,
+        "networkId": this.getAllLocalStorageData.networkId
+      }
 
-    this.spinner.show();
-
-    let id: any;
-    let urlType = id == 0 ? 'POST' : 'PUT';
-    let UrlName = id == 0 ? 'api/SegmentMaster/Add' : 'api/SegmentMaster/Update';
-    this.apiService.setHttp(urlType, UrlName, false, JSON.stringify(obj), false, 'valvemgt');
-    this.apiService.getHttp().subscribe(
-      (res: any) => {
-        if (res.statusCode == '200') {
-          this.spinner.hide();
-          this.toastrService.success(res.statusMessage);
-          this.addSegmentModel.nativeElement.click();
-          this.getAllSegmentMaster();
-        } else {
-          this.toastrService.error(res.statusMessage);
+      this.spinner.show();
+      let urlType = formData.id == 0 ? 'POST' : 'PUT';
+      let UrlName = formData.id == 0 ? 'api/SegmentMaster/Add' : 'api/SegmentMaster/Update';
+      this.apiService.setHttp(urlType, UrlName, false, JSON.stringify(obj), false, 'valvemgt');
+      this.apiService.getHttp().subscribe(
+        (res: any) => {
+          if (res.statusCode == '200') {
+            this.spinner.hide();
+            this.toastrService.success(res.statusMessage);
+            this.clearForm();
+            this.getAllSegmentMaster();
+            this.addSegmentModel.nativeElement.click();
+          } else {
+            this.toastrService.error(res.statusMessage);
+            this.spinner.hide();
+          }
+        },
+        (error: any) => {
+          this.errorSerivce.handelError(error.status);
           this.spinner.hide();
         }
-      },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-        this.spinner.hide();
-      }
-    );
+      );
+    }
   }
 
+  clearForm() {
+    this.submited = false;
+    this.textName = 'Submit';
+    this.defaultForm();
+  }
 
   deleteConformation(id: any) {
     this.deleteSegmentId = id;
@@ -139,24 +169,28 @@ export class SegmentMasterComponent implements OnInit {
 
   //............................................... Agm Map Code Start Here ..................................//
 
-  onEditData:boolean = false;
+  onEditFlag: boolean = false;
+  editObjData:any;
 
   map: any;
   latLongArray: any;
   centerMarker: any;
   @ViewChild('search') searchElementRef: any;
-  centerMarkerLatLng: string = "";
+  centerMarkerLatLng:any;
   isShapeDrawn: boolean = false;
 
   newRecord: any = {
-    dataObj: undefined,
     polyline: undefined,
-    polylinetext: '',
   };
 
-  onEditMapData(){
-    this.onEditData = true;
-    this.onMapReady(this.map)
+  onEditMapData(obj:any) {
+    this.editObjData = obj;
+    this.onEditFlag = true;
+    this.textName = 'Update';
+    this.onMapReady(this.map);
+
+    this.segmentMasterForm.controls['id'].setValue(obj.id);
+    this.segmentMasterForm.controls['segmentName'].setValue(obj.segmentName);
   }
 
   onMapReady(map: any) {
@@ -187,10 +221,6 @@ export class SegmentMasterComponent implements OnInit {
               map: map,
               draggable: false
             })
-            // this.centerMarker.addListener('dragend', (evt: any) => {
-            //   this.centerMarkerLatLng = "Long, Lat:" + evt.latLng.lng().toFixed(6) + ", " + evt.latLng.lat().toFixed(6);
-            //   this.centerMarker.panTo(evt.latLng);
-            // });
           }
           this.centerMarker.setPosition({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
           this.centerMarkerLatLng = "Long, Lat:" + place.geometry.location.lng().toFixed(6) + ", " + place.geometry.location.lat().toFixed(6);
@@ -199,24 +229,29 @@ export class SegmentMasterComponent implements OnInit {
     })
 
     //............................   Edit Code Start Here ..................  //
-    if(this.onEditData == true){
-    this.newRecord.centerMarkerLatLng = [
-      { lat: 24.06091303609314, lng: 79.2068660991788 },
-      { lat: 23.43975495077554, lng: 80.0747860210538 },
-      { lat: 34.024499048616796, lng: 79.8053768413663 },
-      { lat: 24.56906317545367, lng: 77.5032528179288 },
-      { lat: 34.45137407574619, lng: 75.6518123882413 },
-    ];
 
-    const editPatchShape = new google.maps.Polyline({
-      path: this.newRecord.centerMarkerLatLng,
-      geodesic: true,
-      strokeColor: "#FF0000",
-      strokeOpacity: 1.0,
-      strokeWeight: 2,
-    });
-    this.setSelection(editPatchShape);
-  }
+    // drawingManager.setDrawingMode(null);
+
+    if (this.onEditFlag == true) {
+      drawingManager.setOptions({ drawingControl: false });
+
+      let finalString = this.editObjData.midpoints ? this.editObjData.startPoints + ',' + this.editObjData.midpoints + ',' + this.editObjData.endPoints :
+        this.editObjData.startPoints + ',' + this.editObjData.endPoints;
+
+      let stringtoArray = finalString.split(',');
+      let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+
+      this.centerMarkerLatLng = finalLatLngArray;
+
+      const editPatchShape = new google.maps.Polyline({
+        path: this.centerMarkerLatLng,
+        geodesic: true,
+        strokeColor: "#FF0000",
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+      });
+      this.setSelection(editPatchShape);
+    }
     //............................   Edit Code End Here ..................  //
 
 
@@ -239,23 +274,27 @@ export class SegmentMasterComponent implements OnInit {
     }
     this.newRecord.polyline = shape;
     this.newRecord.polyline.setMap(this.map);
-    this.newRecord.centerMarkerLatLng = this.getAllLatLongFromPolyline(shape);
-    console.log(this.newRecord.centerMarkerLatLng,'11');
+    this.centerMarkerLatLng = this.getAllLatLongFromPolyline(shape);
+
+    let firstObj = this.centerMarkerLatLng.shift(0); // get the first obj in Array but Array Remove This Obj
+    let lastObj = this.centerMarkerLatLng.pop(); // get the last obj in Array but Array Remove This Obj
     
+    let middleObj = this.centerMarkerLatLng.map((ele: any) => { return ele = ele.lat + ' ' + ele.lng })
+
+    this.segmentMasterForm.controls['startPoints'].setValue(firstObj.lat + ' ' + firstObj.lng);
+    this.segmentMasterForm.controls['endPoints'].setValue(lastObj?.lat + ' ' + lastObj?.lng);
+    this.segmentMasterForm.controls['midpoints'].setValue(middleObj.toString());
   }
 
   getAllLatLongFromPolyline(polyline: any) {
     let paths: any = polyline.getPath();
-    this.newRecord.polylinetext = "";
     let latlongArray = JSON.stringify(paths.getArray());
-    return latlongArray;
+    return JSON.parse(latlongArray);
   }
-
 
   clearSelection() {
     this.newRecord.polyline && (this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
     this.centerMarkerLatLng = "";
-    this.newRecord.polylinetext = "";
   }
 
   removeShape() {
@@ -265,29 +304,7 @@ export class SegmentMasterComponent implements OnInit {
 
   mapModelClose() {
     this.removeShape();
-  }
-
-  setZoomLevel(radius: number) {
-    let zoom = 8;
-    if (radius < 500) {
-      zoom = 16;
-    }
-    else if (radius < 1000) {
-      zoom = 14;
-    }
-    else if (radius < 2000) {
-      zoom = 14;
-    }
-    else if (radius < 3000) {
-      zoom = 12;
-    }
-    else if (radius < 5000) {
-      zoom = 10;
-    }
-    else if (radius < 15000) {
-      zoom = 10;
-    }
-    // this.map.setZoom(zoom)
+    this.clearForm();
   }
 
 

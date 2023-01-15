@@ -6,7 +6,7 @@
                 <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
                         class="fas fa-sync-alt"></i></button> -->
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                    data-bs-target="#SegmentModal" (click)="onEditData = false">
+                    data-bs-target="#SegmentModal" (click)="onEditFlag = false">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Segment
                 </button>
@@ -24,14 +24,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let segMaster of segmentMasterArray | paginate: {itemsPerPage: pagesize,
+                <tr *ngFor="let segMaster of segmentMasterArray | paginate: {itemsPerPage: 10,
                     currentPage: pageNumber, totalItems:totalRows}; let i = index">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{segMaster?.segmentName}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditMapData()">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditMapData(segMaster)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -48,8 +48,8 @@
             </div>
         </div>
         <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length != 0">
-            <pagination-controls previousLabel="" nextLabel=""
-                (pageChange)="onClickPagintion(pagesize = $event)"> </pagination-controls>
+            <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
+            </pagination-controls>
         </div>
     </div>
 </div>
@@ -60,10 +60,11 @@
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="SegmentModal">Map</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" (click)="mapModelClose()"
+                <button type="button" class="btn-close btn-close-inverse" #addSegmentModel data-bs-dismiss="modal" (click)="mapModelClose()"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <form [formGroup]="segmentMasterForm">
                 <div class="mapsearch my-3">
                     <div class="form-container">
                     <input class="form-control" type="text" 
@@ -82,13 +83,17 @@
                 <hr>
                 <div class="form-container d-flex gap-2 float-end">
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Segment Name">
+                        <input type="text" class="form-control" formControlName="segmentName" placeholder="Segment Name"
+                        [ngClass]="{ 'is-invalid': submited && f.segmentName.errors }">
+                        <div *ngIf="submited && f.segmentName.errors" class="invalid-feedback">
+                            <div *ngIf="f.segmentName.errors.required">Segment Name is required</div>
+                        </div>
                     </div>
                     <div class="mb-0">
-                        <button class="btn btn-main">Save</button>
+                        <button class="btn btn-main" type="submit" (click)="onSubmit()">{{textName}}</button>
                     </div>
                 </div>
-                Map
+            </form>
             </div>
         </div>
     </div>
