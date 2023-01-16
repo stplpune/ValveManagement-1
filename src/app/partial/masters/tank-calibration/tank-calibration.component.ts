@@ -114,7 +114,7 @@ export class TankCalibrationComponent implements OnInit {
           this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
+            : '';
         }
       },
       error: (error: any) => {
@@ -161,7 +161,7 @@ export class TankCalibrationComponent implements OnInit {
           this.tankCalibrationArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
+            : '';
         }
       },
       error: (error: any) => {
