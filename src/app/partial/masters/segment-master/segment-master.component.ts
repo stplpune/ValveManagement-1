@@ -15,10 +15,14 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class SegmentMasterComponent implements OnInit {
 
+
+  filterForm:FormGroup | any;
+
   segmentMasterForm: FormGroup | any;
   submited: boolean = false;
   textName = 'Submit';
   segmentMasterArray: any;
+  valveSegmentList:any;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -39,10 +43,26 @@ export class SegmentMasterComponent implements OnInit {
     private fb: FormBuilder,
   ) { }
 
+  // markers: any[] = [
+  //   {
+  //     lat: 23.7541318,
+  //     lng: 80.3681253,
+  //     label: "C",
+  //     draggable: true,
+  //     content: "InfoWindow content",
+  //     color: "red",
+  //     iconUrl: "../../../../assets/images/Water Tank.png"
+  //   }
+  // ];
+
 
   ngOnInit(): void {
     this.defaultForm();
     this.getAllSegmentMaster();
+  }
+
+  defaultFilterForm(){
+    
   }
 
   defaultForm() {
@@ -71,6 +91,29 @@ export class SegmentMasterComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.segmentMasterArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+        }
+      },
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    });
+  }
+
+  getValveSegmentList(editObj:any) { //All Segment 
+    this.spinner.show();
+    let obj: any = 'YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId 
+    + '&userId=' + this.localStorage.userId();
+    this.apiService.setHttp('get', 'api/SegmentMaster/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === '200') {
+          this.spinner.hide();
+          this.valveSegmentList = res.responseData;
+          this.onEditMapData(editObj,this.valveSegmentList);
+        } else {
+          this.spinner.hide();
+          this.valveSegmentList = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -169,8 +212,10 @@ export class SegmentMasterComponent implements OnInit {
 
   //............................................... Agm Map Code Start Here ..................................//
 
+  editPatchShape:any;
   onEditFlag: boolean = false;
   editObjData:any;
+  insertNewLineFlag:boolean = false;
 
   map: any;
   latLongArray: any;
@@ -183,14 +228,18 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
-  onEditMapData(obj:any) {
-    this.editObjData = obj;
+  onEditMapData(editObj:any,mainArray:any) {
+
+console.log(mainArray);
+
+return
+    this.editObjData = editObj;
     this.onEditFlag = true;
     this.textName = 'Update';
     this.onMapReady(this.map);
 
-    this.segmentMasterForm.controls['id'].setValue(obj.id);
-    this.segmentMasterForm.controls['segmentName'].setValue(obj.segmentName);
+    this.segmentMasterForm.controls['id'].setValue(editObj.id);
+    this.segmentMasterForm.controls['segmentName'].setValue(editObj.segmentName);
   }
 
   onMapReady(map: any) {
@@ -198,7 +247,7 @@ export class SegmentMasterComponent implements OnInit {
     const options: any = {
       drawingControl: true,
       drawingControlOptions: { drawingModes: ["polyline"] },
-      polylineOptions: { draggable: true, editable: true, strokeColor: "#FF0000", fillColor: "#FF0000", fillOpacity: 0.35 },
+      polylineOptions: { draggable: true, editable: true, strokeColor: "#8000FF", fillColor: "#8000FF", fillOpacity: 0.35 },
       drawingMode: google.maps.drawing.OverlayType.POLYLINE,
       map: map,
     };
@@ -233,8 +282,8 @@ export class SegmentMasterComponent implements OnInit {
     // drawingManager.setDrawingMode(null);
 
     if (this.onEditFlag == true) {
+      // this.insertNewLineFlag = false;
       drawingManager.setOptions({ drawingControl: false });
-
       let finalString = this.editObjData.midpoints ? this.editObjData.startPoints + ',' + this.editObjData.midpoints + ',' + this.editObjData.endPoints :
         this.editObjData.startPoints + ',' + this.editObjData.endPoints;
 
@@ -243,19 +292,20 @@ export class SegmentMasterComponent implements OnInit {
 
       this.centerMarkerLatLng = finalLatLngArray;
 
-      const editPatchShape = new google.maps.Polyline({
+      this.editPatchShape = new google.maps.Polyline({
         path: this.centerMarkerLatLng,
         geodesic: true,
         strokeColor: "#FF0000",
         strokeOpacity: 1.0,
         strokeWeight: 2,
       });
-      this.setSelection(editPatchShape);
+      this.editPatchShape.setMap(this.map);
+      // this.newRecord.polyline = editPatchShape; this.setSelection(editPatchShape);
     }
     //............................   Edit Code End Here ..................  //
 
-
     google.maps.event.addListener(drawingManager, 'polylinecomplete', (newShape: any) => {
+      // this.insertNewLineFlag = true;
       this.setSelection(newShape);
       this.isShapeDrawn = true;
       google.maps.event.addListener(newShape, 'dragend', (e: any) => {
@@ -265,7 +315,6 @@ export class SegmentMasterComponent implements OnInit {
       });
     }
     );
-
   }
 
   setSelection(shape: any) {
@@ -274,16 +323,21 @@ export class SegmentMasterComponent implements OnInit {
     }
     this.newRecord.polyline = shape;
     this.newRecord.polyline.setMap(this.map);
+
     this.centerMarkerLatLng = this.getAllLatLongFromPolyline(shape);
+
+    console.log(this.centerMarkerLatLng,'avi');
+    
 
     let firstObj = this.centerMarkerLatLng.shift(0); // get the first obj in Array but Array Remove This Obj
     let lastObj = this.centerMarkerLatLng.pop(); // get the last obj in Array but Array Remove This Obj
     
     let middleObj = this.centerMarkerLatLng.map((ele: any) => { return ele = ele.lat + ' ' + ele.lng })
 
-    this.segmentMasterForm.controls['startPoints'].setValue(firstObj.lat + ' ' + firstObj.lng);
+    this.segmentMasterForm.controls['startPoints'].setValue(firstObj?.lat + ' ' + firstObj?.lng);
     this.segmentMasterForm.controls['endPoints'].setValue(lastObj?.lat + ' ' + lastObj?.lng);
     this.segmentMasterForm.controls['midpoints'].setValue(middleObj.toString());
+
   }
 
   getAllLatLongFromPolyline(polyline: any) {
@@ -304,8 +358,32 @@ export class SegmentMasterComponent implements OnInit {
 
   mapModelClose() {
     this.removeShape();
+    this.editPatchShape.setMap(null);
     this.clearForm();
   }
 
+  FN_CN_poly2latLang(poly: any) {
+    var lowx,
+      highx,
+      lowy,
+      highy,
+      lats = [],
+      lngs = [],
+      vertices = poly.getPath();
+    for (var i = 0; i < vertices.length; i++) {
+      lngs.push(vertices.getAt(i).lng());
+      lats.push(vertices.getAt(i).lat());
+    }
+    lats.sort();
+    lngs.sort();
+    lowx = lats[0];
+    highx = lats[vertices.length - 1];
+    lowy = lngs[0];
+    highy = lngs[vertices.length - 1];
+    const center_x = lowx + ((highx - lowx) / 2);
+    const center_y = lowy + ((highy - lowy) / 2);
+    return (new google.maps.LatLng(center_x, center_y));
+    //return center_x + ' ' + center_y
+  }
 
 }
