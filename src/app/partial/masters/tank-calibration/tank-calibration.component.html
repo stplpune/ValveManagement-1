@@ -101,7 +101,7 @@
             <div class="mb-3">
               <label class="form-label">Tank Name</label>
               <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankId" placeholder="Select tank"
-                optionValueField="id" optionTextField="tankName" [disabled]="true"
+                optionValueField="tankId" optionTextField="tankName" [disabled]="true"
                 [ngClass]="{ 'is-invalid': submitted && f.tankId.errors}">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
@@ -114,23 +114,24 @@
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Tank Min Level" formControlName="tankMinLevel"
                   (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-                  [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel.errors}">
-              </div>
-              <div *ngIf="submitted && f.tankMinLevel.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.tankMinLevel.errors?.required">Tank Min Level Is Required
-                </div>
-              </div>
+                  [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel?.errors}">
+                  <div *ngIf="submitted && f.tankMinLevel.errors" class="invalid-feedback">
+                    <div class="text-danger" *ngIf="f.tankMinLevel.errors?.required">Tank Min Level Is Required
+                    </div>
+                  </div>
+              </div> 
             </div>
             <div class="mb-3">
               <label class="form-label">Tank Max Level</label>
               <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
+                <div *ngIf="submitted && f.tankMaxLevel.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.tankMaxLevel.errors?.required">Tank Max Level Is Required
+                  </div>
+                </div>
             </div>
-            <div *ngIf="submitted && f.tankMaxLevel.errors" class="invalid-feedback">
-              <div class="text-danger" *ngIf="f.tankMaxLevel.errors?.required">Tank Max Level Is Required
-              </div>
-            </div>
+            
             <div class="mb-3">
               <label class="form-label">Tank Min Quality</label>
               <input type="text" class="form-control" placeholder="Tank Min Quality" formControlName="tankMinQty"
