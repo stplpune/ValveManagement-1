@@ -15,22 +15,22 @@ import { ValidationService } from 'src/app/core/services/validation.service';
 })
 export class TankCalibrationComponent implements OnInit {
 
-  tankForm !:FormGroup | any;
-  filterFrm!:FormGroup|any;
+  tankForm !: FormGroup | any;
+  filterFrm!: FormGroup | any;
   tankArray = new Array();
-  submitted : boolean = true;
-  pageNumber:number=1;
-  pagesize:number =10;
-  tankCalibrationArray=new Array();
-  totalRows:any;
-  highlitedRow:any;
-  localstorageData:any;
-  editFlag:boolean=false;
-  updatedObj:any;
-  tankName:any;
-  btnText!:string;
-  yojanaArray=new Array();
-  networkArray=new Array();
+  submitted: boolean = true;
+  pageNumber: number = 1;
+  pagesize: number = 10;
+  tankCalibrationArray = new Array();
+  totalRows: any;
+  highlitedRow: any;
+  localstorageData: any;
+  editFlag: boolean = false;
+  updatedObj: any;
+  tankName: any;
+  btnText!: string;
+  yojanaArray = new Array();
+  networkArray = new Array();
   @ViewChild('AddValveModal') AddValveModal: any;
   constructor(
     private fb: FormBuilder,
@@ -40,41 +40,41 @@ export class TankCalibrationComponent implements OnInit {
     private errorSerivce: ErrorsService,
     private toastrService: ToastrService,
     public commonService: CommonService,
-    public validation:ValidationService,
+    public validation: ValidationService,
   ) { }
 
   ngOnInit(): void {
-    this.localstorageData=this.localStorage.getLoggedInLocalstorageData();
+    this.localstorageData = this.localStorage.getLoggedInLocalstorageData();
     this.getAllYojana(this.localstorageData.yojanaId);
     this.defaultForm();
     this.getFilterForm();
     this.getAllTankCalibration();
-    
+
   }
 
-  defaultForm(){
+  defaultForm() {
     this.tankForm = this.fb.group({
-         tankId:['',[Validators.required]],
-         tankMinLevel: ['',[Validators.required]],
-         tankMaxLevel: ['',[Validators.required]],
-         tankMinQty: ['',[Validators.required]],
-         tankMaxQty: ['',[Validators.required]],
+      tankId: ['', [Validators.required]],
+      tankMinLevel: ['', [Validators.required]],
+      tankMaxLevel: ['', [Validators.required]],
+      tankMinQty: ['', [Validators.required]],
+      tankMaxQty: ['', [Validators.required]],
     })
   }
 
-  getFilterForm(){
-     this.filterFrm =this.fb.group({
-      yojanaId:[0],
-      networkId:[0]
-     })
+  getFilterForm() {
+    this.filterFrm = this.fb.group({
+      yojanaId: [0],
+      networkId: [0]
+    })
   }
 
-  clearfilter(flag:any){
-    if(flag=='yojana'){
+  clearfilter(flag: any) {
+    if (flag == 'yojana') {
       this.filterFrm.controls['yojanaId'].setValue(0);
       this.filterFrm.controls['networkId'].setValue(0);
       this.getAllTankCalibration();
-    }else if(flag== 'network'){
+    } else if (flag == 'network') {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
       this.filterFrm.controls['networkId'].setValue(0);
       this.getAllTankCalibration();
@@ -82,11 +82,11 @@ export class TankCalibrationComponent implements OnInit {
 
   }
 
-  get f(){ return this.tankForm.controls}
+  get f() { return this.tankForm.controls }
 
 
-  getAllYojana(id:any){
-    this.apiService.setHttp('get','api/MasterDropdown/GetAllYojana?YojanaId='+ id, false, false, false,'valvemgt');
+  getAllYojana(id: any) {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + id, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -104,12 +104,12 @@ export class TankCalibrationComponent implements OnInit {
     });
   }
 
-  getNetworkByYojanaId(yojanaId:any){
-    this.apiService.setHttp('get','api/MasterDropdown/GetAllNetwork?YojanaId='+ yojanaId , false, false, false,'valvemgt');
+  getNetworkByYojanaId(yojanaId: any) {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
-          this.networkArray = res.responseData; 
+          this.networkArray = res.responseData;
         } else {
           this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -124,13 +124,13 @@ export class TankCalibrationComponent implements OnInit {
   }
 
 
-  getAllTank(){
-    this.apiService.setHttp('get','api/MasterDropdown/GetAllTank', false, false, false,'valvemgt');
+  getAllTank() {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllTank', false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.tankArray = res.responseData;
-          this.editFlag ? this.tankForm.controls['tankId'].setValue(this.updatedObj.tankId) : ''; 
+          this.editFlag ? this.tankForm.controls['tankId'].setValue(this.updatedObj.tankId) : '';
         } else {
           this.tankArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -144,18 +144,18 @@ export class TankCalibrationComponent implements OnInit {
     });
   }
 
-  getAllTankCalibration(){
+  getAllTankCalibration() {
     this.spinner.show();
-    let filterValue=this.filterFrm.value;
-    let obj ='UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber +'&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + filterValue.networkId;
-    this.apiService.setHttp('get','TankInfo/GetAllTankCalibration?' + obj, false,false,false,'valvemgt');
+    let filterValue = this.filterFrm.value;
+    let obj = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + filterValue.networkId;
+    this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.spinner.hide();
           this.tankCalibrationArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2?.totalCount;
-          this.highlitedRow=0;
+          this.highlitedRow = 0;
         } else {
           this.spinner.hide();
           this.tankCalibrationArray = [];
@@ -175,13 +175,13 @@ export class TankCalibrationComponent implements OnInit {
     this.getAllTankCalibration();
   }
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
-    if(this.tankForm.invalid){
+    if (this.tankForm.invalid) {
       return;
-    }else{
-      let formdata=this.tankForm.value;
-      let obj={
+    } else {
+      let formdata = this.tankForm.value;
+      let obj = {
         "tankId": formdata.tankId,
         "tankName": '',
         "tankHeightInCM": 0,
@@ -193,7 +193,7 @@ export class TankCalibrationComponent implements OnInit {
         "createdBy": 0
       }
 
-      this.apiService.setHttp('PUT','TankInfo/UpdateTankCalibration',false,obj, false,'valvemgt');
+      this.apiService.setHttp('PUT', 'TankInfo/UpdateTankCalibration', false, obj, false, 'valvemgt');
       this.apiService.getHttp().subscribe(
         (res: any) => {
           if (res.statusCode == '200') {
@@ -212,24 +212,28 @@ export class TankCalibrationComponent implements OnInit {
         }
       );
 
-      
-    
     }
 
   }
 
-  updateTankCal(obj:any){
-    this.editFlag=true;
-    this.updatedObj=obj;
+  updateTankCal(obj: any) {
+    this.editFlag = true;
+    this.updatedObj = obj;
     this.highlitedRow = obj.tankId;
-    this.btnText='Update';
+    this.btnText = 'Update';
     this.tankForm.patchValue({
-        tankMinLevel: this.updatedObj.tankMinLevel,
-         tankMaxLevel: this.updatedObj.tankMaxLevel,
-         tankMinQty: this.updatedObj.tankMinQty,
-         tankMaxQty: this.updatedObj.tankMaxQty,
+      tankMinLevel: this.updatedObj.tankMinLevel,
+      tankMaxLevel: this.updatedObj.tankMaxLevel,
+      tankMinQty: this.updatedObj.tankMinQty,
+      tankMaxQty: this.updatedObj.tankMaxQty,
     })
     this.getAllTank();
+  }
+
+  clearForm() {
+    this.submitted = false;
+    this.editFlag = false;
+    this.defaultForm();
   }
 
 }

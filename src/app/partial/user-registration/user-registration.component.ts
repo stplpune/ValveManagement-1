@@ -7,7 +7,9 @@ import { ErrorsService } from 'src/app/core/services/errors.service';
 import { ValidationService } from 'src/app/core/services/validation.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from 'src/app/core/services/common.service';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-user-registration',
@@ -35,6 +37,8 @@ export class UserRegistrationComponent implements OnInit {
   yoganaIdArray=new Array();
   networkIdArray=new Array();
   getLoginData:any;
+  subject: Subject<any> = new Subject();
+
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -53,6 +57,7 @@ export class UserRegistrationComponent implements OnInit {
     this.getUserRegistrationList();
     this.getUserType();
     this.getYoganaId();
+    this.searchFilters('false');
   }
 
   //Intialize Form Fields
@@ -126,14 +131,6 @@ export class UserRegistrationComponent implements OnInit {
     })
   }
 
-  clearSerach(flag?:any){
-    if(flag=='yojana'){
-      this.searchForm.controls['network'].setValue('');
-      this.getUserRegistrationList();
-    }else if(flag=='network'){
-      this.getUserRegistrationList();
-    }
-  }
   //Clear All Data In the Form Fields
   clearForm(formDirective?:any) {
     this.submitted = false;
@@ -324,4 +321,42 @@ export class UserRegistrationComponent implements OnInit {
       },
     });
   }
+
+ 
+
+  onKeyUpFilter() {
+    this.subject.next(true);
+  }
+
+  searchFilters(flag: any) {
+    if (flag == 'true') {
+      if (this.searchForm.value.searchField == "" || this.searchForm.value.searchField == null) {
+        this.toastrService.error("Please search and try again");
+        return
+      }
+    }
+    this.subject
+      .pipe(debounceTime(700))
+      .subscribe(() => {
+        this.searchForm.value.searchField;
+        this.pageNumber = 1;
+        this.getUserRegistrationList();
+      });
+  }
+
+  clearSerach(flag: any) {
+    if (flag == 'yojana') {
+      this.searchForm.controls['network'].setValue('');
+    } else if (flag == 'network') {
+      // this.searchForm.controls['network'].setValue('');
+    } else if (flag == 'search') {
+      this.searchForm.controls['searchField'].setValue('');
+    }
+    this.pageNumber = 1;
+    this.getUserRegistrationList();
+    this.clearForm();
+  }
+
 }
+
+
