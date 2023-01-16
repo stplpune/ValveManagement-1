@@ -128,8 +128,8 @@ export class UserRegistrationComponent implements OnInit {
 
   clearSerach(flag?:any){
     if(flag=='yojana'){
+      this.searchForm.controls['network'].setValue('');
       this.getUserRegistrationList();
-      this.searchForm.controls['network'].setvalue();
     }else if(flag=='network'){
       this.getUserRegistrationList();
     }
