@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -16,8 +16,8 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class YojanaMasterComponent implements OnInit {
   yojanaForm!: FormGroup | any;
   pageNumber: number = 1;
-  pageSize: number = 10;
-  listCount!: number;
+  pagesize: number = 10;
+  totalRows!: number;
   yojanaListArray = new Array();
   submitted = false;
   districtListArray = new Array();
@@ -28,8 +28,11 @@ export class YojanaMasterComponent implements OnInit {
   data: any;
   onSelFlag:boolean = true;
   highlitedRow:any;
+  btnText = 'Submit';
 
-  @ViewChild('yojanaModal') yojanaModal: any;
+
+  @ViewChild('yojanaModal',) yojanaModal: any;
+  @ViewChild('yojanafrm') yoj!: NgForm;
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -129,7 +132,6 @@ export class YojanaMasterComponent implements OnInit {
   }
 
   clearDropdown(flag: any) {
-    debugger;
     switch (flag) {
       case 'district':
         this.yojanaForm.controls['talukaId'].setValue('');
@@ -144,15 +146,14 @@ export class YojanaMasterComponent implements OnInit {
 
   getAllYojanaList() {
     this.spinner.show();
-    let obj = 'pageno=' + this.pageNumber + '&pagesize=' + this.pageSize;
+    let obj = 'pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + obj, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.spinner.hide();
           this.yojanaListArray = res.responseData.responseData1;
-          this.listCount = res.responseData.responseData2?.totalCount;
-          //console.log(this.userListArray);
+          this.totalRows = res.responseData.responseData2?.totalCount;
           this.highlitedRow=0;
         } else {
           this.spinner.hide();
@@ -168,7 +169,7 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
-  selPagination(pagNo: number) {
+  onClickPagintion(pagNo: number) {
     this.pageNumber = pagNo;
     this.getAllYojanaList();
   }
@@ -204,6 +205,7 @@ export class YojanaMasterComponent implements OnInit {
             this.toastrService.success(res.statusMessage);
             this.yojanaModal.nativeElement.click();
             this.getAllYojanaList();
+            this.clearForm();
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
@@ -219,8 +221,10 @@ export class YojanaMasterComponent implements OnInit {
 
   updateYojana(yojana: any) {
     this.editFlag = true;
+    this.onSelFlag = true
     this.updatedObj = yojana
-    this.highlitedRow=yojana.id;
+    this.highlitedRow = yojana.id;
+    this.btnText = 'Update'
     this.yojanaForm.patchValue({
       yojanaName: this.updatedObj.yojanaName,
     })
@@ -272,6 +276,7 @@ export class YojanaMasterComponent implements OnInit {
   clearForm() {
     this.submitted = false;
     this.editFlag = false;
+    this.btnText = 'Submit';
     this.defaultForm();
   }
 }
