@@ -20,6 +20,10 @@ const routes: Routes = [
     data: { breadcrumb: [{ title: 'User Registration', active: true }] }
   },
   {
+    path: 'page-right-access', loadChildren: () => import('../partial/page-right-access/page-right-access.module').then(m => m.PageRightAccessModule),
+    data: { breadcrumb: [{ title: 'Page Right Access', active: true }] }
+  },
+  {
     path: 'segment-master', loadChildren: () => import('../partial/masters/segment-master/segment-master.module').then(m => m.SegmentMasterModule),
     data: { breadcrumb: [{ title: 'Segment Master', active: true }] }
   },
