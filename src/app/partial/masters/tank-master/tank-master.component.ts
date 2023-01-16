@@ -144,7 +144,7 @@ export class TankMasterComponent implements OnInit {
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId:res==0 ? res.yojanaId : 0,
+      yojanaId:res.yojanaId,
       networkId: res.networkId,
     })
   }
