@@ -26,7 +26,13 @@
         </ngx-select>
       </div>
       <div class="col-sm-3">
-        <input type="text" class="form-control" placeholder="Search By Name / Mobile No." maxlength="10" formControlName="searchField"/>
+        <div class="input-group">
+          <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Name / Mobile No." (keyup)="onKeyUpFilter()" />
+          <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')" *ngIf="searchForm.value.searchField"><i
+                  _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i class="fas fa-search"></i></button>
+      </div>
+
       </div>
     </div>
   </form>
