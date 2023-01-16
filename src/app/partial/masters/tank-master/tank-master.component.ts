@@ -22,6 +22,7 @@ export class TankMasterComponent implements OnInit {
   totalRows: any;
   deleteId!: number;
   delData: any;
+  filterFrm!: FormGroup;
   @ViewChild('closebutton') closebutton: any;
 
   constructor
@@ -37,6 +38,7 @@ export class TankMasterComponent implements OnInit {
   ngOnInit(): void {
     console.log('getData',this.getData)
     this.geFormData();
+    this.getFilterFormData();
     this.getTableData();
     this.getYojana();
   }
@@ -46,7 +48,7 @@ export class TankMasterComponent implements OnInit {
       "id": [0],
       "tankName": ['', [Validators.required]],
       "address": ['', [Validators.required,Validators.maxLength(500)]],
-      "yojanaId": [this.getData.yojanaId, Validators.required],
+      "yojanaId": [this.getData.yojanaId,[Validators.required]],
       "networkId": [0, Validators.required],
     })
   }
@@ -54,9 +56,29 @@ export class TankMasterComponent implements OnInit {
     return this.tankForm.controls;
   }
 
+  getFilterFormData(){
+    this.filterFrm =this.fb.group({
+     yojanaId:[0],
+     networkId:[0]
+    })
+ }
+
+ clearfilter(flag:any){
+  if(flag=='yojana'){
+    this.filterFrm.controls['yojanaId'].setValue(0);
+    this.filterFrm.controls['networkId'].setValue(0);
+    this.getTableData();
+  }else if(flag== 'network'){
+    this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
+    this.filterFrm.controls['networkId'].setValue(0);
+    this.getTableData();
+  }
+
+}
+
   getTableData() {
     this.spinner.show();
-    let formData = this.tankForm.value;
+    let formData = this.filterFrm.value;
     this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + formData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
@@ -144,7 +166,7 @@ export class TankMasterComponent implements OnInit {
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId:res.yojanId,
+      yojanaId:res.yojanaId,
       networkId: res.networkId,
     })
   }
