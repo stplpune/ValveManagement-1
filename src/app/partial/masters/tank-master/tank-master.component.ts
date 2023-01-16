@@ -78,7 +78,7 @@ export class TankMasterComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData.yojanaId), this.getNetwork()) : '';
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.getData.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
         }
@@ -89,7 +89,6 @@ export class TankMasterComponent implements OnInit {
   }
 
   getNetwork() {
-    this.networkArray = []
     let formData = this.tankForm.value;
     console.log(formData.yojanaId);
     if (formData.yojanaId) {
