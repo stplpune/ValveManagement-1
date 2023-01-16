@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-tank-master',
   templateUrl: './tank-master.component.html',
@@ -21,7 +22,7 @@ export class TankMasterComponent implements OnInit {
   totalRows: any;
   deleteId!: number;
   delData: any;
-  @ViewChild('closebutton') closebutton:any;
+  @ViewChild('closebutton') closebutton: any;
 
   constructor
     (
@@ -29,11 +30,12 @@ export class TankMasterComponent implements OnInit {
       private service: ApiService,
       private local: LocalstorageService,
       private toastrService: ToastrService,
-      private error: ErrorsService
+      private error: ErrorsService,
+      private spinner: NgxSpinnerService,
+
     ) { }
 
   ngOnInit(): void {
-    console.log(this.getData);
     this.geFormData();
     this.getTableData();
     this.getYojana();
@@ -43,8 +45,8 @@ export class TankMasterComponent implements OnInit {
     this.tankForm = this.fb.group({
       "id": [0],
       "tankName": ['', [Validators.required]],
-      "address": ['', Validators.required],
-      "yojanaId": [0, Validators.required],
+      "address": ['', [Validators.required,Validators.maxLength(500)]],
+      "yojanaId": [this.getData.yojanaId, Validators.required],
       "networkId": [0, Validators.required],
     })
   }
@@ -53,27 +55,28 @@ export class TankMasterComponent implements OnInit {
   }
 
   getTableData() {
+    this.spinner.show();
     let formData = this.tankForm.value;
     this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + formData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
+          this.spinner.hide();
           this.responseArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
-
         } else {
+          this.spinner.hide();
           this.responseArray = [];
         }
       }), error: (error: any) => {
         this.error.handelError(error.status);
       }
     })
-    console.log(this.responseArray)
   }
 
   getYojana() {
-    let formData = this.tankForm.value;
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
+    let formData = this.tankForm.value.yojanaId;
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId='+this.getData.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -89,9 +92,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   getNetwork() {
-    this.networkArray = []
     let formData = this.tankForm.value;
-    console.log(formData.yojanaId);
     if (formData.yojanaId) {
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + formData.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
@@ -114,25 +115,20 @@ export class TankMasterComponent implements OnInit {
       return;
     } else {
       let obj = {
-        "id": 0,
-        "tankName": formData.tankName,
-        "latitude": "string",
-        "longitude": "string",
-        "address": formData.address,
+        ...formData,
         "isDeleted": false,
         "createdBy": this.local.userId(),
         "modifiedBy": this.local.userId(),
-        "yojanaId": formData.yojanaId,
-        "networkId": formData.networkId,
       }
-      console.log(obj)
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
+          console.log('obj',obj)
           if (res.statusCode == '200') {
+            this.closebutton.nativeElement.click();
             this.toastrService.success(res.statusMessage);
-            this.getTableData();
             this.clearForm();
+            this.getTableData();
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
@@ -142,13 +138,13 @@ export class TankMasterComponent implements OnInit {
   }
 
   onEditData(res?: any) {
-    console.log('res', res)
+    console.log('res',res);
     this.editFlag = true;
     this.tankForm.patchValue({
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId: res.yojanaId,
+      yojanaId:res.yojanaId,
       networkId: res.networkId,
     })
   }
@@ -161,11 +157,10 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     formDirective?.resetForm();
     this.editFlag = false;
-     this.geFormData();
+    this.geFormData();
   }
 
   getDeleteConfirm(getData?: any) {
-    console.log(getData);
     this.delData = {
       "id": getData.id,
       "tankName": getData.tankName,
@@ -191,9 +186,5 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
-
-
-
-
 
 }
