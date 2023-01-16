@@ -90,8 +90,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       },
     })
 }
-
-// api/MasterDropdown/GetAllNetwork?YojanaId=1
 getAllNetwork() {
   this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=1', false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
@@ -112,23 +110,21 @@ clearForm(formDirective?:any){
 }
 
 getAllSensorDeviceTableData() {
+  let yojanaIds = this.tankSensorDeviceFrm.value.yojanaId;
   let networkIds = this.tankSensorDeviceFrm.value.networkId;
+  let tankIds = this.tankSensorDeviceFrm.value.tankId;
   console.log(networkIds,'re');
-  
-  // ValveManagement/Network/GetAllNetwork?YojanaId=1&pageno=1&pagesize=10
   // this.spinner.show();
-  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.localStorage.userId() + '&pageno=1&pagesize=10&YojanaId='+ '1' +'&NetworkId='+ '16' +'&TankId=' + '14' , false, false, false, 'valvemgt');
+  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.localStorage.userId() + '&pageno=1&pagesize=10&YojanaId='+ Number(this.editFlag ? yojanaIds : '0') +'&NetworkId='+ Number(this.editFlag ? networkIds : '0') +'&TankId=' + Number(this.editFlag ? tankIds : '0') , false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       // this.spinner.hide();
       if (res.statusCode == "200") {
         this.allSensorDeviceArray = res.responseData.responseData1;
-        console.log(this.allSensorDeviceArray);
-        
         // this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
       } else {
-        // this.spinner.hide();
-        // this.allNetworkArray = [];
+        this.spinner.hide();
+        this.allSensorDeviceArray = [];
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
@@ -149,7 +145,7 @@ onSubmit() {
     // "modifiedby": this.localStorage.userId(),
     // "modifiedDate": new Date(),
     "tankName": "string",
-    "isDeleted": true,
+    "isDeleted": false,
     "modifiedBy": this.localStorage.userId(),
   }
   this.spinner.show();
@@ -164,7 +160,7 @@ onSubmit() {
       if (res.statusCode == '200') {
         this.spinner.hide();
         this.toastrService.success(res.statusMessage);
-        // this.getAllNetworkTableData();
+        this.getAllSensorDeviceTableData();
         // this.closebutton.nativeElement.click();
         this.clearForm();
       } else {
