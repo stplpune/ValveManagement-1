@@ -232,4 +232,10 @@ export class TankCalibrationComponent implements OnInit {
     this.getAllTank();
   }
 
+  clearForm() {
+    this.submitted = false;
+    this.editFlag = false;
+    this.defaultForm();
+  }
+
 }
