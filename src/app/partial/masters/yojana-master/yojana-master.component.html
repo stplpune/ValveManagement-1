@@ -3,8 +3,8 @@
         <div class="row justify-content-between align-items-center">
             <div class="col-sm-4">Yojana Master</div>
             <div class="col-sm-4 text-end">
-                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
-                        class="fas fa-sync-alt"></i></button>
+                <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
+                        class="fas fa-sync-alt"></i></button> -->
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
                     data-bs-target="#YojanaModal">
                     <i class="fa-solid fa-plus me-2"></i>
@@ -24,7 +24,8 @@
             </thead>
             <tbody>
                 <tr
-                    *ngFor="let yojana of yojanaListArray | paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount}; let i=index"
+                    *ngFor="let yojana of yojanaListArray |  paginate: {itemsPerPage: pagesize,
+                        currentPage: pageNumber, totalItems:totalRows}; let i=index"
                     [class.active]="yojana.id == highlitedRow">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{yojana.yojanaName}}</td>
@@ -44,13 +45,19 @@
                 </tr>
             </tbody>
         </table>
-        <pagination-controls (pageChange)="pageNumber = $event"
-            (click)="selPagination(pageNumber)"></pagination-controls>
+        <div class="mt-2 text-end" *ngIf="yojanaListArray?.length == 0">
+            <div class="alert alert-danger text-center py-2">No Data Found..!
+            </div>
+        </div>
+        <div class="mt-2 text-end" *ngIf="yojanaListArray?.length != 0">
+            <pagination-controls previousLabel="" nextLabel=""
+            (pageChange)="onClickPagintion($event)"> </pagination-controls>
+        </div>
     </div>
 </div>
 
 <!-- Network Modal -->
-<div class="modal fade " id="YojanaModal" tabindex="-1" aria-labelledby="YojanaModal" aria-hidden="true">
+<div class="modal fade " id="YojanaModal" tabindex="-1" aria-labelledby="YojanaModal" aria-hidden="true"  data-dismiss="modal" data-bs-keyboard="false" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main">
@@ -59,7 +66,7 @@
                     #yojanaModal (click)="clearForm();highlitedRow=0;"></button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="yojanaForm">
+                <form [formGroup]="yojanaForm" #yojanafrm="ngForm">
                     <div class="form-container">
                         <div class="mb-3">
                             <label class="form-label">Yojana Name <span class="text-danger">*</span></label>
@@ -109,7 +116,7 @@
                         </div>
                         <div class="mb-0 d-flex justify-content-end gap-2">
                             <button class="btn btn-light-main" type="button" (click)="clearForm()">Clear</button>
-                            <button class="btn btn-main" type="submit" (click)="onSubmit()">{{editFlag ? 'Update' : 'Submit'}}</button>
+                            <button class="btn btn-main" type="submit" (click)="onSubmit()">{{btnText}}</button>
                         </div>
                     </div>
                 </form>
