@@ -20,8 +20,8 @@ export class TankMasterComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   deleteId!: number;
-  delData: any
-
+  delData: any;
+  @ViewChild('closebutton') closebutton:any;
 
   constructor
     (
@@ -46,25 +46,21 @@ export class TankMasterComponent implements OnInit {
       "address": ['', Validators.required],
       "yojanaId": [0, Validators.required],
       "networkId": [0, Validators.required],
-      // "isDeleted": true,
-      // "createdBy":this.local.userId(),
-      // "modifiedBy": this.local.userId(),
-      // "createdDate":new Date(),
-      //  "modifiedDate":new Date(),
     })
   }
   get f() {
     return this.tankForm.controls;
   }
-  // DeviceInfo/GetAllTankInformation?UserId=1&pageno=1&pagesize=10&YojanaId=1&NetworkId=1
-  // 'DeviceInfo/GetAllTankInformation?UserId='+this.getData.userId+'&pageno=1&pagesize=10&YojanaId='+formData.yojanaId+'&NetworkId='+formData.networkId
+
   getTableData() {
     let formData = this.tankForm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=1&pagesize=10&YojanaId=' + formData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + formData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.responseArray = res.responseData.responseData1;
+          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+
         } else {
           this.responseArray = [];
         }
@@ -72,15 +68,17 @@ export class TankMasterComponent implements OnInit {
         this.error.handelError(error.status);
       }
     })
+    console.log(this.responseArray)
   }
 
   getYojana() {
+    let formData = this.tankForm.value;
     this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
-         this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.tankForm.value.yojanaId),this.getNetwork()):''; 
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
         }
@@ -91,21 +89,23 @@ export class TankMasterComponent implements OnInit {
   }
 
   getNetwork() {
+    this.networkArray = []
     let formData = this.tankForm.value;
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + formData.yojanaId, false, false, false, 'valvemgt');
-    this.service.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == '200') {
-          this.networkArray = res.responseData;
-          // this.editFlag || this.levelId != 1 ? (this.registerForm.controls['districtId'].setValue(formData), this.getTaluka()) : this.getTaluka();
-        } else {
-          this.networkArray = [];
-          // this.common.checkEmptyData(res.statusMessage) == false ? this.error.handelError(res.statusCode) : this.common.snackBar(res.statusMessage, 1);
+    console.log(formData.yojanaId);
+    if (formData.yojanaId) {
+      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + formData.yojanaId, false, false, false, 'valvemgt');
+      this.service.getHttp().subscribe({
+        next: ((res: any) => {
+          if (res.statusCode == '200') {
+            this.networkArray = res.responseData;
+          } else {
+            this.networkArray = [];
+          }
+        }), error: (error: any) => {
+          this.error.handelError(error.status);
         }
-      }), error: (error: any) => {
-        this.error.handelError(error.status);
-      }
-    })
+      })
+    }
   }
 
   onSubmit() {
@@ -129,7 +129,6 @@ export class TankMasterComponent implements OnInit {
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
-          console.log(this.editFlag)
           if (res.statusCode == '200') {
             this.toastrService.success(res.statusMessage);
             this.getTableData();
@@ -162,7 +161,7 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     formDirective?.resetForm();
     this.editFlag = false;
-    this.geFormData();
+     this.geFormData();
   }
 
   getDeleteConfirm(getData?: any) {

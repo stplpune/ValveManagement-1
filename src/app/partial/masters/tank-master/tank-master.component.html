@@ -54,7 +54,7 @@
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Master
         </p>
-        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse"  data-bs-dismiss="modal" aria-label="Close"  (click)="clearForm(formDirective)" #closebutton></button>
       </div>
       <form [formGroup]="tankForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
@@ -83,7 +83,7 @@
                   <label class="form-label">Yojana <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                   placeholder="Select Yojana" optionValueField="yojanaId"
-                  (select)="getNetwork()"
+                  (ngModelChange)="getNetwork()"
                  optionTextField="yojanaName">
                  <div *ngIf="f['yojanaId'].touched && f['yojanaId'].errors" class="invalid-feedback">
                   <div class="validation-css" *ngIf="f['yojanaId'].errors['yojanaId']"> Yojana Is Required </div>
