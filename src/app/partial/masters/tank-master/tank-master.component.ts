@@ -32,10 +32,10 @@ export class TankMasterComponent implements OnInit {
       private toastrService: ToastrService,
       private error: ErrorsService,
       private spinner: NgxSpinnerService,
-
     ) { }
 
   ngOnInit(): void {
+    console.log('getData',this.getData)
     this.geFormData();
     this.getTableData();
     this.getYojana();
@@ -81,7 +81,7 @@ export class TankMasterComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData.yojanaId), this.getNetwork()) : '';
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
         }
@@ -144,7 +144,7 @@ export class TankMasterComponent implements OnInit {
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId:res.yojanaId,
+      yojanaId:res.yojaId,
       networkId: res.networkId,
     })
   }
