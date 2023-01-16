@@ -5,6 +5,7 @@ import { TankSensorDeviceMasterRoutingModule } from './tank-sensor-device-master
 import { TankSensorDeviceMasterComponent } from './tank-sensor-device-master.component';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
     TankSensorDeviceMasterRoutingModule,
     NgxSelectModule
   ]

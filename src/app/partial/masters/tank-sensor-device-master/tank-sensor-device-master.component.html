@@ -4,7 +4,7 @@
       <div class="col-sm-4">Tank Sensor Device Master
       </div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
+        <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Sensor Device
           Master
@@ -28,8 +28,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let allSensorDeviceInfo of allSensorDeviceArray">
-          <td>1</td>
+        <tr *ngFor="let allSensorDeviceInfo of allSensorDeviceArray | paginate: {itemsPerPage: 10,
+          currentPage: pageNumber, totalItems:totalRows}; let i = index">
+          <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{allSensorDeviceInfo.deviceId}}</td>
           <td>{{allSensorDeviceInfo.deviceName}}</td>
           <!-- <td>{{allSensorDeviceInfo.simId}}</td> -->
@@ -52,10 +53,14 @@
         </tr>
       </tbody>
     </table>
-    <div class="mt-2 text-end">
+    <div class="mt-2 text-end" *ngIf="allSensorDeviceArray?.length == 0">
       <div class="alert alert-danger text-center py-2">No Data Found..!
       </div>
-    </div>
+  </div>
+  <div class="mt-2 text-end" *ngIf="allSensorDeviceArray?.length != 0">
+      <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
+      </pagination-controls>
+  </div>
   </div>
 </div>
 
@@ -67,7 +72,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Sensor Device Master</p>
-        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse"  #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form [formGroup]="tankSensorDeviceFrm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
@@ -94,7 +99,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Tank</label>
-              <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId" placeholder="Select Tank" optionValueField="id"
+              <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId" placeholder="Select Tank" optionValueField="tankId"
                 optionTextField="tankName" (remove)="clearDropdown('tankName')">
               </ngx-select>
             </div>

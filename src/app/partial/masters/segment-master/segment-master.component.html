@@ -13,6 +13,25 @@
             </div>
         </div>
     </div>
+
+    <div class="card-header">
+        <form [formGroup]="filterForm">
+            <div class="row g-2 justify-content-end">
+                <div class="col-sm-3">
+                    <!-- <ngx-select [allowClear]="true" [items]="electionNameArray" optionValueField="id" (remove)="clearFilter('electionType')" (select)="filterData()" optionTextField="ElectionName" placeholder="Election Name" formControlName="ElectionNameId">
+                    </ngx-select> -->
+                </div>
+                <div class="col-sm-4">
+                    <div class="input-group">
+                        <!-- <ngx-select [allowClear]="true" [items]="electionNameArray" optionValueField="id" (remove)="clearFilter('electionType')" (select)="filterData()" optionTextField="ElectionName" placeholder="Election Name" formControlName="ElectionNameId">
+                        </ngx-select> -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
     <div class="card-body">
 
         <table class="table align-middle dashboard-table">
@@ -31,7 +50,7 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditMapData(segMaster)">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="getValveSegmentList(segMaster)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -72,12 +91,19 @@
                         autocapitalize="off" spellcheck="off" type="text" #search>
                     </div>
                 </div>
-
                 <div class="gmap_canvas position-relative">
                     <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape" class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
                     <agm-map [latitude]="23.7541318" [zoom]="6" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
+                        <!-- <agm-marker
+                        *ngFor="let m of markers; let i = index"
+                        [latitude]="m.lat"
+                        [longitude]="m.lng"
+                        [iconUrl]="m.iconUrl"
+                      >
+                      </agm-marker> -->
+
                     </agm-map>
                 </div>
                 <hr>
