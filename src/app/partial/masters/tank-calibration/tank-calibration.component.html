@@ -12,19 +12,23 @@
 
       <form [formGroup]="filterFrm">
         <div class="form-container">
-          <div class="mb-3">
-            <label class="form-label">Yojana Name</label>
-            <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId" placeholder="Select Yojana" 
-              optionValueField="yojanaId" optionTextField="yojanaName" (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);getAllTankCalibration()"
-              (remove)="clearfilter('yojana')">
-            </ngx-select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Network Name</label>
-            <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId" placeholder="Select Network" 
-            optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterFrm.value.yojanaId" (select)="getAllTankCalibration()"
-            (remove)="clearfilter('network')">
-          </ngx-select>
+          <div class="row">
+            <div class="col-sm-3">
+              <label class="form-label">Yojana Name</label>
+              <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
+                placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
+                (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);getAllTankCalibration()"
+                (remove)="clearfilter('yojana')">
+              </ngx-select>
+            </div>
+            <div class="col-sm-3">
+              <label class="form-label">Network Name</label>
+              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
+                placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
+                [disabled]="!this.filterFrm.value.yojanaId" (select)="getAllTankCalibration()"
+                (remove)="clearfilter('network')">
+              </ngx-select>
+            </div>
           </div>
         </div>
 
@@ -45,9 +49,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr  *ngFor="let tankCal of tankCalibrationArray |  paginate: {itemsPerPage: pagesize,
-          currentPage: pageNumber, totalItems:totalRows}; let i=index"
-      [class.active]="tankCal.tankId == highlitedRow" >
+        <tr *ngFor="let tankCal of tankCalibrationArray |  paginate: {itemsPerPage: pagesize,
+          currentPage: pageNumber, totalItems:totalRows}; let i=index" [class.active]="tankCal.tankId == highlitedRow">
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{tankCal.tankName}}</td>
           <td>{{tankCal.tankMinLevel}}</td>
@@ -72,11 +75,10 @@
     <div class="mt-2 text-end" *ngIf="tankCalibrationArray?.length == 0">
       <div class="alert alert-danger text-center py-2">No Data Found..!
       </div>
-  </div>
-  <div class="mt-2 text-end" *ngIf="tankCalibrationArray?.length != 0">
-      <pagination-controls previousLabel="" nextLabel=""
-      (pageChange)="onClickPagintion($event)"> </pagination-controls>
-  </div>
+    </div>
+    <div class="mt-2 text-end" *ngIf="tankCalibrationArray?.length != 0">
+      <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)"> </pagination-controls>
+    </div>
   </div>
 </div>
 
@@ -89,7 +91,8 @@
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">{{btnText}} Tank Calibration
         </p>
-        <button type="button" class="btn-close btn-close-inverse" #AddValveModal data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse" #AddValveModal data-bs-dismiss="modal"
+          aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
@@ -97,7 +100,7 @@
           <div class="form-container">
             <div class="mb-3">
               <label class="form-label">Tank Name</label>
-              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankId" placeholder="Select tank" 
+              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankId" placeholder="Select tank"
                 optionValueField="id" optionTextField="tankName" [disabled]="true"
                 [ngClass]="{ 'is-invalid': submitted && f.tankId.errors}">
               </ngx-select>
@@ -110,8 +113,8 @@
               <label class="form-label">Tank Min Level</label>
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Tank Min Level" formControlName="tankMinLevel"
-                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-                [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel.errors}">
+                  (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                  [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel.errors}">
               </div>
               <div *ngIf="submitted && f.tankMinLevel.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMinLevel.errors?.required">Tank Min Level Is Required
@@ -120,9 +123,9 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Tank Max Level</label>
-              <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel" 
-              (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-              [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
+              <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel"
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
             </div>
             <div *ngIf="submitted && f.tankMaxLevel.errors" class="invalid-feedback">
               <div class="text-danger" *ngIf="f.tankMaxLevel.errors?.required">Tank Max Level Is Required
@@ -131,8 +134,8 @@
             <div class="mb-3">
               <label class="form-label">Tank Min Quality</label>
               <input type="text" class="form-control" placeholder="Tank Min Quality" formControlName="tankMinQty"
-              (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-              [ngClass]="{ 'is-invalid': submitted && f.tankMinQty.errors}">
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.tankMinQty.errors}">
               <div *ngIf="submitted && f.tankMinQty.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMinQty.errors?.required">Tank Min Qty Is Required
                 </div>
@@ -141,8 +144,8 @@
             <div class="mb-3">
               <label class="form-label">Tank Max Quality</label>
               <input type="text" class="form-control" placeholder="Tank Max Quality" formControlName="tankMaxQty"
-              (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-              [ngClass]="{ 'is-invalid': submitted && f.tankMaxQty.errors}">
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.tankMaxQty.errors}">
               <div *ngIf="submitted && f.tankMaxQty.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMaxQty.errors?.required">Tank Max Qty Is Required
                 </div>
