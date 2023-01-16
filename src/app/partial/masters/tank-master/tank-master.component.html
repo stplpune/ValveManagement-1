@@ -18,42 +18,27 @@
           <th>Sr. No.</th>
           <th>Tank Name</th>
           <th>Tank Address</th>
-          <th>Yojana</th>
-          <th>Network</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let data of responseArray;let i=index">
-          <td>{{i+1}}</td>
+        <tr *ngFor="let data of responseArray | paginate: {itemsPerPage: pagesize,
+          currentPage: pageNumber, totalItems:totalRows};let i=index">
+          <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{data.tankName}}</td>
           <td>{{data.address}}</td>
-          <td>{{data.yojanId}}</td>
-          <td>{{data.networkId}}</td>
-          <td> <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-            data-bs-toggle="modal" data-bs-target="#SegmentModal">
+          <td> <button type="button" (click)="onEditData(data)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
+            data-bs-toggle="modal" data-bs-target="#AddValveModal">
             <i class="fa-regular fa-pen-to-square"></i>
         </button>
-        <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+        <button type="button"  (click)="getDeleteConfirm(data)" class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
             data-bs-toggle="modal" data-bs-target="#deleteModel">
             <i class="fa-solid fa-trash-can"></i>
         </button></td>
-          <!-- <td>
-            <div class="btn-group">
-              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                data-bs-target="#AddValveModal">
-                <i class="fa-regular fa-pen-to-square"></i>
-              </button>
-              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                data-bs-toggle="modal" data-bs-target="#deleteModel">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-          </td> -->
         </tr>
       </tbody>
     </table>
-    <div class="mt-2 text-end">
+    <div class="mt-2 text-end" *ngIf="responseArray?.length == 0">
       <div class="alert alert-danger text-center py-2">No Data Found..!
       </div>
     </div>
@@ -62,7 +47,7 @@
 
 
 <!-- Modal for adding new valve -->
-<div class="modal fade" id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="AddValveModal" data-bs-backdrop="static" aria-labelledby="AddValveModal" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="AddValveModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
@@ -71,50 +56,49 @@
         </p>
         <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form [formGroup]="tankForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="tankForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
               <label class="form-label">Tank Name</label>
               <input type="text" class="form-control" placeholder="Tank Name" formControlName="tankName">
+              <div *ngIf="f['tankName'].touched && f['tankName'].errors" class="invalid-feedback">
+                <div class="validation-css" *ngIf="f['tankName'].errors['tankName']"> Tank Name is required </div>
+            </div>
             </div>
             <div class="mb-2">
               <label class="form-label">Address</label>
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Address" formControlName="address"> 
+                <div *ngIf="f['address'].touched && f['address'].errors" class="invalid-feedback">
+                  <div class="validation-css" *ngIf="f['address'].errors['address']"> Address  Is Required </div>
+              </div>
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
               </div>
             </div>
             <div class="row">
-              
-            
-
               <div class="col-6">
-                  <!-- <label class="form-label">Yojana</label>
-                  <ngx-select  [allowClear]="true"  [items]="yojanaArray" class="form-select" class="form-control"
-                   aria-label="Default select example"optionValueField="yojanaId" optionTextField="yojanaName"  (select)="getNetwork()" formControlName="yojanaId">
-                    <option selected>Yojana</option>
-                    <option *ngFor="let yoj of yojanaArray" value="yoj.yojanaId">{{yoj.yojanaName}}</option>
-                  </ngx-select> -->
                   <label class="form-label">Yojana <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                   placeholder="Select Yojana" optionValueField="yojanaId"
                   (select)="getNetwork()"
                  optionTextField="yojanaName">
+                 <div *ngIf="f['yojanaId'].touched && f['yojanaId'].errors" class="invalid-feedback">
+                  <div class="validation-css" *ngIf="f['yojanaId'].errors['yojanaId']"> Yojana Is Required </div>
+              </div>
              </ngx-select>
               </div>
               <div class="col-6">
                 <div class="mb-2">
                   <label class="form-label">Network</label>
-                  <!-- <select class="form-select" class="form-control" aria-label="Default select example" formControlName="networkId">
-                    <option selected>Network</option>
-                    <option *ngFor="let net of networkArray" value="net.networkId">{{net.networkName}}</option>
-                  </select> -->
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                   placeholder="Select Network" optionValueField="networkId"
                  optionTextField="networkName">
+                 <div *ngIf="f['networkId'].touched && f['networkId'].errors" class="invalid-feedback">
+                  <div class="validation-css" *ngIf="f['networkId'].errors['networkId']"> Network Is Required </div>
+              </div>
              </ngx-select>
                   <div class="invalid-feedback">
                   </div>
@@ -124,8 +108,8 @@
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
-              <button type="button" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center">{{this.editFlag ? 'Update' : 'Submit'}}</button>
+              <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)" #closebutton>Clear</button>
+              <button type="submit" [disabled]="tankForm.invalid" class="btn btn-main text-center">{{this.editFlag ? 'Update' : 'Submit'}}</button>
             </div>
           </div>
         </div>
@@ -158,7 +142,8 @@
         <p class="mb-4">Do you really want to This process can not be undone.</p>
         <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
           aria-label="Close">Cancel</button>
-        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
+
+        <button class="btn btn-danger" type="button" (click)="deleteData()" data-bs-dismiss="modal" aria-label="Close" type="button"
           data-bs-dismiss="modal" aria-label="Close">I'm
           Sure</button>
       </div>
