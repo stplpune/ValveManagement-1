@@ -38,7 +38,6 @@ export class TankMasterComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    console.log('getData', this.getData)
     this.geFormData();
     this.getFilterFormData();
     this.getTableData();
@@ -134,9 +133,8 @@ export class TankMasterComponent implements OnInit {
 
   getNetwork(status?: any) {
     let netId: any;
-    console.log('status', status)
-    // netId=this.editFlag ? this.tankForm.value.yojanaId : 0;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+   if(netId){
     this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + netId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
@@ -149,6 +147,7 @@ export class TankMasterComponent implements OnInit {
         this.error.handelError(error.status);
       }
     })
+   }
   }
 
   onSubmit() {
@@ -165,7 +164,6 @@ export class TankMasterComponent implements OnInit {
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
-          console.log('obj', obj)
           if (res.statusCode == '200') {
             this.closebutton.nativeElement.click();
             this.toastrService.success(res.statusMessage);
@@ -180,7 +178,6 @@ export class TankMasterComponent implements OnInit {
   }
 
   onEditData(res?: any) {
-    console.log('res', res);
     this.editFlag = true;
     this.tankForm.patchValue({
       id: res.id,
@@ -200,6 +197,7 @@ export class TankMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
+    this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
     // this.editFlag ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0)):'';
   }
 
