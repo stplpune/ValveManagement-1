@@ -69,18 +69,7 @@ export class TankCalibrationComponent implements OnInit {
     })
   }
 
-  clearfilter(flag: any) {
-    if (flag == 'yojana') {
-      this.filterFrm.controls['yojanaId'].setValue(0);
-      this.filterFrm.controls['networkId'].setValue(0);    
-    } else if (flag == 'network') {
-      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
-      this.filterFrm.controls['networkId'].setValue(0);  
-    }
-    this.getAllTankCalibration();
-
-  }
-
+ 
   get f() { return this.tankForm.controls }
 
 
@@ -169,9 +158,27 @@ export class TankCalibrationComponent implements OnInit {
     });
   }
 
+  filterData() {
+    this.pageNumber = 1;
+    this.getAllTankCalibration();
+   
+  }
+
   onClickPagintion(pagNo: number) {
     this.pageNumber = pagNo;
     this.getAllTankCalibration();
+  }
+
+  clearfilter(flag: any) {
+    if (flag == 'yojana') {
+      this.filterFrm.controls['yojanaId'].setValue(0);
+      this.filterFrm.controls['networkId'].setValue(0);    
+    } else if (flag == 'network') {
+      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
+      this.filterFrm.controls['networkId'].setValue(0);  
+    }
+    this.getAllTankCalibration();
+
   }
 
   onSubmit() {
