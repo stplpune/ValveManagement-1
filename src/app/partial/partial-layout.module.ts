@@ -16,7 +16,6 @@ import { PageRightAccessComponent } from './page-right-access/page-right-access.
     SidebarComponent,
     NavbarComponent,
     FooterComponent,
-    PageRightAccessComponent,
   ],
 
   imports: [
