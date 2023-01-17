@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef,NgZone, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MapsAPILoader } from '@agm/core';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -36,9 +36,9 @@ export class ValveListComponent implements OnInit {
   HighlightRow!: number;
   deleteValveId: any;
   simArray: any;
-  lat: any = 19.7515;
-  lng: any = 75.7139;
-  zoom: number = 8;
+  // lat: any = 19.7515;
+  // lng: any = 75.7139;
+  addressZoomSize = 6;
   geoCoder: any;
   constructor(
     private mapsAPILoader: MapsAPILoader,
@@ -48,7 +48,8 @@ export class ValveListComponent implements OnInit {
     private errorSerivce: ErrorsService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
-    private localStorage: LocalstorageService
+    private localStorage: LocalstorageService,
+    private ngZone: NgZone,
   ) { }
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class ValveListComponent implements OnInit {
     this.getAllYojana();
     this.getValveList();
     this.getTankList();
+    this.searchAddress();
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
     });
@@ -87,6 +89,9 @@ export class ValveListComponent implements OnInit {
       valveId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
       companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
       description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
+      latitude: [''],
+      longitude: [''],
+      // area: ['', Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)],
     });
   }
 
@@ -99,6 +104,10 @@ export class ValveListComponent implements OnInit {
           this.valvelistArray = res.responseData;
         } else {
           this.spinner.hide();
+          this.valvelistArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
       error: (error: any) => {
@@ -116,6 +125,10 @@ export class ValveListComponent implements OnInit {
           this.tankArray = res.responseData;
         } else {
           this.spinner.hide();
+          this.tankArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
       error: (error: any) => {
@@ -134,6 +147,10 @@ export class ValveListComponent implements OnInit {
           // this.iseditbtn==true ? (this.valveListForm.controls['yojana'].setValue(this.editId?.yojanaId),this.getAllNetwork(this.editId?.yojanaId)): '';
         } else {
           this.spinner.hide();
+          this.yojanaArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
       error: (error: any) => {
@@ -151,6 +168,10 @@ export class ValveListComponent implements OnInit {
           this.networkArray = res.responseData;
         } else {
           this.spinner.hide();
+          this.networkArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
         }
       },
       error: (error: any) => {
@@ -191,12 +212,13 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  onClickPagintion(pageNo: any) {
-    this.pageNumber = pageNo;
-    this.getAllValveData();
-  }
+  // onClickPagintion(pageNo: any) {
+  //   this.pageNumber = pageNo;
+  //   this.getAllValveData();
+  // }
 
   onSubmit() {
+    // this.onRadioChange(1)
     let formData = this.valveListForm.value;
     this.submitted = true;
     if (this.valveListForm.invalid) {
@@ -215,8 +237,8 @@ export class ValveListComponent implements OnInit {
         "valvePipeDiameter": formData.pipeDiameter,
         "noOfConnection": formData.noOfConnections,
         "simid": formData.simNumber,
-        "latitude": this.lat,
-        "longitude": this.lng,
+        "latitude": this.addLatitude,
+        "longitude": this.addLongitude,
         "simNo": "",
         "actionDate": new Date(),
         "valveAddress": formData.address,
@@ -250,15 +272,15 @@ export class ValveListComponent implements OnInit {
   }
 
   updateValveData(obj: any) {
-    debugger
+    // debugger
     console.log(obj);
     this.editId = obj;
-    console.log(this.editId);
+    // console.log(this.editId);
     this.iseditbtn = true;
     this.btnText = 'Update Changes';
     this.headingText = 'Update Valve';
     this.HighlightRow = obj.id;
-    console.log(obj.simid);
+    // console.log(obj.simid);
     this.valveListForm.patchValue({
       Id: obj.id,
       valveName: obj.valveName,
@@ -332,34 +354,38 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  getAddress(event: any) {
-    this.lat = event.coords.lat;
-    this.lng = event.coords.lng;
-    console.log(this.lat);
-    console.log(this.lng);
-    this.geoCoder.geocode(
-      { location: { lat: this.lat, lng: this.lng } },
-      (results: any, status: any) => {
-        if (status === 'OK') {
-          if (results[0]) {
-            this.addValveModal.nativeElement.click();
-            this.valveListForm.patchValue({
-              address: results[0].formatted_address
-            })
-          } else {
-            console.log('No results found');
-          }
-        }
-      }
-    );
-  }
+  // getAddress(event: any) {
+  //   this.lat = event.coords.lat;
+  //   this.lng = event.coords.lng;
+  //   console.log(this.lat);
+  //   console.log(this.lng);
+  //   this.geoCoder.geocode(
+  //     { location: { lat: this.lat, lng: this.lng } },
+  //     (results: any, status: any) => {
+  //       console.log(results);
+  //       console.log(status);
+  //       if (status === 'OK') {
+  //         if (results[0]) {
+  //           this.addValveModal.nativeElement.click();
+  //           this.valveListForm.patchValue({
+  //             address: results[0].formatted_address
+             
+              
+  //           })
+  //         } else {
+  //           console.log('No results found');
+  //         }
+  //       }
+  //     }
+  //   );
+  // }
 
-  markerDragEnd($event: any) {
-    console.log($event);
-    // this.lat = $event.coords.lat;
-    // this.lng = $event.coords.lng;
-    this.getAddress($event);
-  }
+  // markerDragEnd($event: any) {
+  //   console.log($event);
+  //   // this.lat = $event.coords.lat;
+  //   // this.lng = $event.coords.lng;
+  //   // this.getAddress($event);
+  // }
 
 
   ToBindSimNumberList() {
@@ -385,17 +411,125 @@ export class ValveListComponent implements OnInit {
   }
 
   onRadioChange(ele: any) {
-    console.log(ele);
+    // console.log(ele);
     if (ele == 1) {
       this.valveListForm.controls['valvelist'].setValidators([Validators.required]);
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
-    } else {
+    }
+     else {
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
     }
   }
+
+  
+  //......................................... Address Code Start Here ..................................................//
+
+  geocoder: any;
+  addLatitude: any = 19.7515;
+  addLongitude: any = 75.7139;
+  addPrevious: any;
+  addressNameforAddress: any;
+  copyAddressNameforAddress: any;
+  @ViewChild('searchAddress') public searchElementRefAddress!: ElementRef;
+  searchAdd = new FormControl('');
+  addressMarkerShow: boolean = true;
+  @ViewChild('searchAddressModel') searchAddressModel: any;
+
+  searchAddress() {
+    this.mapsAPILoader.load().then(() => {
+      this.geocoder = new google.maps.Geocoder();
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRefAddress.nativeElement
+      );
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          this.addLatitude = place.geometry.location.lat();
+          this.addLongitude = place.geometry.location.lng();
+          this.findAddressByCoordinates();
+          this.addressMarkerShow = true;
+        });
+      });
+    });
+  }
+
+  markerAddressDragEnd($event: any) {
+    console.log($event);
+    this.addLatitude = $event.coords.lat;
+    this.addLongitude = $event.coords.lng;
+    // console.log( this.addLatitude);
+    // console.log( this.addLongitude);
+    this.findAddressByCoordinates();
+    this.addressMarkerShow = true;
+  }
+
+  findAddressByCoordinates() {
+    this.geocoder.geocode({
+      'location': {
+        lat: this.addLatitude,
+        lng: this.addLongitude
+      }
+    }, (results: any) => {
+      console.log(results);
+      
+      this.findAddress(results[0]);
+    });
+  }
+
+  findAddress(results: any) {
+    if (results) {
+      this.addressNameforAddress = results.formatted_address;
+      console.log(this.addressNameforAddress);
+      this.addressZoomSize = 12;
+      this.searchAdd.setValue(this.addressNameforAddress);
+    }
+  }
+
+  clickedAddressMarker(infowindow: any) {
+    if (this.addPrevious) {
+      this.addPrevious.close();
+    }
+    this.addPrevious = infowindow;
+  }
+
+  newAddedAddressLat: any;
+  newAddedAddressLang: any;
+
+  addAddress() {
+    this.valveListForm.controls['address'].setValue(this.addressNameforAddress);
+    this.searchAdd.setValue(this.addressNameforAddress);
+    this.copyAddressNameforAddress = this.addressNameforAddress;
+    this.newAddedAddressLat = this.addLatitude; 
+    this.newAddedAddressLang = this.addLongitude;
+    this.addValveModal.nativeElement.click();
+  }
+
+  clearAddress() {
+    this.addressMarkerShow = false;
+    this.searchAdd.setValue('');
+    this.addressZoomSize = 6;
+    this.addressNameforAddress = '';
+    this.addLatitude = 19.7515;
+    this.addLongitude = 75.7139;
+  }
+
+  openAddressModel() {
+    this.addressZoomSize = 6;
+    this.searchAdd.setValue(this.copyAddressNameforAddress);
+    this.addLatitude = this.newAddedAddressLat;
+    this.addLongitude = this.newAddedAddressLang;
+    this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
+    this.addressNameforAddress = this.copyAddressNameforAddress;
+  }
+
+  //.........................................Address code End Here ....................................//
+
 }
