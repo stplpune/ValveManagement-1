@@ -39,8 +39,8 @@ export class TankMasterComponent implements OnInit {
     console.log('getData',this.getData)
     this.geFormData();
     this.getFilterFormData();
-    this.getTableData();
     this.getYojana();
+    this.getTableData();
   }
 
   geFormData() {

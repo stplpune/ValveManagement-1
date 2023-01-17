@@ -68,11 +68,13 @@
                     <div class="form-container ">
                         <div class="mb-3">
                             <label class="form-label">Network Name</label>
-                            <input type="text" class="form-control" formControlName="networkName" placeholder="Network Name">
-                            <div *ngIf="f['networkName'].touched && f['networkName'].errors" class="invalid-feedback">
-                                <div class="validation-css" *ngIf="f['networkName'].errors['required']"> Network Name is required </div>
-                                <!-- <div class="validation-css" *ngIf="f['emailId'].errors['pattern']"> *Email address is invalid </div> -->
-                            </div>
+                            <input type="text" class="form-control" formControlName="networkName" placeholder="Network Name"
+                             (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)"
+                             [ngClass]="{ 'is-invalid': submitted && f['networkName'].errors }">
+                             <div *ngIf="submitted && f['networkName'].errors" class="invalid-feedback">
+                                <div class="text-danger" *ngIf="f['networkName'].errors?.['required']">Network is
+                                  Required.</div>
+                              </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Select Yojana</label>
@@ -86,7 +88,7 @@
                         </div>
                         <div class="d-flex justify-content-end gap-2 mb-0">
                             <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-                            <button type="submit" [disabled]="networkRegForm.invalid" class="btn btn-main">Submit</button>
+                            <button type="submit" class="btn btn-main">Submit</button>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 @Component({
   selector: 'app-network-master',
@@ -22,6 +23,7 @@ export class NetworkMasterComponent implements OnInit {
   totalRows: any;
   editFlag:boolean = false;
   deleteSegmentId: any;
+  submitted:boolean =false;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   get f(){
@@ -29,6 +31,7 @@ export class NetworkMasterComponent implements OnInit {
   }
   constructor(private apiService: ApiService,
     private fb: FormBuilder,
+    public validation: ValidationService,
     private localStorage: LocalstorageService,
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
@@ -85,7 +88,11 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   onSubmit() {
-    let formData = this.networkRegForm.value;
+    if(this.networkRegForm.invalid){
+      return;
+    }else{
+      this.submitted = true;
+      let formData = this.networkRegForm.value;
     let obj = {
       ...formData,
       "createdBy": this.localStorage.userId(),
@@ -120,6 +127,7 @@ export class NetworkMasterComponent implements OnInit {
         this.spinner.hide();
       }
     );
+    }
 }
 
 onEdit(data?:any){
@@ -136,6 +144,7 @@ onEdit(data?:any){
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();
+  this.submitted = false;
   this.editFlag = false;
   this.controlForm();
 }
