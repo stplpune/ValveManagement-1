@@ -76,12 +76,6 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearfilter(flag: any) {
-    // flag=='yojana' ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
-    //                :(this.tankForm.controls['networkId'].setValue(0));
-
-    // flag=='network'? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
-    //                :(this.tankForm.controls['networkId'].setValue(0));     
-
     if (flag == 'yojana') {
       this.filterFrm.controls['yojanaId'].setValue(0);
       this.filterFrm.controls['networkId'].setValue(0);
@@ -91,7 +85,6 @@ export class TankMasterComponent implements OnInit {
       this.filterFrm.controls['networkId'].setValue(0);
       this.getTableData();
     }
-
   }
 
   getTableData() {
@@ -198,7 +191,6 @@ export class TankMasterComponent implements OnInit {
     this.editFlag = false;
     this.geFormData();
     this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
-    // this.editFlag ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0)):'';
   }
 
   getDeleteConfirm(getData?: any) {
@@ -218,7 +210,7 @@ export class TankMasterComponent implements OnInit {
     this.service.setHttp('delete', 'DeviceInfo/DeleteTankDetails', false, this.delData, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === '200') {
+        if (res.statusCode == '200') {
           this.toastrService.success(res.statusMessage);
           this.getTableData();
         }
