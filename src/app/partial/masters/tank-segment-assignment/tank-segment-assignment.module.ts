@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { TankSegmentAssignmentRoutingModule } from './tank-segment-assignment-routing.module';
 import { TankSegmentAssignmentComponent } from './tank-segment-assignment.component';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,10 @@ import { TankSegmentAssignmentComponent } from './tank-segment-assignment.compon
   ],
   imports: [
     CommonModule,
-    TankSegmentAssignmentRoutingModule
+    TankSegmentAssignmentRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxSelectModule
   ]
 })
 export class TankSegmentAssignmentModule { }
