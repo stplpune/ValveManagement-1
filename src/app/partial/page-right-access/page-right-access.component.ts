@@ -13,7 +13,10 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class PageRightAccessComponent implements OnInit {
   pageNameArray=new Array();
   userTypeArray=new Array();
-  getLoginData!:number |any;
+  getLoginData:any;
+  pageNumber:number=1;
+  pageSize:number=10;
+  totalCount!:number;
   userTypeId = new FormControl('');
   constructor(private apiService:ApiService,
     private toastrService:ToastrService,
@@ -21,9 +24,9 @@ export class PageRightAccessComponent implements OnInit {
     private localStorage:LocalstorageService) { }
 
   ngOnInit(): void {
+    this.getLoginData=this.localStorage.getLoggedInLocalstorageData();
     this.getAllPages();
     this.getUserType();
-    this.getLoginData=this.localStorage.getLoggedInLocalstorageData();
   }
   getUserType(){
     this.apiService.setHttp('GET', 'UserRegistration/GetUserTypeList?UserId='+this.getLoginData.userId, false, false, false, 'valvemgt');
@@ -42,22 +45,45 @@ export class PageRightAccessComponent implements OnInit {
   }
 
   getAllPages(){
-    this.pageNameArray=[
-      {pageName:'Dashboard',pageUrl:'dashboard',access:true},
-      {pageName:'Master',pageUrl:'master',access:false},
-      {pageName:'Valva',pageUrl:'valva',access:true}
-    ]
+  this.apiService.setHttp('GET', 'UserRegistration/GetPageDetails?pageNo='+this.pageNumber+'&pageSize='+this.pageSize+'&userTypeId='+(this.userTypeId.value?this.userTypeId.value:0), false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe((res:any)=>{
+    if(res.statusCode=="200"){
+      this.pageNameArray=res.responseData.responseData1;
+      this.totalCount=res.responseData.responseData2.pageCount;
+    }
+    else{
+      this.toastrService.error(res.statusMessage);
+    }
+  },
+  (error: any) => {
+    this.errorSerivce.handelError(error.status);
+  })
   }
+
   addPage(pageData:any,event:any){
-    console.log(event.target.checked);
-    /* [
-      {
-        "pageId": 0,
-        "pageName": "string",
-        "readRights": 0,
-        "writeRights": 0,
-        "userTypeId": 0
+    let obj={
+      "pageId": pageData.pageId,
+      "readWriteAccess": event.target.checked==true ? 1: 0,
+      "userTypeId":this.userTypeId.value?this.userTypeId.value:0,
+      "userId": this.getLoginData.userId
+    }
+    this.apiService.setHttp('POST', 'UserRegistration/SaveUserRights', false, obj, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.toastrService.success(res.statusMessage);
+        this.getAllPages();
       }
-    ] */
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
+  pagination(event:any){
+    this.pageNumber=event;
+    this.getAllPages();
   }
 }

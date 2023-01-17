@@ -94,7 +94,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Sensor Device Master</p>
-        <button type="button" class="btn-close btn-close-inverse"  #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective)"  #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form [formGroup]="tankSensorDeviceFrm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
@@ -175,7 +175,7 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center" [disabled]="!tankSensorDeviceFrm.valid">Submit</button>
+              <button type="submit" class="btn btn-main text-center">Submit</button>
             </div>
           </div>
         </div>
