@@ -307,8 +307,6 @@ export class SegmentMasterComponent implements OnInit {
    
 
     //.........................................  get Edit Object code Start Here.................................//
-    // let finalString = editObj.midpoints ? editObj.startPoints + ',' + editObj.midpoints + ',' + editObj.endPoints :
-    //   editObj.startPoints + ',' + editObj.endPoints;
     let stringtoArray = editObj.midpoints.split(',');
     let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
     this.editObjData = finalLatLngArray;
@@ -318,8 +316,6 @@ export class SegmentMasterComponent implements OnInit {
     
   
     let getOtherAllSegment = mainArray.segmenDetailsModels.map((ele: any) => {
-      // let finalString = ele.midpoints ? ele.startPoints + ',' + ele.midpoints + ',' + ele.endPoints :
-      //   ele.startPoints + ',' + ele.endPoints;
       let stringtoArray = ele.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       return ele = finalLatLngArray;
@@ -381,7 +377,6 @@ export class SegmentMasterComponent implements OnInit {
       drawingManager.setOptions({ drawingControl: false });
 
       this.centerMarkerLatLng = this.editObjData;
-
       var mergeBothPath = [this.getAllSegmentArray, this.centerMarkerLatLng];
       var color = ["#FF0000", '#8000FF'];
 
@@ -444,7 +439,7 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   clearSelection() {
-    this.newRecord.polyline && (this.newRecord.polyline.setMap(null), this.newRecord.polyline = undefined);
+    this.newRecord.polyline && (this.newRecord?.polyline.setMap(null), this.newRecord.polyline = undefined);
     this.centerMarkerLatLng = "";
   }
 
@@ -454,8 +449,8 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   mapModelClose() {
-    this.newRecord.polyline.setMap(null);
-    this.editPatchShape.setMap(null);
+    this.newRecord.polyline?.setMap(null);
+    this.editPatchShape?.setMap(null);
     this.removeShape();
     this.clearForm();
   }
