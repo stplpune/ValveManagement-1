@@ -20,7 +20,10 @@ export class ValveConnectionComponent implements OnInit {
   totalRows!: number;
   highlitedRow: any;
   valveConnectionArray = new Array();
+  networkArray = new Array();
+  yoganaArray = new Array();
   editFlag: boolean = false;
+  getLoginData: any;
 
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -31,6 +34,7 @@ export class ValveConnectionComponent implements OnInit {
     private spinner: NgxSpinnerService,) { }
 
   ngOnInit(): void {
+    this.getLoginData = this.localStorage.getLoggedInLocalstorageData();
     this.defaultValveConnectionForm();
     this.getValveConnectionDropdown();
     this.bindValveConnectionsTable();
@@ -128,6 +132,43 @@ export class ValveConnectionComponent implements OnInit {
     });
   }
 
+  getYoganaIdDropdown() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getLoginData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res: any) => {
+      if (res.statusCode == "200") {
+        this.yoganaArray = res.responseData;
+      }
+      else {
+        this.yoganaArray = [];
+        this.commonService.checkDataType(res.statusMessage) == false
+          ? this.errorSerivce.handelError(res.statusCode)
+          : this.toasterService.error(res.statusMessage);
+      }
+    },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      })
+  }
+
+  getNetworkIDDropdown(yojanaId?: number) {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res: any) => {
+      if (res.statusCode == "200") {
+        this.networkArray = res.responseData;
+      }
+      else {
+        this.networkArray = [];
+        this.commonService.checkDataType(res.statusMessage) == false
+          ? this.errorSerivce.handelError(res.statusCode)
+          : this.toasterService.error(res.statusMessage);
+      }
+    },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      })
+  }
+
+
   onClickEdit(editObj: any) {
     this.connectionForm.clear()
     this.highlitedRow = editObj.id;
@@ -176,17 +217,17 @@ export class ValveConnectionComponent implements OnInit {
             this.toasterService.error(res.statusMessage);
             this.editFlag = false;
           }
-          else{
+          else {
             this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toasterService.error(res.statusMessage);
+              ? this.errorSerivce.handelError(res.statusCode)
+              : this.toasterService.error(res.statusMessage);
           }
         }),
         error: (error: any) => {
           this.errorSerivce.handelError(error.status);
         }
       })
-      }
+    }
   }
 
   onClickPagintion(pagNo: number) {
