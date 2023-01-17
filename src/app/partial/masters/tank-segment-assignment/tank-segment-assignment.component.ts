@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,12 @@ export class TankSegmentAssignmentComponent implements OnInit {
   tankArr = new Array();
   segmentArr = new Array();
   tankSegmentTable = new Array();
+  editObj: any;
+  pageNumber: number = 1;
+  pagesize: number = 10;
+  totalRows: any;
+  editFlag : boolean = false;
+  @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
 
   constructor(private service: ApiService,
@@ -36,21 +42,21 @@ export class TankSegmentAssignmentComponent implements OnInit {
   formField() {
     this.tankSegmentForm = this.fb.group({
       "id": 0,
-      "tankId": [0],
-      "segmentId": [0],
+      "tankId": [this.editObj ? this.editObj.tankId : 0],
+      "segmentId": [this.editObj ? this.editObj.segmentId : 0],
       "isDeleted": true,
       "createdBy": 0,
       "createdDate": new Date(),
       "modifiedBy": 0,
       "modifiedDate": new Date(),
       "timestamp": new Date(),
-      // tanksegment : this.fb.array([
-      //   this.fb.group({
-      //     "segmentId": [''],
-      //     "segmentName": ['']
-      //   })
-      // ])
-      "tanksegment": []
+      tanksegment: this.fb.array([
+        this.fb.group({
+          "segmentId": [''],
+          "segmentName": ['']
+        })
+      ])
+      // "tanksegment": [
       //   {
       //     "segmentId": 0,
       //     "segmentName": "string"
@@ -64,14 +70,14 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getTableData() {
-    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=1&pagesize=10&yojanaId=' + this.getAllLocalStorageData.yojanaId + '&networkId=' + this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + this.getAllLocalStorageData.yojanaId + '&networkId=' + this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         console.log("Table res : ", res);
 
         if (res.statusCode == '200') {
           this.responseArray = res.responseData.responseData1;
-          // this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
         } else {
           this.responseArray = [];
         }
@@ -117,10 +123,21 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   addTankSegment() {
-    this.tankSegmentForm.value.segmentId
+    if (this.tankSegmentForm.value.segmentId == '') {
+      return
+    }
     let array = this.segmentArr.find((x: any) => {
-      return (x.segmentId === this.tankSegmentForm.value.segmentId)
+      return (x.segmentId == this.tankSegmentForm.value.segmentId)
     })
+    console.log("Id : ", this.tankSegmentForm.value.segmentId);
+
+    for (var i = 0; i < this.tankSegmentTable.length; i++) {
+      if (this.tankSegmentTable[i].segmentId == this.tankSegmentForm.value.segmentId) {
+        this.toastrService.success("Dublicate");
+        return
+      }
+    }
+
     this.tankSegmentTable.push(array)
     console.log("segment table", this.tankSegmentTable);
 
@@ -132,6 +149,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
     // let obj = this.tankSegmentForm.value;
     // console.log("obj : ",obj);
+    this.f['segmentId'].setValue(0);
   }
 
   deleteTankSegment(index: number) {
@@ -139,20 +157,25 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   onSubmit() {
-
     this.tankSegmentForm.value.tanksegment = this.tankSegmentTable;
+    this.tankSegmentForm.value.segmentId = 0;
     console.log("Submit : ", this.tankSegmentForm.value);
 
     let formValue = this.tankSegmentForm.value;
 
-    this.spinner.show();
+    // if(!this.tankSegmentForm.valid){
+    //   return
+    // }
+    // else{
 
+    this.spinner.show();
     this.service.setHttp('put', 'ValveTankSegment/Updatetanksegmentassignment', false, formValue, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
+          this.closebutton.nativeElement.click();
           this.toastrService.success(res.statusMessage);
-
+          this.spinner.hide();
           this.getTableData();
         }
         else {
@@ -165,12 +188,37 @@ export class TankSegmentAssignmentComponent implements OnInit {
         this.spinner.hide();
       }
     })
-
+  // }
   }
 
-  onClear() {
-    this.tankSegmentForm.reset();
+  clearForm(formDirective?: any) {
+    formDirective?.resetForm();
+    this.editFlag = false;
+    this.editObj = '';
+    // this.tankSegmentForm.reset();
+    this.formField();
     this.tankSegmentTable = [];
+  }
+
+  onChangeDropdown(label: string) {
+    if (label == 'tank') {
+      this.f['segmentId'].setValue('');
+      // this.tankSegmentTable = [];
+    }
+  }
+
+  onEdit(obj: any) {
+    this.editFlag = true;
+    console.log("onEdit : ", obj);
+    this.editObj = obj;
+    this.formField();
+
+    this.tankSegmentTable = this.editObj.tanksegmet;
+  }
+
+  onClickPagintion(pageNo: number) {
+    this.pageNumber = pageNo;
+    this.getTableData();
   }
 
 }

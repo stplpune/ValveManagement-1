@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, NgForm } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -13,7 +13,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
   styleUrls: ['./valve-connection.component.css']
 })
 export class ValveConnectionComponent implements OnInit {
-  valveConnectionForm!: FormGroup;
+  valveConnectionForm!: FormGroup | any;
   dataSource: any;
   pageNumber: number = 1;
   pagesize: number = 10;
@@ -24,7 +24,9 @@ export class ValveConnectionComponent implements OnInit {
   getLoginData: any;
   @ViewChild('formDirective')
   private formDirective!: NgForm;
+  @ViewChild('addconnectionModal') addconnectionModal: any;
   data: any;
+  submitted:boolean = false;
 
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -44,22 +46,26 @@ export class ValveConnectionComponent implements OnInit {
   defaultValveConnectionForm() {
     this.valveConnectionForm = this.fb.group({
       "id": [0],
-      "valveMasterId": [0],
-      "personName": [''],
-      "mobileNo": [''],
+      "valveMasterId": ['',[Validators.required]],
+      "personName": ['',[Validators.required]],
+      "mobileNo": ['',[Validators.required]],
       "remark": [''],
       "createdBy": this.localStorage.userId(),
       "yojanaId": [this.getLoginData.yojanaId],
       "networkId": [this.getLoginData.networkId],
       "consumerUserId": [0],
-      "totalConnection": [''],
+      "totalConnection": ['',[Validators.required]],
       "connectiondetails": this.fb.array([
         this.fb.group({
-          "pipeDiameter": [''],
-          "connectionNo": ['']
+          "pipeDiameter": ['',[Validators.required]],
+          "connectionNo": ['',[Validators.required]]
         })
       ])
     })
+  }
+
+  get f() {
+    return this.valveConnectionForm.controls;
   }
 
 
@@ -191,6 +197,7 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   onClickSubmit() {
+    this.submitted = true;
     if (!this.valveConnectionForm.valid) {
       if (this.connectionForm.controls[this.connectionForm.length - 1].status == 'INVALID') {
         return;
@@ -207,12 +214,18 @@ export class ValveConnectionComponent implements OnInit {
         next: ((res: any) => {
           this.spinner.hide();
           if (res.statusCode == "200") {
-            this.highlitedRow = 0;
-            this.defaultValveConnectionForm();
-            this.bindValveConnectionsTable();
-            this.toasterService.success(res.statusMessage);
-            this.formDirective.resetForm();
+            this.spinner.hide();
             this.editFlag = false;
+            this.toasterService.success(res.statusMessage);
+            this.addconnectionModal.nativeElement.click();
+            this.formDirective.resetForm();
+            this.bindValveConnectionsTable();
+            // this.highlitedRow = 0;
+            // this.defaultValveConnectionForm();
+            // this.bindValveConnectionsTable();
+            // this.toasterService.success(res.statusMessage);
+            // this.formDirective.resetForm();
+            // this.editFlag = false;
           }
           else {
             this.commonService.checkDataType(res.statusMessage) == false
@@ -234,6 +247,7 @@ export class ValveConnectionComponent implements OnInit {
 
   //Clear All Data In the Form Fields
   clearForm() {
+    this.submitted = false;
     this.formDirective.resetForm();
     this.defaultValveConnectionForm();
     // this.editFlag = false;

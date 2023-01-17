@@ -5,6 +5,7 @@ import { NgxSelectModule } from 'ngx-select-ex';
 
 import { ValveSegmentAssignmentRoutingModule } from './valve-segment-assignment-routing.module';
 import { ValveSegmentAssignmentComponent } from './valve-segment-assignment.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ValveSegmentAssignmentComponent } from './valve-segment-assignment.comp
     ValveSegmentAssignmentRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxSelectModule
+    NgxSelectModule,
+    NgxPaginationModule,
   ]
 })
 export class ValveSegmentAssignmentModule { }
