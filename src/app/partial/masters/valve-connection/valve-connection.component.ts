@@ -20,8 +20,6 @@ export class ValveConnectionComponent implements OnInit {
   totalRows!: number;
   highlitedRow: any;
   valveConnectionArray = new Array();
-  networkArray = new Array();
-  yoganaArray = new Array();
   editFlag: boolean = false;
   getLoginData: any;
 
@@ -61,8 +59,9 @@ export class ValveConnectionComponent implements OnInit {
     })
   }
 
-
-  get connectionForm(): FormArray {
+  
+  
+get connectionForm(): FormArray {
     return this.valveConnectionForm.get('connectiondetails') as FormArray;
   }
 
@@ -132,43 +131,9 @@ export class ValveConnectionComponent implements OnInit {
     });
   }
 
-  getYoganaIdDropdown() {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getLoginData.yojanaId, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe((res: any) => {
-      if (res.statusCode == "200") {
-        this.yoganaArray = res.responseData;
-      }
-      else {
-        this.yoganaArray = [];
-        this.commonService.checkDataType(res.statusMessage) == false
-          ? this.errorSerivce.handelError(res.statusCode)
-          : this.toasterService.error(res.statusMessage);
-      }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
-  }
+ 
 
-  getNetworkIDDropdown(yojanaId?: number) {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe((res: any) => {
-      if (res.statusCode == "200") {
-        this.networkArray = res.responseData;
-      }
-      else {
-        this.networkArray = [];
-        this.commonService.checkDataType(res.statusMessage) == false
-          ? this.errorSerivce.handelError(res.statusCode)
-          : this.toasterService.error(res.statusMessage);
-      }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
-  }
-
-
+ 
   onClickEdit(editObj: any) {
     this.connectionForm.clear()
     this.highlitedRow = editObj.id;
