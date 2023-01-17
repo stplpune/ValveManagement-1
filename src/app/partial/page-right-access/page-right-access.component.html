@@ -4,6 +4,12 @@
             <div class="col-sm-4">Page Right Access</div>
         </div>
     </div>
+    <div class="row">
+        <!-- <ngx-select [items]="userTypeArray" [formControl]="userTypeId"
+                   placeholder="Select User Type" optionValueField="id"
+                   optionTextField="userTypeName">
+              </ngx-select> -->
+    </div>
     <div class="card-body">
         <table class="table align-middle dashboard-table">
             <thead>
@@ -15,11 +21,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>1</th>
-                    <th>Dashboard</th>
-                    <th>dashboard</th>
-                    <th><input type="checkbox" [checked]="true"></th>
+                <tr *ngFor="let pageData of pageNameArray; let i=index">
+                    <th>{{i+1}}</th>
+                    <th>{{pageData.pageName}}</th>
+                    <th>{{pageData.pageUrl}}</th>
+                    <th><input type="checkbox" [checked]="pageData.access" (change)="addPage(pageData,$event)"></th>
                 </tr>
             </tbody>
         </table>
