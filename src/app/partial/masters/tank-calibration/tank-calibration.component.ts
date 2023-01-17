@@ -135,8 +135,8 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    let obj = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + (filterValue.networkId || 0);
-    this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + obj, false, false, false, 'valvemgt');
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + (filterValue.networkId || 0);
+    this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
