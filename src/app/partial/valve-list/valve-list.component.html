@@ -135,7 +135,7 @@
                   <option *ngFor="let simData of simArray" value={{simData.id}}>{{simData.simNo}}</option>
                 </select>
                 <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.simNumber.errors?.pattern">Sim Number Is Required</div>
+                  <div class="text-danger" *ngIf="f.simNumber.errors?.pattern">Sim Number is required</div>
                 </div>
               </div>
             </div>
@@ -158,52 +158,75 @@
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
+                <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
+                </div>
               </div>
-              <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
-              </div>
+             
             </div>
+            
             <div class="mb-3 d-flex gap-3">
-              <label class="form-label">Is Preceding Valve Radio:</label>
+              <label class="form-label">Is Preceding:</label>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                 Yes
-                </label>
+                <input class="form-check-input" id="valve" type="radio" [value]="1" name="list" formControlName="list" checked
+                (change)="onRadioChange(1)" >
+                <label class="form-check-label" for="flexRadioDefault1" > Valve</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                <label class="form-check-label" for="flexRadioDefault2">
-                 No
+                <input class="form-check-input" id="tank" type="radio"  [value]="2" formControlName="list" name="list" 
+                (change)="onRadioChange(2)">
+                <label class="form-check-label" for="flexRadioDefault2"  >
+                 Tank
                 </label>
               </div>
             </div>
-            <div class="mb-3">
+            <!-- {{valveListForm.controls['list'].value}} -->
+            <div class="mb-3"  *ngIf="valveListForm.controls['list'].value=='1'" >
               <label class="form-label">Valve List</label>
-              <select class="form-control" aria-label="Default select example">
-                <option selected>District</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select class="form-control" aria-label="Default select example" formControlName="valvelist"
+              [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
+                <option value="0">Select Valve</option>
+                <option *ngFor="let data of valvelistArray" value={{data.valveId}}>{{data.valveName}}</option>  
               </select>
+              <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.valvelist.errors?.pattern">Valve List  is required</div>
+              </div>
+            </div>
+
+            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
+              <label class="form-label">Tank List</label>
+              <select class="form-control" aria-label="Default select example" formControlName="tankist"
+              [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
+                <option value="0">Select Tank</option>
+                <option *ngFor="let data of tankArray" value={{data.tankId}}>{{data.tankName}}</option>  
+              </select>
+              <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.tankist.errors?.pattern">Tank List  is required</div>
+              </div>
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">Yojana Id</label>
-              <select class="form-control" aria-label="Default select example">
-                <option selected>Yojana</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <label for="" class="form-label">Yojana </label>
+              <select class="form-control" aria-label="Default select example" formControlName="yojana" 
+              (change)="getAllNetwork(valveListForm.controls['yojana'].value)" 
+              [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
+                <option value="0">Select Yojana</option>
+                <option *ngFor="let data of yojanaArray" [value]="data.yojanaId">{{data.yojanaName}}</option> 
               </select>
+              <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.yojana.errors?.pattern">Yojana is required.</div>
+              </div>
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">Network Id</label>
-              <select class="form-control" aria-label="Default select example">
-                <option selected>Yojana</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <label for="" class="form-label">Network </label>
+              <select class="form-control" aria-label="Default select example" formControlName="network"
+              [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
+                <option value="0">Select Network</option>
+                <option *ngFor="let data of networkArray" [value]="data.networkId">{{data.networkName}}</option>  
+            
               </select>
+              <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.network.errors?.pattern">Network is required.</div>
+              </div>
             </div>
             <div class="mb-0">
               <label class="form-label">Description</label>
@@ -237,8 +260,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
-        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="getAddress($event)">
-          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="markerDragEnd($event)">
+          <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="true"
+           (dragEnd)="markerDragEnd($event)"></agm-marker>
         </agm-map>
       </div>
     </div>
