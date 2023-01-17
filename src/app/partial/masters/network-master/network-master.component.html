@@ -79,7 +79,7 @@
                         <div class="mb-3">
                             <label class="form-label">Select Yojana</label>
                               <ngx-select [allowClear]="true" [items]="allYojanaArray" formControlName="yojanaId"
-                              placeholder="Select District" optionValueField="yojanaId"
+                              placeholder="Select Yojana" optionValueField="yojanaId"
                              optionTextField="yojanaName"  (remove)="clearDropdown('yojana')"
                              [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                          </ngx-select>
