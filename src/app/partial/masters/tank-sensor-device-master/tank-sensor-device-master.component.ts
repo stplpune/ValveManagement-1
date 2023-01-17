@@ -32,6 +32,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   totalRows: any;
   submitted = false;
   highlitedRow:any;
+  buttonName:string = 'Submit';
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -81,6 +82,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
 
   onEdit(data?:any){
   this.editFlag = true;
+  this.buttonName = 'Update';
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
@@ -212,6 +214,7 @@ onSubmit() {
           this.toastrService.success(res.statusMessage);
           this.getAllSensorDeviceTableData();
           this.clearForm();
+          this.buttonName = 'Submit'
           this.closebutton.nativeElement.click();
         } else {
           this.toastrService.error(res.statusMessage);
