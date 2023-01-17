@@ -20,8 +20,8 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   postObj!:any;
   formData!:any;
   deleteObj!:any;
-  tankSensorDeviceFrm!:FormGroup;
-  searchForm!:FormGroup;
+  tankSensorDeviceFrm!:FormGroup | any;
+  searchForm!:FormGroup | any;
   getAllSimArray = new Array();
   getAllTankArray = new Array();
   getAllYojanaArray = new Array();
@@ -31,6 +31,8 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   submitted = false;
+  highlitedRow:any;
+  buttonName:string = 'Submit';
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -62,11 +64,11 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       id:[0],
       deviceId: ['',Validators.required],
       deviceName: ['',Validators.required],
-      simId: [0,Validators.required],
+      simId: ['',Validators.required],
       deviceDescription: ['',Validators.required],
-      tankId: [0,Validators.required],
-      yojanaId: [0,Validators.required],
-      networkId: [0,Validators.required]
+      tankId: ['',Validators.required],
+      yojanaId: ['',Validators.required],
+      networkId: ['',Validators.required]
     })
   }
 
@@ -80,6 +82,8 @@ export class TankSensorDeviceMasterComponent implements OnInit {
 
   onEdit(data?:any){
   this.editFlag = true;
+  this.buttonName = 'Update';
+  this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
       deviceId: data.deviceId,
@@ -98,7 +102,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
 }
 
   getAllSim() {
-    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList', false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId=' + this.getAllLocalStorageData.yojanaId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -152,6 +156,7 @@ clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.editFlag = false;
   this.submitted = false;
+  this.buttonName = 'Submit';
   this.controlForm();
 }
 
@@ -170,6 +175,7 @@ getAllSensorDeviceTableData() {
       if (res.statusCode == "200") {
         this.allSensorDeviceArray = res.responseData.responseData1;
         this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+        this.highlitedRow=0;
       } else {
         this.spinner.hide();
         this.allSensorDeviceArray = [];
@@ -184,39 +190,44 @@ getAllSensorDeviceTableData() {
 
 onSubmit() {
   this.submitted = true;
-  let formData = this.tankSensorDeviceFrm.value;
-  this.postObj = {
-    ...formData,
-    "createdBy": this.localStorage.userId(),
-    "tankName": "string",
-    "isDeleted": false,
-    "modifiedBy": this.localStorage.userId(),
-  }
-  this.spinner.show();
-  let id:any;
-  let urlType:any;
-  urlType = (this.editFlag ? (urlType = 'PUT') : (urlType = 'POST'));
-  let urlName:any;
-  urlName = this.editFlag ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
-  this.apiService.setHttp(urlType,urlName,false,this.postObj,false,'valvemgt');
-  this.apiService.getHttp().subscribe(
-    (res: any) => {
-      if (res.statusCode == '200') {
-        this.spinner.hide();
-        this.toastrService.success(res.statusMessage);
-        this.getAllSensorDeviceTableData();
-        this.clearForm();
-        this.closebutton.nativeElement.click();
-      } else {
-        this.toastrService.error(res.statusMessage);
+  if(this.tankSensorDeviceFrm.invalid){
+    return
+  }else{
+    let formData = this.tankSensorDeviceFrm.value;
+    this.postObj = {
+      ...formData,
+      "createdBy": this.localStorage.userId(),
+      "tankName": "string",
+      "isDeleted": false,
+      "modifiedBy": this.localStorage.userId(),
+    }
+    this.spinner.show();
+    let id:any;
+    let urlType:any;
+    urlType = (this.editFlag ? (urlType = 'PUT') : (urlType = 'POST'));
+    let urlName:any;
+    urlName = this.editFlag ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
+    this.apiService.setHttp(urlType,urlName,false,this.postObj,false,'valvemgt');
+    this.apiService.getHttp().subscribe(
+      (res: any) => {
+        if (res.statusCode == '200') {
+          this.spinner.hide();
+          this.toastrService.success(res.statusMessage);
+          this.getAllSensorDeviceTableData();
+          this.clearForm();
+          this.buttonName = 'Submit'
+          this.closebutton.nativeElement.click();
+        } else {
+          this.toastrService.error(res.statusMessage);
+          this.spinner.hide();
+        }
+      },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
         this.spinner.hide();
       }
-    },
-    (error: any) => {
-      this.errorSerivce.handelError(error.status);
-      this.spinner.hide();
-    }
-  );
+    );
+  }
 }
 
 onClickPagintion(pageNo: number) {
@@ -226,6 +237,7 @@ onClickPagintion(pageNo: number) {
 
 deleteConformation(data?:any){
   this.deleteObj = data;
+  this.highlitedRow = data.id;
 }
 
 deleteNetworkMaster(){

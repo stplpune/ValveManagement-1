@@ -19,6 +19,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   sgmentDropdownArray = new Array();
   segmentShowArray = new Array();
   editFlag:boolean=false;
+  editObj:any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   constructor(private apiService: ApiService,public commonService: CommonService,private errorSerivce: ErrorsService ,private localStorage: LocalstorageService,
     private toastrService: ToastrService,
@@ -35,9 +36,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   formData(){
     this.valveRegForm = this.fb.group({      
-        "id": 0,
-        "valveId": 0,
-        "segmentId": 0,   
+        "id": [this.editFlag ? this.editObj.id :0],
+        "valveId":[this.editFlag ? this.editObj.valveId :0],
+        "segmentId": [0],
+        // "segmentId": [this.editFlag ? this.editObj.segmentId :0],
         "valvesegmet":[]
     })
   }
@@ -150,7 +152,12 @@ getAllSegment(){
   }
 
   onEdit(obj:any){
-console.log("EDIToBJ",obj);
+    this.editFlag = true
+    this.editObj = obj;
+    this.formData();
+    console.log("EDIToBJ",obj);
+    this.segmentShowArray = obj.valvesegmet 
+ 
 
   }
 

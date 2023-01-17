@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -22,6 +22,9 @@ export class ValveConnectionComponent implements OnInit {
   valveConnectionArray = new Array();
   editFlag: boolean = false;
   getLoginData: any;
+  @ViewChild('formDirective')
+  private formDirective!: NgForm;
+  data: any;
 
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -46,8 +49,8 @@ export class ValveConnectionComponent implements OnInit {
       "mobileNo": [''],
       "remark": [''],
       "createdBy": this.localStorage.userId(),
-      "yojanaId": [0],
-      "networkId": [0],
+      "yojanaId": [this.getLoginData.yojanaId],
+      "networkId": [this.getLoginData.networkId],
       "consumerUserId": [0],
       "totalConnection": [''],
       "connectiondetails": this.fb.array([
@@ -59,9 +62,9 @@ export class ValveConnectionComponent implements OnInit {
     })
   }
 
-  
-  
-get connectionForm(): FormArray {
+
+
+  get connectionForm(): FormArray {
     return this.valveConnectionForm.get('connectiondetails') as FormArray;
   }
 
@@ -88,7 +91,7 @@ get connectionForm(): FormArray {
 
   bindValveConnectionsTable() {
     this.spinner.show();
-    let obj = 'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    let obj = 'UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'ValveConnection?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -112,11 +115,13 @@ get connectionForm(): FormArray {
   }
 
   getValveConnectionDropdown() {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId=1&NetworkId=1', false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=' + this.localStorage.userId() + '&YojanaId=' + this.getLoginData.yojanaId + '&NetworkId=' + this.getLoginData.networkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.valveConnectionArray = res.responseData;
+          // this.editFlag ? this.valveConnectionForm.controls['valveMasterId'].setValue() : '';
+
         }
         else {
           this.valveConnectionArray = [];
@@ -131,26 +136,52 @@ get connectionForm(): FormArray {
     });
   }
 
- 
+  deleteConformation(ele: number) {
+    this.data = ele;
+    this.highlitedRow = this.data.id;
+  }
 
- 
+  deleteConnection() {
+    let obj = {
+      "id": this.data.id,
+      "deletedBy": 0
+    }
+
+    this.apiService.setHttp('DELETE', 'ValveConnection', false, obj, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == '200') {
+          this.toasterService.success(res.statusMessage);
+          this.bindValveConnectionsTable();
+        } else {
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toasterService.error(res.statusMessage);
+        }
+      },
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    });
+  }
+
   onClickEdit(editObj: any) {
     this.connectionForm.clear()
     this.highlitedRow = editObj.id;
     this.editFlag = true;
     this.valveConnectionForm.patchValue({
-      "id": 0,
-      "valveMasterId": 0,
+      "id": editObj.id,
+      "valveMasterId": editObj.valveMasterId,
       "personName": editObj.personName,
       "mobileNo": editObj.mobileNo,
       "remark": editObj.remark,
       "createdBy": this.localStorage.userId(),
-      "yojanaId": 0,
-      "networkId": 0,
+      "yojanaId": this.getLoginData.yojanaId,
+      "networkId": this.getLoginData.networkId,
       "consumerUserId": 0,
-      "totalConnection": editObj.totalConnection,
+      "totalConnection": +editObj.totalConnection,
     });
-    editObj.connectiondetails.map((element: any) => {
+    editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
         pipeDiameter: [element.pipeDiameter],
         connectionNo: [+element.connectionNo]
@@ -170,8 +201,8 @@ get connectionForm(): FormArray {
       this.spinner.show();
       let formData = this.valveConnectionForm.value;
       let url;
-      this.editFlag ? url = 'ValveConnection' : url = 'ValveConnection'
-      this.apiService.setHttp(this.editFlag ? 'put' : 'post', url, false, formData, false, 'valvemgt');
+      // this.editFlag ? url = 'ValveConnection' : url = 'ValveConnection'
+      this.apiService.setHttp(this.editFlag ? 'put' : 'post', 'ValveConnection', false, formData, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: ((res: any) => {
           this.spinner.hide();
@@ -179,7 +210,8 @@ get connectionForm(): FormArray {
             this.highlitedRow = 0;
             this.defaultValveConnectionForm();
             this.bindValveConnectionsTable();
-            this.toasterService.error(res.statusMessage);
+            this.toasterService.success(res.statusMessage);
+            this.formDirective.resetForm();
             this.editFlag = false;
           }
           else {
@@ -198,6 +230,13 @@ get connectionForm(): FormArray {
   onClickPagintion(pagNo: number) {
     this.pageNumber = pagNo;
     this.bindValveConnectionsTable();
+  }
+
+  //Clear All Data In the Form Fields
+  clearForm() {
+    this.formDirective.resetForm();
+    this.defaultValveConnectionForm();
+    // this.editFlag = false;
   }
 
 

@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 @Component({
   selector: 'app-network-master',
@@ -14,7 +15,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class NetworkMasterComponent implements OnInit {
 
-  networkRegForm!:FormGroup;
+  networkRegForm!:FormGroup | any;
   allNetworkArray = new Array();
   allYojanaArray = new Array();
   pageNumber: number = 1;
@@ -22,6 +23,8 @@ export class NetworkMasterComponent implements OnInit {
   totalRows: any;
   editFlag:boolean = false;
   deleteSegmentId: any;
+  submitted:boolean =false;
+  buttonName:string = 'Submit';
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   get f(){
@@ -29,6 +32,7 @@ export class NetworkMasterComponent implements OnInit {
   }
   constructor(private apiService: ApiService,
     private fb: FormBuilder,
+    public validation: ValidationService,
     private localStorage: LocalstorageService,
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
@@ -45,7 +49,7 @@ export class NetworkMasterComponent implements OnInit {
     this.networkRegForm = this.fb.group({
       id:[0],
       networkName : ['', Validators.required],
-      yojanaId: +['', Validators.required]
+      yojanaId: ['', Validators.required]
     })
   }
 
@@ -85,7 +89,11 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   onSubmit() {
-    let formData = this.networkRegForm.value;
+    this.submitted = true;
+    if(this.networkRegForm.invalid){
+      return;
+    }else{
+      let formData = this.networkRegForm.value;
     let obj = {
       ...formData,
       "createdBy": this.localStorage.userId(),
@@ -109,6 +117,7 @@ export class NetworkMasterComponent implements OnInit {
           this.toastrService.success(res.statusMessage);
           this.getAllNetworkTableData();
           this.closebutton.nativeElement.click();
+          this.buttonName = 'Submit';
           this.clearForm();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -120,10 +129,12 @@ export class NetworkMasterComponent implements OnInit {
         this.spinner.hide();
       }
     );
+    }
 }
 
 onEdit(data?:any){
   this.editFlag = true;
+  this.buttonName = 'Update';
   console.log(data,'editData');
   this.networkRegForm.patchValue({
     id:data.id,
@@ -136,7 +147,9 @@ onEdit(data?:any){
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();
+  this.submitted = false;
   this.editFlag = false;
+  this.buttonName = 'Submit';
   this.controlForm();
 }
 
