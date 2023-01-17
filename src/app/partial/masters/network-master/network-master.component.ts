@@ -15,7 +15,7 @@ import { ValidationService } from 'src/app/core/services/validation.service';
 })
 export class NetworkMasterComponent implements OnInit {
 
-  networkRegForm!:FormGroup;
+  networkRegForm!:FormGroup | any;
   allNetworkArray = new Array();
   allYojanaArray = new Array();
   pageNumber: number = 1;
@@ -48,7 +48,7 @@ export class NetworkMasterComponent implements OnInit {
     this.networkRegForm = this.fb.group({
       id:[0],
       networkName : ['', Validators.required],
-      yojanaId: +['', Validators.required]
+      yojanaId: ['', Validators.required]
     })
   }
 
@@ -88,10 +88,10 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
     if(this.networkRegForm.invalid){
       return;
     }else{
-      this.submitted = true;
       let formData = this.networkRegForm.value;
     let obj = {
       ...formData,
