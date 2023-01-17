@@ -1,122 +1,125 @@
 <div class="card plain-card">
-    <div class="card-header">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-sm-4">Tank Segment Assignment
-        </div>
-        <div class="col-sm-4 text-end">
-          <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-              class="fas fa-sync-alt"></i></button>
-          <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-            data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Segment Assignment
-          </button>
-        </div>
+  <div class="card-header">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-sm-4">Tank Segment Assignment
       </div>
-    </div>
-    <div class="card-body">
-      <table class="table align-middle dashboard-table">
-        <thead>
-          <tr>
-            <th>Sr. No.</th>
-            <th>Tank</th>
-            <th>No of Segment</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of responseArray; let i=index">
-            <td>{{i+1}}</td>
-            <td>{{data?.tankName}}</td>
-            <td>{{data?.tanksegmet.length}}</td>
-            <td>
-              <div class="btn-group">
-                <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                   data-bs-target="#AddValveModal">
-                  <i class="fa-regular fa-pen-to-square"></i>
-                </button>
-                <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                  data-bs-toggle="modal"  data-bs-target="#deleteModel">
-                  <i class="fa-solid fa-trash-can"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="mt-2 text-end" *ngIf="responseArray?.length == 0">
-        <div class="alert alert-danger text-center py-2">No Data Found..!
-        </div>
+      <div class="col-sm-4 text-end">
+        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
+        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
+          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Segment
+          Assignment
+        </button>
       </div>
     </div>
   </div>
-  
-  <!-- Modal for adding new valve -->
-  <div class="modal fade" id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="AddValveModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0">
-        <div class="modal-header bg-main">
-          <p class="modal-title mb-0" id="AddValveModalLabel">
-           Add Tank Segment Assignment
-          </p>
-          <button type="button" class="btn-close btn-close-inverse"
-            data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form [formGroup]="tankSegmentForm">
-          <div class="modal-body">
-            <div class="form-container">
-              <div class="mb-3">
-                <label class="form-label">Tank</label>
-                  <!-- <select class="form-select" class="form-control" aria-label="Default select example">
+  <div class="card-body">
+    <table class="table align-middle dashboard-table">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Tank</th>
+          <th>No of Segment</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of responseArray; let i=index">
+          <td>{{i+1}}</td>
+          <td>{{data?.tankName}}</td>
+          <td>
+        <tr *ngFor="let arr of data.tanksegmet">
+          <td>{{arr?.segmentName}}</td>
+        </tr>
+        </td>
+
+        <td>
+          <div class="btn-group">
+            <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
+              data-bs-target="#AddValveModal">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve" data-bs-toggle="modal"
+              data-bs-target="#deleteModel">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mt-2 text-end" *ngIf="responseArray?.length == 0">
+      <div class="alert alert-danger text-center py-2">No Data Found..!
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for adding new valve -->
+<div class="modal fade" id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="AddValveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+      <div class="modal-header bg-main">
+        <p class="modal-title mb-0" id="AddValveModalLabel">
+          Add Tank Segment Assignment
+        </p>
+        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form [formGroup]="tankSegmentForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="form-container">
+            <div class="mb-3">
+              <label class="form-label">Tank</label>
+              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
                     <option selected>Tank</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </select> -->
-                  <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId"
-                              placeholder="Select Tank" optionValueField="tankId"
-                             optionTextField="tankName" >
-                  </ngx-select>
-              </div>
-              
-              <div class="mb-3">
-                <!-- <div> -->
-                  <label class="form-label">Segment</label>
-                <!-- </div> -->
-                <div class="d-flex  gap-2" >
-                  <!-- <select class="form-select" class="form-control"  aria-label="Default select example">
+              <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
+                optionValueField="tankId" optionTextField="tankName">
+              </ngx-select>
+            </div>
+
+            <div class="mb-3">
+              <!-- <div> -->
+              <label class="form-label">Segment</label>
+              <!-- </div> -->
+              <div class="d-flex  gap-2">
+                <!-- <select class="form-select" class="form-control"  aria-label="Default select example">
                     <option selected>Segment</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </select> -->
-                  <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
-                              placeholder="Select Segment" optionValueField="segmentId"
-                             optionTextField="segmentName" class="form-control"  aria-label="Default select example">
-                  </ngx-select>
-                <button type="type" class="btn btn-main">Add</button>
-                </div>
+                <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
+                  placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
+                  class="form-control" aria-label="Default select example">
+                </ngx-select>
+                <button type="button" class="btn btn-main" (click)="addTankSegment()">Add</button>
               </div>
-              <div class="mb-0">
-                <table class="table dashboard-table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Sr. No</th>
-                      <th scope="col">Segment</th>
-                      <th>Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>demo</td>
-                      <td>
-                        <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
-                      >
+            </div>
+            <div class="mb-0">
+              <table class="table dashboard-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Sr. No</th>
+                    <th scope="col">Segment</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let seg of tankSegmentTable ; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{seg?.segmentName}}</td>
+                    <td>
+                      <button type="button" class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
+                        (click)="deleteTankSegment(i)">
                         <i class="fa-solid fa-trash-can"></i>
                       </button>
-                      </td>
-                    </tr>
-                    <tr>
+                    </td>
+                  </tr>
+                  <!-- <tr>
                       <td>2</td>
                       <td>demo</td>
                       <td>
@@ -125,52 +128,51 @@
                         <i class="fa-solid fa-trash-can"></i>
                       </button>
                       </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="modal-footer px-0 pb-0">
-              <div class="d-flex justify-content-between align-items-center w-100 form-container">
-                <button type="button" class="btn btn-light-main">Clear</button>
-                <button type="submit" class="btn btn-main">Submit</button>
-              </div>
+                    </tr> -->
+                </tbody>
+              </table>
             </div>
           </div>
-        </form>
+          <div class="modal-footer px-0 pb-0">
+            <div class="d-flex justify-content-between align-items-center w-100 form-container">
+              <button type="button" class="btn btn-light-main" (click)="onClear()">Clear</button>
+              <button type="submit" class="btn btn-main">Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Delete modal pop up -->
+<div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-transparent border-bottom-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center pb-5">
+        <h3 class="my-3">Are You Sure?</h3>
+        <p class="mb-4">Do you really want to This process can not be undone.</p>
+        <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
+          aria-label="Close">Cancel</button>
+        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
+          data-bs-dismiss="modal" aria-label="Close">I'm
+          Sure</button>
       </div>
     </div>
   </div>
-  <div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Delete modal pop up -->
-  <div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-transparent border-bottom-0">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center pb-5">
-          <h3 class="my-3">Are You Sure?</h3>
-          <p class="mb-4">Do you really want to This process can not be undone.</p>
-          <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
-            aria-label="Close">Cancel</button>
-          <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
-            data-bs-dismiss="modal" aria-label="Close">I'm
-            Sure</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
+</div>
