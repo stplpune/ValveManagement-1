@@ -22,9 +22,9 @@ export class ValveConnectionComponent implements OnInit {
   valveConnectionArray = new Array();
   editFlag: boolean = false;
   getLoginData: any;
-  @ViewChild('formDirective')
-  private formDirective!: NgForm;
-  @ViewChild('addconnectionModal') addconnectionModal: any;
+  // @ViewChild('formDirective')
+  // private formDirective!: NgForm;
+  @ViewChild('closebutton') closebutton: any;
   data: any;
   submitted:boolean = false;
 
@@ -212,14 +212,14 @@ export class ValveConnectionComponent implements OnInit {
       this.apiService.setHttp(this.editFlag ? 'put' : 'post', 'ValveConnection', false, formData, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: ((res: any) => {
-          this.spinner.hide();
-          if (res.statusCode == "200") {
+         if (res.statusCode == "200") {
             this.spinner.hide();
-            this.editFlag = false;
+            this.highlitedRow = 0;
             this.toasterService.success(res.statusMessage);
-            this.addconnectionModal.nativeElement.click();
-            this.formDirective.resetForm();
+            this.closebutton.nativeElement.click();
             this.bindValveConnectionsTable();
+            this.clearForm();
+            // this.editFlag = false;
             // this.highlitedRow = 0;
             // this.defaultValveConnectionForm();
             // this.bindValveConnectionsTable();
@@ -246,11 +246,11 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   //Clear All Data In the Form Fields
-  clearForm() {
+  clearForm(formDirective?:any) {
     this.submitted = false;
-    this.formDirective.resetForm();
+    formDirective?.resetForm();
     this.defaultValveConnectionForm();
-    // this.editFlag = false;
+    this.editFlag = false;
   }
 
 

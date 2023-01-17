@@ -120,6 +120,9 @@ getAllSegment(){
     this.segmentShowArray.push(data) 
   }
 
+  changeDropdown(){
+    
+  }
 
   onSubmit(){
     if(this.valveRegForm.invalid){
