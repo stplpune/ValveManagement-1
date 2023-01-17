@@ -56,6 +56,17 @@ export class TankMasterComponent implements OnInit {
     return this.tankForm.controls;
   }
 
+
+  clearFormData(flag?:any){
+    if(flag == 'formYojana'){
+      this.tankForm.controls['yojanaId'].setValue(0);
+      this.tankForm.controls['networkId'].setValue(0);
+    }else if(flag == 'networkId'){
+      this.tankForm.controls['yojanaId'].setValue(this.tankForm.value.yojanaId);
+      this.tankForm.controls['networkId'].setValue(0);
+    }
+  }
+
   getFilterFormData(){
     this.filterFrm =this.fb.group({
      yojanaId:[0],
@@ -64,6 +75,12 @@ export class TankMasterComponent implements OnInit {
  }
 
  clearfilter(flag:any){
+  // flag=='yojana' ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
+  //                :(this.tankForm.controls['networkId'].setValue(0));
+
+  // flag=='network'? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
+  //                :(this.tankForm.controls['networkId'].setValue(0));     
+
   if(flag=='yojana'){
     this.filterFrm.controls['yojanaId'].setValue(0);
     this.filterFrm.controls['networkId'].setValue(0);
@@ -79,7 +96,7 @@ export class TankMasterComponent implements OnInit {
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + formData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' +this.getData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -113,10 +130,11 @@ export class TankMasterComponent implements OnInit {
     })
   }
 
-  getNetwork() {
-    let formData = this.tankForm.value;
-    if (formData.yojanaId) {
-      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + formData.yojanaId, false, false, false, 'valvemgt');
+  getNetwork(status?:any) {
+    let netId: any;
+    console.log('status',status)
+    netId= status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId='+netId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
@@ -128,7 +146,6 @@ export class TankMasterComponent implements OnInit {
           this.error.handelError(error.status);
         }
       })
-    }
   }
 
   onSubmit() {
@@ -180,6 +197,8 @@ export class TankMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
+    this.filterFrm.controls['yojanaId'].setValue(0);
+    this.filterFrm.controls['networkId'].setValue(0);
   }
 
   getDeleteConfirm(getData?: any) {
