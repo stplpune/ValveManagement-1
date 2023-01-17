@@ -140,7 +140,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     })
 }
 getAllNetwork() {
-  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=1', false, false, false, 'valvemgt');
+  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       if (res.statusCode == '200') {

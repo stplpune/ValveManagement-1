@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgmCoreModule} from '@agm/core';
 import { FormsModule } from '@angular/forms';
+import { NgxSelectModule } from 'ngx-select-ex';
 @NgModule({
   declarations: [
     ValveListComponent
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
     NgxPaginationModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxSelectModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
       language: 'en',

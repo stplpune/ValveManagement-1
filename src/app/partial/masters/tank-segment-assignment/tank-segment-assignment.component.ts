@@ -200,11 +200,20 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.tankSegmentTable = [];
   }
 
-  onChangeDropdown(label: string) {
+  onChangeDropdown(event : any, label: string) {
+    // let tankEventId = event[0]?.value;
+    // console.log("tankEventId", tankEventId);
+
+    // console.log("event : ", event[0]?.value);
+
     if (label == 'tank') {
       this.f['segmentId'].setValue('');
       // this.tankSegmentTable = [];
     }
+    // else if(tankEventId !== event[0]?.value){
+    //   this.tankSegmentTable = [];
+    // }
+   
   }
 
   onEdit(obj: any) {

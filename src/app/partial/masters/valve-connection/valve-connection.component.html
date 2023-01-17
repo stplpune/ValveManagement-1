@@ -1,125 +1,19 @@
 <div class="card plain-card">
     <div class="card-header">
         <div class="row justify-content-between align-items-center">
-            <!-- <div class="col-sm-6">
-                <div class="d-flex justify-content-between">
-                </div>
-                Valve Connection
-            </div>
-            <div class="text-end">
-                <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-                        class="fas fa-sync-alt"></i></button>
-
-            </div> -->
             <div class="row">
                 <div class="d-flex justify-content-between w-100">
                     Valve Connection
-                    <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-                        class="fas fa-sync-alt"></i></button> -->
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addconnectionModal">
+                    <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
+                        data-bs-target="#addconnectionModal">
                         <i class="fa-solid fa-plus me-2"></i> Add Connection
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="card-body">
         <div class="row">
-            <!-- <div class="col-sm-6">
-                <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
-
-                    <div class="form-container">
-
-                        <div class="mb-3">
-                            <label class="form-label">Valve</label>
-                            <ngx-select [allowClear]="true" [items]="valveConnectionArray"
-                                formControlName="valveMasterId" placeholder="Select Valve" optionValueField="valveId"
-                                optionTextField="valveName">
-                            </ngx-select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Person Name</label>
-                            <input type="text" class="form-control" placeholder="Person Name"
-                                formControlName="personName">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Mobile Number</label>
-                            <input type="text" class="form-control" placeholder="Mobile Number"
-                                formControlName="mobileNo">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Number of Connection</label>
-                            <input type="text" class="form-control" placeholder="Number of Connection"
-                                formControlName="totalConnection">
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="card card-body border shadow-none">
-
-                                <div formArrayName="connectiondetails"
-                                    *ngFor="let connection of connectionForm?.controls;let i = index;">
-                                    <div [formGroupName]="i">
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Pipe Diameter</label>
-                                            <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                formControlName="pipeDiameter">
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Connection No.</label>
-                                            <input type="text" class="form-control" placeholder="Connection No."
-                                                formControlName="connectionNo">
-                                        </div>
-
-                                        <div class="text-end mb-2">
-                                            <span class="ms-2">
-                                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                                    (click)="removeItem(i)">
-                                                    Remove
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="addConnection()">
-                                    Add
-                                </button>
-
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="mb-3">
-                            <label for="floatingTextarea" class="form-label">Comments</label>
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-                                formControlName="remark">
-                        </textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-6 col">
-                                <button type="button" class="btn btn-secondary  float-lg-start"
-                                    (click)="clearForm()">Clear</button>
-                            </div>
-                            <div class="col-sm-6 text-end col">
-                                <button type="submit" class="btn btn-main float-lg-end">{{ editFlag ? 'Update' :
-                                    'Submit'}}</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
-            </div> -->
             <div class="col-sm-12">
                 <table class="table align-middle dashboard-table">
                     <thead>
@@ -144,7 +38,8 @@
                             <td>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded"
-                                    data-bs-toggle="modal" data-bs-target="#addconnectionModal"  (click)="onClickEdit(data)">
+                                        data-bs-toggle="modal" data-bs-target="#addconnectionModal"
+                                        (click)="onClickEdit(data)">
                                         <i class="far fa-edit"></i></button>
                                     <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
                                         data-bs-toggle="modal" data-bs-target="#deleteModel"
@@ -170,70 +65,6 @@
 </div>
 
 
-<!--Total Connection Modal -->
-<!-- <div class="modal fade" id="totalconnectionmodal" tabindex="-1" aria-labelledby="totalconnectionmodalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-main">
-                <h1 class="modal-title fs-5" id="totalconnectionmodalLabel">Modal title</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table align-middle dashboard-table">
-                    <thead>
-                        <tr>
-                            <th>Connection No.</th>
-                            <th>Pipe</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2.5</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>2.3</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
-<!--Add Connection Modal -->
-
-<!-- <div class="modal fade" id="addconnectionmodal" tabindex="-1" aria-labelledby="addconnectionmodalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-main">
-                <h1 class="modal-title fs-5" id="addconnectionmodalLabel">Pipe Diameter</h1>
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="" class="form-label">Pipe Diameter</label>
-                    <select class="form-control" aria-label="Default select example">
-                        <option selected>Pipe Diameter</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-                <div class="d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-light-main">Clear</button>
-                    <button type="submit" class="btn btn-main">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <!-- Delete Model Pop-Up -->
 <div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -258,140 +89,122 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModalLabel" aria-hidden="true">
+<!--Add/Update Modal Pop Up -->
+<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModal"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-main">
-          <h1 class="modal-title fs-5" id="addconnectionModalLabel">Add Connection</h1>
-          <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close" #closebutton></button>
-        </div>
-        <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
-      
-        <div class="modal-body">
-              <div class="form-container">
-              
+        <div class="modal-content">
+            <div class="modal-header bg-main">
+                <h1 class="modal-title fs-5" id="addconnectionModal">Add Connection</h1>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
+                    #closebutton (click)="clearForm(formDirective)"></button>
+            </div>
+            <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
+
+                <div class="modal-body">
                     <div class="form-container">
 
-                        <div class="mb-3">
-                            <label class="form-label">Valve</label>
-                            <ngx-select [allowClear]="true" [items]="valveConnectionArray"
-                                formControlName="valveMasterId" placeholder="Select Valve" optionValueField="valveId"
-                                optionTextField="valveName"
-                                [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }">
-                            </ngx-select>
+                        <div class="form-container">
+
+                            <div class="mb-3">
+                                <label class="form-label">Valve</label>
+                                <ngx-select [allowClear]="true" [items]="valveConnectionArray"
+                                    formControlName="valveMasterId" placeholder="Select Valve"
+                                    optionValueField="valveId" optionTextField="valveName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }">
+                                </ngx-select>
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">
                                         Valve Is Required</div>
                                 </div>
-                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Person Name</label>
-                            <input type="text" class="form-control" placeholder="Person Name"
-                            formControlName="personName" 
-                            [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
-                            <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
-                                <div class="text-danger" *ngIf="f.personName.errors?.required">
-                                Person Name Is  Required</div>
                             </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Mobile Number</label>
-                            <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo"
-                            [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }">
-                            <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
-                                <div class="text-danger" *ngIf="f.mobileNo.errors?.required">
-                                    Mobile Number Is  Required.</div>
+                            <div class="mb-3">
+                                <label class="form-label">Person Name</label>
+                                <input type="text" class="form-control" placeholder="Person Name"
+                                    formControlName="personName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
+                                    <div class="text-danger" *ngIf="f.personName.errors?.required">
+                                        Person Name Is Required</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Number of Connection</label>
-                            <input type="text" class="form-control" placeholder="Number of Connection"
-                                formControlName="totalConnection"
-                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
+                            <div class="mb-3">
+                                <label class="form-label">Mobile Number</label>
+                                <input type="text" class="form-control" placeholder="Mobile Number"
+                                    formControlName="mobileNo"
+                                    [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }">
+                                <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
+                                    <div class="text-danger" *ngIf="f.mobileNo.errors?.required">
+                                        Mobile Number Is Required.</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Number of Connection</label>
+                                <input type="text" class="form-control" placeholder="Number of Connection"
+                                    formControlName="totalConnection"
+                                    [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
                                 <div *ngIf="submitted && f.totalConnection.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.totalConnection.errors?.required">
-                                        Total Connection Is  Required.</div>
+                                        Total Connection Is Required.</div>
                                 </div>
-                        </div>
+                            </div>
 
-                        <div class="mb-3">
-                            <div class="card card-body border shadow-none">
+                            <div class="mb-3">
+                                <div class="card card-body border shadow-none">
 
-                                <div formArrayName="connectiondetails"
-                                    *ngFor="let connection of connectionForm?.controls;let i = index;">
-                                    <div [formGroupName]="i">
+                                    <div formArrayName="connectiondetails"
+                                        *ngFor="let connection of connectionForm?.controls;let i = index;">
+                                        <div [formGroupName]="i">
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Pipe Diameter</label>
-                                            <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                formControlName="pipeDiameter">
-                                        </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Pipe Diameter</label>
+                                                <input type="text" class="form-control" placeholder="Pipe Diameter"
+                                                    formControlName="pipeDiameter">
+                                            </div>
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Connection No.</label>
-                                            <input type="text" class="form-control" placeholder="Connection No."
-                                                formControlName="connectionNo">
-                                        </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Connection No.</label>
+                                                <input type="text" class="form-control" placeholder="Connection No."
+                                                    formControlName="connectionNo">
+                                            </div>
 
-                                        <div class="text-end mb-2">
-                                            <span class="ms-2">
-                                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                                    (click)="removeItem(i)">
-                                                    Remove
-                                                </button>
-                                            </span>
+                                            <div class="text-end mb-2">
+                                                <span class="ms-2">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        (click)="removeItem(i)">
+                                                        Remove
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                        (click)="addConnection()">
+                                        Add
+                                    </button>
+
                                 </div>
-
-
-                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="addConnection()">
-                                    Add
-                                </button>
-
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="floatingTextarea" class="form-label">Comments</label>
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-                                formControlName="remark">
+                            <div class="mb-3">
+                                <label for="floatingTextarea" class="form-label">Comments</label>
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
+                                    formControlName="remark">
                         </textarea>
+                            </div>
                         </div>
-
-                        <!-- <div class="row">
-                            <div class="col-sm-6 col">
-                                <button type="button" class="btn btn-secondary  float-lg-start"
-                                    (click)="clearForm()">Clear</button>
-                            </div>
-                            <div class="col-sm-6 text-end col">
-                                <button type="submit" class="btn btn-main float-lg-end">{{ editFlag ? 'Update' :
-                                    'Submit'}}</button>
-                            </div>
-                        </div> -->
-
                     </div>
-                
-            </div>
-       
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
+                        <button type="submit" class="btn btn-main text-center">{{ editFlag ? 'Update' :
+                            'Submit'}}</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="modal-footer">
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <!-- <div class=""> -->
-                    <button type="button" class="btn btn-light-main"
-                        (click)="clearForm()">Clear</button>
-                <!-- </div> -->
-                <!-- <div class="col-sm-6 text-end col"> -->
-                    <button type="submit" class="btn btn-main text-center">{{ editFlag ? 'Update' :
-                        'Submit'}}</button>
-                <!-- </div> -->
-            </div>
-  
-        </div>
-    </form>
-      </div>
     </div>
-  </div>
+</div>

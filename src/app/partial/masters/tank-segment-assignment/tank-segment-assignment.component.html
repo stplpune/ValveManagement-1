@@ -83,7 +83,7 @@
                     <option value="3">Three</option>
                   </select> -->
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank')">
+                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown($event, 'tank')">
               </ngx-select>
             </div>
 

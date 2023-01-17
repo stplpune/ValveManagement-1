@@ -19,7 +19,7 @@
                 <tr>
                     <th>Sr. No.</th>
                     <th>Network</th>
-                    <th>Vocabulary</th>
+                    <th>Yojana Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -28,7 +28,7 @@
                     currentPage: pageNumber, totalItems:totalRows}; let i = index">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{showAllNetwork?.networkName}}</td>
-                    <td>Vocalbulary Data</td>
+                    <td>{{showAllNetwork?.yojanaName}}</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" (click)="onEdit(showAllNetwork)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
@@ -79,7 +79,7 @@
                         <div class="mb-3">
                             <label class="form-label">Select Yojana</label>
                               <ngx-select [allowClear]="true" [items]="allYojanaArray" formControlName="yojanaId"
-                              placeholder="Select District" optionValueField="yojanaId"
+                              placeholder="Select Yojana" optionValueField="yojanaId"
                              optionTextField="yojanaName"  (remove)="clearDropdown('yojana')"
                              [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                          </ngx-select>
