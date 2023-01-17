@@ -5,6 +5,7 @@ import { TankMasterComponent } from './tank-master.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AgmCoreModule } from '@agm/core';
 @NgModule({
   declarations: [
     TankMasterComponent
@@ -14,7 +15,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
     TankMasterRoutingModule,
     ReactiveFormsModule,
     NgxSelectModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+     AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
+      language: 'en',
+      libraries: ['places', 'geometry'],
+    }),
 
 
   ]
