@@ -187,8 +187,6 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   onSubmit() {
-
-    return
     this.submited = true;
     if (this.segmentMasterForm.invalid) {
       return;
