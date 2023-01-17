@@ -7,6 +7,7 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { PartialLayoutRoutingModule } from './partial-layout-routing.module';
 import { AgmCoreModule } from '@agm/core/core.module';
+import { PageRightAccessComponent } from './page-right-access/page-right-access.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { AgmCoreModule } from '@agm/core/core.module';
     SidebarComponent,
     NavbarComponent,
     FooterComponent,
+    PageRightAccessComponent,
   ],
 
   imports: [

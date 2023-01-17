@@ -15,6 +15,9 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class TankSensorDeviceMasterComponent implements OnInit {
 
   editFlag:boolean = false;
+  deleteSegmentId!:any;
+  postObj!:any;
+  formData!:any;
   tankSensorDeviceFrm!:FormGroup;
   getAllSimArray = new Array();
   getAllTankArray = new Array();
@@ -138,7 +141,7 @@ getAllSensorDeviceTableData() {
   let tankIds = this.tankSensorDeviceFrm.value.tankId;
   console.log(networkIds,'re');
   // this.spinner.show();
-  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.localStorage.userId() + '&pageno='+ this.pageNumber +'&pagesize='+ this.pagesize +'&YojanaId='+ Number(this.editFlag ? yojanaIds : '0') +'&NetworkId='+ Number(this.editFlag ? networkIds : '0') +'&TankId=' + Number(this.editFlag ? tankIds : '0') , false, false, false, 'valvemgt');
+  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId=1&pageno=1&pagesize=10&YojanaId=0&NetworkId=0&TankId=0', false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       // this.spinner.hide();
@@ -158,17 +161,15 @@ getAllSensorDeviceTableData() {
 }
 
 onSubmit() {
-  console.log('submit');
-  
   let formData = this.tankSensorDeviceFrm.value;
-  let obj = {
+  this.postObj = {
     ...formData,
     "createdBy": this.localStorage.userId(),
     // "createdDate": new Date(),
     // "modifiedby": this.localStorage.userId(),
     // "modifiedDate": new Date(),
     "tankName": "string",
-    "isDeleted": true,
+    "isDeleted": false,
     "modifiedBy": this.localStorage.userId(),
   }
   this.spinner.show();
@@ -176,16 +177,16 @@ onSubmit() {
   let urlType:any;
   urlType = (this.editFlag ? (urlType = 'PUT') : (urlType = 'POST'));
   let urlName:any;
-  urlName = this.editFlag ? (urlName = 'ValveManagement/Network/UpdateNetwork') : (urlName = 'ValveManagement/Network/AddNetwork');
-  this.apiService.setHttp(urlType,urlName,false,obj,false,'valvemgt');
+  urlName = this.editFlag ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
+  this.apiService.setHttp(urlType,urlName,false,this.postObj,false,'valvemgt');
   this.apiService.getHttp().subscribe(
     (res: any) => {
       if (res.statusCode == '200') {
         this.spinner.hide();
         this.toastrService.success(res.statusMessage);
         this.getAllSensorDeviceTableData();
-        this.closebutton.nativeElement.click();
         this.clearForm();
+        this.closebutton.nativeElement.click();
       } else {
         this.toastrService.error(res.statusMessage);
         this.spinner.hide();
@@ -198,13 +199,47 @@ onSubmit() {
   );
 }
 
-
-
 onClickPagintion(pageNo: number) {
   this.pageNumber = pageNo;
   this.getAllSensorDeviceTableData();
 }
 
+deleteConformation(id?:any){
+  this.deleteSegmentId = id;
+  console.log(this.deleteSegmentId);
+  
+}
+
+deleteNetworkMaster(){
+  let formData = this.tankSensorDeviceFrm.value;
+  let deleteObj = {
+    ...formData,
+    "id": this.deleteSegmentId,
+    "createdBy": this.localStorage.userId(),
+    // "createdDate": new Date(),
+    // "modifiedby": this.localStorage.userId(),
+    // "modifiedDate": new Date(),
+    "tankName": "string",
+    "isDeleted": true,
+    "modifiedBy": this.localStorage.userId(),
+  }
+  console.log(deleteObj,'de');
+  
+  this.apiService.setHttp('DELETE', 'DeviceInfo/DeleteDeviceDetails', false, deleteObj, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode === '200') {
+        this.toastrService.success(res.statusMessage);
+        this.getAllSensorDeviceTableData();
+      } else {
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+      }
+    },
+    error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  });
+}
 
   clearDropdown(flag:any){
     // this.editFlag = false;
