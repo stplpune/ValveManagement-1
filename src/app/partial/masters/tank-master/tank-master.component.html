@@ -151,9 +151,35 @@
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" #searchAddressModel aria-label="Close"></button>
       </div>
 
+      <div class="modal-body mt-20 py-2">
+        <div class="form-container mb-2 input-group">
+            <input class="form-control" type="text" autocapitalize="off" [formControl]="searchAdd" spellcheck="off" #searchAddress>
+            <button type="button" class="btn btn-light btn-sm" (click)="searchAdd.setValue('')"
+             *ngIf="searchAdd.value"><i class="fas fa-times"></i></button>
+        </div>
+
+        <agm-map [latitude]="addLatitude || 19.0898177" [longitude]="addLongitude || 76.5240298" [zoom]="addressZoomSize" (mapClick)="markerAddressDragEnd($event)">
+            <div>
+                <agm-marker *ngIf="addressMarkerShow == true" [latitude]="addLatitude" [longitude]="addLongitude" (dragEnd)="markerAddressDragEnd($event)"
+                    [markerDraggable]="true" (markerClick)="clickedAddressMarker(infowindow)">
+                    <agm-info-window #infowindow>
+                        <strong>Address - {{addressNameforAddress}}</strong>
+                    </agm-info-window>
+                </agm-marker>
+            </div>
+        </agm-map>
+
+        <div class="modal-footer py-1">
+          <div  class="d-flex justify-content-between align-items-center float-end">
+              <button type="button" class="btn btn-secondary" (click)="clearAddress()">Clear</button>
+              <button type="button" class="btn btn-main ms-2" data-bs-toggle="modal"
+                  data-bs-target="#AddValveModal" (click)="addAddress()">Add</button>
+          </div>
+      </div>
+    </div>
     </div>
   </div>
 </div>
