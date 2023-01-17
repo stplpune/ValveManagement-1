@@ -24,8 +24,8 @@ export class ValveConnectionComponent implements OnInit {
   getLoginData: any;
   @ViewChild('formDirective')
   private formDirective!: NgForm;
-  data:any;
- 
+  data: any;
+
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
     private toasterService: ToastrService,
@@ -48,11 +48,11 @@ export class ValveConnectionComponent implements OnInit {
       "personName": [''],
       "mobileNo": [''],
       "remark": [''],
-       "createdBy": this.localStorage.userId(),
-       "yojanaId": [this.getLoginData.yojanaId],
-       "networkId": [this.getLoginData.networkId],
-       "consumerUserId": [0],
-       "totalConnection": [''],
+      "createdBy": this.localStorage.userId(),
+      "yojanaId": [this.getLoginData.yojanaId],
+      "networkId": [this.getLoginData.networkId],
+      "consumerUserId": [0],
+      "totalConnection": [''],
       "connectiondetails": this.fb.array([
         this.fb.group({
           "pipeDiameter": [''],
@@ -62,9 +62,9 @@ export class ValveConnectionComponent implements OnInit {
     })
   }
 
-  
-  
-get connectionForm(): FormArray {
+
+
+  get connectionForm(): FormArray {
     return this.valveConnectionForm.get('connectiondetails') as FormArray;
   }
 
@@ -91,7 +91,7 @@ get connectionForm(): FormArray {
 
   bindValveConnectionsTable() {
     this.spinner.show();
-    let obj = 'UserId='+this.localStorage.userId()+'&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    let obj = 'UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'ValveConnection?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -115,13 +115,13 @@ get connectionForm(): FormArray {
   }
 
   getValveConnectionDropdown() {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId='+this.localStorage.userId()+'&YojanaId='+this.getLoginData.yojanaId +'&NetworkId='+ this.getLoginData.networkId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=' + this.localStorage.userId() + '&YojanaId=' + this.getLoginData.yojanaId + '&NetworkId=' + this.getLoginData.networkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.valveConnectionArray = res.responseData;
           // this.editFlag ? this.valveConnectionForm.controls['valveMasterId'].setValue() : '';
-    
+
         }
         else {
           this.valveConnectionArray = [];
@@ -141,13 +141,13 @@ get connectionForm(): FormArray {
     this.highlitedRow = this.data.id;
   }
 
-deleteConnection(){
+  deleteConnection() {
     let obj = {
       "id": this.data.id,
-     "deletedBy": 0
+      "deletedBy": 0
     }
 
-    this.apiService.setHttp('DELETE','ValveConnection',false,obj,false,'valvemgt');
+    this.apiService.setHttp('DELETE', 'ValveConnection', false, obj, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -165,9 +165,6 @@ deleteConnection(){
     });
   }
 
- 
-
- 
   onClickEdit(editObj: any) {
     this.connectionForm.clear()
     this.highlitedRow = editObj.id;
@@ -180,9 +177,9 @@ deleteConnection(){
       "remark": editObj.remark,
       "createdBy": this.localStorage.userId(),
       "yojanaId": this.getLoginData.yojanaId,
-      "networkId":this.getLoginData.networkId,
+      "networkId": this.getLoginData.networkId,
       "consumerUserId": 0,
-      "totalConnection":+editObj.totalConnection,
+      "totalConnection": +editObj.totalConnection,
     });
     editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
@@ -235,9 +232,9 @@ deleteConnection(){
     this.bindValveConnectionsTable();
   }
 
-   //Clear All Data In the Form Fields
-   clearForm() {
-  this.formDirective.resetForm();
+  //Clear All Data In the Form Fields
+  clearForm() {
+    this.formDirective.resetForm();
     this.defaultValveConnectionForm();
     // this.editFlag = false;
   }
