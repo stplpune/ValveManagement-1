@@ -4,8 +4,12 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from 'src/app/core/services/api.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from 'src/app/core/services/common.service';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-user-registration',
@@ -15,24 +19,26 @@ import { CommonService } from 'src/app/core/services/common.service';
 export class UserRegistrationComponent implements OnInit {
   //Intialize the Component Property
   userDetails: FormGroup | any;
+  searchForm: FormGroup | any;
   submitted = false;
   @ViewChild('addUserModel') addUserModel: any;
   @ViewChild('openBlockUserPopup') blockUserModel: any;
+  buttontextFlag:String='Submit';
   pageNumber: number = 1;
-  pageSize: number = 20;
-  userListArray: {
-    id: number;
-    fullName: string;
-    mobileNo: string;
-    isUserBlock: number;
-    address: number;
-  }[] = [];
+  pageSize: number = 10;
+  userListArray=new Array();
   deleteUserId: number = 0;
   blockUserId: number = 0;
   listCount!: number;
   blockUserText: string = 'Block';
   preventEvent!: any;
   isBlockStatus: number = 0;
+  userTypeArray=new Array();
+  yoganaIdArray=new Array();
+  networkIdArray=new Array();
+  getLoginData:any;
+  subject: Subject<any> = new Subject();
+
   constructor(
     private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -40,12 +46,18 @@ export class UserRegistrationComponent implements OnInit {
     public apiService: ApiService,
     private errorSerivce: ErrorsService,
     private toastrService: ToastrService,
-    public commonService: CommonService
+    public commonService: CommonService,
+    public validation: ValidationService
   ) {}
 
   ngOnInit(): void {
+    this.getLoginData=this.localStorage.getLoggedInLocalstorageData();
     this.defaultForm();
+    this.searchFormControl();
     this.getUserRegistrationList();
+    this.getUserType();
+    this.getYoganaId();
+    this.searchFilters('false');
   }
 
   //Intialize Form Fields
@@ -53,9 +65,19 @@ export class UserRegistrationComponent implements OnInit {
     this.userDetails = this.fb.group({
       Id: [0],
       fullName: ['', [Validators.required]],
-      mobileNo: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      address: [''],
+      mobileNo: ['', [Validators.required, Validators.pattern('^[6-9][0-9]*$')]],
+      userTypeId: ['',[Validators.required]],
+      yojanaId: ['',[Validators.required]],
+      networkId: ['',[Validators.required]],
+      address: ['',[Validators.required]],
     });
+  }
+  searchFormControl(){
+    this.searchForm=this.fb.group({
+      yojana:[''],
+      network:[''],
+      searchField:['']
+    })
   }
 
   //Get Form Control Values
@@ -63,45 +85,84 @@ export class UserRegistrationComponent implements OnInit {
     return this.userDetails.controls;
   }
 
+  getUserType(){
+    this.apiService.setHttp('GET', 'UserRegistration/GetUserTypeList?UserId='+this.getLoginData.userId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.userTypeArray=res.responseData;
+      }
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
+  getYoganaId(){
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' +this.getLoginData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.yoganaIdArray=res.responseData;
+        // this.getNetworkID();
+      }
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
+  getNetworkID(yojanaId?:number){
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId='+yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.networkIdArray=res.responseData;
+      }
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
   //Clear All Data In the Form Fields
-  clearForm() {
+  clearForm(formDirective?:any) {
     this.submitted = false;
+    formDirective.resetForm();
     this.defaultForm();
   }
 
   //Save User Registration Details
-  onSubmit() {
-    let formData = this.userDetails.value;
+  onSubmit(formDirective:any) {
     this.submitted = true;
     if (this.userDetails.invalid) {
       return;
     } else {
-      let obj = {
-        id: formData.Id,
-        fullName: formData.fullName,
-        mobileNo: formData.mobileNo,
-        address: formData.address,
-        userTypeId: 2,
-        createdBy: this.localStorage.userId(),
-        modifiedBy: 0,
-      };
+      let obj=this.userDetails.value;
+      obj.userTypeId=parseInt(obj.userTypeId);
+      obj.yojanaId=parseInt(obj.yojanaId);
+      obj.networkId=parseInt(obj.networkId);
+      obj.createdBy=this.localStorage.userId();
+      obj.modifiedBy=this.getLoginData.userId;
+      obj.createdBy=this.getLoginData.userId;
       this.spinner.show();
-      let urlType;
-      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
-      this.apiService.setHttp(
-        urlType,
-        'UserRegistration',
-        false,
-        JSON.stringify(obj),
-        false,
-        'valvemgt'
-      );
+      let urlType:any;
+      obj.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
+      this.apiService.setHttp(urlType,'UserRegistration',false,obj,false,'valvemgt');
       this.apiService.getHttp().subscribe(
         (res: any) => {
-          if (res.statusCode == '201') {
+          if (urlType == 'POST'? res.statusCode == '201': res.statusCode == '200') {
             this.spinner.hide();
+            this.buttontextFlag='Submit';
             this.toastrService.success(res.statusMessage);
             this.addUserModel.nativeElement.click();
+            this.clearForm();
             this.getUserRegistrationList();
           } else {
             this.toastrService.error(res.statusMessage);
@@ -119,22 +180,15 @@ export class UserRegistrationComponent implements OnInit {
   //Get User Registration Data
   getUserRegistrationList() {
     this.spinner.show();
-    let obj = 'pageno=' + this.pageNumber + '&pagesize=' + this.pageSize;
-    this.apiService.setHttp(
-      'get',
-      'UserRegistration?' + obj,
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    let obj = 'pageno=' + this.pageNumber + '&pagesize=' + this.pageSize+ '&search='+(this.searchForm.value.searchField?this.searchForm.value.searchField:'')
+    +'&yojanaId='+(this.searchForm.value.yojana?this.searchForm.value.yojana:0)+'&networkId='+(this.searchForm.value.network?this.searchForm.value.network:0);
+    this.apiService.setHttp('get','UserRegistration?' + obj,false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.userListArray = res.responseData.responseData1;
           this.listCount = res.responseData.responseData2?.totalCount;
-          //console.log(this.userListArray);
         } else {
           this.spinner.hide();
           this.userListArray = [];
@@ -186,10 +240,15 @@ export class UserRegistrationComponent implements OnInit {
 
   //Update User Data
   updateUserData(userData: any) {
+    this.getNetworkID(userData.yojanaId)
+    this.buttontextFlag='Update';
     this.userDetails.patchValue({
       Id: userData.id,
       fullName: userData.fullName,
       mobileNo: userData.mobileNo,
+      userTypeId: userData.userTypeId,
+      yojanaId: userData.yojanaId,
+      networkId: userData.networkId,
       address: userData.address,
     });
   }
@@ -250,7 +309,7 @@ export class UserRegistrationComponent implements OnInit {
         if (res.statusCode === '200') {
           this.toastrService.success(res.statusMessage);
           this.getUserRegistrationList();
-          this.clearForm();
+          // this.clearForm();
         } else {
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
@@ -262,4 +321,42 @@ export class UserRegistrationComponent implements OnInit {
       },
     });
   }
+
+ 
+
+  onKeyUpFilter() {
+    this.subject.next(true);
+  }
+
+  searchFilters(flag: any) {
+    if (flag == 'true') {
+      if (this.searchForm.value.searchField == "" || this.searchForm.value.searchField == null) {
+        this.toastrService.error("Please search and try again");
+        return
+      }
+    }
+    this.subject
+      .pipe(debounceTime(700))
+      .subscribe(() => {
+        this.searchForm.value.searchField;
+        this.pageNumber = 1;
+        this.getUserRegistrationList();
+      });
+  }
+
+  clearSerach(flag: any) {
+    if (flag == 'yojana') {
+      this.searchForm.controls['network'].setValue('');
+    } else if (flag == 'network') {
+      // this.searchForm.controls['network'].setValue('');
+    } else if (flag == 'search') {
+      this.searchForm.controls['searchField'].setValue('');
+    }
+    this.pageNumber = 1;
+    this.getUserRegistrationList();
+    this.clearForm();
+  }
+
 }
+
+

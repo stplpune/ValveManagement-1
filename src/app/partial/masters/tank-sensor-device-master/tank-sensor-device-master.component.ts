@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 @Component({
   selector: 'app-tank-sensor-device-master',
@@ -15,15 +16,26 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class TankSensorDeviceMasterComponent implements OnInit {
 
   editFlag:boolean = false;
+  deleteSegmentId!:any;
+  postObj!:any;
+  formData!:any;
+  deleteObj!:any;
   tankSensorDeviceFrm!:FormGroup;
+  searchForm!:FormGroup;
   getAllSimArray = new Array();
   getAllTankArray = new Array();
   getAllYojanaArray = new Array();
   getAllNetworkArray = new Array();
   allSensorDeviceArray = new Array();
+  pageNumber: number = 1;
+  pagesize: number = 10;
+  totalRows: any;
+  submitted = false;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
     private fb: FormBuilder,
+    public validation: ValidationService,
     private localStorage: LocalstorageService,
     public commonService: CommonService,
     private spinner: NgxSpinnerService,
@@ -32,25 +44,58 @@ export class TankSensorDeviceMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.controlForm();
+    this.searchFormControl();
     this.getAllSim();
-    this.getAllTank();
     this.getAllYojana();
+    this.getAllTank();
     this.getAllNetwork();
     this.getAllSensorDeviceTableData();
+  }
+
+  //Get Form Control Values
+  get f() {
+    return this.tankSensorDeviceFrm.controls;
   }
 
   controlForm(){
     this.tankSensorDeviceFrm = this.fb.group({
       id:[0],
-      deviceId: [''],
-      deviceName: [''],
-      simId: +[''],
-      deviceDescription: [''],
-      tankId: +[''],
-      yojanaId: +[''],
-      networkId: +['']
+      deviceId: ['',Validators.required],
+      deviceName: ['',Validators.required],
+      simId: [0,Validators.required],
+      deviceDescription: ['',Validators.required],
+      tankId: [0,Validators.required],
+      yojanaId: [0,Validators.required],
+      networkId: [0,Validators.required]
     })
   }
+
+  searchFormControl(){
+    this.searchForm=this.fb.group({
+      yojana:[''],
+      network:[''],
+      tank:['']
+    })
+  }
+
+  onEdit(data?:any){
+  this.editFlag = true;
+  this.tankSensorDeviceFrm.patchValue({
+      id: data.id,
+      deviceId: data.deviceId,
+      deviceName: data.deviceName,
+      deviceDescription: data.deviceDescription,
+      simId: data.simId,
+      tankId: data.tankId,
+      tankName: data.tankName,
+      isDeleted: data.isDeleted,
+      createdBy: data.createdBy,
+      modifiedBy: data.modifiedBy,
+      yojanaId: data.yojanaId,
+      networkId: data.networkId
+  })
+  console.log(data,'editData');
+}
 
   getAllSim() {
     this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList', false, false, false, 'valvemgt');
@@ -106,6 +151,7 @@ getAllNetwork() {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.editFlag = false;
+  this.submitted = false;
   this.controlForm();
 }
 
@@ -115,13 +161,15 @@ getAllSensorDeviceTableData() {
   let tankIds = this.tankSensorDeviceFrm.value.tankId;
   console.log(networkIds,'re');
   // this.spinner.show();
-  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.localStorage.userId() + '&pageno=1&pagesize=10&YojanaId='+ Number(this.editFlag ? yojanaIds : '0') +'&NetworkId='+ Number(this.editFlag ? networkIds : '0') +'&TankId=' + Number(this.editFlag ? tankIds : '0') , false, false, false, 'valvemgt');
+  this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
+  this.pageNumber+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana ? this.searchForm.value.yojana : 0) +
+  '&NetworkId='+ (this.searchForm.value.network ? this.searchForm.value.network : 0) +'&TankId=' + (this.searchForm.value.tank ? this.searchForm.value.tank : 0), false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       // this.spinner.hide();
       if (res.statusCode == "200") {
         this.allSensorDeviceArray = res.responseData.responseData1;
-        // this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+        this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
       } else {
         this.spinner.hide();
         this.allSensorDeviceArray = [];
@@ -135,34 +183,30 @@ getAllSensorDeviceTableData() {
 }
 
 onSubmit() {
-  console.log('submit');
-  
+  this.submitted = true;
   let formData = this.tankSensorDeviceFrm.value;
-  let obj = {
+  this.postObj = {
     ...formData,
     "createdBy": this.localStorage.userId(),
-    // "createdDate": new Date(),
-    // "modifiedby": this.localStorage.userId(),
-    // "modifiedDate": new Date(),
     "tankName": "string",
     "isDeleted": false,
     "modifiedBy": this.localStorage.userId(),
   }
   this.spinner.show();
   let id:any;
-  let urlType
-  // this.editFlag ? (urlType = 'PUT') : (urlType = 'POST');
-  let urlName 
-  // this.editFlag ? (urlName = 'ValveManagement/Network/UpdateNetwork') : (urlName = 'ValveManagement/Network/AddNetwork');
-  this.apiService.setHttp('POST','DeviceInfo/AddDeviceDetails',false,obj,false,'valvemgt');
+  let urlType:any;
+  urlType = (this.editFlag ? (urlType = 'PUT') : (urlType = 'POST'));
+  let urlName:any;
+  urlName = this.editFlag ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
+  this.apiService.setHttp(urlType,urlName,false,this.postObj,false,'valvemgt');
   this.apiService.getHttp().subscribe(
     (res: any) => {
       if (res.statusCode == '200') {
         this.spinner.hide();
         this.toastrService.success(res.statusMessage);
         this.getAllSensorDeviceTableData();
-        // this.closebutton.nativeElement.click();
         this.clearForm();
+        this.closebutton.nativeElement.click();
       } else {
         this.toastrService.error(res.statusMessage);
         this.spinner.hide();
@@ -175,32 +219,36 @@ onSubmit() {
   );
 }
 
-onEdit(data?:any){
-  this.editFlag = true;
-  console.log(data,'editData');
-  
-  this.tankSensorDeviceFrm.patchValue({
-    id: data.id,
-  deviceId: data.deviceId,
-  deviceName: data.deviceName,
-  deviceDescription: data.deviceDescription,
-  simId: data.simId,
-  tankId: data.tankId,
-  tankName: data.tankName,
-  isDeleted: true,
-  createdBy: data.createdBy,
-  modifiedBy: data.modifiedBy,
-  yojanaId: data.yojanaId,
-  networkId: data.networkId
-  })
+onClickPagintion(pageNo: number) {
+  this.pageNumber = pageNo;
+  this.getAllSensorDeviceTableData();
 }
 
+deleteConformation(data?:any){
+  this.deleteObj = data;
+}
 
-  clearDropdown(flag:any){
-    // this.editFlag = false;
-  //  switch(flag){
-  //    case 'simNo': this.networkRegForm.controls['yojanaId'].setValue('');
-  //                      break;
-  //  }
- }
+deleteNetworkMaster(){
+  this.deleteObj.isDeleted = true;
+  this.apiService.setHttp('DELETE', 'DeviceInfo/DeleteDeviceDetails', false, this.deleteObj, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode === '200') {
+        this.toastrService.success(res.statusMessage);
+        this.getAllSensorDeviceTableData();
+      } else {
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+      }
+    },
+    error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  });
+}
+
+ clearSerach(flag: any) {
+  this.pageNumber = 1;
+  this.getAllSensorDeviceTableData();
+  this.clearForm();
+}
 }
