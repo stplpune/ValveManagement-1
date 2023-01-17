@@ -28,7 +28,7 @@
           <td>{{valve?.valveName}}</td>
           <td>
         <tr *ngFor="let valveObj of valve.valvesegmet">
-          <td>{{valveObj.segmentName}}</td>
+          <td>{{valveObj?.segmentName}}</td>
         </tr>
         </td>
         <td>
@@ -95,7 +95,7 @@
                   <option value="3">Three</option>
                 </select> -->
                 <ngx-select  [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
-                placeholder="Select valve" optionValueField="segmentId"
+                placeholder="Select Segment" optionValueField="segmentId"
                optionTextField="segmentName">
               </ngx-select>
               <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
@@ -113,7 +113,7 @@
                 <tbody>
                   <tr *ngFor="let segment of segmentShowArray; let i = index" >
                     <td>{{i+1}}</td>
-                    <td>{{segment.segmentName}}</td>
+                    <td>{{segment?.segmentName}}</td>
                     <td>
                       <button class="btn bg-danger bg-opacity-10 text-danger rounded" (click)="deleteSegment(i)" title="Delete"
                     >

@@ -5,10 +5,12 @@
         </div>
     </div>
     <div class="row">
-        <!-- <ngx-select [items]="userTypeArray" [formControl]="userTypeId"
-                   placeholder="Select User Type" optionValueField="id"
-                   optionTextField="userTypeName">
-              </ngx-select> -->
+       <div class="col-sm-3">
+        <ngx-select [items]="userTypeArray" [formControl]="userTypeId"
+        placeholder="Select User Type" optionValueField="id"
+        optionTextField="userTypeName" (select)="getAllPages()">
+   </ngx-select>
+       </div>
     </div>
     <div class="card-body">
         <table class="table align-middle dashboard-table">
@@ -21,13 +23,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let pageData of pageNameArray; let i=index">
-                    <th>{{i+1}}</th>
+                <tr *ngFor="let pageData of pageNameArray | paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:totalCount}; let i=index">
+                    <th>{{(((pageNumber + 1) * 10 + i + 1)-20)}}</th>
                     <th>{{pageData.pageName}}</th>
-                    <th>{{pageData.pageUrl}}</th>
-                    <th><input type="checkbox" [checked]="pageData.access" (change)="addPage(pageData,$event)"></th>
+                    <th>{{pageData.pageURL}}</th>
+                    <th><input type="checkbox" [checked]="pageData.userAccessOption==1" (change)="addPage(pageData,$event)"></th>
                 </tr>
             </tbody>
         </table>
+        <div class="mt-2 text-end" *ngIf="pageNameArray?.length == 0">
+            <div class="alert alert-danger text-center py-2">No Data Found..!
+            </div>
+        </div>
+        <div class="mt-2 text-end" *ngIf="pageNameArray?.length != 0">
+            <pagination-controls previousLabel="" nextLabel="" (pageChange)="pagination($event)">
+            </pagination-controls>
+        </div>
     </div>
 </div>
