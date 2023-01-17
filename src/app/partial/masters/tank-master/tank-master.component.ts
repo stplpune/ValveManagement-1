@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ValidationService } from 'src/app/core/services/validation.service';
 @Component({
   selector: 'app-tank-master',
   templateUrl: './tank-master.component.html',
@@ -33,10 +34,11 @@ export class TankMasterComponent implements OnInit {
       private toastrService: ToastrService,
       private error: ErrorsService,
       private spinner: NgxSpinnerService,
+      public validation:ValidationService
     ) { }
 
   ngOnInit(): void {
-    console.log('getData',this.getData)
+    console.log('getData', this.getData)
     this.geFormData();
     this.getFilterFormData();
     this.getTableData();
@@ -47,56 +49,56 @@ export class TankMasterComponent implements OnInit {
     this.tankForm = this.fb.group({
       "id": [0],
       "tankName": ['', [Validators.required]],
-      "address": ['', [Validators.required,Validators.maxLength(500)]],
-      "yojanaId": [this.getData.yojanaId,[Validators.required]],
+      "address": ['', [Validators.required, Validators.maxLength(500)]],
+      "yojanaId": [this.getData.yojanaId, [Validators.required]],
       "networkId": [0, Validators.required],
     })
   }
+
   get f() {
     return this.tankForm.controls;
   }
 
-
-  clearFormData(flag?:any){
-    if(flag == 'formYojana'){
+  clearFormData(flag?: any) {
+    if (flag == 'formYojana') {
       this.tankForm.controls['yojanaId'].setValue(0);
       this.tankForm.controls['networkId'].setValue(0);
-    }else if(flag == 'networkId'){
+    } else if (flag == 'networkId') {
       this.tankForm.controls['yojanaId'].setValue(this.tankForm.value.yojanaId);
       this.tankForm.controls['networkId'].setValue(0);
     }
   }
 
-  getFilterFormData(){
-    this.filterFrm =this.fb.group({
-     yojanaId:[0],
-     networkId:[0]
+  getFilterFormData() {
+    this.filterFrm = this.fb.group({
+      yojanaId: [0],
+      networkId: [0]
     })
- }
-
- clearfilter(flag:any){
-  // flag=='yojana' ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
-  //                :(this.tankForm.controls['networkId'].setValue(0));
-
-  // flag=='network'? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
-  //                :(this.tankForm.controls['networkId'].setValue(0));     
-
-  if(flag=='yojana'){
-    this.filterFrm.controls['yojanaId'].setValue(0);
-    this.filterFrm.controls['networkId'].setValue(0);
-    this.getTableData();
-  }else if(flag== 'network'){
-    this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
-    this.filterFrm.controls['networkId'].setValue(0);
-    this.getTableData();
   }
 
-}
+  clearfilter(flag: any) {
+    // flag=='yojana' ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
+    //                :(this.tankForm.controls['networkId'].setValue(0));
+
+    // flag=='network'? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0),this.getTableData())
+    //                :(this.tankForm.controls['networkId'].setValue(0));     
+
+    if (flag == 'yojana') {
+      this.filterFrm.controls['yojanaId'].setValue(0);
+      this.filterFrm.controls['networkId'].setValue(0);
+      this.getTableData();
+    } else if (flag == 'network') {
+      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
+      this.filterFrm.controls['networkId'].setValue(0);
+      this.getTableData();
+    }
+
+  }
 
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' +this.getData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + this.getData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -115,7 +117,7 @@ export class TankMasterComponent implements OnInit {
 
   getYojana() {
     let formData = this.tankForm.value.yojanaId;
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId='+this.getData.yojanaId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -130,22 +132,23 @@ export class TankMasterComponent implements OnInit {
     })
   }
 
-  getNetwork(status?:any) {
+  getNetwork(status?: any) {
     let netId: any;
-    console.log('status',status)
-    netId= status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId='+netId, false, false, false, 'valvemgt');
-      this.service.getHttp().subscribe({
-        next: ((res: any) => {
-          if (res.statusCode == '200') {
-            this.networkArray = res.responseData;
-          } else {
-            this.networkArray = [];
-          }
-        }), error: (error: any) => {
-          this.error.handelError(error.status);
+    console.log('status', status)
+    // netId=this.editFlag ? this.tankForm.value.yojanaId : 0;
+    netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + netId, false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == '200') {
+          this.networkArray = res.responseData;
+        } else {
+          this.networkArray = [];
         }
-      })
+      }), error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
   }
 
   onSubmit() {
@@ -162,7 +165,7 @@ export class TankMasterComponent implements OnInit {
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
-          console.log('obj',obj)
+          console.log('obj', obj)
           if (res.statusCode == '200') {
             this.closebutton.nativeElement.click();
             this.toastrService.success(res.statusMessage);
@@ -177,13 +180,13 @@ export class TankMasterComponent implements OnInit {
   }
 
   onEditData(res?: any) {
-    console.log('res',res);
+    console.log('res', res);
     this.editFlag = true;
     this.tankForm.patchValue({
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId:res.yojanaId,
+      yojanaId: res.yojanaId,
       networkId: res.networkId,
     })
   }
@@ -197,8 +200,7 @@ export class TankMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
-    this.filterFrm.controls['yojanaId'].setValue(0);
-    this.filterFrm.controls['networkId'].setValue(0);
+    // this.editFlag ? (this.filterFrm.controls['yojanaId'].setValue(0),this.filterFrm.controls['networkId'].setValue(0)):'';
   }
 
   getDeleteConfirm(getData?: any) {
