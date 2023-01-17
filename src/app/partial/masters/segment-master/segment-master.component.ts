@@ -31,7 +31,7 @@ export class SegmentMasterComponent implements OnInit {
   @ViewChild('addSegmentModel') addSegmentModel: any;
   yoganaIdArray: any;
   networkIdArray: any;
-  networkIdAddArray:any;
+  networkIdAddArray: any;
 
 
   constructor(
@@ -126,7 +126,7 @@ export class SegmentMasterComponent implements OnInit {
 
   clearFilter(flag: any) {
     if (flag == 'yojana') {
-      this.filterForm.controls['networkId'].setValue(''); 
+      this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'network') {
     } else if (flag == 'search') {
       this.filterForm.controls['searchText'].setValue('');
@@ -136,7 +136,7 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   getAllSegmentMaster() {
-    this.spinner.show();   
+    this.spinner.show();
     let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
       + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'api/SegmentMaster/GetAll?' + obj, false, false, false, 'valvemgt');
@@ -158,9 +158,10 @@ export class SegmentMasterComponent implements OnInit {
     });
   }
 
-  getValveSegmentList(editObj: any) { //All Segment 
+  getValveSegmentList(editObj?: any) { //All Segment 
+    this.editObj = editObj;
     this.spinner.show();
-    let obj: any = 'YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId
+    let obj: any = 'YojanaId=' + (this.segmentMasterForm.value.yojanaId || 0) + '&NetworkId=' + (this.segmentMasterForm.value.networkId || 0)
       + '&userId=' + this.localStorage.userId();
     this.apiService.setHttp('get', 'api/SegmentMaster/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -168,7 +169,7 @@ export class SegmentMasterComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.valveSegmentList = res.responseData[0];
-          this.onEditMapData(editObj, this.valveSegmentList);
+          this.onEditMapData(this.valveSegmentList);
         } else {
           this.spinner.hide();
           this.valveSegmentList = [];
@@ -270,9 +271,11 @@ export class SegmentMasterComponent implements OnInit {
 
   //............................................... Agm Map Code Start Here ..................................//
 
+  editObj: any;
+  zoom = 6;
   editPatchShape: any;
   onEditFlag: boolean = false;
-  editObjData: any;
+  splitedEditObjData: any;
   insertNewLineFlag: boolean = false;
 
   tank_ValveArray: any;
@@ -290,7 +293,34 @@ export class SegmentMasterComponent implements OnInit {
   };
 
 
-  onEditMapData(editObj: any, mainArray: any) {
+  onEditMapData(mainArray: any) {
+
+    if (this.onEditFlag != true) {
+      this.add_editCommonData(mainArray);
+    } else {
+      this.add_editCommonData(mainArray);
+      let index: any = mainArray.segmenDetailsModels.findIndex((ele: any) => ele?.segmentId == this.editObj?.id)
+      mainArray.segmenDetailsModels.splice(index, 1);
+
+      //.........................................  get Edit Object code Start Here.................................//
+      let stringtoArray = this.editObj?.midpoints.split(',');
+      let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+      this.splitedEditObjData = finalLatLngArray;
+      //.........................................  get Edit Object Segment code End Here.................................//
+
+      this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
+      this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
+      this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
+      this.getNetworkIdAdd(this.editObj.yojanaId);
+      this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
+      
+    }
+    this.onMapReady(this.map);
+  }
+
+
+  add_editCommonData(mainArray: any) {
+
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
       ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; return ele
     })
@@ -299,22 +329,10 @@ export class SegmentMasterComponent implements OnInit {
       ele['iconUrl'] = "../../../../assets/images/valve.png"; return ele
     })
 
-    this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels); 
-
-    let index:any = mainArray.segmenDetailsModels.findIndex((ele:any) => ele.segmentId == editObj.id)
-    mainArray.segmenDetailsModels.splice(index,1);
-
-   
-
-    //.........................................  get Edit Object code Start Here.................................//
-    let stringtoArray = editObj.midpoints.split(',');
-    let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
-    this.editObjData = finalLatLngArray;
-    //.........................................  get Edit Object Segment code End Here.................................//
+    this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels);
 
     //.........................................  get Edit All Other Segment Array code Start Here.................................//
-    
-  
+
     let getOtherAllSegment = mainArray.segmenDetailsModels.map((ele: any) => {
       let stringtoArray = ele.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
@@ -322,17 +340,11 @@ export class SegmentMasterComponent implements OnInit {
     })
     this.getAllSegmentArray = getOtherAllSegment.flat();
 
-    console.log(this.getAllSegmentArray,'222');
     //.........................................  get Edit All Other Segment Array code Start End.................................//
-
-
-    this.onEditFlag = true;
-    this.textName = 'Update';
-    this.onMapReady(this.map);
-
-    this.segmentMasterForm.controls['id'].setValue(editObj.id);
-    this.segmentMasterForm.controls['segmentName'].setValue(editObj.segmentName);
   }
+
+
+
 
   onMapReady(map: any) {
     this.map = map;
@@ -372,30 +384,30 @@ export class SegmentMasterComponent implements OnInit {
     //............................   Edit Code Start Here ..................  //
 
     // drawingManager.setDrawingMode(null);
+    
+    this.editPatchShape = new google.maps.Polyline({
+      path: this.getAllSegmentArray,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+    });
+    this.editPatchShape.setMap(this.map);
+
+    let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
+    this.map.setCenter(latLng);
 
     if (this.onEditFlag == true) {
       drawingManager.setOptions({ drawingControl: false });
-
-      this.centerMarkerLatLng = this.editObjData;
-      var mergeBothPath = [this.getAllSegmentArray, this.centerMarkerLatLng];
-      var color = ["#FF0000", '#8000FF'];
-
-      //Loops through all polyline paths and draws each on the map.
-      for (let i = 0; i < 2; i++) {
-        this.editPatchShape = new google.maps.Polyline({
-          path: mergeBothPath[i],
-          geodesic: true,
-          strokeColor: color[i],
-          strokeOpacity: 1.0,
-          strokeWeight: 2,
-        });
-        this.editPatchShape.setMap(this.map);
-      }
-
-      console.log(this.centerMarkerLatLng,'8888');
-      
-      this.setSelection(this.editPatchShape);
-
+      this.centerMarkerLatLng = this.splitedEditObjData;
+      let patchShapeEditedObj = new google.maps.Polyline({
+        path: this.centerMarkerLatLng,
+        geodesic: true,
+        strokeColor: '#8000FF',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+      });
+      this.setSelection(patchShapeEditedObj);
     }
     //............................   Edit Code End Here ..................  //
 
@@ -416,6 +428,7 @@ export class SegmentMasterComponent implements OnInit {
     if (this.newRecord.polyline) { // new polyline Add then before polyline map data clear 
       this.newRecord.polyline.setMap(null);
     }
+
     this.newRecord.polyline = shape;
     this.newRecord.polyline.setMap(this.map);
 
@@ -429,6 +442,11 @@ export class SegmentMasterComponent implements OnInit {
 
     this.segmentMasterForm.controls['startPoints'].setValue(firstObj?.lat + ' ' + firstObj?.lng);
     this.segmentMasterForm.controls['endPoints'].setValue(lastObj?.lat + ' ' + lastObj?.lng);
+
+
+
+    //     var OBJ_fitBounds = new google.maps.LatLngBounds();
+    //  this.map.fitBounds(OBJ_fitBounds);
 
   }
 
@@ -451,6 +469,7 @@ export class SegmentMasterComponent implements OnInit {
   mapModelClose() {
     this.newRecord.polyline?.setMap(null);
     this.editPatchShape?.setMap(null);
+    this.tank_ValveArray = [];
     this.removeShape();
     this.clearForm();
   }
