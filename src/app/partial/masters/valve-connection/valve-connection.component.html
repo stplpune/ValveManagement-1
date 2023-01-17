@@ -11,21 +11,23 @@
                         class="fas fa-sync-alt"></i></button>
 
             </div> -->
-            <div class="col-sm-6">
-                <div class="d-flex justify-content-between">
+            <div class="row">
+                <div class="d-flex justify-content-between w-100">
                     Valve Connection
                     <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
                         class="fas fa-sync-alt"></i></button> -->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addconnectionModal">
+                        <i class="fa-solid fa-plus me-2"></i> Add Connection
+                    </button>
                 </div>
             </div>
-            <div class="col-sm-6">
-                Valve Remark
-            </div>
+
         </div>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-sm-6">
+            <!-- <div class="col-sm-6">
                 <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
 
                     <div class="form-container">
@@ -117,8 +119,8 @@
 
                     </div>
                 </form>
-            </div>
-            <div class="col-sm-6">
+            </div> -->
+            <div class="col-sm-12">
                 <table class="table align-middle dashboard-table">
                     <thead>
                         <tr>
@@ -254,3 +256,123 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-main">
+          <h1 class="modal-title fs-5" id="addconnectionModalLabel">Add Connection</h1>
+          <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close" #closebutton></button>
+        </div>
+        <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
+      
+        <div class="modal-body">
+              <div class="form-container">
+              
+                    <div class="form-container">
+
+                        <div class="mb-3">
+                            <label class="form-label">Valve</label>
+                            <ngx-select [allowClear]="true" [items]="valveConnectionArray"
+                                formControlName="valveMasterId" placeholder="Select Valve" optionValueField="valveId"
+                                optionTextField="valveName">
+                            </ngx-select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Person Name</label>
+                            <input type="text" class="form-control" placeholder="Person Name"
+                                formControlName="personName">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" placeholder="Mobile Number"
+                                formControlName="mobileNo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Number of Connection</label>
+                            <input type="text" class="form-control" placeholder="Number of Connection"
+                                formControlName="totalConnection">
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="card card-body border shadow-none">
+
+                                <div formArrayName="connectiondetails"
+                                    *ngFor="let connection of connectionForm?.controls;let i = index;">
+                                    <div [formGroupName]="i">
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Pipe Diameter</label>
+                                            <input type="text" class="form-control" placeholder="Pipe Diameter"
+                                                formControlName="pipeDiameter">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Connection No.</label>
+                                            <input type="text" class="form-control" placeholder="Connection No."
+                                                formControlName="connectionNo">
+                                        </div>
+
+                                        <div class="text-end mb-2">
+                                            <span class="ms-2">
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    (click)="removeItem(i)">
+                                                    Remove
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="addConnection()">
+                                    Add
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="floatingTextarea" class="form-label">Comments</label>
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
+                                formControlName="remark">
+                        </textarea>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-sm-6 col">
+                                <button type="button" class="btn btn-secondary  float-lg-start"
+                                    (click)="clearForm()">Clear</button>
+                            </div>
+                            <div class="col-sm-6 text-end col">
+                                <button type="submit" class="btn btn-main float-lg-end">{{ editFlag ? 'Update' :
+                                    'Submit'}}</button>
+                            </div>
+                        </div> -->
+
+                    </div>
+                
+            </div>
+       
+        </div>
+        <div class="modal-footer">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- <div class=""> -->
+                    <button type="button" class="btn btn-light-main"
+                        (click)="clearForm()">Clear</button>
+                <!-- </div> -->
+                <!-- <div class="col-sm-6 text-end col"> -->
+                    <button type="submit" class="btn btn-main text-center">{{ editFlag ? 'Update' :
+                        'Submit'}}</button>
+                <!-- </div> -->
+            </div>
+  
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
