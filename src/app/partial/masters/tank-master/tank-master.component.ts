@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ValidationService } from 'src/app/core/services/validation.service';
+import { MapsAPILoader } from '@agm/core';
 @Component({
   selector: 'app-tank-master',
   templateUrl: './tank-master.component.html',
@@ -24,6 +25,13 @@ export class TankMasterComponent implements OnInit {
   deleteId!: number;
   delData: any;
   filterFrm!: FormGroup;
+
+  latitude: any;
+  longitude: any;
+  pinCode: any;
+  geocoder: any;
+
+  addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
 
   constructor
@@ -34,7 +42,9 @@ export class TankMasterComponent implements OnInit {
       private toastrService: ToastrService,
       private error: ErrorsService,
       private spinner: NgxSpinnerService,
-      public validation:ValidationService
+      public validation:ValidationService,
+      private mapsAPILoader: MapsAPILoader,
+      private ngZone: NgZone,
     ) { }
 
   ngOnInit(): void {
@@ -42,6 +52,7 @@ export class TankMasterComponent implements OnInit {
     this.getFilterFormData();
     this.getYojana();
     this.getTableData();
+    this.searchAddress();
   }
 
   geFormData() {
@@ -219,5 +230,107 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
+
+
+  // geocoder: any;
+  addLatitude: any = 19.0898177;
+  addLongitude: any = 76.5240298;
+  addPrevious: any;
+  addressNameforAddress: any;
+  copyAddressNameforAddress: any;
+  @ViewChild('searchAddress') public searchElementRefAddress!: ElementRef;
+  searchAdd = new FormControl('');
+  addressMarkerShow: boolean = true;
+  @ViewChild('searchAddressModel') searchAddressModel: any;
+
+  searchAddress() {
+    this.mapsAPILoader.load().then(() => {
+      this.geocoder = new google.maps.Geocoder();
+      let autocomplete = new google.maps.places.Autocomplete(
+        this.searchElementRefAddress.nativeElement
+      );
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+          this.addLatitude = place.geometry.location.lat();
+          this.addLongitude = place.geometry.location.lng();
+        
+          this.findAddressByCoordinates();
+          this.addressMarkerShow = true;
+        });
+      });
+    });
+  }
+
+  markerAddressDragEnd($event:any) {
+    this.addLatitude = $event.coords.lat;
+    this.addLongitude = $event.coords.lng;
+   
+    this.findAddressByCoordinates();
+    this.addressMarkerShow = true;
+  }
+
+  findAddressByCoordinates() {
+    this.geocoder.geocode({
+      'location': {
+        lat: this.addLatitude,
+        lng: this.addLongitude
+      }
+    }, (results: any) => {
+      this.findAddress(results[0]);
+    });
+  }
+
+  findAddress(results: any) {
+    if (results) {
+      this.addressNameforAddress = results.formatted_address;
+     
+      this.addressZoomSize = 12;
+      this.searchAdd.setValue(this.addressNameforAddress);
+    }
+  }
+
+  clickedAddressMarker(infowindow: any) {
+    if (this.addPrevious) {
+      this.addPrevious.close();
+    }
+    this.addPrevious = infowindow;
+  }
+
+  newAddedAddressLat: any;
+  newAddedAddressLang: any;
+  
+
+  addAddress() {
+    this.tankForm.controls['address'].setValue(this.addressNameforAddress);
+    this.searchAdd.setValue(this.addressNameforAddress);
+    this.copyAddressNameforAddress = this.addressNameforAddress;
+    this.newAddedAddressLat = this.addLatitude; 
+    this.newAddedAddressLang = this.addLongitude;
+    this.searchAddressModel.nativeElement.click();
+   
+  }
+
+  clearAddress() {
+    this.addressMarkerShow = false;
+    this.searchAdd.setValue('');
+    this.addressZoomSize = 6;
+    this.addressNameforAddress = '';
+    this.addLatitude = 19.0898177;
+    this.addLongitude = 76.5240298;
+  }
+
+  openAddressModel() {
+    this.addressZoomSize = 6;
+    this.searchAdd.setValue(this.copyAddressNameforAddress);
+    this.addLatitude = this.newAddedAddressLat;
+    this.addLongitude = this.newAddedAddressLang;
+    this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
+    this.addressNameforAddress = this.copyAddressNameforAddress;
+  }
+ 
 
 }
