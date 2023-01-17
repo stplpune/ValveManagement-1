@@ -14,8 +14,8 @@
             <div class="col-sm-6">
                 <div class="d-flex justify-content-between">
                     Valve Connection
-                    <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-                        class="fas fa-sync-alt"></i></button>
+                    <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+                        class="fas fa-sync-alt"></i></button> -->
                 </div>
             </div>
             <div class="col-sm-6">
@@ -26,40 +26,88 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-6">
+                <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()">
+       
                 <div class="form-container">
+
                     <div class="mb-3">
-                        <label for="" class="form-label">Valve</label>
-                        <select class="form-control" aria-label="Default select example">
-                            <option selected>Yojana</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
+                         <label class="form-label">Valve</label>
+                        <ngx-select [allowClear]="true" [items]="valveConnectionArray" formControlName="yojanaId"
+                        placeholder="Select Valve" optionValueField="valveId"
+                        optionTextField="valveName">
+                    </ngx-select> 
+                   </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Person Name</label>
+                        <input type="text" class="form-control" placeholder="Person Name" formControlName="personName">
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="" class="form-label">Person Name</label>
-                        <input type="text" class="form-control" placeholder="Person Name">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo">
                     </div>
+                   
                     <div class="mb-3">
-                        <label for="" class="form-label">Mobile Number</label>
-                        <input type="text" class="form-control" placeholder="Mobile Number">
+                        <label class="form-label">Number of Connection</label>
+                        <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection">
                     </div>
-                    <div class="mb-3">
-                        <label for="" class="form-label">Number of Connection</label>
-                        <div class="d-flex gap-2">
-                            <input type="text" class="form-control" placeholder="Person Name">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#addconnectionmodal">
-                                <i class="fa-solid fa-plus me-2"></i>
+
+                     <div class="mb-3">
+                        <div class="card card-body border shadow-none">
+                            
+                         <div formArrayName="connectiondetails"
+                            *ngFor="let connection of connectionForm?.controls;let i = index;">
+                            <div [formGroupName]="i"> 
+                        
+                            <div class="mb-3">
+                                <label class="form-label">Pipe Diameter</label>
+                                <input type="text" class="form-control" placeholder="Pipe Diameter" formControlName="pipeDiameter"> 
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Connection No.</label>
+                               <input type="text" class="form-control" placeholder="Connection No." formControlName="connectionNo"> 
+                           </div>
+
+                            <div class="text-end mb-2">
+                                <span class="ms-2">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeItem(i)"> 
+                                        Remove
+                                    </button>
+                                </span>
+                            </div>
+                             </div>
+                            </div> 
+                           
+        
+                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addConnection()">
+                                Add
                             </button>
+                         
                         </div>
                     </div>
+
+                  
+                    
+
                     <div class="mb-3">
                         <label for="floatingTextarea" class="form-label">Comments</label>
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" formControlName="remark">
                         </textarea>
                     </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col">
+                            <button type="button" class="btn btn-secondary  float-lg-start">Clear</button>
+                        </div>
+                        <div class="col-sm-6 text-end col">
+                            <button type="submit" class="btn btn-main float-lg-end">{{ editFlag ? 'Update' : 'Submit'}}</button>
+                        </div>
+                    </div>
+
                 </div>
+            </form>
             </div>
             <div class="col-sm-6">
                 <table class="table align-middle dashboard-table">
@@ -68,33 +116,44 @@
                             <th>Sr. No.</th>
                             <th>Person Name</th>
                             <th>Mobile Number</th>
-                            <th>Remark</th>
+                            <th>Valve Name</th>
                             <th>Total Connection</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Yojanan Name</td>
-                            <td>866926467</td>
-                            <td>Some Reamrk</td>
-                            <td>
-                                <button type="button" class="btn" data-bs-toggle="modal"
-                                    data-bs-target="#totalconnectionmodal">
-                                    2
-                                </button>
+                        <tr  *ngFor="let data of dataSource |  paginate: {itemsPerPage: pagesize,
+                            currentPage: pageNumber, totalItems:totalRows}; let i=index"
+                        [class.active]="data.id == highlitedRow">
+                            <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                            <td>{{data.personName}}</td>
+                            <td>{{data.mobileNo}}</td>
+                            <td>{{data.valveName}}</td>
+                            <td>{{data.totalConnection}}</td>
+                           <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded">
+                                        <i class="far fa-edit"></i></button>
+                                    <button type="button" class="btn btn-sm btn-light text-danger rounded">
+                                        <i class="fas fa-trash-alt"></i></button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="mt-2 text-end" *ngIf="dataSource?.length != 0">
+                    <pagination-controls previousLabel="" nextLabel=""
+                    (pageChange)="onClickPagintion($event)"> </pagination-controls>
+                </div>
             </div>
         </div>
+        
     </div>
 </div>
 
 
 <!--Total Connection Modal -->
-<div class="modal fade" id="totalconnectionmodal" tabindex="-1" aria-labelledby="totalconnectionmodalLabel"
+<!-- <div class="modal fade" id="totalconnectionmodal" tabindex="-1" aria-labelledby="totalconnectionmodalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -125,11 +184,12 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <!--Add Connection Modal -->
-<div class="modal fade" id="addconnectionmodal" tabindex="-1" aria-labelledby="addconnectionmodalLabel"
+
+<!-- <div class="modal fade" id="addconnectionmodal" tabindex="-1" aria-labelledby="addconnectionmodalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -155,4 +215,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
