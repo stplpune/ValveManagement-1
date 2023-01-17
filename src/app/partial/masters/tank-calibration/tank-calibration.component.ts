@@ -69,19 +69,7 @@ export class TankCalibrationComponent implements OnInit {
     })
   }
 
-  clearfilter(flag: any) {
-    if (flag == 'yojana') {
-      this.filterFrm.controls['yojanaId'].setValue(0);
-      this.filterFrm.controls['networkId'].setValue(0);
-      this.getAllTankCalibration();
-    } else if (flag == 'network') {
-      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
-      this.filterFrm.controls['networkId'].setValue(0);
-      this.getAllTankCalibration();
-    }
-
-  }
-
+ 
   get f() { return this.tankForm.controls }
 
 
@@ -147,8 +135,8 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    let obj = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + filterValue.networkId;
-    this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + obj, false, false, false, 'valvemgt');
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + filterValue.yojanaId + '&NetworkId=' + (filterValue.networkId || 0);
+    this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -170,9 +158,27 @@ export class TankCalibrationComponent implements OnInit {
     });
   }
 
+  filterData() {
+    this.pageNumber = 1;
+    this.getAllTankCalibration();
+   
+  }
+
   onClickPagintion(pagNo: number) {
     this.pageNumber = pagNo;
     this.getAllTankCalibration();
+  }
+
+  clearfilter(flag: any) {
+    if (flag == 'yojana') {
+      this.filterFrm.controls['yojanaId'].setValue(0);
+      this.filterFrm.controls['networkId'].setValue(0);    
+    } else if (flag == 'network') {
+      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
+      this.filterFrm.controls['networkId'].setValue(0);  
+    }
+    this.getAllTankCalibration();
+
   }
 
   onSubmit() {

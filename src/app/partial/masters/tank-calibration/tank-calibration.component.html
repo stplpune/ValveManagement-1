@@ -17,7 +17,7 @@
               <label class="form-label">Yojana Name</label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);getAllTankCalibration()"
+                (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);filterData()"
                 (remove)="clearfilter('yojana')">
               </ngx-select>
             </div>
@@ -25,7 +25,7 @@
               <label class="form-label">Network Name</label>
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                 placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                [disabled]="!this.filterFrm.value.yojanaId" (select)="getAllTankCalibration()"
+                [disabled]="!this.filterFrm.value.yojanaId" (select)="filterData()"
                 (remove)="clearfilter('network')">
               </ngx-select>
             </div>
@@ -63,10 +63,10 @@
                 data-bs-target="#AddValveModal" (click)="updateTankCal(tankCal)">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
-              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+              <!-- <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
                 data-bs-toggle="modal" data-bs-target="#deleteModel">
                 <i class="fa-solid fa-trash-can"></i>
-              </button>
+              </button> -->
             </div>
           </td>
         </tr>

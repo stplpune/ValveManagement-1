@@ -146,8 +146,8 @@ export class YojanaMasterComponent implements OnInit {
 
   getAllYojanaList() {
     this.spinner.show();
-    let obj ='DistrictId=0&TalukaId=0&VillageId=0&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + obj, false,false,false,'valvemgt');
+    let str ='DistrictId=0&TalukaId=0&VillageId=0&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + str, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {

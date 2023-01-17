@@ -29,6 +29,8 @@ export class SegmentMasterComponent implements OnInit {
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   deleteSegmentId: any;
   @ViewChild('addSegmentModel') addSegmentModel: any;
+  yoganaIdArray: any;
+  networkIdArray: any;
 
 
   constructor(
@@ -43,26 +45,19 @@ export class SegmentMasterComponent implements OnInit {
     private fb: FormBuilder,
   ) { }
 
-  // markers: any[] = [
-  //   {
-  //     lat: 23.7541318,
-  //     lng: 80.3681253,
-  //     label: "C",
-  //     draggable: true,
-  //     content: "InfoWindow content",
-  //     color: "red",
-  //     iconUrl: "../../../../assets/images/Water Tank.png"
-  //   }
-  // ];
-
-
   ngOnInit(): void {
     this.defaultForm();
+    this.defaultFilterForm();
     this.getAllSegmentMaster();
+    this.getYoganaId();
   }
 
   defaultFilterForm(){
-    
+    this.filterForm=this.fb.group({
+      yojanaId:[''],
+      networkId:[''],
+      searchText:['']
+    })
   }
 
   defaultForm() {
@@ -76,6 +71,49 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   get f() { return this.segmentMasterForm.controls }
+
+  getYoganaId(){
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' +this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.yoganaIdArray=res.responseData;
+        // this.getNetworkID();
+      }
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
+  getNetworkId(yojanaId?:number){
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId='+yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res:any)=>{
+      if(res.statusCode=="200"){
+        this.networkIdArray=res.responseData;
+      }
+      else{
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+    (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    })
+  }
+
+  clearFilter(flag: any) {
+    if (flag == 'yojana') {
+      this.filterForm.controls['yojanaId'].setValue(0);
+    }else if (flag == 'network') {
+      this.filterForm.controls['networkId'].setValue(0);
+    } else if (flag == 'search') {
+      this.filterForm.controls['searchText'].setValue('');
+    }
+    this.pageNumber = 1;
+    this.getAllSegmentMaster();
+  }
 
   getAllSegmentMaster() {
     this.spinner.show();
@@ -109,7 +147,7 @@ export class SegmentMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
-          this.valveSegmentList = res.responseData;
+          this.valveSegmentList = res.responseData[0];
           this.onEditMapData(editObj,this.valveSegmentList);
         } else {
           this.spinner.hide();
@@ -213,9 +251,11 @@ export class SegmentMasterComponent implements OnInit {
   //............................................... Agm Map Code Start Here ..................................//
 
   editPatchShape:any;
+  editPatchShape1:any;
   onEditFlag: boolean = false;
   editObjData:any;
   insertNewLineFlag:boolean = false;
+  getAllSegmentArray:any[]=[];
 
   map: any;
   latLongArray: any;
@@ -228,12 +268,51 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+tankArray:any;
+
   onEditMapData(editObj:any,mainArray:any) {
 
-console.log(mainArray);
+// console.log(mainArray.segmenDetailsModels);
 
-return
+// console.log(mainArray.tankDetailsModels);
+
     this.editObjData = editObj;
+
+    this.tankArray =  mainArray.tankDetailsModels.map((ele:any)=>{
+      ele['iconUrl'] = "../../../../assets/images/waterTank2.png"
+      return ele
+    })
+console.log(this.tankArray);
+
+      // markers: any[] = [
+  //   {
+  //     lat: 23.7541318,
+  //     lng: 80.3681253,
+  //     label: "C",
+  //     draggable: true,
+  //     content: "InfoWindow content",
+  //     color: "red",
+  //     iconUrl: "../../../../assets/images/valve-3.png"
+  //   }
+  // ];
+
+
+
+ let asd = mainArray.segmenDetailsModels.map((ele:any)=>{
+      let finalString = ele.midpoints ? ele.startPoints + ',' + ele.midpoints + ',' + ele.endPoints :
+      ele.startPoints + ',' + ele.endPoints;
+    let stringtoArray = finalString.split(',');
+    let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+     return ele = finalLatLngArray;
+    })
+
+
+
+    this.getAllSegmentArray = asd.flat();
+
+    // console.log(this.getAllSegmentArray,'555');
+
+
     this.onEditFlag = true;
     this.textName = 'Update';
     this.onMapReady(this.map);
@@ -282,15 +361,27 @@ return
     // drawingManager.setDrawingMode(null);
 
     if (this.onEditFlag == true) {
-      // this.insertNewLineFlag = false;
       drawingManager.setOptions({ drawingControl: false });
-      let finalString = this.editObjData.midpoints ? this.editObjData.startPoints + ',' + this.editObjData.midpoints + ',' + this.editObjData.endPoints :
-        this.editObjData.startPoints + ',' + this.editObjData.endPoints;
+      // let finalString = this.editObjData.midpoints ? this.editObjData.startPoints + ',' + this.editObjData.midpoints + ',' + this.editObjData.endPoints :
+      //   this.editObjData.startPoints + ',' + this.editObjData.endPoints;
 
-      let stringtoArray = finalString.split(',');
-      let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+      // let stringtoArray = finalString.split(',');
+      // let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
 
-      this.centerMarkerLatLng = finalLatLngArray;
+      // this.centerMarkerLatLng = finalLatLngArray;
+console.log(this.getAllSegmentArray);
+
+      this.centerMarkerLatLng = this.getAllSegmentArray
+
+    let asd =     [ {
+      "lat": 26.143513798692876,
+      "lng": 79.66329131562502
+  },
+  {
+      "lat": 32.2437273033567,
+      "lng": 87.45430694062502
+  }
+]
 
       this.editPatchShape = new google.maps.Polyline({
         path: this.centerMarkerLatLng,
@@ -299,7 +390,17 @@ return
         strokeOpacity: 1.0,
         strokeWeight: 2,
       });
+
+      this.editPatchShape1 = new google.maps.Polyline({
+        path: asd,
+        geodesic: true,
+        strokeColor: "#8000FF",
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+      });
+
       this.editPatchShape.setMap(this.map);
+      this.editPatchShape1.setMap(this.map);
       // this.newRecord.polyline = editPatchShape; this.setSelection(editPatchShape);
     }
     //............................   Edit Code End Here ..................  //

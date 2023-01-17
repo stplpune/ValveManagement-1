@@ -12,6 +12,28 @@
       </div>
     </div>
   </div>
+  <form class="ms-3" [formGroup]="searchForm">
+    <div class="row">
+      <div class="col-sm-3">
+        <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana"
+        placeholder="Select Yojana" optionValueField="yojanaId"
+        optionTextField="yojanaName" (remove)="clearSerach('yojana')"
+        (select)="getAllSensorDeviceTableData()">
+      </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="network"
+             placeholder="Select Network" optionValueField="networkId"
+             optionTextField="networkName" (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData()">
+        </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tank" placeholder="Select Tank" optionValueField="tankId"
+        optionTextField="tankName" (remove)="clearSerach('tank')" (select)="getAllSensorDeviceTableData()">
+      </ngx-select>
+    </div>
+    </div>
+  </form>
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
@@ -44,7 +66,7 @@
                 data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
-              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+              <button class="btn bg-danger bg-opacity-10 text-danger rounded" (click)="deleteConformation(allSensorDeviceInfo)" title="Delete Valve"
                 data-bs-toggle="modal" data-bs-target="#deleteModel">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
@@ -79,29 +101,51 @@
           <div class="form-container">
             <div class="mb-3">
               <label class="form-label">Device Id</label>
-              <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id">
+              <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id"
+              [ngClass]="{ 'is-invalid': submitted && f['deviceId'].errors }" (keypress)="validation.noFirstSpaceAllow($event);validation.onlyDigits($event)">
+              <div *ngIf="submitted && f['deviceId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['deviceId'].errors?.['required']">Device Id is
+                  Required.</div>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Device Name</label>
-              <input type="text" class="form-control" formControlName="deviceName" placeholder="Device Name">
+              <input type="text" class="form-control" formControlName="deviceName" placeholder="Device Name"
+              [ngClass]="{ 'is-invalid': submitted && f['deviceName'].errors }" (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
+              <div *ngIf="submitted && f['deviceName'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['deviceName'].errors?.['required']">Device Name is
+                  Required.</div>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">SIM No</label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId" placeholder="Select Sim Number"
-                optionValueField="id" optionTextField="simNo" (remove)="clearDropdown('simNo')">
+                optionValueField="id" optionTextField="simNo"
+                [ngClass]="{ 'is-invalid': submitted && f['simId'].errors }">
               </ngx-select>
+              <div *ngIf="submitted && f['simId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['simId'].errors?.['required']">Sim Number is
+                  Required.</div>
+              </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Description</label>
-              <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"></textarea>
-              <div class="invalid-feedback">
+              <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"
+              [ngClass]="{ 'is-invalid': submitted && f['deviceDescription'].errors }" (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"></textarea>
+              <div *ngIf="submitted && f['deviceDescription'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['deviceDescription'].errors?.['required']">Device Description is
+                  Required.</div>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId" placeholder="Select Tank" optionValueField="tankId"
-                optionTextField="tankName" (remove)="clearDropdown('tankName')">
+                optionTextField="tankName" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }">
               </ngx-select>
+              <div *ngIf="submitted && f['tankId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['tankId'].errors?.['required']">Tank Type is
+                  Required.</div>
+              </div>
             </div>
 
             <div class="row">
@@ -109,15 +153,20 @@
                 <div class="mb-3">
                   <label class="form-label">Yojana</label>
                   <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
-                    optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearDropdown('yojanaName')">
+                    optionValueField="yojanaId" optionTextField="yojanaName"
+                    [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                   </ngx-select>
+                  <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
+                    <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is
+                      Required.</div>
+                  </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Network</label>
                   <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" placeholder="Select Network"
-                    optionValueField="networkId" optionTextField="networkName" (remove)="clearDropdown('networkName')">
+                    optionValueField="networkId" optionTextField="networkName">
                   </ngx-select>
                 </div>
               </div>
@@ -126,7 +175,7 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center">Submit</button>
+              <button type="submit" class="btn btn-main text-center" [disabled]="!tankSensorDeviceFrm.valid">Submit</button>
             </div>
           </div>
         </div>
@@ -159,7 +208,7 @@
         <p class="mb-4">Do you really want to This process can not be undone.</p>
         <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
           aria-label="Close">Cancel</button>
-        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
+        <button class="btn btn-danger" type="button" (click)="deleteNetworkMaster()" data-bs-dismiss="modal" aria-label="Close" type="button"
           data-bs-dismiss="modal" aria-label="Close">I'm
           Sure</button>
       </div>
