@@ -156,6 +156,7 @@ clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.editFlag = false;
   this.submitted = false;
+  this.buttonName = 'Submit';
   this.controlForm();
 }
 
