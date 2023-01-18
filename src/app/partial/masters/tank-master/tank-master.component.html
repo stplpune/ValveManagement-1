@@ -110,7 +110,7 @@
                 <label class="form-label">Yojana <span class="text-danger">*</span></label>
                 <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                   placeholder="Select Yojana" optionValueField="yojanaId" (ngModelChange)="getNetwork()"
-                  optionTextField="yojanaName" (remove)="clearFormData('formYojana')">
+                  optionTextField="yojanaName" (remove)="clearFormDataDropDown('formYojana')">
                 </ngx-select>
                 <div *ngIf="f['yojanaId'].touched && f['yojanaId'].errors" class="invalid-feedback">
                   <div class="validation-css" *ngIf="f['yojanaId'].errors['yojanaId']"> Yojana Is Required </div>
@@ -121,7 +121,7 @@
                   <label class="form-label">Network</label>
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                    [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormData('formnetwork')">
+                    [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormDataDropDown('formnetwork')">
                   </ngx-select>
                   <div *ngIf="f['networkId'].touched && f['networkId'].errors" class="invalid-feedback">
                     <div class="validation-css" *ngIf="f['networkId'].errors['networkId']"> Network Is Required </div>
