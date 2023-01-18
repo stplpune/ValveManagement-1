@@ -105,6 +105,9 @@ getAllSegment(){
   }
 
   addSegment(){  
+    if(this.valveRegForm.value.segmentId ==''){
+      return;
+    }
    let segId= this.valveRegForm.value.segmentId    
    let data= this.sgmentDropdownArray.find((res:any)=>{
       if(res.segmentId == segId){
@@ -118,6 +121,7 @@ getAllSegment(){
       }
     }
     this.segmentShowArray.push(data) 
+    this.f['segmentId'].setValue(0);
   }
 
   changeDropdown(){
@@ -186,7 +190,6 @@ getAllSegment(){
     this.editObj ='';
     this.formData();
     this.segmentShowArray=[];
-
   }
   clearDropdown(){
     this.f['segmentId'].setValue('');
