@@ -100,7 +100,7 @@
                 <div *ngIf="f['address'].touched && f['address'].errors" class="invalid-feedback">
                   <div class="validation-css" *ngIf="f['address'].errors['address']"> Address Is Required </div>
                 </div>
-                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" (click)="openAddressModel()" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
               </div>
