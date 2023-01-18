@@ -38,6 +38,7 @@ export class UserRegistrationComponent implements OnInit {
   networkIdArray=new Array();
   networkFilterArray=new Array();
   getLoginData:any;
+  networkFlag!:string;
   subject: Subject<any> = new Subject();
 
   constructor(
@@ -121,8 +122,7 @@ export class UserRegistrationComponent implements OnInit {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getLoginData.userId+'&YojanaId='+yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res:any)=>{
       if(res.statusCode=="200"){
-        this.networkIdArray=res.responseData;
-        this.networkFilterArray=res.responseData
+        this.networkFlag=='filter'?(alert(),this.networkFilterArray=res.responseData):this.networkIdArray=res.responseData;
       }
       else{
         this.toastrService.error(res.statusMessage);

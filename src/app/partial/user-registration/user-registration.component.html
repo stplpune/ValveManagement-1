@@ -14,7 +14,7 @@
         <ngx-select [allowClear]="true" [items]="yoganaIdArray" formControlName="yojana"
         placeholder="Select Yojana" optionValueField="yojanaId"
         optionTextField="yojanaName" (remove)="clearSerach('yojana')"
-        (select)="getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
+        (select)="networkFlag='filter';getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
       </ngx-select>
       </div>
       <div class="col-sm-3">
@@ -63,7 +63,7 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                data-bs-target="#AddUserModal" (click)="updateUserData(userData)">
+                data-bs-target="#AddUserModal" (click)="networkFlag='add';updateUserData(userData)">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -136,7 +136,7 @@
               <ngx-select [items]="yoganaIdArray" formControlName="yojanaId"
                    placeholder="Select Yojana" optionValueField="yojanaId"
                    optionTextField="yojanaName" [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
-                   (select)="getNetworkID(userDetails.value.yojanaId)">
+                   (select)="networkFlag='add';getNetworkID(userDetails.value.yojanaId)">
               </ngx-select>
               <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
