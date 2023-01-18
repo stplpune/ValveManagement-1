@@ -11,10 +11,9 @@
       </div> -->
 
       <form [formGroup]="filterFrm">
-        <div class="form-container">
           <div class="row">
             <div class="col-sm-3">
-              <label class="form-label">Yojana Name</label>
+              <!-- <label class="form-label">Yojana Name</label> -->
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);filterData()"
@@ -22,7 +21,7 @@
               </ngx-select>
             </div>
             <div class="col-sm-3">
-              <label class="form-label">Network Name</label>
+              <!-- <label class="form-label">Network Name</label> -->
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                 placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                 [disabled]="!this.filterFrm.value.yojanaId" (select)="filterData()"
@@ -30,8 +29,6 @@
               </ngx-select>
             </div>
           </div>
-        </div>
-
       </form>
     </div>
   </div>
