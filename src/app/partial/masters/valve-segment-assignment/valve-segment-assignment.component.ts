@@ -24,6 +24,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
+  valveId:any;
+  id:any;
+  valvelabel:any
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,public commonService: CommonService,private errorSerivce: ErrorsService ,private localStorage: LocalstorageService,
@@ -53,14 +56,12 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
  
   getAllvalve(){
-    // ValveMaster/GetValveNameList?userId=1&YojanaId=1&NetworkId=1
+   
     this.apiService.setHttp('GET', 'ValveMaster/GetValveNameList?userId='+this.getAllLocalStorageData.userId+'&YojanaId='+ this.getAllLocalStorageData.yojanaId+'&NetworkId='+this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == 200) {
-          this.valveDropdownArray = res.responseData;
-          // console.log("valveDropdownArray",this.valveDropdownArray);
-          
+          this.valveDropdownArray = res.responseData;    
         }
       },  error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -74,8 +75,7 @@ getAllSegment(){
       this.apiService.getHttp().subscribe({
         next: (res: any) => {
           if (res.statusCode == 200) {
-            this.sgmentDropdownArray = res.responseData;
-            // console.log("sagment",this.sgmentDropdownArray);    
+            this.sgmentDropdownArray = res.responseData;              
           }
         },  error: (error: any) => {
           this.errorSerivce.handelError(error.status);
@@ -105,28 +105,39 @@ getAllSegment(){
   }
 
   addSegment(){  
-    if(this.valveRegForm.value.segmentId ==''){
+    if(this.valveRegForm.value.segmentId == ''){
       return;
     }
+
    let segId= this.valveRegForm.value.segmentId    
    let data= this.sgmentDropdownArray.find((res:any)=>{
       if(res.segmentId == segId){
         return res;
       }
-    })   
+    }) 
+
+    //--------------------clear segment dropdown ------------------------------//
+    if( this.segmentShowArray.length > 0 && this.valvelabel == 'valve'){      
+      this.segmentShowArray = [];     
+      this.f['segmentId'].setValue('');
+      this.valvelabel = '';  
+    }else{
+      this.valvelabel = ''
+    }  
+  //--------------------clear segment dropdown ------------------------------//
+
     for(var i=0; i < this.segmentShowArray.length; i++){
       if(this.segmentShowArray[i].segmentId == this.valveRegForm.value.segmentId){
         this.toastrService.success("Dublicate");        
         return
       }
     }
-    this.segmentShowArray.push(data) 
-    this.f['segmentId'].setValue(0);
+    this.segmentShowArray.push(data);
+
+    this.f['segmentId'].setValue(0); 
   }
 
-  changeDropdown(){
-    
-  }
+
 
   onSubmit(){
     if(this.valveRegForm.invalid){
@@ -167,11 +178,9 @@ getAllSegment(){
       }
     );
     }    
-
   }
+
   onEdit(obj:any){
-    console.log("obj",obj);
-    
     this.editFlag = true
     this.editObj = obj;
     this.formData();    
@@ -191,11 +200,13 @@ getAllSegment(){
     this.formData();
     this.segmentShowArray=[];
   }
-  clearDropdown(){
-    this.f['segmentId'].setValue('');
-    // this.segmentShowArray = [];
+  clearDropdown(){  
+    this.f['segmentId'].setValue('');   
   }
 
+  valvedropdown(label:any){   
+    this.valvelabel = label
+  }
   onClickPagintion(pageNo: number) {
     this.pageNumber = pageNo;
     this.getAllValveTableData();
