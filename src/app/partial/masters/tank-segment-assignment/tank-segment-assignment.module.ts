@@ -5,6 +5,7 @@ import { TankSegmentAssignmentRoutingModule } from './tank-segment-assignment-ro
 import { TankSegmentAssignmentComponent } from './tank-segment-assignment.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { NgxSelectModule } from 'ngx-select-ex';
     TankSegmentAssignmentRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxSelectModule
+    NgxSelectModule,
+    NgxPaginationModule
   ]
 })
 export class TankSegmentAssignmentModule { }
