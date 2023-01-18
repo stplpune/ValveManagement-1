@@ -197,6 +197,12 @@ export class TankMasterComponent implements OnInit {
       longitude:res.longitude,
     })
     this.commonService.checkDataType(res.latitude) == true ? this.searchAdd.setValue(res.address) : '';
+    this.addLatitude = res.latitude;
+    this.addLongitude = res.longitude;
+    this.newAddedAddressLat = res.latitude;
+    this.newAddedAddressLang = res.longitude;
+    this.addressNameforAddress = res.address;
+    this.copyAddressNameforAddress = res.address;
   }
 
   getPagenation(pageNo: number) {
