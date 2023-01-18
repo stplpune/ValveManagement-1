@@ -49,7 +49,7 @@ export class TankMasterComponent implements OnInit {
   ngOnInit(): void {
     this.geFormData();
     this.getFilterFormData();
-    this.getYojana();
+    this.getYojana()
     this.getTableData();
     this.searchAddress();
   }
@@ -70,7 +70,7 @@ export class TankMasterComponent implements OnInit {
     return this.tankForm.controls;
   }
 
-  clearFormData(flag?: any) {
+  clearFormDataDropDown(flag?: any) {
     if (flag == 'formYojana') {
       this.tankForm.controls['yojanaId'].setValue(0);
       this.tankForm.controls['networkId'].setValue(0);
@@ -139,12 +139,14 @@ export class TankMasterComponent implements OnInit {
   getNetwork(status?: any) {
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+    console.log('netId',netId)
    if(netId){
     this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + netId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
+          this.editFlag ? this.tankForm.controls['yojanaId'].setValue(netId): '';
         } else {
           this.networkArray = [];
         }
@@ -214,7 +216,7 @@ export class TankMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
-    this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
+    // this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
   }
 
   getDeleteConfirm(getData?: any) {
