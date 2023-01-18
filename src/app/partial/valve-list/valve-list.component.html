@@ -3,13 +3,42 @@
     <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">Valve List</div>
       <div class="col-sm-4 text-end">
-        <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-            class="fas fa-sync-alt"></i></button>
+        <!-- <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
+            class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
+          data-bs-target="#AddValveModal" (click)="onRadioChange(1)" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
       </div>
     </div>
   </div>
+
+  <form [formGroup]="searchForm">
+    <div class="row">
+      <div class="col-sm-3">
+        <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana"
+        placeholder="Select Yojana" optionValueField="yojanaId"
+        optionTextField="yojanaName"  (select)="getAllNetwork(searchForm.controls['yojana'].value);getAllValveData()"
+        (remove)="clearSerach('yojana')">
+      </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
+             placeholder="Select Network" optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0"
+             optionTextField="networkName"   (remove)="clearSerach('network')" (select)="getAllValveData()">
+        </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <div class="input-group">
+          <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Valve Name"
+          (keyup)="onKeyUpFilter()" />
+          <button type="button" class="btn btn-light btn-sm"  (click)="clearSerach('search')"
+          *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i class="fas fa-search"></i></button>
+      </div>
+
+      </div>
+    </div>
+  </form>
+
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
@@ -61,9 +90,9 @@
       <div class="alert alert-danger text-center py-2">No Data Found..!
       </div>
     </div>
-    <!-- <pagination-controls *ngIf="valveStatusArray?.length != 0" previousLabel="" nextLabel=""
+    <pagination-controls *ngIf="valveStatusArray?.length != 0" previousLabel="" nextLabel=""
             (pageChange)="onClickPagintion($event)">
-        </pagination-controls> -->
+        </pagination-controls>
   </div>
 </div>
 
@@ -116,7 +145,7 @@
                     Valid Pipe Diameter Value.</div>
                 </div>
               </div>
-              <div class="col-sm-6">
+              <!-- <div class="col-sm-6">
                 <label class="form-label">No. of Connection</label>
                 <input type="text" class="form-control" formControlName="noOfConnections"
                   placeholder="No. of Connection" [ngClass]="{ 'is-invalid': submitted && f.noOfConnections.errors }">
@@ -126,18 +155,7 @@
                   <div class="text-danger" *ngIf="f.noOfConnections.errors?.pattern">Please enter
                     Valid No. of Connection Value.</div>
                 </div>
-              </div>
-              <div class="col-sm-12">
-                <label class="form-label">Sim Number</label>
-                <select class="form-control" formControlName="simNumber"
-                  [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
-                  <option value="0">Select Sim</option>
-                  <option *ngFor="let simData of simArray" value={{simData.id}}>{{simData.simNo}}</option>
-                </select>
-                <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.simNumber.errors?.pattern">Sim Number is required</div>
-                </div>
-              </div>
+              </div> -->
             </div>
             <div class="mb-2">
               <label class="form-label">Company Name</label>
@@ -155,79 +173,94 @@
               <div class="input-group">
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
                   [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
-                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapSelectModalForAddress"
+                (click)="openAddressModel()" >
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
                 <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
                 </div>
               </div>
-             
             </div>
-            
+
             <div class="mb-3 d-flex gap-3">
-              <label class="form-label">Is Preceding:</label>
+              <label class="form-label">Preceding:</label>
               <div class="form-check">
-                <input class="form-check-input" id="valve" type="radio" [value]="1" name="list" formControlName="list" checked
-                (change)="onRadioChange(1)" >
-                <label class="form-check-label" for="flexRadioDefault1" > Valve</label>
+                <input class="form-check-input" id="valve" type="radio" [value]="1" name="list" formControlName="list"
+                  checked (change)="onRadioChange(1)">
+                <label class="form-check-label" for="flexRadioDefault1"> Valve</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" id="tank" type="radio"  [value]="2" formControlName="list" name="list" 
-                (change)="onRadioChange(2)">
-                <label class="form-check-label" for="flexRadioDefault2"  >
-                 Tank
+                <input class="form-check-input" id="tank" type="radio" [value]="2" formControlName="list" name="list"
+                  (change)="onRadioChange(2)">
+                <label class="form-check-label" for="flexRadioDefault2">
+                  Tank
                 </label>
               </div>
             </div>
-            <!-- {{valveListForm.controls['list'].value}} -->
-            <div class="mb-3"  *ngIf="valveListForm.controls['list'].value=='1'" >
+          
+            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
               <label class="form-label">Valve List</label>
-              <select class="form-control" aria-label="Default select example" formControlName="valvelist"
-              [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
-                <option value="0">Select Valve</option>
-                <option *ngFor="let data of valvelistArray" value={{data.valveId}}>{{data.valveName}}</option>  
-              </select>
+              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
+                optionValueField="valveId" optionTextField="valveName"
+                [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
+              </ngx-select>
               <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.valvelist.errors?.pattern">Valve List  is required</div>
+                <div class="text-danger" *ngIf="f.valvelist.errors?.required">Valve List is required</div>
               </div>
             </div>
 
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
               <label class="form-label">Tank List</label>
-              <select class="form-control" aria-label="Default select example" formControlName="tankist"
-              [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
-                <option value="0">Select Tank</option>
-                <option *ngFor="let data of tankArray" value={{data.tankId}}>{{data.tankName}}</option>  
-              </select>
+              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
+                optionValueField="tankId" optionTextField="tankName" 
+                [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
+              </ngx-select>
               <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.tankist.errors?.pattern">Tank List  is required</div>
+                <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is required</div>
               </div>
             </div>
+
             <div class="mb-3">
               <label for="" class="form-label">Yojana </label>
-              <select class="form-control" aria-label="Default select example" formControlName="yojana" 
-              (change)="getAllNetwork(valveListForm.controls['yojana'].value)" 
-              [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
-                <option value="0">Select Yojana</option>
-                <option *ngFor="let data of yojanaArray" [value]="data.yojanaId">{{data.yojanaName}}</option> 
-              </select>
-              <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
+              <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
+                optionValueField="yojanaId" optionTextField="yojanaName"
+                (select)="getAllNetwork(valveListForm.controls['yojana'].value)"
+                [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
+              </ngx-select>
+              <!-- <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.yojana.errors?.pattern">Yojana is required.</div>
+              </div> -->
+
+              <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.yojana.errors?.required">Yojana is
+                  Required.</div>
               </div>
             </div>
+
             <div class="mb-3">
               <label for="" class="form-label">Network </label>
-              <select class="form-control" aria-label="Default select example" formControlName="network"
+              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network" placeholder="Select Network"
+              optionValueField="networkId" optionTextField="networkName" [disabled]="valveListForm.controls['yojana'].value==0"
               [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
-                <option value="0">Select Network</option>
-                <option *ngFor="let data of networkArray" [value]="data.networkId">{{data.networkName}}</option>  
-            
-              </select>
+            </ngx-select>
               <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.network.errors?.pattern">Network is required.</div>
+                <div class="text-danger" *ngIf="f.network.errors?.required">Network is required.</div>
               </div>
             </div>
+
+            <div class="col-sm-12">
+              <label class="form-label">Sim Number</label>
+
+              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
+                optionValueField="id" optionTextField="simNo"
+                [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
+              </ngx-select>
+              <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.simNumber.errors?.pattern">Sim Number is required</div>
+              </div>
+            </div>
+            
             <div class="mb-0">
               <label class="form-label">Description</label>
               <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
@@ -251,7 +284,45 @@
     </div>
   </div>
 </div>
-<div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+
+
+<!-- Modal to select Map Address   -->
+<div class="modal fade" id="MapSelectModalForAddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="MapSelectModalLabel1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+          <div class="modal-header">
+              <p class="modal-title" id="MapSelectModalLabel1">Address Details</p>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" #searchAddressModel aria-label="Close"></button>
+          </div>
+          <div class="modal-body mt-20 py-2">
+              <div class="form-container mb-2 input-group">
+                  <input class="form-control" type="text" autocapitalize="off" [formControl]="searchAdd" spellcheck="off" #searchAddress>
+                  <button type="button" class="btn btn-light btn-sm" (click)="searchAdd.setValue('')"
+                   *ngIf="searchAdd.value"><i class="fas fa-times"></i></button>
+              </div>
+
+              <agm-map [latitude]="addLatitude || 19.0898177" [longitude]="addLongitude || 76.5240298" [zoom]="addressZoomSize" (mapClick)="markerAddressDragEnd($event)">
+                  <div >
+                      <agm-marker *ngIf="addressMarkerShow == true" [latitude]="addLatitude" [longitude]="addLongitude" (dragEnd)="markerAddressDragEnd($event)"
+                          [markerDraggable]="true" (markerClick)="clickedAddressMarker(infowindow)">
+                          <agm-info-window #infowindow>
+                              <strong>Address - {{addressNameforAddress}}</strong>
+                          </agm-info-window>
+                      </agm-marker>
+                  </div>
+              </agm-map>
+          </div>
+          <div class="modal-footer py-1">
+              <div  class="d-flex justify-content-between align-items-center float-end">
+                  <button type="button" class="btn btn-secondary" (click)="clearAddress()">Clear</button>
+                  <button type="button" class="btn btn-main ms-2" (click)="addAddress()">Add</button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -262,12 +333,12 @@
       <div class="modal-body p-0">
         <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="markerDragEnd($event)">
           <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="true"
-           (dragEnd)="markerDragEnd($event)"></agm-marker>
+            (dragEnd)="markerDragEnd($event)"></agm-marker>
         </agm-map>
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <!-- Delete modal pop up -->
 <div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">

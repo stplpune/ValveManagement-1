@@ -19,7 +19,7 @@
                 <tr>
                     <th>Sr. No.</th>
                     <th>Network</th>
-                    <th>Vocabulary</th>
+                    <th>Yojana Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -28,7 +28,7 @@
                     currentPage: pageNumber, totalItems:totalRows}; let i = index">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{showAllNetwork?.networkName}}</td>
-                    <td>Vocalbulary Data</td>
+                    <td>{{showAllNetwork?.yojanaName}}</td>
                     <td>
                         <div class="btn-group">
                             <button type="button" (click)="onEdit(showAllNetwork)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
@@ -69,26 +69,28 @@
                         <div class="mb-3">
                             <label class="form-label">Network Name</label>
                             <input type="text" class="form-control" formControlName="networkName" placeholder="Network Name"
-                             (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)"
-                             [ngClass]="{ 'is-invalid': submitted && f['networkName'].errors }">
-                             <div *ngIf="submitted && f['networkName'].errors" class="invalid-feedback">
-                                <div class="text-danger" *ngIf="f['networkName'].errors?.['required']">Network is
-                                  Required.</div>
-                              </div>
+                            [ngClass]="{ 'is-invalid': submitted && f.networkName.errors }"
+                                (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)">
+                                <div *ngIf="submitted && f.networkName.errors" class="invalid-feedback">
+                                    <div class="text-danger" *ngIf="f.networkName.errors?.required">Network Name is
+                                      Required.</div>
+                                  </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Select Yojana</label>
-                            <!-- <select class="form-control" formControlName="yojanaId" aria-label="Default select example">
-                                <option *ngFor="let showYojanaDropdown of allYojanaArray" [value]="showYojanaDropdown.yojanaId">{{showYojanaDropdown.yojanaName}}</option>
-                              </select> -->
                               <ngx-select [allowClear]="true" [items]="allYojanaArray" formControlName="yojanaId"
-                              placeholder="Select District" optionValueField="yojanaId"
-                             optionTextField="yojanaName"  (remove)="clearDropdown('yojana')">
+                              placeholder="Select Yojana" optionValueField="yojanaId"
+                             optionTextField="yojanaName"  (remove)="clearDropdown('yojana')"
+                             [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                          </ngx-select>
+                         <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
+                            <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is
+                              Required.</div>
+                          </div>
                         </div>
                         <div class="d-flex justify-content-end gap-2 mb-0">
                             <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-                            <button type="submit" class="btn btn-main">Submit</button>
+                            <button type="submit" class="btn btn-main">{{buttonName}}</button>
                         </div>
                     </div>
                 </div>

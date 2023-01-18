@@ -11,10 +11,9 @@
       </div> -->
 
       <form [formGroup]="filterFrm">
-        <div class="form-container">
           <div class="row">
             <div class="col-sm-3">
-              <label class="form-label">Yojana Name</label>
+              <!-- <label class="form-label">Yojana Name</label> -->
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="getNetworkByYojanaId(filterFrm.value.yojanaId);filterData()"
@@ -22,7 +21,7 @@
               </ngx-select>
             </div>
             <div class="col-sm-3">
-              <label class="form-label">Network Name</label>
+              <!-- <label class="form-label">Network Name</label> -->
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                 placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                 [disabled]="!this.filterFrm.value.yojanaId" (select)="filterData()"
@@ -30,8 +29,6 @@
               </ngx-select>
             </div>
           </div>
-        </div>
-
       </form>
     </div>
   </div>
@@ -41,10 +38,10 @@
         <tr>
           <th>Sr. No.</th>
           <th>Tank Name</th>
-          <th>Tank Min Level</th>
-          <th>Tank Max Level</th>
-          <th>Tank Min Quantity</th>
-          <th>Tank Max Quantity</th>
+          <th>Tank Min Level(in feet.)</th>
+          <th>Tank Max Level(in feet.)</th>
+          <th>Tank Min Quantity(in Ltr.)</th>
+          <th>Tank Max Quantity(in Ltr.)</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -110,7 +107,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank Min Level</label>
+              <label class="form-label">Tank Min Level(in feet.)</label>
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Tank Min Level" formControlName="tankMinLevel"
                   (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
@@ -122,7 +119,7 @@
               </div> 
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank Max Level</label>
+              <label class="form-label">Tank Max Level(in feet.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
@@ -133,7 +130,7 @@
             </div>
             
             <div class="mb-3">
-              <label class="form-label">Tank Min Quality</label>
+              <label class="form-label">Tank Min Quantity(in Ltr.)</label>
               <input type="text" class="form-control" placeholder="Tank Min Quality" formControlName="tankMinQty"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMinQty.errors}">
@@ -143,7 +140,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank Max Quality</label>
+              <label class="form-label">Tank Max Quantity(in Ltr.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Quality" formControlName="tankMaxQty"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxQty.errors}">
