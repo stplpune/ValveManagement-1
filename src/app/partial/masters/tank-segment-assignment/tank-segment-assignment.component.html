@@ -1,3 +1,25 @@
+<form [formGroup]="filterForm">
+  <div class="row">
+    <div class="col-3">
+      <!-- <label class="form-label">Yojna</label> -->
+      <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="filterYojanaId" placeholder="Select Yojna"
+        optionValueField="yojanaId" optionTextField="yojanaName" (selectionChanges)="getAllNetwork();">
+      </ngx-select>
+    </div>
+    
+    <div class="col-3">
+      <!-- <label class="form-label">Network</label> -->
+      <ngx-select [allowClear]="true" [items]="networkArr" formControlName="filterNetworkId" placeholder="Select Network"
+        optionValueField="networkId" optionTextField="networkName">
+      </ngx-select>
+    </div>
+
+    <div class="col-2">
+      <button type="button" class="btn btn-main">Search</button>
+    </div>
+  </div>
+</form>
+
 <div class="card plain-card">
   <div class="card-header">
     <div class="row justify-content-between align-items-center">
@@ -32,7 +54,7 @@
           <td>{{arr?.segmentName}}</td>
         </tr>
         </td>
-
+        
         <td>
           <div class="btn-group">
             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
@@ -74,6 +96,41 @@
       <form [formGroup]="tankSegmentForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
+
+            <div class="mb-3">
+              <label class="form-label">Yojna</label>
+              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
+                    <option selected>Tank</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select> -->
+              <!-- <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
+                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank');">
+                (select)="doSelect($event)"
+              </ngx-select> -->
+              <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+                optionValueField="yojanaId" optionTextField="yojanaName" (selectionChanges)="getAllNetwork();">
+              </ngx-select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Network</label>
+              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
+                    <option selected>Tank</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select> -->
+              <!-- <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
+                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank');">
+                (select)="doSelect($event)"
+              </ngx-select> -->
+              <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
+                optionValueField="networkId" optionTextField="networkName" (selectionChanges)="getAllTank(); getAllSegment();" (click)="onLable('tank')">
+              </ngx-select>
+            </div>
+
             <div class="mb-3">
               <label class="form-label">Tank</label>
               <!-- <select class="form-select" class="form-control" aria-label="Default select example">
@@ -88,7 +145,6 @@
               </ngx-select> -->
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown();" (click)="onLable('tank')">
-                
               </ngx-select>
             </div>
 
