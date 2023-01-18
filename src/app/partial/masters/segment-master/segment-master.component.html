@@ -4,7 +4,7 @@
             <div class="col-sm-4">Segment Master</div>
             <div class="col-sm-4 text-end">
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                    data-bs-target="#SegmentModal" (click)="onEditFlag = false">
+                    data-bs-target="#SegmentModal" (click)="onEditFlag = false; getValveSegmentList()">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Segment
                 </button>
@@ -47,7 +47,7 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="getValveSegmentList(segMaster)">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditFlag = true;textName = 'Update';getValveSegmentList(segMaster)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -85,7 +85,7 @@
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="segmentMasterForm.controls['networkId'].setValue('')"
-                                (select)="getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
+                                (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
@@ -121,7 +121,7 @@
                     <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape" class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [latitude]="23.7541318" [zoom]="6" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
+                    <agm-map [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
                         <agm-marker
                         *ngFor="let m of tank_ValveArray; let i = index"
                         [latitude]="m.latitude"
