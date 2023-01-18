@@ -107,10 +107,36 @@
                         <div class="form-container">
 
                             <div class="mb-3">
-                                <label class="form-label">Valve</label>
+                                <label for="" class="form-label">Yojana</label>
+                                <ngx-select [items]="yoganaArray" formControlName="yojanaId"
+                                     placeholder="Select Yojana" optionValueField="yojanaId"
+                                     optionTextField="yojanaName" [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
+                                     (select)="getNetworkDropdown()">
+                                </ngx-select>
+                                <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
+                                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
+                                    Required.</div>
+                                </div>
+                              </div>
+
+                               <div class="mb-3">   
+                                <label for="" class="form-label">Network</label>
+                                <ngx-select [items]="networkArray" formControlName="networkId"
+                                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveConnectionForm.value.yojanaId"
+                                     optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
+                                     (select)="getValveConnectionDropdown()">
+                                </ngx-select>
+                                <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
+                                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
+                                    Required.</div>
+                                </div>
+                              </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Valve Name</label>
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
-                                    optionValueField="valveId" optionTextField="valveName"
+                                    optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveConnectionForm.value.networkId"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
