@@ -80,8 +80,6 @@ export class ValveConnectionComponent implements OnInit {
     return this.valveConnectionForm.controls;
   }
 
-
-
   get connectionForm(): FormArray {
     return this.valveConnectionForm.get('connectiondetails') as FormArray;
   }
@@ -106,12 +104,18 @@ export class ValveConnectionComponent implements OnInit {
   removeItem(i: number) {
     this.connectionForm.removeAt(i)
   }
+ // ValveConnection/GetAllRemark?YojanaId=1&NetworkId=1&UserId=1&pageno=1&pagesize=1&ValveMasterId=1
 
   bindValveConnectionsTable() {
     this.spinner.show();
     // (this.searchForm.value.yojana?this.searchForm.value.yojana:0)
-    let obj = 'UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get', 'ValveConnection?' + obj, false, false, false, 'valvemgt');
+    let obj = 'YojanaId='+(this.searchForm.value.yojana?this.searchForm.value.yojana:0)
+    +'&NetworkId='+(this.searchForm.value.network?this.searchForm.value.network:0)
+    +'&UserId='+this.localStorage.userId()+'&pageno='+ this.pageNumber + '&pagesize='+this.pagesize
+    +'&ValveMasterId='+(this.searchForm.value.valveMaster?this.searchForm.value.valveMaster:0);
+
+    // let obj1 = 'UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+     this.apiService.setHttp('get', 'ValveConnection/GetAllRemark?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -128,6 +132,7 @@ export class ValveConnectionComponent implements OnInit {
         }
       },
       error: (error: any) => {
+        this.spinner.hide();
         this.errorSerivce.handelError(error.status);
       },
     });
@@ -170,9 +175,8 @@ export class ValveConnectionComponent implements OnInit {
       this.errorSerivce.handelError(error.status);
     })
   }
-
-  getValveConnectionDropdown() {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=' + this.localStorage.userId() + '&YojanaId=' + this.valveConnectionForm.value.yojanaId + '&NetworkId=' + this.valveConnectionForm.value.networkId, false, false, false, 'valvemgt');
+   getValveConnectionDropdown() {
+    this.apiService.setHttp('get','ValveMaster/GetValveNameList?userId=' + this.localStorage.userId() + '&YojanaId=' + this.valveConnectionForm.value.yojanaId + '&NetworkId=' + this.valveConnectionForm.value.networkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -223,6 +227,7 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   onClickEdit(editObj: any) {
+    console.log("editObj",editObj)
     this.connectionForm.clear()
     this.highlitedRow = editObj.id;
     this.editFlag = true;
@@ -233,10 +238,10 @@ export class ValveConnectionComponent implements OnInit {
       "mobileNo": editObj.mobileNo,
       "remark": editObj.remark,
       "createdBy": this.localStorage.userId(),
-      "yojanaId": +editObj.yojanaId,
-      "networkId": +editObj.networkId,
+      "yojanaId":editObj.yojanaId,
+      "networkId":editObj.networkId,
       "consumerUserId": 0,
-      "totalConnection": +editObj.totalConnection,
+      "totalConnection":editObj.totalConnection,
     });
     editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
@@ -245,6 +250,7 @@ export class ValveConnectionComponent implements OnInit {
       });
       this.connectionForm.push(arrayData);
     })
+    this.getYoganaDropdown();
   }
 
   onClickSubmit() {
