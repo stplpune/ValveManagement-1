@@ -27,7 +27,7 @@ export class TankMasterComponent implements OnInit {
   delData: any;
   filterFrm!: FormGroup;
   pinCode: any;
- 
+  editObj:any
 
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
@@ -59,8 +59,8 @@ export class TankMasterComponent implements OnInit {
       "id": [0],
       "tankName": ['', [Validators.required]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
-      "yojanaId": [this.getData.yojanaId, [Validators.required]],
-      "networkId": [0, Validators.required],
+      "yojanaId": ['', [Validators.required]],
+      "networkId": ['', Validators.required],
       "latitude":[''],
       "longitude":[''],
     })
@@ -126,7 +126,7 @@ export class TankMasterComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData), this.getNetwork()) : '';
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
         }
@@ -135,18 +135,17 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
-
+//  http://valvemgt.erpguru.in/api/MasterDropdown/GetAllNetworkbyUserId?UserId=1&YojanaId=1
   getNetwork(status?: any) {
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-    console.log('netId',netId)
    if(netId){
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + netId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getData.userId+'&YojanaId=' + netId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
-          this.editFlag ? this.tankForm.controls['yojanaId'].setValue(netId): '';
+          this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId): '';
         } else {
           this.networkArray = [];
         }
@@ -170,7 +169,6 @@ export class TankMasterComponent implements OnInit {
         "createdBy": this.local.userId(),
         "modifiedBy": this.local.userId(),
       }
-      console.log('formData', obj);
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
@@ -189,15 +187,17 @@ export class TankMasterComponent implements OnInit {
 
   onEditData(res?: any) {
     this.editFlag = true;
+    this.editObj = res;
     this.tankForm.patchValue({
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId: res.yojanaId,
-      networkId: res.networkId,
+      // yojanaId: res.yojanaId,
+      // networkId: res.networkId,
       latitude:res.latitude,
       longitude:res.longitude,
     })
+    this.getYojana();
     this.commonService.checkDataType(res.latitude) == true ? this.searchAdd.setValue(res.address) : '';
     this.addLatitude = res.latitude;
     this.addLongitude = res.longitude;
@@ -213,7 +213,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    formDirective?.resetForm();
+    // formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
     // this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
@@ -302,11 +302,9 @@ export class TankMasterComponent implements OnInit {
   findAddress(results: any) {
     if (results) {
       this.addressNameforAddress = results.formatted_address;
-     console.log('add',this.addressNameforAddress);
       this.addressZoomSize = 12;
       this.searchAdd.setValue(this.addressNameforAddress);
     }
-    console.log('hi', this.addLatitude,this.addLongitude );
   }
 
   clickedAddressMarker(infowindow: any) {
