@@ -22,6 +22,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   editFlag : boolean = false;
+  tankLabel !: string;
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
 
@@ -200,20 +201,14 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.tankSegmentTable = [];
   }
 
-  onChangeDropdown(event : any, label: string) {
-    // let tankEventId = event[0]?.value;
-    // console.log("tankEventId", tankEventId);
-
-    // console.log("event : ", event[0]?.value);
-
-    if (label == 'tank') {
+  onChangeDropdown() {
       this.f['segmentId'].setValue('');
-      // this.tankSegmentTable = [];
-    }
-    // else if(tankEventId !== event[0]?.value){
-    //   this.tankSegmentTable = [];
-    // }
-   
+  }
+
+  onLable(label : string){
+    console.log("label : ", label);
+    
+    this.tankLabel = label;
   }
 
   onEdit(obj: any) {
