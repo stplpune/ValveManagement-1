@@ -274,7 +274,7 @@ export class SegmentMasterComponent implements OnInit {
   editObj: any;
   zoom = 6;
   editPatchShape: any;
-  onEditFlag: boolean = false;
+  onEditFlag!: boolean;
   splitedEditObjData: any;
   insertNewLineFlag: boolean = false;
 
@@ -295,13 +295,14 @@ export class SegmentMasterComponent implements OnInit {
 
   onEditMapData(mainArray: any) {
 
-    if (this.onEditFlag != true) {
+    if (this.onEditFlag == false) {
       this.add_editCommonData(mainArray);
     } else {
-      this.add_editCommonData(mainArray);
       let index: any = mainArray.segmenDetailsModels.findIndex((ele: any) => ele?.segmentId == this.editObj?.id)
       mainArray.segmenDetailsModels.splice(index, 1);
 
+      this.add_editCommonData(mainArray);
+     
       //.........................................  get Edit Object code Start Here.................................//
       let stringtoArray = this.editObj?.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
@@ -338,6 +339,11 @@ export class SegmentMasterComponent implements OnInit {
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       return ele = finalLatLngArray;
     })
+
+console.log(getOtherAllSegment,'aaa');
+
+
+
     this.getAllSegmentArray = getOtherAllSegment.flat();
 
     //.........................................  get Edit All Other Segment Array code Start End.................................//
@@ -408,6 +414,8 @@ export class SegmentMasterComponent implements OnInit {
         strokeWeight: 2,
       });
       this.setSelection(patchShapeEditedObj);
+    }else if(this.onEditFlag == false){
+      drawingManager.setOptions({ drawingControl: false });
     }
     //............................   Edit Code End Here ..................  //
 
