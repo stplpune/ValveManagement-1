@@ -15,12 +15,15 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class ValveSegmentAssignmentComponent implements OnInit {
 
   valveRegForm!:FormGroup;
+  filterForm!:FormGroup;
   valveArray = new Array();
   valveDropdownArray = new Array();
   sgmentDropdownArray = new Array();
   segmentShowArray = new Array();
   editFlag:boolean=false;
   editObj:any;
+  yojanaArr = new Array();
+  networkArr = new Array();
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -38,10 +41,13 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     }
   ngOnInit(): void {
     this.formData();
+    this.filterFormField();
     this.getAllValveTableData();
     console.log("localstorage",this.getAllLocalStorageData);
-    this.getAllvalve();
-    this.getAllSegment();
+    // this.getAllvalve();
+    // this.getAllSegment();
+    this.getAllYojana();
+    // this.getAllNetwork();
     
   }
 
@@ -51,13 +57,62 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         "valveId":[this.editObj ? this.editObj.valveId :0],
         "segmentId": [0],
         // "segmentId": [this.editFlag ? this.editObj.segmentId :0],
+        "yojanaId": 0,
+        "networkId": 0,
         "valvesegmet":[]
     })
   }
+
+  filterFormField(){
+    this.filterForm = this.fb.group({
+      filterYojanaId : [0],
+      filterNetworkId : [0]
+    })
+  }
+  getAllYojana() {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: ((res: any) => {
+        // console.log("Segement res : ", res);
+        if (res.statusCode == '200') {
+          this.yojanaArr = res.responseData;
+          console.log("this.yojanaArr",this.yojanaArr);
+          
+        } else {
+          this.yojanaArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      }
+    })
+  }
+
+  getAllNetwork() {
+    console.log("this.valveRegForm.value.yojanaId",this.valveRegForm.value.yojanaId);
+    
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.valveRegForm.value.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: ((res: any) => {
+        // console.log("Segement res : ", res);
+        if (res.statusCode == 200) {
+          this.networkArr = res.responseData;
+          console.log("this.networkArr",this.networkArr);
+        } else {
+          this.networkArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      }
+    })
+  }
  
-  getAllvalve(){
-   
-    this.apiService.setHttp('GET', 'ValveMaster/GetValveNameList?userId='+this.getAllLocalStorageData.userId+'&YojanaId='+ this.getAllLocalStorageData.yojanaId+'&NetworkId='+this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+  getAllvalve(){   
+    console.log(" valve yojanaId",this.valveRegForm.value.yojanaId);
+    console.log("valve network",this.valveRegForm.value.networkId);
+
+    this.apiService.setHttp('GET', 'ValveMaster/GetValveNameList?userId='+this.getAllLocalStorageData.userId+'&YojanaId='+ this.valveRegForm.value.yojanaId+'&NetworkId='+this.valveRegForm.value.networkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == 200) {
@@ -71,7 +126,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 }
 
 getAllSegment(){
-      this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllSegment?YojanaId='+ this.getAllLocalStorageData.yojanaId+'&NetworkId='+this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+  console.log(" segment yojanaId",this.valveRegForm.value.yojanaId);
+  console.log("segment network",this.valveRegForm.value.networkId);
+      this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllSegmentForValve?YojanaId='+ this.valveRegForm.value.yojanaId+'&NetworkId='+this.valveRegForm.value.networkId, false, false, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: (res: any) => {
           if (res.statusCode == 200) {
@@ -85,7 +142,7 @@ getAllSegment(){
 
   getAllValveTableData(){   
     this.spinner.show();
-    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo='+this.pageNumber+'&pageSize='+this.pagesize+'&yojanaId='+this.getAllLocalStorageData.yojanaId+'&networkId='+this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo='+this.pageNumber+'&pageSize='+this.pagesize+'&yojanaId='+this.filterForm.value.filterYojanaId+'&networkId='+this.filterForm.value.filterNetworkId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => { 
         this.spinner.hide();      
@@ -136,8 +193,6 @@ getAllSegment(){
 
     this.f['segmentId'].setValue(0); 
   }
-
-
 
   onSubmit(){
     if(this.valveRegForm.invalid){

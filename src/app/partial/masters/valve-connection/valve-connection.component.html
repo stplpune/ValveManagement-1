@@ -25,7 +25,7 @@
           <div class="col-sm-3">
             <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
                  placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
-                 optionTextField="networkName" (remove)="clearSearch('network')" (select)="bindValveConnectionsTable()">
+                 optionTextField="networkName" (remove)="clearSearch('network')" (select)="getValveConnectionDropdown('filter');bindValveConnectionsTable()">
             </ngx-select>
           </div>
           <div class="col-sm-3">
@@ -215,7 +215,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Pipe Diameter</label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
+                                                formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event)">
                                             </div>
 
                                             <div class="mb-3">

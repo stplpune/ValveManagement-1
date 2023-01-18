@@ -59,8 +59,8 @@ export class TankMasterComponent implements OnInit {
       "id": [0],
       "tankName": ['', [Validators.required]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
-      "yojanaId": [this.getData.yojanaId, [Validators.required]],
-      "networkId": [0, Validators.required],
+      "yojanaId": ['', [Validators.required]],
+      "networkId": ['', Validators.required],
       "latitude":[''],
       "longitude":[''],
     })

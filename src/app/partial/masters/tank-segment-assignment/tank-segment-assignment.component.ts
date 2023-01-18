@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -13,15 +13,18 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class TankSegmentAssignmentComponent implements OnInit {
   tankSegmentForm !: FormGroup;
+  filterForm !: FormGroup;
   responseArray = new Array();
   tankArr = new Array();
   segmentArr = new Array();
+  yojanaArr = new Array();
+  networkArr = new Array();
   tankSegmentTable = new Array();
   editObj: any;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
-  editFlag : boolean = false;
+  editFlag: boolean = false;
   tankLabel !: string;
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
@@ -35,9 +38,11 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.formField();
+    this.filterFormField();
     this.getTableData();
-    this.getAllTank();
-    this.getAllSegment();
+    // this.getAllTank();
+    // this.getAllSegment();
+    this.getAllYojana();
   }
 
   formField() {
@@ -56,13 +61,16 @@ export class TankSegmentAssignmentComponent implements OnInit {
           "segmentId": [''],
           "segmentName": ['']
         })
-      ])
-      // "tanksegment": [
-      //   {
-      //     "segmentId": 0,
-      //     "segmentName": "string"
-      //   }
-      // ]
+      ]),
+      "yojanaId": [this.editObj ? this.editObj.yojanaId : 0],
+      "networkId": [this.editObj ? this.editObj.networkId : 0]
+    })
+  }
+
+  filterFormField(){
+    this.filterForm = this.fb.group({
+      filterYojanaId : [''],
+      filterNetworkId : ['']
     })
   }
 
@@ -89,11 +97,44 @@ export class TankSegmentAssignmentComponent implements OnInit {
     })
   }
 
-  getAllTank() {
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllTank?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+  getAllYojana() {
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
-        // console.log("Tank res : ", res);
+        if (res.statusCode == '200') {
+          this.yojanaArr = res.responseData;
+          // this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
+        } else {
+          this.yojanaArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
+  }
+
+  getAllNetwork() {
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.tankSegmentForm.value.yojanaId, false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == '200') {
+          this.networkArr = res.responseData;
+          // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
+        } else {
+          this.networkArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
+  }
+
+  getAllTank() {
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllTank?YojanaId=' + this.tankSegmentForm.value.yojanaId + '&NetworkId=' + this.tankSegmentForm.value.networkId, false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
         if (res.statusCode == '200') {
           this.tankArr = res.responseData;
         } else {
@@ -107,10 +148,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getAllSegment() {
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllSegment?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&NetworkId=' + this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllSegmentForTank?YojanaId=' + this.tankSegmentForm.value.yojanaId + '&NetworkId=' + this.tankSegmentForm.value.networkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
-        // console.log("Segement res : ", res);
         if (res.statusCode == '200') {
           this.segmentArr = res.responseData;
         } else {
@@ -132,6 +172,15 @@ export class TankSegmentAssignmentComponent implements OnInit {
     })
     console.log("Id : ", this.tankSegmentForm.value.segmentId);
 
+    if (this.tankSegmentTable.length > 0 && this.tankLabel == 'tank') {
+      this.tankSegmentTable = [];
+      this.f['segmentId'].setValue('');
+      this.tankLabel = '';
+    }
+    else {
+      this.tankLabel = '';
+    }
+
     for (var i = 0; i < this.tankSegmentTable.length; i++) {
       if (this.tankSegmentTable[i].segmentId == this.tankSegmentForm.value.segmentId) {
         this.toastrService.success("Dublicate");
@@ -139,17 +188,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       }
     }
 
-    this.tankSegmentTable.push(array)
-    console.log("segment table", this.tankSegmentTable);
-
-    // this.tankSegmentTable 
-    // console.log(this.tankSegmentForm.value.tanksegment[0].segmentName);
-    // for(var i=0; i<this.tankSegmentTable.length; i++){
-    //   console.log(this.tankSegmentForm.value.tanksegment.segmentName);
-    // }
-
-    // let obj = this.tankSegmentForm.value;
-    // console.log("obj : ",obj);
+    this.tankSegmentTable.push(array);
     this.f['segmentId'].setValue(0);
   }
 
@@ -189,7 +228,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
         this.spinner.hide();
       }
     })
-  // }
+    // }
   }
 
   clearForm(formDirective?: any) {
@@ -202,12 +241,12 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   onChangeDropdown() {
-      this.f['segmentId'].setValue('');
+    this.f['segmentId'].setValue('');
   }
 
-  onLable(label : string){
+  onLable(label: string) {
     console.log("label : ", label);
-    
+
     this.tankLabel = label;
   }
 
