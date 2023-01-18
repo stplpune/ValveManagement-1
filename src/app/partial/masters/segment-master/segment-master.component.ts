@@ -79,8 +79,9 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
-        this.yoganaIdArray = res.responseData;
-        // this.getNetworkID();
+        this.yoganaIdArray = res.responseData; 
+        this.yoganaIdArray.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkId()) : '';
+        this.yoganaIdArray.length == 1 ? (this.segmentMasterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkIdAdd()) : '';
       }
       else {
         this.yoganaIdArray = [];
@@ -97,6 +98,10 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
+        (this.networkIdArray.length == 1 && this.onEditFlag == true )? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId })) : '';
+         if(this.networkIdArray.length != 1 && this.onEditFlag == true){
+          this.filterForm.patchValue({ networkId: this.editObj.networkId })
+        }
       }
       else {
         this.networkIdArray = [];
@@ -113,6 +118,7 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
+        this.networkIdAddArray.length == 1 ? (this.segmentMasterForm.patchValue({ networkId: this.networkIdAddArray[0].networkId }),this.getValveSegmentList()) : '';
       }
       else {
         this.networkIdAddArray = [];
@@ -158,8 +164,7 @@ export class SegmentMasterComponent implements OnInit {
     });
   }
 
-  getValveSegmentList(editObj?: any) { //All Segment 
-    this.editObj = editObj;
+  getValveSegmentList() { //All Segment 
     this.spinner.show();
     let obj: any = 'YojanaId=' + (this.segmentMasterForm.value.yojanaId || 0) + '&NetworkId=' + (this.segmentMasterForm.value.networkId || 0)
       + '&userId=' + this.localStorage.userId();
@@ -169,7 +174,7 @@ export class SegmentMasterComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.valveSegmentList = res.responseData[0];
-          this.onEditMapData(this.valveSegmentList);
+          this.valveSegPatchData(this.valveSegmentList);
         } else {
           this.spinner.hide();
           this.valveSegmentList = [];
@@ -292,9 +297,18 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+  patchSegmentTable(obj:any){
+    this.onEditFlag = true;
+    this.textName = 'Update'; 
+    this.editObj = obj ;
+    this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
+    this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
+    this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
+    this.getNetworkIdAdd(this.editObj.yojanaId);
+    this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
+  }
 
-  onEditMapData(mainArray: any) {
-
+  valveSegPatchData(mainArray: any) {
     if (this.onEditFlag == false) {
       this.add_editCommonData(mainArray);
     } else {
@@ -308,17 +322,10 @@ export class SegmentMasterComponent implements OnInit {
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       this.splitedEditObjData = finalLatLngArray;
       //.........................................  get Edit Object Segment code End Here.................................//
-
-      this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
-      this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
-      this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
-      this.getNetworkIdAdd(this.editObj.yojanaId);
-      this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
       
     }
     this.onMapReady(this.map);
   }
-
 
   add_editCommonData(mainArray: any) {
 
@@ -339,10 +346,6 @@ export class SegmentMasterComponent implements OnInit {
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       return ele = finalLatLngArray;
     })
-
-console.log(getOtherAllSegment,'aaa');
-
-
 
     this.getAllSegmentArray = getOtherAllSegment.flat();
 

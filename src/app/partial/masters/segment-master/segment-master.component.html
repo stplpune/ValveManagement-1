@@ -4,7 +4,7 @@
             <div class="col-sm-4">Segment Master</div>
             <div class="col-sm-4 text-end">
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                    data-bs-target="#SegmentModal" (click)="onEditFlag = false; getValveSegmentList()">
+                    data-bs-target="#SegmentModal" (click)="onEditFlag = false">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Segment
                 </button>
@@ -47,7 +47,7 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="onEditFlag = true;textName = 'Update';getValveSegmentList(segMaster)">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="patchSegmentTable(segMaster)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -84,7 +84,7 @@
                     <div class="row g-2">
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
-                                (remove)="segmentMasterForm.controls['networkId'].setValue('')"
+                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = []"
                                 (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
@@ -92,9 +92,9 @@
                             <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
                         </div>
                         <div class="col-sm">
-                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId"
+                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
-                                optionTextField="networkName"
+                                optionTextField="networkName" (remove)="valveSegmentList = []"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                            </ngx-select>
                            <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
