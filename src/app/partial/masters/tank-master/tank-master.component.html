@@ -100,7 +100,7 @@
                 <div *ngIf="f['address'].touched && f['address'].errors" class="invalid-feedback">
                   <div class="validation-css" *ngIf="f['address'].errors['address']"> Address Is Required </div>
                 </div>
-                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapModal">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" (click)="openAddressModel()" data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
               </div>
@@ -110,7 +110,7 @@
                 <label class="form-label">Yojana <span class="text-danger">*</span></label>
                 <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                   placeholder="Select Yojana" optionValueField="yojanaId" (ngModelChange)="getNetwork()"
-                  optionTextField="yojanaName" (remove)="clearFormData('formYojana')">
+                  optionTextField="yojanaName" (remove)="clearFormDataDropDown('formYojana')">
                 </ngx-select>
                 <div *ngIf="f['yojanaId'].touched && f['yojanaId'].errors" class="invalid-feedback">
                   <div class="validation-css" *ngIf="f['yojanaId'].errors['yojanaId']"> Yojana Is Required </div>
@@ -121,7 +121,7 @@
                   <label class="form-label">Network</label>
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                    [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormData('formnetwork')">
+                    [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormDataDropDown('formnetwork')">
                   </ngx-select>
                   <div *ngIf="f['networkId'].touched && f['networkId'].errors" class="invalid-feedback">
                     <div class="validation-css" *ngIf="f['networkId'].errors['networkId']"> Network Is Required </div>
@@ -145,13 +145,14 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" #searchAddressModel aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"  #searchAddressModel aria-label="Close" data-bs-toggle="modal" data-bs-target="#AddValveModal"></button>
       </div>
 
       <div class="modal-body mt-20 py-2">

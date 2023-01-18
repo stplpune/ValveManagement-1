@@ -93,7 +93,7 @@ export class TankCalibrationComponent implements OnInit {
   }
 
   getNetworkByYojanaId(yojanaId: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.localstorageData.userId +'&YojanaId=' + yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {

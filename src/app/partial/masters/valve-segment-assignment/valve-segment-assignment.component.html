@@ -74,6 +74,23 @@
       <form [formGroup]="valveRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
+            <!-- <div class="mb-3">
+              <label class="form-label">Yojna</label>              
+                <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
+                placeholder="Select Yojna" optionValueField="valveId" 
+               optionTextField="valveName">
+              </ngx-select>
+            </div> -->
+<!-- 
+            <div class="mb-3">
+              <label class="form-label">Network</label>             
+                <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
+                placeholder="Select Network" optionValueField="valveId" 
+               optionTextField="valveName">
+              </ngx-select>
+            </div> -->
+
+
             <div class="mb-3">
               <label class="form-label">Valve</label>
                 <!-- <select class="form-select" class="form-control" aria-label="Default select example">
@@ -83,7 +100,7 @@
                   <option value="3">Three</option>
                 </select> -->
                 <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
-                placeholder="Select valve" optionValueField="valveId" (selectionChanges)="clearDropdown()"
+                placeholder="Select valve" optionValueField="valveId" (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')"
                optionTextField="valveName">
               </ngx-select>
             </div>
@@ -100,8 +117,8 @@
                   <option value="3">Three</option>
                 </select> -->
                 <ngx-select  [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
-                placeholder="Select Segment" optionValueField="segmentId"
-               optionTextField="segmentName" (selectionChanges)="changeDropdown()">
+                placeholder="Select Segment" optionValueField="segmentId" 
+               optionTextField="segmentName">
               </ngx-select>
               <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
               </div>

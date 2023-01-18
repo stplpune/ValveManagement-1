@@ -6,7 +6,8 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ValidationService } from 'src/app/core/services/validation.service';
-import { MapsAPILoader } from '@agm/core';
+import { MapsAPILoader,MouseEvent} from '@agm/core';
+import { CommonService } from 'src/app/core/services/common.service';
 @Component({
   selector: 'app-tank-master',
   templateUrl: './tank-master.component.html',
@@ -25,11 +26,8 @@ export class TankMasterComponent implements OnInit {
   deleteId!: number;
   delData: any;
   filterFrm!: FormGroup;
-
-  latitude: any;
-  longitude: any;
   pinCode: any;
-  geocoder: any;
+  editObj:any
 
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
@@ -45,12 +43,13 @@ export class TankMasterComponent implements OnInit {
       public validation:ValidationService,
       private mapsAPILoader: MapsAPILoader,
       private ngZone: NgZone,
+      private commonService:CommonService
     ) { }
 
   ngOnInit(): void {
     this.geFormData();
     this.getFilterFormData();
-    this.getYojana();
+    this.getYojana()
     this.getTableData();
     this.searchAddress();
   }
@@ -62,6 +61,8 @@ export class TankMasterComponent implements OnInit {
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": [this.getData.yojanaId, [Validators.required]],
       "networkId": [0, Validators.required],
+      "latitude":[''],
+      "longitude":[''],
     })
   }
 
@@ -69,7 +70,7 @@ export class TankMasterComponent implements OnInit {
     return this.tankForm.controls;
   }
 
-  clearFormData(flag?: any) {
+  clearFormDataDropDown(flag?: any) {
     if (flag == 'formYojana') {
       this.tankForm.controls['yojanaId'].setValue(0);
       this.tankForm.controls['networkId'].setValue(0);
@@ -125,7 +126,7 @@ export class TankMasterComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(formData), this.getNetwork()) : '';
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
         }
@@ -134,16 +135,17 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
-
+//  http://valvemgt.erpguru.in/api/MasterDropdown/GetAllNetworkbyUserId?UserId=1&YojanaId=1
   getNetwork(status?: any) {
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
    if(netId){
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + netId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getData.userId+'&YojanaId=' + netId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
+          this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId): '';
         } else {
           this.networkArray = [];
         }
@@ -161,6 +163,8 @@ export class TankMasterComponent implements OnInit {
     } else {
       let obj = {
         ...formData,
+         "latitude":(formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString() ,
+         "longitude":(formData.address == this.addressNameforAddress ? this.addLongitude || '' : '' ).toString(),
         "isDeleted": false,
         "createdBy": this.local.userId(),
         "modifiedBy": this.local.userId(),
@@ -183,13 +187,24 @@ export class TankMasterComponent implements OnInit {
 
   onEditData(res?: any) {
     this.editFlag = true;
+    this.editObj = res;
     this.tankForm.patchValue({
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      yojanaId: res.yojanaId,
-      networkId: res.networkId,
+      // yojanaId: res.yojanaId,
+      // networkId: res.networkId,
+      latitude:res.latitude,
+      longitude:res.longitude,
     })
+    this.getYojana();
+    this.commonService.checkDataType(res.latitude) == true ? this.searchAdd.setValue(res.address) : '';
+    this.addLatitude = res.latitude;
+    this.addLongitude = res.longitude;
+    this.newAddedAddressLat = res.latitude;
+    this.newAddedAddressLang = res.longitude;
+    this.addressNameforAddress = res.address;
+    this.copyAddressNameforAddress = res.address;
   }
 
   getPagenation(pageNo: number) {
@@ -198,10 +213,10 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    formDirective?.resetForm();
+    // formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
-    this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
+    // this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
   }
 
   getDeleteConfirm(getData?: any) {
@@ -232,7 +247,7 @@ export class TankMasterComponent implements OnInit {
   }
 
 
-  // geocoder: any;
+  geocoder: any;
   addLatitude: any = 19.0898177;
   addLongitude: any = 76.5240298;
   addPrevious: any;
@@ -264,8 +279,8 @@ export class TankMasterComponent implements OnInit {
       });
     });
   }
-
-  markerAddressDragEnd($event:any) {
+ 
+  markerAddressDragEnd($event:MouseEvent) {
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
    
@@ -287,7 +302,6 @@ export class TankMasterComponent implements OnInit {
   findAddress(results: any) {
     if (results) {
       this.addressNameforAddress = results.formatted_address;
-     
       this.addressZoomSize = 12;
       this.searchAdd.setValue(this.addressNameforAddress);
     }
@@ -298,6 +312,7 @@ export class TankMasterComponent implements OnInit {
       this.addPrevious.close();
     }
     this.addPrevious = infowindow;
+
   }
 
   newAddedAddressLat: any;
@@ -310,8 +325,7 @@ export class TankMasterComponent implements OnInit {
     this.copyAddressNameforAddress = this.addressNameforAddress;
     this.newAddedAddressLat = this.addLatitude; 
     this.newAddedAddressLang = this.addLongitude;
-    this.searchAddressModel.nativeElement.click();
-   
+    this.searchAddressModel.nativeElement.click();  
   }
 
   clearAddress() {
@@ -324,13 +338,16 @@ export class TankMasterComponent implements OnInit {
   }
 
   openAddressModel() {
+    if(this.editFlag){
     this.addressZoomSize = 6;
     this.searchAdd.setValue(this.copyAddressNameforAddress);
     this.addLatitude = this.newAddedAddressLat;
     this.addLongitude = this.newAddedAddressLang;
-    this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
-    this.addressNameforAddress = this.copyAddressNameforAddress;
+    this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
+    this.addressNameforAddress = this.copyAddressNameforAddress;  
+    } else{
+      this.clearAddress();
+    }    
   }
  
-
 }

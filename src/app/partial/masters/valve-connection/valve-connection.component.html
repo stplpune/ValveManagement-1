@@ -12,6 +12,33 @@
             </div>
         </div>
     </div>
+
+    <form [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-sm-3">
+            <ngx-select [allowClear]="true" [items]="yoganaArray" formControlName="yojana"
+            placeholder="Select Yojana" optionValueField="yojanaId"
+            optionTextField="yojanaName" (remove)="clearSearch('yojana')"
+            (select)="getNetworkDropdown('filter');bindValveConnectionsTable()">
+          </ngx-select>
+          </div>
+          <div class="col-sm-3">
+            <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
+                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
+                 optionTextField="networkName" (remove)="clearSearch('network')" (select)="bindValveConnectionsTable()">
+            </ngx-select>
+          </div>
+          <div class="col-sm-3">
+            <ngx-select [allowClear]="true" [items]="valveConnectionArray" formControlName="valveMaster"
+            placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
+            [disabled]="!this.searchForm.value.network" (select)="bindValveConnectionsTable()">
+       </ngx-select>
+    
+          </div>
+        </div>
+      </form>
+
+
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12">
@@ -90,7 +117,7 @@
 
 
 <!--Add/Update Modal Pop Up -->
-<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModal"
+<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModal" data-bs-keyboard="false" data-bs-backdrop="static"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -107,10 +134,36 @@
                         <div class="form-container">
 
                             <div class="mb-3">
-                                <label class="form-label">Valve</label>
+                                <label for="" class="form-label">Yojana</label>
+                                <ngx-select [items]="yoganaArray" formControlName="yojanaId"
+                                     placeholder="Select Yojana" optionValueField="yojanaId"
+                                     optionTextField="yojanaName" [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
+                                     (select)="getNetworkDropdown()">
+                                </ngx-select>
+                                <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
+                                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
+                                    Required.</div>
+                                </div>
+                              </div>
+
+                               <div class="mb-3">   
+                                <label for="" class="form-label">Network</label>
+                                <ngx-select [items]="networkArray" formControlName="networkId"
+                                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveConnectionForm.value.yojanaId"
+                                     optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
+                                     (select)="getValveConnectionDropdown()">
+                                </ngx-select>
+                                <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
+                                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
+                                    Required.</div>
+                                </div>
+                              </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Valve Name</label>
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
-                                    optionValueField="valveId" optionTextField="valveName"
+                                    optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveConnectionForm.value.networkId"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
@@ -121,9 +174,9 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Person Name</label>
-                                <input type="text" class="form-control" placeholder="Person Name"
-                                    formControlName="personName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                <input type="text" class="form-control" placeholder="Person Name" formControlName="personName"
+                                (keypress)="validation.noSpacesAtStart($event)"  
+                                [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
                                 <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName.errors?.required">
                                         Person Name Is Required</div>
@@ -132,20 +185,21 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Mobile Number</label>
-                                <input type="text" class="form-control" placeholder="Mobile Number"
-                                    formControlName="mobileNo"
-                                    [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }">
+                                <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo"
+                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"   
+                                [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
                                 <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
-                                    <div class="text-danger" *ngIf="f.mobileNo.errors?.required">
-                                        Mobile Number Is Required.</div>
-                                </div>
+                              <div *ngIf="f.mobileNo.errors?.required" class="text-danger" >Mobile Number Is Required</div>
+                              <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid Mobile Number</div>
+                             
+                            </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Number of Connection</label>
-                                <input type="text" class="form-control" placeholder="Number of Connection"
-                                    formControlName="totalConnection"
-                                    [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
+                                <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection"
+                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"    
+                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
                                 <div *ngIf="submitted && f.totalConnection.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.totalConnection.errors?.required">
                                         Total Connection Is Required.</div>
@@ -154,21 +208,20 @@
 
                             <div class="mb-3">
                                 <div class="card card-body border shadow-none">
-
-                                    <div formArrayName="connectiondetails"
+                                     <div formArrayName="connectiondetails"
                                         *ngFor="let connection of connectionForm?.controls;let i = index;">
                                         <div [formGroupName]="i">
 
                                             <div class="mb-3">
                                                 <label class="form-label">Pipe Diameter</label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                    formControlName="pipeDiameter">
+                                                formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Connection No.</label>
                                                 <input type="text" class="form-control" placeholder="Connection No."
-                                                    formControlName="connectionNo">
+                                                formControlName="connectionNo" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
                                             </div>
 
                                             <div class="text-end mb-2">
