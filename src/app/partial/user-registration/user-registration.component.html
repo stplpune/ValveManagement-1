@@ -18,7 +18,7 @@
       </ngx-select>
       </div>
       <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="network"
+        <ngx-select [allowClear]="true" [items]="networkFilterArray" formControlName="network"
              placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
              optionTextField="networkName" (remove)="clearSerach('network')" (select)="getUserRegistrationList()">
         </ngx-select>
@@ -147,7 +147,7 @@
               <label for="" class="form-label">Network</label>
               <ngx-select [items]="networkIdArray" formControlName="networkId"
                    placeholder="Select Network" optionValueField="networkId" [disabled]="!this.userDetails.value.yojanaId"
-                   optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }">
+                   optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }" [multiple]="true">
               </ngx-select>
               <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
