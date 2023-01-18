@@ -101,7 +101,7 @@
                 </select> -->
                 <ngx-select  [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
                 placeholder="Select Segment" optionValueField="segmentId"
-               optionTextField="segmentName" (selectionChanges)="changeDropdown()">
+               optionTextField="segmentName">
               </ngx-select>
               <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
               </div>
