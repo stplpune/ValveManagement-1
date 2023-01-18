@@ -139,10 +139,12 @@ export class ValveConnectionComponent implements OnInit {
   }
 //#region -------------------Start Dropdown Here-----------------------------------------
   getYoganaDropdown(){
+    let data = this.valveConnectionForm.value.yojanaId;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' +this.getLoginData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res:any)=>{
       if(res.statusCode=="200"){
         this.yoganaArray=res.responseData;
+        this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(data), this.getNetworkDropdown()) : '';
        
       }
       else{
