@@ -84,7 +84,7 @@
                     <div class="row g-2">
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
-                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = []"
+                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = [];getValveSegmentList()"
                                 (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
@@ -94,7 +94,7 @@
                         <div class="col-sm">
                                 <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
-                                optionTextField="networkName" (remove)="valveSegmentList = []"
+                                optionTextField="networkName" (remove)="valveSegmentList = [];getValveSegmentList()"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                            </ngx-select>
                            <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>

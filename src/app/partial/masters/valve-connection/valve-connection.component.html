@@ -19,7 +19,7 @@
             <ngx-select [allowClear]="true" [items]="yoganaArray" formControlName="yojana"
             placeholder="Select Yojana" optionValueField="yojanaId"
             optionTextField="yojanaName" (remove)="clearSearch('yojana')"
-            (select)="getNetworkDropdown();bindValveConnectionsTable()">
+            (select)="getNetworkDropdown('filter');bindValveConnectionsTable()">
           </ngx-select>
           </div>
           <div class="col-sm-3">
@@ -175,7 +175,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Person Name</label>
                                 <input type="text" class="form-control" placeholder="Person Name" formControlName="personName"
-                                    [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                (keypress)="validation.noSpacesAtStart($event)"  
+                                [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
                                 <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName.errors?.required">
                                         Person Name Is Required</div>
@@ -185,7 +186,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Mobile Number</label>
                                 <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo"
-                                    [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
+                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"   
+                                [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
                                 <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
                               <div *ngIf="f.mobileNo.errors?.required" class="text-danger" >Mobile Number Is Required</div>
                               <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid Mobile Number</div>
@@ -196,7 +198,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Number of Connection</label>
                                 <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection"
-                                    [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
+                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"    
+                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
                                 <div *ngIf="submitted && f.totalConnection.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.totalConnection.errors?.required">
                                         Total Connection Is Required.</div>
@@ -212,13 +215,13 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Pipe Diameter</label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                    formControlName="pipeDiameter">
+                                                formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Connection No.</label>
                                                 <input type="text" class="form-control" placeholder="Connection No."
-                                                    formControlName="connectionNo">
+                                                formControlName="connectionNo" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
                                             </div>
 
                                             <div class="text-end mb-2">

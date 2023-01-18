@@ -94,7 +94,7 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   getNetworkId(yojanaId?: number) {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
@@ -114,7 +114,7 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   getNetworkIdAdd(yojanaId?: number) { // For Filter
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
