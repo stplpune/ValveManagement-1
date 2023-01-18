@@ -14,7 +14,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class ValveConnectionComponent implements OnInit {
   valveConnectionForm!: FormGroup | any;
-  // filterForm!:FormGroup;
+  searchForm!:FormGroup;
    dataSource: any;
   pageNumber: number = 1;
   pagesize: number = 10;
@@ -42,7 +42,7 @@ export class ValveConnectionComponent implements OnInit {
   ngOnInit(): void {
     this.getLoginData = this.localStorage.getLoggedInLocalstorageData();
     this.defaultValveConnectionForm();
-    // this.filterFormData();
+    this.filterFormControl();
     this.getYoganaDropdown();
     this.bindValveConnectionsTable();
   }
@@ -52,7 +52,7 @@ export class ValveConnectionComponent implements OnInit {
       "id": [0],
       "valveMasterId": ['',[Validators.required]],
       "personName": ['',[Validators.required]],
-      "mobileNo": ['',[Validators.required]],
+      "mobileNo": ['',[Validators.required,Validators.pattern('[6-9]\\d{9}')]],
       "remark": [''],
       "createdBy": this.localStorage.userId(),
       "yojanaId":['',[Validators.required]],
@@ -68,9 +68,13 @@ export class ValveConnectionComponent implements OnInit {
     })
   }
 
-//   filterFormData(){
-//  this.filterForm = 
-//   }
+  filterFormControl(){
+    this.searchForm=this.fb.group({
+      yojana:[''],
+      network:[''],
+      valveMaster:['']
+    })
+  }
 
   get f() {
     return this.valveConnectionForm.controls;
@@ -105,6 +109,7 @@ export class ValveConnectionComponent implements OnInit {
 
   bindValveConnectionsTable() {
     this.spinner.show();
+    // (this.searchForm.value.yojana?this.searchForm.value.yojana:0)
     let obj = 'UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'ValveConnection?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -288,6 +293,23 @@ export class ValveConnectionComponent implements OnInit {
     formDirective?.resetForm();
     this.defaultValveConnectionForm();
     this.editFlag = false;
+  }
+
+  clearSearch(flag: any) {
+    if (flag == 'yojana') {
+      this.searchForm.controls['network'].setValue('');
+      this.searchForm.controls['valveMaster'].setValue('')
+    } 
+    else (flag == 'network')
+    {
+      this.searchForm.controls['valveMaster'].setValue('')
+    } 
+    // else if (flag == 'valveMaster') {
+    //   this.searchForm.controls['valveMaster'].setValue('');
+    // }
+    this.pageNumber = 1;
+    // this.getUserRegistrationList();
+    this.clearForm();
   }
 
 
