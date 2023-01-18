@@ -279,7 +279,7 @@ export class TankMasterComponent implements OnInit {
       });
     });
   }
-
+ 
   markerAddressDragEnd($event:MouseEvent) {
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
@@ -327,8 +327,7 @@ export class TankMasterComponent implements OnInit {
     this.copyAddressNameforAddress = this.addressNameforAddress;
     this.newAddedAddressLat = this.addLatitude; 
     this.newAddedAddressLang = this.addLongitude;
-    this.searchAddressModel.nativeElement.click();
-   
+    this.searchAddressModel.nativeElement.click();  
   }
 
   clearAddress() {
@@ -341,13 +340,16 @@ export class TankMasterComponent implements OnInit {
   }
 
   openAddressModel() {
+    if(this.editFlag){
     this.addressZoomSize = 6;
     this.searchAdd.setValue(this.copyAddressNameforAddress);
     this.addLatitude = this.newAddedAddressLat;
     this.addLongitude = this.newAddedAddressLang;
-    this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
-    this.addressNameforAddress = this.copyAddressNameforAddress;
+    this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
+    this.addressNameforAddress = this.copyAddressNameforAddress;  
+    } else{
+      this.clearAddress();
+    }    
   }
  
-
 }
