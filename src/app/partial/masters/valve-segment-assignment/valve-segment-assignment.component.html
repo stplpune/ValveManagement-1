@@ -1,8 +1,32 @@
+
+ <form [formGroup]="filterForm">
+  <div class="row">
+    <div class="col-3">
+      <!-- <label class="form-label">Yojna</label> -->
+      <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="filterYojanaId" placeholder="Select Yojna"
+        optionValueField="yojanaId" optionTextField="yojanaName" (selectionChanges)="getAllNetwork();">
+      </ngx-select>
+    </div>
+    
+    <div class="col-3">
+      <!-- <label class="form-label">Network</label> -->
+      <ngx-select [allowClear]="true" [items]="networkArr" formControlName="filterNetworkId" placeholder="Select Network"
+        optionValueField="networkId" optionTextField="networkName">
+      </ngx-select>
+    </div>
+
+    <div class="col-2">
+      <button type="submit" class="btn btn-main" (click)="getAllValveTableData()">Search</button>
+    </div>
+  </div>
+</form>
+
 <div class="card plain-card">
   <div class="card-header">
     <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">Valve Segment Assignment
-      </div>
+      </div>    
+
       <div class="col-sm-4 text-end">
         <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
             class="fas fa-sync-alt"></i></button>
@@ -74,21 +98,21 @@
       <form [formGroup]="valveRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
-            <!-- <div class="mb-3">
+            <div class="mb-3">
               <label class="form-label">Yojna</label>              
-                <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
-                placeholder="Select Yojna" optionValueField="valveId" 
-               optionTextField="valveName">
+                <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
+                placeholder="Select Yojna" optionValueField="yojanaId" (selectionChanges)="getAllNetwork();"
+               optionTextField="yojanaName">
               </ngx-select>
-            </div> -->
-<!-- 
+            </div>
+
             <div class="mb-3">
               <label class="form-label">Network</label>             
-                <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
-                placeholder="Select Network" optionValueField="valveId" 
-               optionTextField="valveName">
+                <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
+                placeholder="Select Network" optionValueField="networkId" (selectionChanges)="getAllvalve();getAllSegment()"
+               optionTextField="networkName">
               </ngx-select>
-            </div> -->
+            </div>
 
 
             <div class="mb-3">
