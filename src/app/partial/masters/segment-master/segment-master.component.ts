@@ -320,9 +320,9 @@ export class SegmentMasterComponent implements OnInit {
       //.........................................  get Edit Object code Start Here.................................//
       let stringtoArray = this.editObj?.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+     
       this.splitedEditObjData = finalLatLngArray;
       //.........................................  get Edit Object Segment code End Here.................................//
-      
     }
     this.onMapReady(this.map);
   }
@@ -347,7 +347,8 @@ export class SegmentMasterComponent implements OnInit {
       return ele = finalLatLngArray;
     })
 
-    this.getAllSegmentArray = getOtherAllSegment.flat();
+    // this.getAllSegmentArray = getOtherAllSegment.flat();
+    this.getAllSegmentArray = getOtherAllSegment;
 
     //.........................................  get Edit All Other Segment Array code Start End.................................//
   }
@@ -394,17 +395,23 @@ export class SegmentMasterComponent implements OnInit {
 
     // drawingManager.setDrawingMode(null);
     
-    this.editPatchShape = new google.maps.Polyline({
-      path: this.getAllSegmentArray,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2,
-    });
-    this.editPatchShape.setMap(this.map);
+    this.getAllSegmentArray.map((ele:any)=>{
 
-    let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
-    this.map.setCenter(latLng);
+      this.editPatchShape = new google.maps.Polyline({
+        path: ele,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+      });
+      this.editPatchShape.setMap(this.map);
+
+    })
+
+
+
+    // let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
+    // this.map.setCenter(latLng);
 
     if (this.onEditFlag == true) {
       drawingManager.setOptions({ drawingControl: false });
