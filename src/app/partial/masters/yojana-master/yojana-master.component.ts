@@ -15,20 +15,26 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class YojanaMasterComponent implements OnInit {
   yojanaForm!: FormGroup | any;
+  filterForm!:FormGroup | any;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows!: number;
   yojanaListArray = new Array();
   submitted = false;
   districtListArray = new Array();
+  districtFilterArray = new Array();
   talukaListArray = new Array();
+  talukaFilterArray =new Array();
   villageListArray = new Array();
+  villageFilterArray = new Array();
   editFlag: boolean = false;
   updatedObj: any;
   data: any;
   onSelFlag:boolean = true;
   highlitedRow:any;
   btnText = 'Submit';
+  talukaFlag!:string;
+  villageFlag!:string
 
 
   @ViewChild('yojanaModal',) yojanaModal: any;
@@ -45,6 +51,7 @@ export class YojanaMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.defaultForm();
+    this.getFilterFrm();
     this.getAllDistrict();
     this.getAllYojanaList();
   }
@@ -58,6 +65,14 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
+   getFilterFrm(){
+    this.filterForm = this.fb.group({
+      districtId: [''],
+      talukaId: [''],
+      villageId: ['']
+    });
+   }
+
   get f() {
     return this.yojanaForm.controls;
   }
@@ -68,6 +83,7 @@ export class YojanaMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.districtListArray = res.responseData;
+          this.districtFilterArray =res.responseData;
           if (this.editFlag && this.onSelFlag) {
             this.yojanaForm.controls['districtId'].setValue(this.updatedObj.districtId);
             this.getTaluka(this.updatedObj.districtId);
@@ -85,15 +101,16 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
-  getTaluka(districtId: number) {
+  getTaluka(flag?:any) {
+    let districtId = flag =='tal' ?  this.filterForm.value.districtId : this.yojanaForm.value.districtId;
     this.apiService.setHttp('get','api/MasterDropdown/GetAllTaluka?DistrictId=' + districtId, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
-          this.talukaListArray = res.responseData;
+           flag == 'tal' ? this.talukaFilterArray= res.responseData : this.talukaListArray = res.responseData;
           if (this.editFlag && this.onSelFlag) {
             this.yojanaForm.controls['talukaId'].setValue(this.updatedObj.talukaId);
-            this.getVillage(this.updatedObj.talukaId);
+            this.getVillage();
           }
         } else {
           this.talukaListArray = [];
@@ -108,12 +125,13 @@ export class YojanaMasterComponent implements OnInit {
     });
   }
 
-  getVillage(talukaId: number) {
+  getVillage(flag?:any) {
+   let talukaId = flag == 'vil'? this.filterForm.value.talukaId : this.yojanaForm.value.talukaId;
     this.apiService.setHttp('get','api/MasterDropdown/GetAllVillage?DistrictId=0&TalukaId=' + talukaId, false,false,false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
-          this.villageListArray = res.responseData;
+          flag =='vil' ? this.villageFilterArray = res.responseData : this.villageListArray = res.responseData;
           if (this.editFlag && this.onSelFlag) {
             this.yojanaForm.controls['villageId'].setValue(this.updatedObj.villageId);
           }
@@ -141,12 +159,31 @@ export class YojanaMasterComponent implements OnInit {
         this.yojanaForm.controls['villageId'].setValue('');
         break;
     }
+    this.getAllYojanaList();
   }
 
+  clearfilter(flag:any){
+    switch (flag) {
+      case 'district':
+        this.filterForm.controls['talukaId'].setValue('');
+        this.filterForm.controls['villageId'].setValue('');
+        break;
+      case 'taluka':
+        this.filterForm.controls['villageId'].setValue('');
+        break;
+    }
+    this.getAllYojanaList();
+  }
+
+  filterData(){
+    this.pageNumber=1;
+    this.getAllYojanaList();
+  }
 
   getAllYojanaList() {
     this.spinner.show();
-    let str ='DistrictId=0&TalukaId=0&VillageId=0&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    let formData = this.filterForm.value;
+    let str ='DistrictId='+ (formData.districtId || 0) +'&TalukaId='+ (formData.talukaId || 0) +'&VillageId='+ (formData.villageId || 0) +'&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + str, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -221,7 +258,7 @@ export class YojanaMasterComponent implements OnInit {
 
   updateYojana(yojana: any) {
     this.editFlag = true;
-    this.onSelFlag = true
+    this.onSelFlag = true;
     this.updatedObj = yojana
     this.highlitedRow = yojana.id;
     this.btnText = 'Update'
