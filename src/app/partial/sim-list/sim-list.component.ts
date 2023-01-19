@@ -148,6 +148,8 @@ export class SimListComponent implements OnInit
   clearForm(formDirective?:any)
   {
     formDirective?.resetForm();
+    // this.simOperatorList = [];
+    this.getAllNetworkArray = [];
     this.editFlag = false;
     this.headerText = 'Add Sim';
     this.buttonName = 'Submit';
