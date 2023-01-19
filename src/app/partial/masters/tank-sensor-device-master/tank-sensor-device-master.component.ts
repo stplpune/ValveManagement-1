@@ -36,6 +36,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   submitted = false;
   highlitedRow:any;
   buttonName:string = 'Submit';
+  dropdownFlag!:string;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -112,7 +113,6 @@ getAllYojana() {
     next: (res: any) => {
       if (res.statusCode == '200') {
         this.getAllYojanaArray = res.responseData;
-        // console.log(this.editData.yojanaId,'yojanaId');
         this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : '';
       }else{
         this.getAllYojanaArray = [];
@@ -311,9 +311,8 @@ deleteNetworkMaster(){
   }
 }
 
-clearDropdown(dropdownFlag?:any){
-  console.log(dropdownFlag,'flag');
-  if(dropdownFlag == 'yojana'){
+clearDropdown(flag?:any){
+  if(flag == 'yojana'){
     this.tankSensorDeviceFrm.controls['networkId'].setValue(''),
     this.tankSensorDeviceFrm.controls['tankId'].setValue(''),
     this.tankSensorDeviceFrm.controls['simId'].setValue('')
@@ -321,11 +320,12 @@ clearDropdown(dropdownFlag?:any){
     this.getAllTankArray = [];
     this.getAllSimArray = [];
   }
-  else if(dropdownFlag == 'network'){
+  else if(flag == 'network'){
     this.tankSensorDeviceFrm.controls['tankId'].setValue(''),
     this.tankSensorDeviceFrm.controls['simId'].setValue('')
     this.getAllTankArray = [];
     this.getAllSimArray = [];
   }
 }
+
 }
