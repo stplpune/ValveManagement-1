@@ -236,6 +236,7 @@ export class TankMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.toastrService.success(res.statusMessage);
+          // this.pageNumber = 1;
           this.getTableData();
         }
       }, error: (error: any) => {
