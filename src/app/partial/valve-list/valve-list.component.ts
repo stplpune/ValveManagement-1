@@ -81,7 +81,7 @@ export class ValveListComponent implements OnInit {
       valveName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
       pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9.]*$')],],
       // noOfConnections: ['', [Validators.required, Validators.pattern('^[0-9]*$')],],
-      simNumber: ['0', [Validators.pattern('[^0]+')]],
+      simNumber: ['', [Validators.required]],
       address: ['', [Validators.required],],
       valvelist: ['', [Validators.required],],
       tankist: ['', [Validators.required],],
@@ -331,7 +331,7 @@ export class ValveListComponent implements OnInit {
       longitude: obj.longitude,
     });
     this.getAllNetwork(obj.yojanaId);
-    this.ToBindSimNumberList(obj.yojanaId,obj.networkId)
+    this.ToBindSimNumberList(obj.yojanaId, obj.networkId)
     this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
     this.addLatitude = obj.latitude;
     this.addLongitude = obj.longitude;
@@ -370,28 +370,28 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  refreshValveStatus() {
-    this.spinner.show();
-    this.apiService.setHttp('get', 'ValveMaster/RefreshValveStatus?UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.getAllValveData();
-          // this.valveStatusArray = res.responseData;
-        } else {
-          this.spinner.hide();
-          // this.valveStatusArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status), this.spinner.hide();
-      },
-    });
-  }
+  // refreshValveStatus() {
+  //   this.spinner.show();
+  //   this.apiService.setHttp('get', 'ValveMaster/RefreshValveStatus?UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  //   this.apiService.getHttp().subscribe({
+  //     next: (res: any) => {
+  //       if (res.statusCode === '200') {
+  //         this.spinner.hide();
+  //         this.getAllValveData();
+  //         // this.valveStatusArray = res.responseData;
+  //       } else {
+  //         this.spinner.hide();
+  //         // this.valveStatusArray = [];
+  //         this.commonService.checkDataType(res.statusMessage) == false
+  //           ? this.errorSerivce.handelError(res.statusCode)
+  //           : this.toastrService.error(res.statusMessage);
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       this.errorSerivce.handelError(error.status), this.spinner.hide();
+  //     },
+  //   });
+  // }
 
   clearSerach(flag: any) {
     if (flag == 'yojana') {
@@ -406,10 +406,14 @@ export class ValveListComponent implements OnInit {
     this.clearForm();
   }
 
+  clearhighlightrow() {
+    this.HighlightRow = 0;
+  }
 
-  ToBindSimNumberList(yojana:any,network:any) {
+
+  ToBindSimNumberList(yojana: any, network: any) {
     this.spinner.show();
-    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId='+yojana+'&NetworkId='+network, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -430,14 +434,13 @@ export class ValveListComponent implements OnInit {
   }
 
   onRadioChange(ele: any) {
-    // console.log(ele);
     if (ele == 1) {
       this.valveListForm.controls['valvelist'].setValidators([Validators.required]);
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].setValue('');
-    }else{
+    } else {
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
@@ -452,10 +455,10 @@ export class ValveListComponent implements OnInit {
       this.valveListForm.controls['simNumber'].setValue('');
     } else if (flag == 'network') {
       this.valveListForm.controls['simNumber'].setValue('');
-    } 
+    }
   }
 
-  defaultPageNo(){
+  defaultPageNo() {
     this.pageNumber = 1;
     this.getAllValveData()
   }
@@ -556,16 +559,16 @@ export class ValveListComponent implements OnInit {
   }
 
   openAddressModel() {
-    if(this.iseditbtn){
-    this.addressZoomSize = 6;
-    this.searchAdd.setValue(this.copyAddressNameforAddress);
-    this.addLatitude = this.newAddedAddressLat;
-    this.addLongitude = this.newAddedAddressLang;
-    this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
-    this.addressNameforAddress = this.copyAddressNameforAddress;  
-    } else{
+    if (this.iseditbtn) {
+      this.addressZoomSize = 6;
+      this.searchAdd.setValue(this.copyAddressNameforAddress);
+      this.addLatitude = this.newAddedAddressLat;
+      this.addLongitude = this.newAddedAddressLang;
+      this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
+      this.addressNameforAddress = this.copyAddressNameforAddress;
+    } else {
       this.clearAddress();
-    }    
+    }
   }
 
   //.........................................Address code End Here ....................................//
