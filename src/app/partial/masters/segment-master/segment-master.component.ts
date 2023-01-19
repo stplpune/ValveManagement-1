@@ -297,6 +297,14 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+  lineSymbol = {
+    path: 'M 1.5 1 L 1 0 L 1 2 M 0.5 1 L 1 0',
+    fillColor: '#4d5ebf',
+    strokeColor: '#4d5ebf',
+    strokeWeight: 3,
+    strokeOpacity: 1
+};
+
   patchSegmentTable(obj:any){
     this.onEditFlag = true;
     this.textName = 'Update'; 
@@ -320,9 +328,9 @@ export class SegmentMasterComponent implements OnInit {
       //.........................................  get Edit Object code Start Here.................................//
       let stringtoArray = this.editObj?.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
+     
       this.splitedEditObjData = finalLatLngArray;
       //.........................................  get Edit Object Segment code End Here.................................//
-      
     }
     this.onMapReady(this.map);
   }
@@ -347,12 +355,11 @@ export class SegmentMasterComponent implements OnInit {
       return ele = finalLatLngArray;
     })
 
-    this.getAllSegmentArray = getOtherAllSegment.flat();
+    // this.getAllSegmentArray = getOtherAllSegment.flat();
+    this.getAllSegmentArray = getOtherAllSegment;
 
     //.........................................  get Edit All Other Segment Array code Start End.................................//
   }
-
-
 
 
   onMapReady(map: any) {
@@ -393,18 +400,25 @@ export class SegmentMasterComponent implements OnInit {
     //............................   Edit Code Start Here ..................  //
 
     // drawingManager.setDrawingMode(null);
-    
-    this.editPatchShape = new google.maps.Polyline({
-      path: this.getAllSegmentArray,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2,
-    });
-    this.editPatchShape.setMap(this.map);
+  
+    this.getAllSegmentArray.map((ele:any)=>{
 
-    let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
-    this.map.setCenter(latLng);
+      this.editPatchShape = new google.maps.Polyline({
+        path: ele,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 4,
+        icons: [{ icon: this.lineSymbol,offset: '25px',repeat: '100px'}]
+      });
+      this.editPatchShape.setMap(this.map);
+
+    })
+
+
+
+    // let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
+    // this.map.setCenter(latLng);
 
     if (this.onEditFlag == true) {
       drawingManager.setOptions({ drawingControl: false });
@@ -414,7 +428,7 @@ export class SegmentMasterComponent implements OnInit {
         geodesic: true,
         strokeColor: '#8000FF',
         strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeWeight: 3,
       });
       this.setSelection(patchShapeEditedObj);
     }else if(this.onEditFlag == false){

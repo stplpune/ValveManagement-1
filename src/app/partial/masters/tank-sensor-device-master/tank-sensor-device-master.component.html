@@ -17,17 +17,17 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
-          (select)="getAllSensorDeviceTableData()">
+          (select)="getAllSensorDeviceTableData();getAllNetwork(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="network"
+        <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
           placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-          (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData()">
+          (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tank" placeholder="Select Tank"
+        <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
           optionValueField="tankId" optionTextField="tankName" (remove)="clearSerach('tank')"
           (select)="getAllSensorDeviceTableData()">
         </ngx-select>
@@ -126,7 +126,7 @@
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Yojana</label>
-                  <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId"
+                  <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" (select)="getAllNetwork(true)"
                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                     [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                   </ngx-select>
@@ -139,7 +139,7 @@
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Network</label>
-                  <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId"
+                  <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" (select)="getAllTank(true)"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>

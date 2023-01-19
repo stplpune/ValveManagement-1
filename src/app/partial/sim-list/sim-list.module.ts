@@ -5,6 +5,7 @@ import { SimListRoutingModule } from './sim-list-routing.module';
 import { SimListComponent } from './sim-list.component';
 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSelectModule } from 'ngx-select-ex';
 @NgModule({
   declarations: [
     SimListComponent
@@ -13,7 +14,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CommonModule,
     SimListRoutingModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgxSelectModule
   ]
 })
 export class SimListModule { }

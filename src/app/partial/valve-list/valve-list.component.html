@@ -6,7 +6,7 @@
         <!-- <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
             class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
+          data-bs-target="#AddValveModal" (click)="onRadioChange(1)" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
       </div>
     </div>
   </div>
@@ -16,14 +16,14 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana"
         placeholder="Select Yojana" optionValueField="yojanaId"
-        optionTextField="yojanaName"  (select)="getAllNetwork(searchForm.controls['yojana'].value);getAllValveData()"
+        optionTextField="yojanaName"  (select)="getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()"
         (remove)="clearSerach('yojana')">
       </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
              placeholder="Select Network" optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0"
-             optionTextField="networkName"   (remove)="clearSerach('network')" (select)="getAllValveData()">
+             optionTextField="networkName"   (remove)="clearSerach('network')" (select)="defaultPageNo()">
         </ngx-select>
       </div>
       <div class="col-sm-3">
@@ -174,7 +174,7 @@
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
                   [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapSelectModalForAddress"
-                (click)="openAddressModel()">
+                (click)="openAddressModel()" >
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
                 <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
@@ -201,7 +201,7 @@
           
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
               <label class="form-label">Valve List</label>
-              <ngx-select [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
+              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
                 optionValueField="valveId" optionTextField="valveName"
                 [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
               </ngx-select>
@@ -212,7 +212,7 @@
 
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
               <label class="form-label">Tank List</label>
-              <ngx-select [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
+              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" 
                 [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
               </ngx-select>
@@ -223,15 +223,12 @@
 
             <div class="mb-3">
               <label for="" class="form-label">Yojana </label>
-              <ngx-select [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
+              <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
-                (select)="getAllNetwork(valveListForm.controls['yojana'].value)"
+                (select)="clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
+                (remove)="clearFilter('yojana')"
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
               </ngx-select>
-              <!-- <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.yojana.errors?.pattern">Yojana is required.</div>
-              </div> -->
-
               <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.yojana.errors?.required">Yojana is
                   Required.</div>
@@ -240,9 +237,10 @@
 
             <div class="mb-3">
               <label for="" class="form-label">Network </label>
-              <ngx-select [items]="networkArray" formControlName="network" placeholder="Select Network"
-              optionValueField="networkId" optionTextField="networkName" [disabled]="valveListForm.controls['yojana'].value==0"
-              [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
+              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network" placeholder="Select Network"
+              (select)="clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
+              optionValueField="networkId" optionTextField="networkName" [disabled]="!this.valveListForm.value.yojana"
+              (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
             </ngx-select>
               <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.network.errors?.required">Network is required.</div>
@@ -251,9 +249,8 @@
 
             <div class="col-sm-12">
               <label class="form-label">Sim Number</label>
-
-              <ngx-select [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
-                optionValueField="id" optionTextField="simNo"
+              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
+                optionValueField="id" optionTextField="simNo" [disabled]="!this.valveListForm.value.network"
                 [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
@@ -322,23 +319,6 @@
   </div>
 </div>
 
-<!-- <div class="modal fade" #mapModal id="MapModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <p class="modal-title mb-0" id="exampleModalLabel">Location</p>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-0">
-        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="markerDragEnd($event)">
-          <agm-marker [latitude]="lat" [longitude]="lng" [markerDraggable]="true"
-            (dragEnd)="markerDragEnd($event)"></agm-marker>
-        </agm-map>
-      </div>
-    </div>
-  </div>
-</div> -->
 <!-- Delete modal pop up -->
 <div class="modal fade" id="deleteModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">

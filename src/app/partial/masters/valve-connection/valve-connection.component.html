@@ -23,15 +23,15 @@
           </ngx-select>
           </div>
           <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
+            <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
                  placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
                  optionTextField="networkName" (remove)="clearSearch('network')" (select)="getValveConnectionDropdown('filter');bindValveConnectionsTable()">
             </ngx-select>
           </div>
           <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="valveConnectionArray" formControlName="valveMaster"
+            <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
             placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
-            [disabled]="!this.searchForm.value.network" (select)="bindValveConnectionsTable()">
+            [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster')" (select)="bindValveConnectionsTable()">
        </ngx-select>
     
           </div>

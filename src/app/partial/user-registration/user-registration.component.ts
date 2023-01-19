@@ -36,7 +36,9 @@ export class UserRegistrationComponent implements OnInit {
   userTypeArray=new Array();
   yoganaIdArray=new Array();
   networkIdArray=new Array();
+  networkFilterArray=new Array();
   getLoginData:any;
+  networkFlag!:string;
   subject: Subject<any> = new Subject();
 
   constructor(
@@ -117,10 +119,10 @@ export class UserRegistrationComponent implements OnInit {
   }
 
   getNetworkID(yojanaId?:number){
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId='+yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getLoginData.userId+'&YojanaId='+yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res:any)=>{
       if(res.statusCode=="200"){
-        this.networkIdArray=res.responseData;
+        this.networkFlag=='filter'?(this.networkFilterArray=res.responseData):this.networkIdArray=res.responseData;
       }
       else{
         this.toastrService.error(res.statusMessage);
@@ -144,13 +146,22 @@ export class UserRegistrationComponent implements OnInit {
     if (this.userDetails.invalid) {
       return;
     } else {
+    let ids:any=[];
+      let networdIds=this.userDetails.value.networkId;
+        networdIds.forEach((ele:any) => {
+          ids.push({
+            "networkId" : ele,
+            "networkName": ""
+        })
+      });
+
       let obj=this.userDetails.value;
       obj.userTypeId=parseInt(obj.userTypeId);
       obj.yojanaId=parseInt(obj.yojanaId);
       obj.networkId=parseInt(obj.networkId);
-      obj.createdBy=this.localStorage.userId();
       obj.modifiedBy=this.getLoginData.userId;
       obj.createdBy=this.getLoginData.userId;
+      obj.userNetworkListModels=ids;
       this.spinner.show();
       let urlType:any;
       obj.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
@@ -212,14 +223,7 @@ export class UserRegistrationComponent implements OnInit {
   deleteUser() {
     let obj =
       'Id=' + this.deleteUserId + '&ModifiedBy=' + this.localStorage.userId();
-    this.apiService.setHttp(
-      'DELETE',
-      'UserRegistration/DeleteUser?' + obj,
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('DELETE','UserRegistration/DeleteUser?' + obj,false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -239,7 +243,13 @@ export class UserRegistrationComponent implements OnInit {
   }
 
   //Update User Data
+  
   updateUserData(userData: any) {
+    console.log(userData);
+    let ids:any=[];
+    userData.userNetworkListModels.forEach((ele:any)=>{
+      ids.push(ele.networkId)
+    })
     this.getNetworkID(userData.yojanaId)
     this.buttontextFlag='Update';
     this.userDetails.patchValue({
@@ -248,7 +258,7 @@ export class UserRegistrationComponent implements OnInit {
       mobileNo: userData.mobileNo,
       userTypeId: userData.userTypeId,
       yojanaId: userData.yojanaId,
-      networkId: userData.networkId,
+      networkId:ids,
       address: userData.address,
     });
   }
