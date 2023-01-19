@@ -98,14 +98,11 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        (this.networkIdArray.length == 1 && this.onEditFlag == true) ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId })) : '';
-        if (this.networkIdArray.length != 1 && this.onEditFlag == true) {
-          this.filterForm.patchValue({ networkId: this.editObj.networkId })
-        }
+        this.networkIdArray.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
       }
       else {
         this.networkIdArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
@@ -122,7 +119,7 @@ export class SegmentMasterComponent implements OnInit {
       }
       else {
         this.networkIdAddArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {

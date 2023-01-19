@@ -22,7 +22,7 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.filterForm.value.yojanaId" optionTextField="networkName"
+                        [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" optionTextField="networkName"
                         (remove)="clearFilter('network')" (select)="getAllSegmentMaster()">
                     </ngx-select>
                 </div>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-sm">
                                 <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
-                                placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
+                                placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length == 0"
                                 optionTextField="networkName" (remove)="clearMapData()"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                             </ngx-select>
