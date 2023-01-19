@@ -40,6 +40,7 @@ export class SimListComponent implements OnInit
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
+  highlitedRow:any;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -252,6 +253,7 @@ export class SimListComponent implements OnInit
           this.spinner.hide();
           this.simArray = res.responseData.responseData1;
           this.listCount = res.responseData.responseData2?.totalCount;
+          this.highlitedRow=0;
         } else
         {
           this.spinner.hide();
@@ -279,6 +281,7 @@ export class SimListComponent implements OnInit
   {
     console.log(simData,'editData');
     this.editData = simData;
+    this.highlitedRow = simData.id;
     this.editFlag = true;
     this.buttonName = 'Update';
     this.headerText = 'Update Sim';
@@ -297,6 +300,7 @@ export class SimListComponent implements OnInit
   deleteConformation(id: any)
   {
     this.deleteSimId = id;
+    this.highlitedRow = id;
   }
 
   //Delete Sim Data

@@ -178,6 +178,7 @@ export class SegmentMasterComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.valveSegmentList = [];
+          this.valveSegmentList = '';
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -297,6 +298,7 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+  markerArray:any;
   lineSymbol = {
     path: 'M 1.5 1 L 1 0 L 1 2 M 0.5 1 L 1 0',
     fillColor: '#4d5ebf',
@@ -335,7 +337,20 @@ export class SegmentMasterComponent implements OnInit {
     this.onMapReady(this.map);
   }
 
+  addPrevious:any;
+  clickedAddressMarker(infowindow: any) {
+    if (this.addPrevious) {
+      this.addPrevious.close();
+    }
+    this.addPrevious = infowindow;
+
+  }
+
   add_editCommonData(mainArray: any) {
+
+    this.markerArray  = mainArray.segmenDetailsModels.map((ele:any)=>{ //Marker show Data
+      return ele = {latitude:ele.startPoints.split(' ')[0],longitude:ele.startPoints.split(' ')[1],label:ele.segmentName,url:'../../../../assets/images/segment.png'};
+     })
 
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
       ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; return ele
@@ -348,6 +363,7 @@ export class SegmentMasterComponent implements OnInit {
     this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels);
 
     //.........................................  get Edit All Other Segment Array code Start Here.................................//
+
 
     let getOtherAllSegment = mainArray.segmenDetailsModels.map((ele: any) => {
       let stringtoArray = ele.midpoints.split(',');
@@ -428,7 +444,8 @@ export class SegmentMasterComponent implements OnInit {
         geodesic: true,
         strokeColor: '#8000FF',
         strokeOpacity: 1.0,
-        strokeWeight: 3,
+        strokeWeight: 4,
+        icons: [{ icon: this.lineSymbol,offset: '25px',repeat: '100px'}]
       });
       this.setSelection(patchShapeEditedObj);
     }else if(this.onEditFlag == false){
@@ -495,8 +512,20 @@ export class SegmentMasterComponent implements OnInit {
     this.newRecord.polyline?.setMap(null);
     this.editPatchShape?.setMap(null);
     this.tank_ValveArray = [];
+    this.markerArray = [];
     this.removeShape();
     this.clearForm();
+    this.searchElementRef.nativeElement.value = '';
+  }
+
+  clearMapData(){
+    this.newRecord.polyline?.setMap(null);
+    this.editPatchShape?.setMap(null);
+    this.tank_ValveArray = [];
+    this.markerArray = [];
+    this.removeShape();
+    this.valveSegmentList = [];
+    this.valveSegmentList = '';
   }
 
   FN_CN_poly2latLang(poly: any) {
