@@ -14,7 +14,8 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class ValveSegmentAssignmentComponent implements OnInit {
 
-  valveRegForm!:FormGroup;
+  valveRegForm:FormGroup | any;
+  submited: boolean = false;
   filterForm!:FormGroup;
   valveArray = new Array();
   valveDropdownArray = new Array();
@@ -36,9 +37,6 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     private toastrService: ToastrService,private spinner: NgxSpinnerService,
     private fb: FormBuilder) { }
 
-    get f(){
-      return this.valveRegForm.controls;
-    }
   ngOnInit(): void {
     this.formData();
     this.filterFormField();
@@ -50,13 +48,17 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   formData(){
     this.valveRegForm = this.fb.group({      
         "id": [this.editObj ? this.editObj.id :0,Validators.required],
-        "valveId":[0,Validators.required],
-        "segmentId": [0,Validators.required],
+        "valveId":['',Validators.required],
+        "segmentId": [''],
         // "segmentId": [this.editFlag ? this.editObj.segmentId :0],
-        "yojanaId": [0,Validators.required],
-        "networkId": [0,Validators.required],
+        "yojanaId": ['',Validators.required],
+        "networkId": ['',Validators.required],
         "valvesegmet":[]
     })
+  }
+
+  get f(){
+    return this.valveRegForm.controls;
   }
 
   filterFormField(){
@@ -200,11 +202,11 @@ getAllSegment(){
   }
 
   onSubmit(){
+    this.submited = true;
     if(this.valveRegForm.invalid){
       return;
     }else{
       let formValue = this.valveRegForm.value
- 
     formValue.valvesegmet = this.segmentShowArray;
     let obj={
       "id": formValue.id,
@@ -259,6 +261,7 @@ getAllSegment(){
     this.editObj ='';
     this.formData();
     this.segmentShowArray=[];
+    this.submited = false;
   }
   clearDropdown(){  
     this.f['segmentId'].setValue('');   
@@ -270,6 +273,26 @@ getAllSegment(){
   onClickPagintion(pageNo: number) {
     this.pageNumber = pageNo;
     this.getAllValveTableData();
-   
   }
+
+  clearFormData(flag:any){
+    if(flag == 'yojana'){
+      this.valveRegForm.controls['networkId'].setValue('');
+    }else if(flag == ''){
+      this.valveRegForm.controls['valvesegmet'].setValue('');
+    }else 
+    
+    
+    
+    if(flag == ''){
+      this.valveRegForm.controls['yojanaId'].setValue('');
+
+    }else if(flag == ''){
+      this.valveRegForm.controls['networkId'].setValue('');
+    } else{
+      this.valveRegForm.controls['valvesegmet'].setValue('');
+    }
+
+  }
+
 }

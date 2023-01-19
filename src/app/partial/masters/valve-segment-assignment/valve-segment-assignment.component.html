@@ -102,16 +102,18 @@
             <div class="row">
               <div class="col-6">
                 <label class="form-label">Yojna</label>              
-                  <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
-                  placeholder="Select Yojna" optionValueField="yojanaId" (selectionChanges)="getAllNetwork();"
-                 optionTextField="yojanaName">
+                  <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" (remove)="clearFormData('yojana')"
+                  placeholder="Select Yojna" optionValueField="yojanaId" (select)="getAllNetwork();"
+                 optionTextField="yojanaName"
+                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
+                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
               </div>
   
               <div class="col-6">
                 <label class="form-label">Network</label>             
-                  <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
-                  placeholder="Select Network" optionValueField="networkId" (selectionChanges)="getAllvalve();getAllSegment()"
+                  <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" (remove)="clearFormData('network')"
+                  placeholder="Select Network" optionValueField="networkId" (select)="getAllvalve();getAllSegment()"
                  optionTextField="networkName">
                 </ngx-select>
               </div>
