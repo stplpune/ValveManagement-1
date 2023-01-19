@@ -21,7 +21,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let simData of simArray | paginate: { itemsPerPage: pagesize, currentPage: pageNumber, totalItems:listCount };let i = index ">
+        <tr *ngFor="let simData of simArray | paginate: { itemsPerPage: pagesize, currentPage: pageNumber, totalItems:listCount };let i = index"
+        [class.active]="simData.id == highlitedRow">
           <td>{{(+(pageNumber-1+"0")+i+1)}}</td>
           <td>{{simData.operatorName}}</td>
           <td>{{simData.simNo}}</td>
@@ -59,7 +60,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddSIMModalLabel">{{headerText}}</p>
-        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective)" #addSimData data-bs-dismiss="modal"
+        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0" #addSimData data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -148,7 +149,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header bg-transparent border-bottom-0">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="highlitedRow=0"></button>
       </div>
       <div class="modal-body text-center pb-5">
         <h3 class="my-3">Are You Sure?</h3>

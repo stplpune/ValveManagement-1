@@ -1,6 +1,6 @@
 <div class="card plain-card">
     <div class="card-header">
-        <div class="row justify-content-between align-items-center">
+        <div class="row justify-content-between align-items-center mb-2">
             <div class="col-sm-4">Segment Master</div>
             <div class="col-sm-4 text-end">
                 <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
@@ -10,25 +10,27 @@
                 </button>
             </div>
         </div>
-    </div>
-
-    <div class="col-sm-4 float-end ms-4">
         <form [formGroup]="filterForm">
             <div class="row g-2">
-                <div class="col-sm">
-                    <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')" (select)="getAllSegmentMaster();getNetworkId(filterForm.value.yojanaId)"
-                    optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')"
+                        (select)="getAllSegmentMaster();getNetworkId(filterForm.value.yojanaId)"
+                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
+                        formControlName="yojanaId">
                     </ngx-select>
                 </div>
-                <div class="col-sm">
-                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
-                        placeholder="Select Network" optionValueField="networkId" [disabled]="!this.filterForm.value.yojanaId"
-                        optionTextField="networkName" (remove)="clearFilter('network')" (select)="getAllSegmentMaster()">
-                   </ngx-select>
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
+                        placeholder="Select Network" optionValueField="networkId"
+                        [disabled]="!this.filterForm.value.yojanaId" optionTextField="networkName"
+                        (remove)="clearFilter('network')" (select)="getAllSegmentMaster()">
+                    </ngx-select>
                 </div>
             </div>
         </form>
     </div>
+
+
 
     <div class="card-body">
         <table class="table align-middle dashboard-table">
@@ -47,11 +49,13 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#SegmentModal" (click)="patchSegmentTable(segMaster)">
+                                data-bs-toggle="modal" data-bs-target="#SegmentModal"
+                                (click)="patchSegmentTable(segMaster)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
-                                data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(segMaster.id)">
+                                data-bs-toggle="modal" data-bs-target="#deleteModel"
+                                (click)="deleteConformation(segMaster.id)">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -71,69 +75,69 @@
 </div>
 
 <!-- Segement Modal -->
-<div class="modal fade " id="SegmentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="SegmentModal" aria-hidden="true">
+<div class="modal fade " id="SegmentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="SegmentModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="SegmentModal">Map</h1>
-                <button type="button" class="btn-close btn-close-inverse" #addSegmentModel data-bs-dismiss="modal" (click)="mapModelClose()"
-                    aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" #addSegmentModel data-bs-dismiss="modal"
+                    (click)="mapModelClose()" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="segmentMasterForm">
-                    <div class="row g-2">
+                    <div class="row g-2 form-container">
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
-                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = [];getValveSegmentList()"
-                                (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
+                                (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
+                                (select)="getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
-                            <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
+                            <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required
+                            </div>
                         </div>
                         <div class="col-sm">
-                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="getValveSegmentList()"
+                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
-                                optionTextField="networkName" (remove)="valveSegmentList = [];getValveSegmentList()"
+                                optionTextField="networkName" (remove)="clearMapData()"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
-                           </ngx-select>
-                           <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
+                            </ngx-select>
+                            <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required
+                            </div>
                         </div>
 
                         <div class="col-sm">
-                        <input type="text" class="form-control" formControlName="segmentName" placeholder="Segment Name"
-                        [ngClass]="{ 'is-invalid': submited && f.segmentName.errors }">
-                        <div *ngIf="submited && f.segmentName.errors" class="invalid-feedback">
-                            <div *ngIf="f.segmentName.errors.required">Segment Name is required</div>
+                            <input type="text" class="form-control" formControlName="segmentName"
+                                placeholder="Segment Name"
+                                [ngClass]="{ 'is-invalid': submited && f.segmentName.errors }">
+                            <div *ngIf="submited && f.segmentName.errors" class="invalid-feedback">
+                                <div *ngIf="f.segmentName.errors.required">Segment Name is required</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
                 <div class="mapsearch my-2">
                     <div class="form-container">
-                    <input class="form-control" type="text" 
-                        (keydown.enter)="$event.preventDefault()" placeholder="Search Location" autocorrect="off"
-                        autocapitalize="off" spellcheck="off" type="text" #search>
+                        <input class="form-control" type="text" (keydown.enter)="$event.preventDefault()"
+                            placeholder="Search Location" autocorrect="off" autocapitalize="off" spellcheck="off"
+                            type="text" #search>
                     </div>
                 </div>
                 <div class="gmap_canvas position-relative">
-                    <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape" class="closebtn">
+                    <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape"
+                        class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
-
-
-                        <agm-polyline  [title]="'DOT-to-DOT site'"></agm-polyline>
-
-                        <agm-marker
-                        *ngFor="let m of tank_ValveArray; let i = index"
-                        [latitude]="m.latitude"
-                        [longitude]="m.longitude"
-                        [iconUrl]="m.iconUrl"
-                      >
-                      </agm-marker>
-
+                    <agm-map [fitBounds]="true" [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253"
+                        (mapReady)="onMapReady($event)">
+                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
+                            [iconUrl]="m.iconUrl">
+                        </agm-marker>
+                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude"
+                            [longitude]="m.longitude" [iconUrl]="m.url" [label]="m.label">
+                        </agm-marker>
                     </agm-map>
                 </div>
                 <hr>
@@ -142,7 +146,7 @@
                         <button class="btn btn-main" type="submit" (click)="onSubmit()">{{textName}}</button>
                     </div>
                 </div>
-            
+
             </div>
         </div>
     </div>
