@@ -199,7 +199,7 @@
                                 <label class="form-label">Number of Connection</label>
                                 <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection"
                                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"    
-                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }">
+                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }" [readOnly]="true">
                                 <div *ngIf="submitted && f.totalConnection.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.totalConnection.errors?.required">
                                         Total Connection Is Required.</div>
