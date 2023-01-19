@@ -1,32 +1,10 @@
-<form [formGroup]="filterForm">
-  <div class="row">
-    <div class="col-3">
-      <!-- <label class="form-label">Yojna</label> -->
-      <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="filterYojanaId" placeholder="Select Yojna"
-        optionValueField="yojanaId" optionTextField="yojanaName" (selectionChanges)="getAllNetwork();">
-      </ngx-select>
-    </div>
-    
-    <div class="col-3">
-      <!-- <label class="form-label">Network</label> -->
-      <ngx-select [allowClear]="true" [items]="networkArr" formControlName="filterNetworkId" placeholder="Select Network"
-        optionValueField="networkId" optionTextField="networkName">
-      </ngx-select>
-    </div>
-
-    <div class="col-2">
-      <button type="button" class="btn btn-main">Search</button>
-    </div>
-  </div>
-</form>
-
 <div class="card plain-card">
   <div class="card-header">
     <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">Tank Segment Assignment
       </div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
+        <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Segment
           Assignment
@@ -34,6 +12,35 @@
       </div>
     </div>
   </div>
+
+  <div class="col-sm-4 float-end ms-4">
+    <form [formGroup]="filterForm">
+      <div class="row g-2">
+        <div class="col-sm">
+          <!-- <label class="form-label">Yojna</label> -->
+          <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="filterYojanaId" placeholder="Select Yojna"
+            optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork(); getTableData();" (remove)="clearfilter('Yojana')">
+          </ngx-select>
+        </div>
+        
+        <div class="col-sm">
+          <!-- <label class="form-label">Network</label> -->
+          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="filterNetworkId" placeholder="Select Network"
+            optionValueField="networkId" optionTextField="networkName" (select)="getTableData();" (remove)="clearfilter('Network')" [disabled]="!this.filterForm.value.filterYojanaId">
+          </ngx-select>
+        </div>
+    
+        <!-- <div class="col-sm">
+          <button type="submit" class="btn btn-main" (click)="getTableData()">Search</button>
+          <button type="button" class="btn btn-main ms-2" (click)="clearFilter()">Clear</button>
+        </div> -->
+      </div>
+    </form>
+
+  </div>
+
+
+
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
@@ -97,55 +104,39 @@
         <div class="modal-body">
           <div class="form-container">
 
-            <div class="mb-3">
+            <div class="row">
+            <div class="col-6">
               <label class="form-label">Yojna</label>
-              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
-                    <option selected>Tank</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select> -->
-              <!-- <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank');">
-                (select)="doSelect($event)"
-              </ngx-select> -->
               <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-                optionValueField="yojanaId" optionTextField="yojanaName" (selectionChanges)="getAllNetwork();">
+                optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
+                (remove)="onChangeDropdown('Yojna');">
               </ngx-select>
+              <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
+              </div>
             </div>
 
-            <div class="mb-3">
+            <div class="col-6">
               <label class="form-label">Network</label>
-              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
-                    <option selected>Tank</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select> -->
-              <!-- <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank');">
-                (select)="doSelect($event)"
-              </ngx-select> -->
               <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
-                optionValueField="networkId" optionTextField="networkName" (selectionChanges)="getAllTank(); getAllSegment();" (click)="onLable('tank')">
+                optionValueField="networkId" optionTextField="networkName" (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
+                (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId">
               </ngx-select>
+              <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
+              </div>
             </div>
+          </div>
 
             <div class="mb-3">
               <label class="form-label">Tank</label>
-              <!-- <select class="form-select" class="form-control" aria-label="Default select example">
-                    <option selected>Tank</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select> -->
-              <!-- <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown('tank');">
-                (select)="doSelect($event)"
-              </ngx-select> -->
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (selectionChanges)="onChangeDropdown();" (click)="onLable('tank')">
+                optionValueField="tankId" optionTextField="tankName" (remove)="onChangeDropdown('Tank');" (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }"
+                [disabled]="!this.tankSegmentForm.value.networkId">
               </ngx-select>
+              <div *ngIf="submitted && f['tankId'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['tankId'].errors?.['required']">Tank is Required.</div>
+              </div>
             </div>
 
             <div class="mb-3">
@@ -153,15 +144,9 @@
               <label class="form-label">Segment</label>
               <!-- </div> -->
               <div class="d-flex  gap-2">
-                <!-- <select class="form-select" class="form-control"  aria-label="Default select example">
-                    <option selected>Segment</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </select> -->
                 <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  class="form-control" aria-label="Default select example">
+                  class="form-control" aria-label="Default select example" [disabled]="!this.tankSegmentForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()">Add</button>
               </div>
@@ -186,16 +171,6 @@
                       </button>
                     </td>
                   </tr>
-                  <!-- <tr>
-                      <td>2</td>
-                      <td>demo</td>
-                      <td>
-                        <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
-                      >
-                        <i class="fa-solid fa-trash-can"></i>
-                      </button>
-                      </td>
-                    </tr> -->
                 </tbody>
               </table>
             </div>

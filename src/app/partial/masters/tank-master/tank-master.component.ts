@@ -93,10 +93,12 @@ export class TankMasterComponent implements OnInit {
     if (flag == 'yojana') {
       this.filterFrm.controls['yojanaId'].setValue(0);
       this.filterFrm.controls['networkId'].setValue(0);
+      // this.pageNumber=1;
       this.getTableData();
     } else if (flag == 'network') {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
       this.filterFrm.controls['networkId'].setValue(0);
+      // this.pageNumber=1;
       this.getTableData();
     }
   }
