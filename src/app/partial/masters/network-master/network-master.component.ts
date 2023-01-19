@@ -25,8 +25,8 @@ export class NetworkMasterComponent implements OnInit {
   deleteSegmentId: any;
   submitted:boolean =false;
   buttonName:string = 'Submit';
-  highlitedRow:any;
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  highlitedRow:any; 
+  getAllLocalStorageData:any;
   @ViewChild('closebutton') closebutton:any;
   get f(){
     return this.networkRegForm.controls;
@@ -42,6 +42,7 @@ export class NetworkMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.controlForm();
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.getAllNetworkTableData();
     this.getAllYojana();
   }
@@ -68,7 +69,6 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   getAllNetworkTableData() {
-    // ValveManagement/Network/GetAllNetwork?YojanaId=1&pageno=1&pagesize=10
     this.spinner.show();
     this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -96,22 +96,12 @@ export class NetworkMasterComponent implements OnInit {
       return;
     }else{
       let formData = this.networkRegForm.value;
-    let obj = {
-      ...formData,
-      "createdBy": this.localStorage.userId(),
-      // "createdDate": new Date(),
-      // "modifiedby": this.localStorage.userId(),
-      // "modifiedDate": new Date(),
-      // "isDeleted": false,
-      "timestamp": new Date(),
-    }
+      formData.createdBy=this.localStorage.userId();
+      formData.timestamp=new Date();
     this.spinner.show();
-    let id:any;
-    let urlType
-    this.editFlag ? (urlType = 'PUT') : (urlType = 'POST');
-    let urlName 
-    this.editFlag ? (urlName = 'ValveManagement/Network/UpdateNetwork') : (urlName = 'ValveManagement/Network/AddNetwork');
-    this.apiService.setHttp(urlType,urlName,false,obj,false,'valvemgt');
+    let urlType= this.editFlag ? 'PUT':'POST';
+    let urlName= this.editFlag ? ('ValveManagement/Network/UpdateNetwork') : ('ValveManagement/Network/AddNetwork');
+    this.apiService.setHttp(urlType,urlName,false,formData,false,'valvemgt');
     this.apiService.getHttp().subscribe(
       (res: any) => {
         if (res.statusCode == '200') {
@@ -138,7 +128,6 @@ onEdit(data?:any){
   this.editFlag = true;
   this.highlitedRow = data.id;
   this.buttonName = 'Update';
-  console.log(data,'editData');
   this.networkRegForm.patchValue({
     id:data.id,
     networkName : data.networkName,
@@ -153,7 +142,6 @@ clearForm(formDirective?:any){
   this.submitted = false;
   this.editFlag = false;
   this.buttonName = 'Submit';
-  this.controlForm();
 }
 
 deleteConformation(id?:any){

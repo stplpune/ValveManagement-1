@@ -91,7 +91,7 @@
               <input type="text" class="form-control" placeholder="Tank Name" formControlName="tankName"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)">
               <div *ngIf="f['tankName'].touched && f['tankName'].errors" class="invalid-feedback">
-                <div class="validation-css" *ngIf="f['tankName'].errors['tankName']"> Tank Name is required </div>
+                <div class="validation-css" *ngIf="f['tankName'].errors['tankName']"> Tank Name Is required </div>
               </div>
             </div>
             <div class="mb-2">
