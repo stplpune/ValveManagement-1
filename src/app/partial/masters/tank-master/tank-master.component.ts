@@ -15,9 +15,9 @@ import { CommonService } from 'src/app/core/services/common.service';
 })
 export class TankMasterComponent implements OnInit {
   tankForm!: FormGroup;
+  getData:any;
   yojanaArray = new Array();
   networkArray = new Array();
-  getData = this.local.getLoggedInLocalstorageData();
   editFlag: boolean = false;
   responseArray = new Array();
   pageNumber: number = 1;
@@ -27,10 +27,11 @@ export class TankMasterComponent implements OnInit {
   delData: any;
   filterFrm!: FormGroup;
   pinCode: any;
-  editObj: any
+  editObj: any;
+  submitted:boolean =false;
   filterYojanaArray = new Array();
   filterNetworkArray = new Array();
-
+  
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
 
@@ -49,10 +50,11 @@ export class TankMasterComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.getData = this.local.getLoggedInLocalstorageData();
     this.geFormData();
     this.getFilterFormData();
-    this.getYojana()
     this.getTableData();
+    this.getYojana()
     this.searchAddress();
   }
 
@@ -117,7 +119,6 @@ export class TankMasterComponent implements OnInit {
   }
 
   getYojana() {
-    let formData = this.tankForm.value.yojanaId;
     this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
@@ -154,19 +155,18 @@ export class TankMasterComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted=true;
     let formData = this.tankForm.value;
     if (this.tankForm.invalid) {
       return;
     } else {
-      let obj = {
-        ...formData,
-        "latitude": (formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString(),
-        "longitude": (formData.address == this.addressNameforAddress ? this.addLongitude || '' : '').toString(),
-        "isDeleted": false,
-        "createdBy": this.local.userId(),
-        "modifiedBy": this.local.userId(),
-      }
-      this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, obj, false, 'valvemgt');
+      formData.latitude=(formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString();
+      formData.longitude= (formData.address == this.addressNameforAddress ? this.addLongitude || '' : '').toString();
+      formData.isDeleted=false;
+      formData.createdBy=this.local.userId();
+      formData.modifiedBy=this.local.userId();
+   
+      this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, formData, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
@@ -208,6 +208,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
+    this.submitted=true;
     this.editFlag = false;
     this.geFormData();
   }

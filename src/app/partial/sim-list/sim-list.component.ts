@@ -17,7 +17,7 @@ export class SimListComponent implements OnInit {
   editData!: any;
   buttonName: string = 'Submit';
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] = [];
-  simFormData: FormGroup |any;
+  simFormData: FormGroup | any;
   submitted: boolean = false;
   opeartorName: string = '';
   pageNumber: number = 1;
@@ -69,7 +69,7 @@ export class SimListComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
       ],
-      OperatorId: ['0', [Validators.pattern('[^0]+')]],
+      OperatorId: ['', [Validators.pattern('[^0]+')]],
     });
   }
 
@@ -212,8 +212,8 @@ export class SimListComponent implements OnInit {
   //Get Sim Details
   getAllSimData() {
     this.spinner.show();
-    let obj ='UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get','SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize,false,false,false,'valvemgt');
+    let obj = 'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    this.apiService.setHttp('get', 'SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
