@@ -132,8 +132,8 @@
                         <div class="form-container">
 
                             <div class="mb-3">
-                                <label for="" class="form-label">Yojana</label>
-                                <ngx-select [items]="yoganaArray" formControlName="yojanaId"
+                                <label for="" class="form-label"> Yojana<span class="text-danger">*</span></label>
+                                <ngx-select [items]="yoganaArray" formControlName="yojanaId" [allowClear]="true"
                                      placeholder="Select Yojana" optionValueField="yojanaId"
                                      optionTextField="yojanaName" [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
                                      (select)="getNetworkDropdown()">
@@ -145,8 +145,8 @@
                               </div>
 
                                <div class="mb-3">   
-                                <label for="" class="form-label">Network</label>
-                                <ngx-select [items]="networkArray" formControlName="networkId"
+                                <label for="" class="form-label">Network <span class="text-danger">*</span></label>
+                                <ngx-select [items]="networkArray" formControlName="networkId" [allowClear]="true"
                                      placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveConnectionForm.value.yojanaId"
                                      optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                      (select)="getValveConnectionDropdown()">
@@ -158,7 +158,7 @@
                               </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Valve Name</label>
+                                <label class="form-label">Valve Name <span class="text-danger">*</span></label>
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
                                     optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveConnectionForm.value.networkId"
@@ -171,9 +171,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Person Name</label>
+                                <label class="form-label">Person Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Person Name" formControlName="personName"
-                                (keypress)="validation.noSpacesAtStart($event)"  
+                                (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)" 
                                 [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
                                 <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName.errors?.required">
@@ -182,7 +182,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Mobile Number</label>
+                                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo"
                                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"   
                                 [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
@@ -194,7 +194,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Number of Connection</label>
+                                <label class="form-label">Number of Connection <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection"
                                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"    
                                 [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }" [readOnly]="true">
@@ -211,17 +211,26 @@
                                         <div [formGroupName]="i">
 
                                             <div class="mb-3">
-                                                <label class="form-label">Pipe Diameter</label>
+                                                <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
                                                 formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event)">
+                                                <!-- <div *ngIf="submitted && connectionForm.controls[i].get('pipeDiameter').errors" class="invalid-feedback">
+                                                    <div class="text-danger" *ngIf="connectionForm.controls[i].get('pipeDiameter').errors?.required">
+                                                        Pipe Diameter Is Required.</div>
+                                                </div> -->
                                             </div>
-
+                                           
                                             <div class="mb-3">
-                                                <label class="form-label">Connection No.</label>
+                                                <label class="form-label">Connection No. <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" placeholder="Connection No."
                                                 formControlName="connectionNo" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
+                                                <div *ngIf="submitted && f.connectionNo.errors" class="invalid-feedback">
+                                                    <div class="text-danger" *ngIf="f.connectionNo.errors?.required">
+                                                        Connection Number Is Required.</div>
+                                                </div>
                                             </div>
 
+                                           <ng-container *ngIf="valveConnectionForm.value.totalConnection > 1">
                                             <div class="text-end mb-2">
                                                 <span class="ms-2">
                                                     <button type="button" class="btn btn-outline-danger btn-sm"
@@ -230,6 +239,7 @@
                                                     </button>
                                                 </span>
                                             </div>
+                                           </ng-container>
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-outline-primary btn-sm"
@@ -242,7 +252,7 @@
                             <div class="mb-3">
                                 <label for="floatingTextarea" class="form-label">Comments</label>
                                 <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-                                    formControlName="remark">
+                                    formControlName="remark" (keypress)="validation.noSpacesAtStart($event)">
                         </textarea>
                             </div>
                         </div>
