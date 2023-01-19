@@ -13,7 +13,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 })
 export class TankSegmentAssignmentComponent implements OnInit {
   tankSegmentForm: FormGroup | any;
-  filterForm : FormGroup | any;
+  filterForm: FormGroup | any;
   responseArray = new Array();
   tankArr = new Array();
   segmentArr = new Array();
@@ -65,8 +65,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
   filterFormField() {
     this.filterForm = this.fb.group({
-      filterYojanaId: [0],
-      filterNetworkId: [0]
+      yojanaId: [0],
+      networkId: [0]
     })
   }
 
@@ -75,7 +75,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getTableData() {
-    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + this.filterForm.value.filterYojanaId + '&networkId=' + this.filterForm.value.filterNetworkId, false, false, false, 'valvemgt');
+    console.log("Filter form : ", this.filterForm.value);
+
+    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0) + '&networkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         // console.log("Table res : ", res);
@@ -109,8 +111,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
     })
   }
 
-  getAllNetwork() {
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.tankSegmentForm.value.yojanaId, false, false, false, 'valvemgt');
+  getAllNetwork(label?: string) {
+    let yojanaId = label == 'yojana' ? this.filterForm.value.yojanaId : this.tankSegmentForm.value.yojanaId;
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -210,7 +213,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
         "isDeleted": true,
         "createdBy": this.localStorage.userId(),
         "createdDate": new Date(),
-        "modifiedBy": 0,
+        "modifiedBy": this.localStorage.userId(),
         "modifiedDate": new Date(),
         "timestamp": new Date(),
         "yojanaId": [formValue.yojanaId, Validators.required],
@@ -251,21 +254,17 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.submitted = false;
   }
 
-  onChangeDropdown(label : string) {
-    if(label == 'Yojna'){
+  onChangeDropdown(label: string) {
+    if (label == 'Yojna') {
       this.f['networkId'].setValue('');
       this.f['tankId'].setValue('');
       this.f['segmentId'].setValue('');
-      // this.tankArr = [];
-      // this.segmentArr = [];
     }
-    else if(label == 'Network'){
+    else if (label == 'Network') {
       this.f['tankId'].setValue('');
       this.f['segmentId'].setValue('');
-      // this.tankArr = [];
-      // this.segmentArr = [];
     }
-    else if(label == 'Tank'){
+    else if (label == 'Tank') {
       this.f['segmentId'].setValue('');
     }
   }

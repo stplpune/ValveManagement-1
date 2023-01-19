@@ -18,22 +18,19 @@
       <div class="row g-2">
         <div class="col-sm">
           <!-- <label class="form-label">Yojna</label> -->
-          <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="filterYojanaId" placeholder="Select Yojna"
-            optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork(); getTableData();" (remove)="clearfilter('Yojana')">
+          <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+            optionValueField="yojanaId" optionTextField="yojanaName" (select)="getTableData(); getAllNetwork('yojana');"
+            (remove)="clearfilter('Yojana')">
           </ngx-select>
         </div>
-        
+
         <div class="col-sm">
           <!-- <label class="form-label">Network</label> -->
-          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="filterNetworkId" placeholder="Select Network"
-            optionValueField="networkId" optionTextField="networkName" (select)="getTableData();" (remove)="clearfilter('Network')" [disabled]="!this.filterForm.value.filterYojanaId">
+          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
+            optionValueField="networkId" optionTextField="networkName" (select)="getTableData();"
+            (remove)="clearfilter('Network')" [disabled]="!this.filterForm.value.yojanaId">
           </ngx-select>
         </div>
-    
-        <!-- <div class="col-sm">
-          <button type="submit" class="btn btn-main" (click)="getTableData()">Search</button>
-          <button type="button" class="btn btn-main ms-2" (click)="clearFilter()">Clear</button>
-        </div> -->
       </div>
     </form>
 
@@ -61,7 +58,7 @@
           <td>{{arr?.segmentName}}</td>
         </tr>
         </td>
-        
+
         <td>
           <div class="btn-group">
             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
@@ -84,7 +81,7 @@
     <div class="mt-2 text-end" *ngIf="responseArray?.length != 0">
       <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
       </pagination-controls>
-  </div>
+    </div>
   </div>
 </div>
 
@@ -97,41 +94,45 @@
         <p class="modal-title mb-0" id="AddValveModalLabel">
           Add Tank Segment Assignment
         </p>
-        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close" 
-        (click)="clearForm(formDirective)" #closebutton></button>
+        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
+          (click)="clearForm(formDirective)" #closebutton></button>
       </div>
       <form [formGroup]="tankSegmentForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
 
             <div class="row">
-            <div class="col-6">
-              <label class="form-label">Yojna</label>
-              <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-                optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
-                (remove)="onChangeDropdown('Yojna');">
-              </ngx-select>
-              <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
+              <div class="col-6">
+                <label class="form-label">Yojna</label>
+                <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
+                  placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
+                  (select)="getAllNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
+                  (remove)="onChangeDropdown('Yojna');">
+                </ngx-select>
+                <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
+                </div>
               </div>
-            </div>
 
-            <div class="col-6">
-              <label class="form-label">Network</label>
-              <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
-                optionValueField="networkId" optionTextField="networkName" (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
-                (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId">
-              </ngx-select>
-              <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
+              <div class="col-6">
+                <label class="form-label">Network</label>
+                <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
+                  placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
+                  (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')"
+                  [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
+                  (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId">
+                </ngx-select>
+                <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
+                </div>
               </div>
             </div>
-          </div>
 
             <div class="mb-3">
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" (remove)="onChangeDropdown('Tank');" (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }"
+                optionValueField="tankId" optionTextField="tankName" (remove)="onChangeDropdown('Tank');"
+                (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }"
                 [disabled]="!this.tankSegmentForm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f['tankId'].errors" class="invalid-feedback">
@@ -146,7 +147,8 @@
               <div class="d-flex  gap-2">
                 <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  class="form-control" aria-label="Default select example" [disabled]="!this.tankSegmentForm.value.networkId">
+                  class="form-control" aria-label="Default select example"
+                  [disabled]="!this.tankSegmentForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()">Add</button>
               </div>
@@ -178,7 +180,8 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
-              <button type="submit" class="btn btn-main" data-dismiss="modal">{{editFlag ? 'Update' : 'Submit'}}</button>
+              <button type="submit" class="btn btn-main" data-dismiss="modal">{{editFlag ? 'Update' :
+                'Submit'}}</button>
             </div>
           </div>
         </div>
