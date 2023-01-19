@@ -297,6 +297,14 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+  lineSymbol = {
+    path: 'M 1.5 1 L 1 0 L 1 2 M 0.5 1 L 1 0',
+    fillColor: '#4d5ebf',
+    strokeColor: '#4d5ebf',
+    strokeWeight: 3,
+    strokeOpacity: 1
+};
+
   patchSegmentTable(obj:any){
     this.onEditFlag = true;
     this.textName = 'Update'; 
@@ -354,8 +362,6 @@ export class SegmentMasterComponent implements OnInit {
   }
 
 
-
-
   onMapReady(map: any) {
     this.map = map;
     const options: any = {
@@ -394,15 +400,16 @@ export class SegmentMasterComponent implements OnInit {
     //............................   Edit Code Start Here ..................  //
 
     // drawingManager.setDrawingMode(null);
-    
+  
     this.getAllSegmentArray.map((ele:any)=>{
 
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
         geodesic: true,
         strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeOpacity: 0.8,
+        strokeWeight: 4,
+        icons: [{ icon: this.lineSymbol,offset: '25px',repeat: '100px'}]
       });
       this.editPatchShape.setMap(this.map);
 
@@ -421,7 +428,7 @@ export class SegmentMasterComponent implements OnInit {
         geodesic: true,
         strokeColor: '#8000FF',
         strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeWeight: 3,
       });
       this.setSelection(patchShapeEditedObj);
     }else if(this.onEditFlag == false){
