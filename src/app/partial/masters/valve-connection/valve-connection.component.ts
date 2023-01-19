@@ -98,20 +98,20 @@ export class ValveConnectionComponent implements OnInit {
     if (this.valveConnectionForm.value.connectiondetails.length > 0) {
       if (this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails.length - 1].pipeDiameter && this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails.length - 1].connectionNo) {
         this.connectionForm.push(arrayData);
-        this.arrLength = this.connectionForm.length;
-        console.log(this.arrLength);
-        
-      } else {
+   } else {
         this.toasterService.error('Please, Enter Pipe Diameter and Connection No. !');
       }
+
     }
     else {
       this.connectionForm.push(arrayData);
     }
+   this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
   }
 
   removeItem(i: number) {
     this.connectionForm.removeAt(i)
+    this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
   }
 
   bindValveConnectionsTable() {
@@ -246,7 +246,7 @@ export class ValveConnectionComponent implements OnInit {
       "yojanaId": this.editObj.yojanaId,
       "networkId": this.editObj.networkId,
       "consumerUserId": this.editObj.consumerUserId,
-      "totalConnection": this.editObj.totalConnection,
+      
     });
     this.editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
@@ -254,7 +254,9 @@ export class ValveConnectionComponent implements OnInit {
         connectionNo: [element.connectionNo]
       });
       this.connectionForm.push(arrayData);
+      
     })
+    this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
     this.getYoganaDropdown();
   }
 
