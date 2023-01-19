@@ -25,6 +25,7 @@ export class NetworkMasterComponent implements OnInit {
   deleteSegmentId: any;
   submitted:boolean =false;
   buttonName:string = 'Submit';
+  highlitedRow:any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   get f(){
@@ -76,6 +77,7 @@ export class NetworkMasterComponent implements OnInit {
         if (res.statusCode == "200") {
           this.allNetworkArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+          this.highlitedRow=0;
         } else {
           this.spinner.hide();
           this.allNetworkArray = [];
@@ -134,6 +136,7 @@ export class NetworkMasterComponent implements OnInit {
 
 onEdit(data?:any){
   this.editFlag = true;
+  this.highlitedRow = data.id;
   this.buttonName = 'Update';
   console.log(data,'editData');
   this.networkRegForm.patchValue({
@@ -155,6 +158,7 @@ clearForm(formDirective?:any){
 
 deleteConformation(id?:any){
   this.deleteSegmentId = id;
+  this.highlitedRow = id;
 }
 
 deleteNetworkMaster(){
