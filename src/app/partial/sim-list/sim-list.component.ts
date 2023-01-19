@@ -77,7 +77,8 @@ export class SimListComponent implements OnInit
       OperatorId: ['0', [Validators.pattern('[^0]+')]],
     });
   }
-
+ 
+  // Yojana Array
   getAllYojana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -91,6 +92,7 @@ export class SimListComponent implements OnInit
     })
   }
 
+  // Network Array
   getAllNetwork() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.getAllLocalStorageData.userId
     +'&YojanaId=' + (this.simFormData.value.yojanaId || 0) , false, false, false, 'valvemgt');
@@ -340,5 +342,6 @@ export class SimListComponent implements OnInit
 
   clearDropdown(){
     this.simFormData.controls['networkId'].setValue('');
+    this.getAllNetworkArray = [];
   }
 }
