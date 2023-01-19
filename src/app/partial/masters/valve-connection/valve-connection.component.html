@@ -1,42 +1,40 @@
 <div class="card plain-card">
     <div class="card-header">
-        <div class="row justify-content-between align-items-center">
-            <div class="row">
-                <div class="d-flex justify-content-between w-100">
-                    Valve Connection
-                    <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                        data-bs-target="#addconnectionModal">
-                        <i class="fa-solid fa-plus me-2"></i> Add Connection
-                    </button>
-                </div>
-            </div>
+        <div class="d-flex justify-content-between w-100 mb-3">
+            Valve Connection
+            <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
+                data-bs-target="#addconnectionModal">
+                <i class="fa-solid fa-plus me-2"></i> Add Connection
+            </button>
         </div>
+
+        <form [formGroup]="searchForm">
+            <div class="row">
+              <div class="col-sm-3">
+                <ngx-select [allowClear]="true" [items]="yoganaArray" formControlName="yojana"
+                placeholder="Select Yojana" optionValueField="yojanaId"
+                optionTextField="yojanaName" (remove)="clearSearch('yojana')"
+                (select)="getNetworkDropdown('filter');filterData()">
+              </ngx-select>
+              </div>
+              <div class="col-sm-3">
+                <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
+                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
+                     optionTextField="networkName" (remove)="clearSearch('network')" (select)="getValveConnectionDropdown('filter');filterData()">
+                </ngx-select>
+              </div>
+              <div class="col-sm-3">
+                <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
+                placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
+                [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster')" (select)="filterData()">
+           </ngx-select>
+        
+              </div>
+            </div>
+          </form>
     </div>
 
-    <form [formGroup]="searchForm">
-        <div class="row">
-          <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="yoganaArray" formControlName="yojana"
-            placeholder="Select Yojana" optionValueField="yojanaId"
-            optionTextField="yojanaName" (remove)="clearSearch('yojana')"
-            (select)="getNetworkDropdown('filter');filterData()">
-          </ngx-select>
-          </div>
-          <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
-                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
-                 optionTextField="networkName" (remove)="clearSearch('network')" (select)="getValveConnectionDropdown('filter');filterData()">
-            </ngx-select>
-          </div>
-          <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
-            placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
-            [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster')" (select)="filterData()">
-       </ngx-select>
     
-          </div>
-        </div>
-      </form>
 
 
     <div class="card-body">
