@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class YojanaMasterComponent implements OnInit {
     public apiService: ApiService,
     private errorSerivce: ErrorsService,
     private toastrService: ToastrService,
-    public commonService: CommonService
+    public commonService: CommonService,
+    public validation:ValidationService
   ) { }
 
   ngOnInit(): void {
