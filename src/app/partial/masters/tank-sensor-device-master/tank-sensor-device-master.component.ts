@@ -24,8 +24,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   searchForm!:FormGroup | any;
   getAllSimArray = new Array();
   getAllTankArray = new Array();
+  getAllFilterTankArray = new Array();
   getAllYojanaArray = new Array();
   getAllNetworkArray = new Array();
+  getAllFilterNetworkArray = new Array();
   allSensorDeviceArray = new Array();
   pageNumber: number = 1;
   pagesize: number = 10;
@@ -47,10 +49,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   ngOnInit(): void {
     this.controlForm();
     this.searchFormControl();
-    this.getAllSim();
+    // this.getAllSim();
     this.getAllYojana();
-    this.getAllTank();
-    this.getAllNetwork();
+    // this.getAllTank();
+    // this.getAllNetwork();
     this.getAllSensorDeviceTableData();
   }
 
@@ -101,6 +103,37 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   console.log(data,'editData');
 }
 
+getAllYojana() {
+  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode == '200') {
+        this.getAllYojanaArray = res.responseData;
+      }
+    },  error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  })
+}
+  
+getAllNetwork(flag?:any) {
+  let networkFlag = flag;
+  console.log(networkFlag);
+  
+  // http://valvemgt.erpguru.in/api/MasterDropdown/GetAllNetworkbyUserId?UserId=1&YojanaId=1
+  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.getAllLocalStorageData.userId
+  +'&YojanaId=' + (networkFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) , false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode == '200') {
+        networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
+      }
+    },  error: (error: any) => {
+      this.errorSerivce.handelError(error.status);
+    },
+  })
+}
+
   getAllSim() {
     this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId=' + this.getAllLocalStorageData.yojanaId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -114,12 +147,16 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     })
   }
 
-  getAllTank(){
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank', false, false, false, 'valvemgt');
+  getAllTank(flag?:any){
+    let tankFlag = flag;
+    console.log(tankFlag,'tankFlag');
+    
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) +'&NetworkId=' + 
+    (tankFlag?this.tankSensorDeviceFrm.value.networkId:this.searchForm.value.network), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
-          this.getAllTankArray = res.responseData;
+          tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -127,30 +164,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     })
   }
 
-  getAllYojana() {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode == '200') {
-          this.getAllYojanaArray = res.responseData;
-        }
-      },  error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    })
-}
-getAllNetwork() {
-  this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
-  this.apiService.getHttp().subscribe({
-    next: (res: any) => {
-      if (res.statusCode == '200') {
-        this.getAllNetworkArray = res.responseData;
-      }
-    },  error: (error: any) => {
-      this.errorSerivce.handelError(error.status);
-    },
-  })
-}
+
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();

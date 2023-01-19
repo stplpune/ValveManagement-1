@@ -313,9 +313,10 @@ export class ValveListComponent implements OnInit {
   }
 
   updateValveData(obj: any) {
+    debugger
     console.log(obj);
     this.editId = obj;
-    // this.iseditbtn = true;
+    this.iseditbtn = true;
     this.btnText = 'Update Changes';
     this.headingText = 'Update Valve';
     this.HighlightRow = obj.id;
@@ -338,6 +339,14 @@ export class ValveListComponent implements OnInit {
       longitude: obj.longitude,
     });
     this.getAllNetwork(obj.yojanaId);
+
+    this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
+    this.addLatitude = obj.latitude;
+    this.addLongitude = obj.longitude;
+    this.newAddedAddressLat = obj.latitude;
+    this.newAddedAddressLang = obj.longitude;
+    this.addressNameforAddress = obj.valveAddress;
+    this.copyAddressNameforAddress = obj.valveAddress;
   }
 
   deleteConformation(id: any) {
@@ -435,12 +444,14 @@ export class ValveListComponent implements OnInit {
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
+    }else{
+      this.valveListForm.controls['tankist'].setValidators([Validators.required]);
+      this.valveListForm.controls['tankist'].updateValueAndValidity();
+      this.valveListForm.controls['valvelist'].clearValidators();
+      this.valveListForm.controls['valvelist'].updateValueAndValidity();
+  
     }
-    this.valveListForm.controls['tankist'].setValidators([Validators.required]);
-    this.valveListForm.controls['tankist'].updateValueAndValidity();
-    this.valveListForm.controls['valvelist'].clearValidators();
-    this.valveListForm.controls['valvelist'].updateValueAndValidity();
-
+   
 
   }
 
@@ -539,13 +550,26 @@ export class ValveListComponent implements OnInit {
     this.addLongitude = 75.7139;
   }
 
+  // openAddressModel() {
+  //   this.addressZoomSize = 6;
+  //   this.searchAdd.setValue(this.copyAddressNameforAddress);
+  //   this.addLatitude = this.newAddedAddressLat;
+  //   this.addLongitude = this.newAddedAddressLang;
+  //   this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
+  //   this.addressNameforAddress = this.copyAddressNameforAddress;
+  // }
+
   openAddressModel() {
+    if(this.iseditbtn){
     this.addressZoomSize = 6;
     this.searchAdd.setValue(this.copyAddressNameforAddress);
     this.addLatitude = this.newAddedAddressLat;
     this.addLongitude = this.newAddedAddressLang;
-    this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
-    this.addressNameforAddress = this.copyAddressNameforAddress;
+    this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
+    this.addressNameforAddress = this.copyAddressNameforAddress;  
+    } else{
+      this.clearAddress();
+    }    
   }
 
   //.........................................Address code End Here ....................................//

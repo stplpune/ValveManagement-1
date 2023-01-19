@@ -6,7 +6,7 @@
         <!-- <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
             class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
+          data-bs-target="#AddValveModal" (click)="onRadioChange(1)" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
                   [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapSelectModalForAddress"
-                (click)="openAddressModel()">
+                (click)="openAddressModel()" >
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
                 <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
@@ -201,7 +201,7 @@
           
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
               <label class="form-label">Valve List</label>
-              <ngx-select [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
+              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
                 optionValueField="valveId" optionTextField="valveName"
                 [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
               </ngx-select>
@@ -212,7 +212,7 @@
 
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
               <label class="form-label">Tank List</label>
-              <ngx-select [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
+              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" 
                 [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
               </ngx-select>
@@ -223,7 +223,7 @@
 
             <div class="mb-3">
               <label for="" class="form-label">Yojana </label>
-              <ngx-select [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
+              <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="getAllNetwork(valveListForm.controls['yojana'].value)"
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
@@ -240,7 +240,7 @@
 
             <div class="mb-3">
               <label for="" class="form-label">Network </label>
-              <ngx-select [items]="networkArray" formControlName="network" placeholder="Select Network"
+              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network" placeholder="Select Network"
               optionValueField="networkId" optionTextField="networkName" [disabled]="valveListForm.controls['yojana'].value==0"
               [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
             </ngx-select>
@@ -252,7 +252,7 @@
             <div class="col-sm-12">
               <label class="form-label">Sim Number</label>
 
-              <ngx-select [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
+              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
                 optionValueField="id" optionTextField="simNo"
                 [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
               </ngx-select>
