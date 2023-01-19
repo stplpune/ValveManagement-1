@@ -104,7 +104,7 @@ export class TankMasterComponent implements OnInit {
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (formData.yojanaId) + '&NetworkId=' + (formData.networkId), false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
