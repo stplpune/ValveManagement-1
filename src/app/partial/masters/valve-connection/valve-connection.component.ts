@@ -82,6 +82,11 @@ export class ValveConnectionComponent implements OnInit {
     })
   }
 
+  filterData(){
+    this.pageNumber=1;
+    this.bindValveConnectionsTable();
+  }
+
   get f() {
     return this.valveConnectionForm.controls;
   }
