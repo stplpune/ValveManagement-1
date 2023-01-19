@@ -45,9 +45,9 @@ export class TankCalibrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.localstorageData = this.localStorage.getLoggedInLocalstorageData();
-    this.getAllYojana(this.localstorageData.yojanaId);
     this.defaultForm();
     this.getFilterForm();
+    this.getAllYojana(this.localstorageData.yojanaId);
     this.getAllTankCalibration();
 
   }
@@ -171,13 +171,13 @@ export class TankCalibrationComponent implements OnInit {
 
   clearfilter(flag: any) {
     if (flag == 'yojana') {
-      this.filterFrm.controls['networkId'].setValue('');    
-    } 
-    // else if (flag == 'network') {
-    //   this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
-    //   this.filterFrm.controls['networkId'].setValue('');      
-    // }
-    
+      this.filterFrm.controls['yojanaId'].setValue(''); 
+      this.filterFrm.controls['networkId'].setValue('');        
+    } else if (flag == 'network') {
+      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId); 
+      this.filterFrm.controls['networkId'].setValue('');        
+    }  
+    this.filterData();
   }
 
   onSubmit() {
