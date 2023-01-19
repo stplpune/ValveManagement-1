@@ -14,6 +14,9 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class SimListComponent implements OnInit
 {
   //Initialize variable
+  editFlag!:boolean;
+  editData!:any;
+  buttonName:string = 'Submit';
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] =
     [];
   simFormData: FormGroup | any;
@@ -22,6 +25,8 @@ export class SimListComponent implements OnInit
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
+  getAllYojanaArray = new Array();
+  getAllNetworkArray = new Array();
   simArray: {
     id: number;
     simNo: string;
@@ -32,6 +37,7 @@ export class SimListComponent implements OnInit
   }[] = [];
   listCount!: number;
   headerText: string = 'Add Sim';
+  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
 
@@ -49,7 +55,58 @@ export class SimListComponent implements OnInit
   {
     this.getSimOperator();
     this.defaultForm();
+    this.getAllYojana();
     this.getAllSimData();
+  }
+
+  //Form Initialize
+  defaultForm()
+  {
+    this.simFormData = this.fb.group({
+      Id: [0],
+      yojanaId:['',Validators.required],
+      networkId:['',Validators.required],
+      SimNo: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')],
+      ],
+      IMSINo: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
+      ],
+      OperatorId: ['0', [Validators.pattern('[^0]+')]],
+    });
+  }
+ 
+  // Yojana Array
+  getAllYojana() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == '200') {
+          this.getAllYojanaArray = res.responseData;
+        }
+      },  error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    })
+  }
+
+  // Network Array
+  getAllNetwork() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.getAllLocalStorageData.userId
+    +'&YojanaId=' + (this.simFormData.value.yojanaId || 0) , false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == '200') {
+          this.getAllNetworkArray = res.responseData;
+          this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
+        }else{
+        this.getAllNetworkArray = [];}
+      },  error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    })
   }
 
   //Get Sim Operator
@@ -87,27 +144,15 @@ export class SimListComponent implements OnInit
     });
   }
 
-  //Form Initialize
-  defaultForm()
-  {
-    this.simFormData = this.fb.group({
-      Id: [0],
-      SimNo: [
-        '',
-        [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')],
-      ],
-      IMSINo: [
-        '',
-        [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
-      ],
-      OperatorId: ['0', [Validators.pattern('[^0]+')]],
-    });
-  }
-
   //Clear Form Data
-  clearForm()
+  clearForm(formDirective?:any)
   {
+    formDirective?.resetForm();
+    // this.simOperatorList = [];
+    this.getAllNetworkArray = [];
+    this.editFlag = false;
     this.headerText = 'Add Sim';
+    this.buttonName = 'Submit';
     this.submitted = false;
     this.defaultForm();
   }
@@ -127,6 +172,8 @@ export class SimListComponent implements OnInit
         id: formData.Id,
         simNo: formData.SimNo,
         imsiNo: formData.IMSINo,
+        yojanaId: formData.yojanaId,
+        networkId: formData.networkId,
         operatorId: formData.OperatorId,
         operatorName: this.opeartorName,
         createdBy: this.localStorage.userId(),
@@ -149,6 +196,8 @@ export class SimListComponent implements OnInit
           {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
+            this.editFlag = false;
+            this.buttonName = 'Update';
             this.addSimData.nativeElement.click();
             this.getAllSimData();
           } else
@@ -228,13 +277,20 @@ export class SimListComponent implements OnInit
   //Update Sim Data
   updateSimData(simData: any)
   {
+    console.log(simData,'editData');
+    this.editData = simData;
+    this.editFlag = true;
+    this.buttonName = 'Update';
     this.headerText = 'Update Sim';
     this.simFormData.patchValue({
       Id: simData.id,
+      yojanaId: simData.yojanaId,
+      // networkId: simData.networkId,
       SimNo: simData.simNo,
       IMSINo: simData.imsiNo,
       OperatorId: simData.operatorId,
     });
+    this.getAllNetwork();
   }
 
   //Bind We need to deleted Id
@@ -284,5 +340,10 @@ export class SimListComponent implements OnInit
   refreshData()
   {
     this.getAllSimData();
+  }
+
+  clearDropdown(){
+    this.simFormData.controls['networkId'].setValue('');
+    this.getAllNetworkArray = [];
   }
 }
