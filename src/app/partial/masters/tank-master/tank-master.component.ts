@@ -6,7 +6,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ValidationService } from 'src/app/core/services/validation.service';
-import { MapsAPILoader,MouseEvent} from '@agm/core';
+import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { CommonService } from 'src/app/core/services/common.service';
 @Component({
   selector: 'app-tank-master',
@@ -27,7 +27,7 @@ export class TankMasterComponent implements OnInit {
   delData: any;
   filterFrm!: FormGroup;
   pinCode: any;
-  editObj:any
+  editObj: any
   filterYojanaArray = new Array();
   filterNetworkArray = new Array();
 
@@ -42,10 +42,10 @@ export class TankMasterComponent implements OnInit {
       private toastrService: ToastrService,
       private error: ErrorsService,
       private spinner: NgxSpinnerService,
-      public validation:ValidationService,
+      public validation: ValidationService,
       private mapsAPILoader: MapsAPILoader,
       private ngZone: NgZone,
-      private commonService:CommonService
+      private commonService: CommonService
     ) { }
 
   ngOnInit(): void {
@@ -63,8 +63,8 @@ export class TankMasterComponent implements OnInit {
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": ['', [Validators.required]],
       "networkId": ['', Validators.required],
-      "latitude":[''],
-      "longitude":[''],
+      "latitude": [''],
+      "longitude": [''],
     })
   }
 
@@ -104,7 +104,7 @@ export class TankMasterComponent implements OnInit {
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' +(formData.yojanaId) + '&NetworkId=' +(formData.networkId), false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (formData.yojanaId) + '&NetworkId=' + (formData.networkId), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -141,21 +141,21 @@ export class TankMasterComponent implements OnInit {
   getNetwork(status?: any) {
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-   if(netId){
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getData.userId+'&YojanaId=' +netId, false, false, false, 'valvemgt');
-    this.service.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == '200') {
-          status == 'net' ?  this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
-          this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId): '';
-        } else {
-          this.networkArray = [];
+    if (netId) {
+      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + netId, false, false, false, 'valvemgt');
+      this.service.getHttp().subscribe({
+        next: ((res: any) => {
+          if (res.statusCode == '200') {
+            status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
+            this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
+          } else {
+            this.networkArray = [];
+          }
+        }), error: (error: any) => {
+          this.error.handelError(error.status);
         }
-      }), error: (error: any) => {
-        this.error.handelError(error.status);
-      }
-    })
-   }
+      })
+    }
   }
 
   onSubmit() {
@@ -165,8 +165,8 @@ export class TankMasterComponent implements OnInit {
     } else {
       let obj = {
         ...formData,
-         "latitude":(formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString() ,
-         "longitude":(formData.address == this.addressNameforAddress ? this.addLongitude || '' : '' ).toString(),
+        "latitude": (formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString(),
+        "longitude": (formData.address == this.addressNameforAddress ? this.addLongitude || '' : '').toString(),
         "isDeleted": false,
         "createdBy": this.local.userId(),
         "modifiedBy": this.local.userId(),
@@ -194,8 +194,8 @@ export class TankMasterComponent implements OnInit {
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      latitude:res.latitude,
-      longitude:res.longitude,
+      latitude: res.latitude,
+      longitude: res.longitude,
     })
     this.getYojana();
     this.commonService.checkDataType(res.latitude) == true ? this.searchAdd.setValue(res.address) : '';
@@ -270,18 +270,18 @@ export class TankMasterComponent implements OnInit {
           }
           this.addLatitude = place.geometry.location.lat();
           this.addLongitude = place.geometry.location.lng();
-        
+
           this.findAddressByCoordinates();
           this.addressMarkerShow = true;
         });
       });
     });
   }
- 
-  markerAddressDragEnd($event:MouseEvent) {
+
+  markerAddressDragEnd($event: MouseEvent) {
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
-   
+
     this.findAddressByCoordinates();
     this.addressMarkerShow = true;
   }
@@ -315,15 +315,15 @@ export class TankMasterComponent implements OnInit {
 
   newAddedAddressLat: any;
   newAddedAddressLang: any;
-  
+
 
   addAddress() {
     this.tankForm.controls['address'].setValue(this.addressNameforAddress);
     this.searchAdd.setValue(this.addressNameforAddress);
     this.copyAddressNameforAddress = this.addressNameforAddress;
-    this.newAddedAddressLat = this.addLatitude; 
+    this.newAddedAddressLat = this.addLatitude;
     this.newAddedAddressLang = this.addLongitude;
-    this.searchAddressModel.nativeElement.click();  
+    this.searchAddressModel.nativeElement.click();
   }
 
   clearAddress() {
@@ -336,16 +336,16 @@ export class TankMasterComponent implements OnInit {
   }
 
   openAddressModel() {
-    if(this.editFlag){
-    this.addressZoomSize = 6;
-    this.searchAdd.setValue(this.copyAddressNameforAddress);
-    this.addLatitude = this.newAddedAddressLat;
-    this.addLongitude = this.newAddedAddressLang;
-    this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
-    this.addressNameforAddress = this.copyAddressNameforAddress;  
-    } else{
+    if (this.editFlag) {
+      this.addressZoomSize = 6;
+      this.searchAdd.setValue(this.copyAddressNameforAddress);
+      this.addLatitude = this.newAddedAddressLat;
+      this.addLongitude = this.newAddedAddressLang;
+      this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
+      this.addressNameforAddress = this.copyAddressNameforAddress;
+    } else {
       this.clearAddress();
-    }    
+    }
   }
- 
+
 }
