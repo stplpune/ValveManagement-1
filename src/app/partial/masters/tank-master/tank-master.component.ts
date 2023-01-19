@@ -139,7 +139,6 @@ export class TankMasterComponent implements OnInit {
     })
   }
   getNetwork(status?: any) {
-    // let formData=this.filterFrm.value;
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
    if(netId){
@@ -195,8 +194,6 @@ export class TankMasterComponent implements OnInit {
       id: res.id,
       tankName: res.tankName,
       address: res.address,
-      // yojanaId: res.yojanaId,
-      // networkId: res.networkId,
       latitude:res.latitude,
       longitude:res.longitude,
     })
@@ -216,10 +213,8 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    // formDirective?.resetForm();
     this.editFlag = false;
     this.geFormData();
-    // this.tankForm.controls['yojanaId'].setValue(0);this.tankForm.controls['networkId'].setValue(0)
   }
 
   getDeleteConfirm(getData?: any) {
