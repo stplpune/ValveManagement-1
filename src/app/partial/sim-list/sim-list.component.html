@@ -96,7 +96,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Operator <span class="text-danger">*</span></label>
+              <label class="form-label">Operator</label>
               <!-- <select class="form-control" formControlName="OperatorId"
                 [ngClass]="{ 'is-invalid': submitted && f.OperatorId.errors }" (change)="getOperatorName($event)">
                 <option value="0">Select Operator</option>
@@ -104,31 +104,31 @@
               </select> -->
               <ngx-select [allowClear]="true" [items]="simOperatorList" formControlName="OperatorId" (change)="getOperatorName($event)"
               placeholder="Select Operator" optionValueField="id" optionTextField="operatorName"
-              [ngClass]="{ 'is-invalid': submitted && f['OperatorId'].errors }">
+              [ngClass]="{ 'is-invalid': submitted && f.OperatorId.errors }">
             </ngx-select>
               <div *ngIf="submitted && f.OperatorId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.OperatorId.errors?.pattern">Operator Is Required</div>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">SIM No.<span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="SimNo" placeholder="SIM No."
+              <label class="form-label">SIM No.</label>
+              <input type="text" class="form-control" maxlength="20" formControlName="SimNo" placeholder="SIM No."
                 [ngClass]="{ 'is-invalid': submitted && f.SimNo.errors }" />
               <div *ngIf="submitted && f.SimNo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.SimNo.errors?.required">Sim No Is Required.</div>
-                <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
-                  Valid Sim No.<br>Sim No Should be 20 digit</div>
-              </div>
+                <!-- <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
+                  Valid Sim No.<br>Sim No Should be 20 digit</div> -->
+              </div> 
             </div>
             <div class="mb-3">
               <label class="form-label">IMSI No.</label>
-              <input type="text" class="form-control" formControlName="IMSINo" placeholder="IMSI No."
+              <input type="text" class="form-control" formControlName="IMSINo" maxlength="15" placeholder="IMSI No."
                 [ngClass]="{ 'is-invalid': submitted && f.IMSINo.errors }" />
               <div *ngIf="submitted && f.IMSINo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.IMSINo.errors?.required">IMSI No Is Required.</div>
-                <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
-                  Valid IMSI No.<br>IMSI No Should be 15 digit</div>
-              </div>
+                <!-- <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
+                  Valid IMSI No.<br>IMSI No Should be 15 digit</div> -->
+              </div> 
             </div>
           </div>
           <div class="modal-footer px-0 pb-0">
