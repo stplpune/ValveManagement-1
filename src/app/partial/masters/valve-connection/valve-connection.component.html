@@ -124,7 +124,7 @@
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="addconnectionModal">Add Connection</h1>
                 <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
-                    #closebutton (click)="clearForm(formDirective)"></button>
+                    #closebutton (click)="clearForm(formDirective);highlitedRow=0;"></button>
             </div>
             <form [formGroup]="valveConnectionForm" (ngSubmit)="onClickSubmit()" #formDirective="ngForm">
 
