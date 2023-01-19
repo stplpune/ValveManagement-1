@@ -98,20 +98,20 @@ export class ValveConnectionComponent implements OnInit {
     if (this.valveConnectionForm.value.connectiondetails.length > 0) {
       if (this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails.length - 1].pipeDiameter && this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails.length - 1].connectionNo) {
         this.connectionForm.push(arrayData);
-        this.arrLength = this.connectionForm.length;
-        console.log(this.arrLength);
-        
-      } else {
+   } else {
         this.toasterService.error('Please, Enter Pipe Diameter and Connection No. !');
       }
+
     }
     else {
       this.connectionForm.push(arrayData);
     }
+   this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
   }
 
   removeItem(i: number) {
     this.connectionForm.removeAt(i)
+    this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
   }
 
   bindValveConnectionsTable() {
@@ -172,7 +172,7 @@ export class ValveConnectionComponent implements OnInit {
             this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
           }
           else {
-            // flag == 'filter' ? this.networkArrayFilter = [] :  this.networkArray = [] ;
+             flag == 'filter' ? this.networkArrayFilter = [] :  this.networkArray = [] ;
              this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toasterService.error(res.statusMessage);
           }
         },
@@ -192,7 +192,7 @@ export class ValveConnectionComponent implements OnInit {
       flag == 'filter' ? this.valveConnectionArrayFilter = res.responseData : this.valveConnectionArray = res.responseData;
         }
       else {
-      // flag == 'filter' ? this.valveConnectionArrayFilter = [] : this.valveConnectionArray = [];
+      flag == 'filter' ? this.valveConnectionArrayFilter = [] : this.valveConnectionArray = [];
          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toasterService.error(res.statusMessage);
       }
     },
@@ -246,7 +246,7 @@ export class ValveConnectionComponent implements OnInit {
       "yojanaId": this.editObj.yojanaId,
       "networkId": this.editObj.networkId,
       "consumerUserId": this.editObj.consumerUserId,
-      "totalConnection": this.editObj.totalConnection,
+      
     });
     this.editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
@@ -254,7 +254,9 @@ export class ValveConnectionComponent implements OnInit {
         connectionNo: [element.connectionNo]
       });
       this.connectionForm.push(arrayData);
+      
     })
+    this.valveConnectionForm.controls['totalConnection'].setValue(this.connectionForm.length);//set formArray length
     this.getYoganaDropdown();
   }
 
@@ -311,13 +313,13 @@ export class ValveConnectionComponent implements OnInit {
       this.searchForm.controls['network'].setValue('');
       this.searchForm.controls['valveMaster'].setValue('')
     }
-    else (flag == 'network')
+    else if(flag == 'network')
     {
       this.searchForm.controls['valveMaster'].setValue('')
     }
-    // else if (flag == 'valveMaster') {
-    //   this.searchForm.controls['valveMaster'].setValue('');
-    // }
+     else if(flag == 'valveMaster') {
+       this.searchForm.controls['valveMaster'].setValue('');
+     }
     this.pageNumber = 1;
     this.bindValveConnectionsTable();
     this.clearForm();

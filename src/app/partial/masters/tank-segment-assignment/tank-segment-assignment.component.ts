@@ -12,8 +12,8 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
   styleUrls: ['./tank-segment-assignment.component.css']
 })
 export class TankSegmentAssignmentComponent implements OnInit {
-  tankSegmentForm !: FormGroup;
-  filterForm !: FormGroup;
+  tankSegmentForm: FormGroup | any;
+  filterForm : FormGroup | any;
   responseArray = new Array();
   tankArr = new Array();
   segmentArr = new Array();
@@ -26,6 +26,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   totalRows: any;
   editFlag: boolean = false;
   tankLabel !: string;
+  submitted: boolean = false;
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
 
@@ -48,29 +49,24 @@ export class TankSegmentAssignmentComponent implements OnInit {
   formField() {
     this.tankSegmentForm = this.fb.group({
       "id": 0,
-      "tankId": [this.editObj ? this.editObj.tankId : 0],
-      "segmentId": [this.editObj ? this.editObj.segmentId : 0],
-      "isDeleted": true,
-      "createdBy": 0,
-      "createdDate": new Date(),
-      "modifiedBy": 0,
-      "modifiedDate": new Date(),
-      "timestamp": new Date(),
-      tanksegment: this.fb.array([
-        this.fb.group({
-          "segmentId": [''],
-          "segmentName": ['']
-        })
-      ]),
-      "yojanaId": [this.editObj ? this.editObj.yojanaId : 0],
-      "networkId": [this.editObj ? this.editObj.networkId : 0]
+      "tankId": ['', Validators.required],
+      "segmentId": [''],
+      // "isDeleted": true,
+      // "createdBy": 0,
+      // "createdDate": new Date(),
+      // "modifiedBy": 0,
+      // "modifiedDate": new Date(),
+      // "timestamp": new Date(),
+      tanksegment: [],
+      "yojanaId": ['', Validators.required],
+      "networkId": ['', Validators.required]
     })
   }
 
-  filterFormField(){
+  filterFormField() {
     this.filterForm = this.fb.group({
-      filterYojanaId : [''],
-      filterNetworkId : ['']
+      filterYojanaId: [0],
+      filterNetworkId: [0]
     })
   }
 
@@ -79,11 +75,10 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getTableData() {
-    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + this.getAllLocalStorageData.yojanaId + '&networkId=' + this.getAllLocalStorageData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + this.filterForm.value.filterYojanaId + '&networkId=' + this.filterForm.value.filterNetworkId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
-        console.log("Table res : ", res);
-
+        // console.log("Table res : ", res);
         if (res.statusCode == '200') {
           this.responseArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
@@ -103,7 +98,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
-          // this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
+          this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
         }
@@ -120,7 +115,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.networkArr = res.responseData;
-          // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
+          this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
         } else {
           this.networkArr = [];
         }
@@ -137,6 +132,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.tankArr = res.responseData;
+          this.editObj ? (this.f['tankId'].setValue(this.editObj.tankId)) : '';
         } else {
           this.tankArr = [];
         }
@@ -187,7 +183,6 @@ export class TankSegmentAssignmentComponent implements OnInit {
         return
       }
     }
-
     this.tankSegmentTable.push(array);
     this.f['segmentId'].setValue(0);
   }
@@ -197,38 +192,53 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
     this.tankSegmentForm.value.tanksegment = this.tankSegmentTable;
     this.tankSegmentForm.value.segmentId = 0;
     console.log("Submit : ", this.tankSegmentForm.value);
 
     let formValue = this.tankSegmentForm.value;
 
-    // if(!this.tankSegmentForm.valid){
-    //   return
-    // }
-    // else{
-
-    this.spinner.show();
-    this.service.setHttp('put', 'ValveTankSegment/Updatetanksegmentassignment', false, formValue, false, 'valvemgt');
-    this.service.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == '200') {
-          this.closebutton.nativeElement.click();
-          this.toastrService.success(res.statusMessage);
-          this.spinner.hide();
-          this.getTableData();
-        }
-        else {
-          this.toastrService.error(res.statusMessage);
-          this.spinner.hide();
-        }
-      }),
-      error: (error: any) => {
-        this.error.handelError(error.status);
-        this.spinner.hide();
+    if (!this.tankSegmentForm.valid) {
+      return
+    }
+    else {
+      let obj = {
+        "id": formValue.id,
+        "tankId": [formValue.tankId, Validators.required],
+        "segmentId": [formValue.segmentId, Validators.required],
+        "isDeleted": true,
+        "createdBy": this.localStorage.userId(),
+        "createdDate": new Date(),
+        "modifiedBy": 0,
+        "modifiedDate": new Date(),
+        "timestamp": new Date(),
+        "yojanaId": [formValue.yojanaId, Validators.required],
+        "networkId": [formValue.networkId, Validators.required],
+        tanksegment: this.tankSegmentTable
       }
-    })
-    // }
+
+      this.spinner.show();
+      this.service.setHttp('put', 'ValveTankSegment/Updatetanksegmentassignment', false, formValue, false, 'valvemgt');
+      this.service.getHttp().subscribe({
+        next: ((res: any) => {
+          if (res.statusCode == '200') {
+            this.closebutton.nativeElement.click();
+            this.toastrService.success(res.statusMessage);
+            this.spinner.hide();
+            this.getTableData();
+          }
+          else {
+            this.toastrService.error(res.statusMessage);
+            this.spinner.hide();
+          }
+        }),
+        error: (error: any) => {
+          this.error.handelError(error.status);
+          this.spinner.hide();
+        }
+      })
+    }
   }
 
   clearForm(formDirective?: any) {
@@ -238,15 +248,29 @@ export class TankSegmentAssignmentComponent implements OnInit {
     // this.tankSegmentForm.reset();
     this.formField();
     this.tankSegmentTable = [];
+    this.submitted = false;
   }
 
-  onChangeDropdown() {
-    this.f['segmentId'].setValue('');
+  onChangeDropdown(label : string) {
+    if(label == 'Yojna'){
+      this.f['networkId'].setValue('');
+      this.f['tankId'].setValue('');
+      this.f['segmentId'].setValue('');
+      // this.tankArr = [];
+      // this.segmentArr = [];
+    }
+    else if(label == 'Network'){
+      this.f['tankId'].setValue('');
+      this.f['segmentId'].setValue('');
+      // this.tankArr = [];
+      // this.segmentArr = [];
+    }
+    else if(label == 'Tank'){
+      this.f['segmentId'].setValue('');
+    }
   }
 
   onLable(label: string) {
-    console.log("label : ", label);
-
     this.tankLabel = label;
   }
 
@@ -254,7 +278,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.editFlag = true;
     console.log("onEdit : ", obj);
     this.editObj = obj;
-    this.formField();
+    // this.formField();
+    this.getAllYojana();
 
     this.tankSegmentTable = this.editObj.tanksegmet;
   }
@@ -262,6 +287,18 @@ export class TankSegmentAssignmentComponent implements OnInit {
   onClickPagintion(pageNo: number) {
     this.pageNumber = pageNo;
     this.getTableData();
+  }
+
+  clearfilter(label: any) {
+    if (label == 'Yojana') {
+      this.filterForm.controls['yojanaId'].setValue(0);
+      this.filterForm.controls['networkId'].setValue(0);
+      this.getTableData();
+    } else if (label == 'Network') {
+      this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
+      this.filterForm.controls['networkId'].setValue(0);
+      this.getTableData();
+    }
   }
 
 }
