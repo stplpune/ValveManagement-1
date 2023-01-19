@@ -29,7 +29,7 @@
             </ngx-select>
           </div>
           <div class="col-sm-3">
-            <ngx-select [allowClear]="true" [items]="valveConnectionArray" formControlName="valveMaster"
+            <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
             placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
             [disabled]="!this.searchForm.value.network" (select)="bindValveConnectionsTable()">
        </ngx-select>
