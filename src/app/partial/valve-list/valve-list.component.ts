@@ -502,8 +502,6 @@ export class ValveListComponent implements OnInit {
     console.log($event);
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
-    // console.log( this.addLatitude);
-    // console.log( this.addLongitude);
     this.findAddressByCoordinates();
     this.addressMarkerShow = true;
   }
