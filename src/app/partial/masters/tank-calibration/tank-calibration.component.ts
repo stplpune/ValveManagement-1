@@ -64,8 +64,8 @@ export class TankCalibrationComponent implements OnInit {
 
   getFilterForm() {
     this.filterFrm = this.fb.group({
-      yojanaId: [''],
-      networkId: ['']
+      yojanaId: [0],
+      networkId: [0]
     })
   }
 
@@ -135,7 +135,7 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId || 0) + '&NetworkId=' + (filterValue.networkId || 0);
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0);
     this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -171,13 +171,14 @@ export class TankCalibrationComponent implements OnInit {
 
   clearfilter(flag: any) {
     if (flag == 'yojana') {
-      this.filterFrm.controls['yojanaId'].setValue(''); 
-      this.filterFrm.controls['networkId'].setValue('');        
-    } else if (flag == 'network') {
-      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId); 
-      this.filterFrm.controls['networkId'].setValue('');        
-    }  
-    this.filterData();
+      // this.filterFrm.controls['yojanaId'].setValue(''); 
+      this.filterFrm.controls['networkId'].setValue(0);           
+    } 
+    // else if (flag == 'network') {
+    //   this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId); 
+    //   this.filterFrm.controls['networkId'].setValue('');        
+    // }  
+    
   }
 
   onSubmit() {

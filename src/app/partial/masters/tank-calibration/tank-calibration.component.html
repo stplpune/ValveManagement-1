@@ -19,14 +19,14 @@
           <!-- <label class="form-label">Yojana Name</label> -->
           <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
             optionValueField="yojanaId" optionTextField="yojanaName"
-            (select)="filterData();getNetworkByYojanaId(filterFrm.value.yojanaId);" (remove)="clearfilter('yojana')">
+            (select)="clearfilter('yojana');filterData();getNetworkByYojanaId(filterFrm.value.yojanaId);" (remove)="clearfilter('yojana');filterData()">
           </ngx-select>
         </div>
         <div class="col-sm">
           <!-- <label class="form-label">Network Name</label> -->
           <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
             placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-            [disabled]="!this.filterFrm.value.yojanaId" (select)="filterData()" (remove)="clearfilter('network')">
+            [disabled]="!this.filterFrm.value.yojanaId" (select)="filterData()" (remove)="filterData()">
           </ngx-select>
         </div>
       </div>
