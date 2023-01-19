@@ -28,6 +28,8 @@ export class TankMasterComponent implements OnInit {
   filterFrm!: FormGroup;
   pinCode: any;
   editObj:any
+  filterYojanaArray = new Array();
+  filterNetworkArray = new Array();
 
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
@@ -102,7 +104,7 @@ export class TankMasterComponent implements OnInit {
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + this.getData.yojanaId + '&NetworkId=' + formData.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' +(formData.yojanaId) + '&NetworkId=' +(formData.networkId), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -126,6 +128,7 @@ export class TankMasterComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
+          this.filterYojanaArray = res.responseData;
           this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
@@ -135,16 +138,16 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
-//  http://valvemgt.erpguru.in/api/MasterDropdown/GetAllNetworkbyUserId?UserId=1&YojanaId=1
   getNetwork(status?: any) {
+    // let formData=this.filterFrm.value;
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
    if(netId){
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getData.userId+'&YojanaId=' + netId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getData.userId+'&YojanaId=' +netId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
-          this.networkArray = res.responseData;
+          status == 'net' ?  this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
           this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId): '';
         } else {
           this.networkArray = [];
