@@ -38,8 +38,6 @@ export class ValveListComponent implements OnInit {
   HighlightRow!: number;
   deleteValveId: any;
   simArray: any;
-  // lat: any = 19.7515;
-  // lng: any = 75.7139;
   addressZoomSize = 6;
   subject: Subject<any> = new Subject();
   geoCoder: any;
@@ -63,11 +61,9 @@ export class ValveListComponent implements OnInit {
     this.getValveList();
     this.getTankList();
     this.searchAddress();
-    // this.onRadioChange();
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
     });
-    this.ToBindSimNumberList();
     this.searchFilters('false');
   }
   get f() {
@@ -224,7 +220,6 @@ export class ValveListComponent implements OnInit {
   getAllValveData() {
     let formdata = this.searchForm.value;
     this.spinner.show();
-    // let obj = 'UserId=' + this.pageNumber + '&Search=' + this.pagesize;
     let obj = {
       "pageno": this.pageNumber,
       "Search": formdata.searchField || "",
@@ -237,7 +232,6 @@ export class ValveListComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.valveStatusArray = res.responseData.responseData1;
-          // this.valveStatusArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
         } else {
           this.spinner.hide();
@@ -259,7 +253,6 @@ export class ValveListComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.onRadioChange(1)
     let formData = this.valveListForm.value;
     this.submitted = true;
     if (this.valveListForm.invalid) {
@@ -313,7 +306,6 @@ export class ValveListComponent implements OnInit {
   }
 
   updateValveData(obj: any) {
-    debugger
     console.log(obj);
     this.editId = obj;
     this.iseditbtn = true;
@@ -339,7 +331,7 @@ export class ValveListComponent implements OnInit {
       longitude: obj.longitude,
     });
     this.getAllNetwork(obj.yojanaId);
-
+    this.ToBindSimNumberList(obj.yojanaId,obj.networkId)
     this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
     this.addLatitude = obj.latitude;
     this.addLongitude = obj.longitude;
@@ -415,9 +407,9 @@ export class ValveListComponent implements OnInit {
   }
 
 
-  ToBindSimNumberList() {
+  ToBindSimNumberList(yojana:any,network:any) {
     this.spinner.show();
-    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=0&NetworkId=0', false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId='+yojana+'&NetworkId='+network, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -444,15 +436,28 @@ export class ValveListComponent implements OnInit {
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
+      this.valveListForm.controls['tankist'].setValue('');
     }else{
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
-  
+      this.valveListForm.controls['valvelist'].setValue('');
     }
-   
+  }
 
+  clearFilter(flag: any) {
+    if (flag == 'yojana') {
+      this.valveListForm.controls['network'].setValue('');
+      this.valveListForm.controls['simNumber'].setValue('');
+    } else if (flag == 'network') {
+      this.valveListForm.controls['simNumber'].setValue('');
+    } 
+  }
+
+  defaultPageNo(){
+    this.pageNumber = 1;
+    this.getAllValveData()
   }
 
 
@@ -549,15 +554,6 @@ export class ValveListComponent implements OnInit {
     this.addLatitude = 19.7515;
     this.addLongitude = 75.7139;
   }
-
-  // openAddressModel() {
-  //   this.addressZoomSize = 6;
-  //   this.searchAdd.setValue(this.copyAddressNameforAddress);
-  //   this.addLatitude = this.newAddedAddressLat;
-  //   this.addLongitude = this.newAddedAddressLang;
-  //   this.copyAddressNameforAddress ? this.addressMarkerShow = true : this.addressMarkerShow = false;
-  //   this.addressNameforAddress = this.copyAddressNameforAddress;
-  // }
 
   openAddressModel() {
     if(this.iseditbtn){
