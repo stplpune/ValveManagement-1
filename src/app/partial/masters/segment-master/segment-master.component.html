@@ -122,6 +122,10 @@
                         <i class="fas fa-times"></i>
                     </a>
                     <agm-map [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
+
+
+                        <agm-polyline  [title]="'DOT-to-DOT site'"></agm-polyline>
+
                         <agm-marker
                         *ngFor="let m of tank_ValveArray; let i = index"
                         [latitude]="m.latitude"
