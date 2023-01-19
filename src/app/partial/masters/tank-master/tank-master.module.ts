@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AgmCoreModule } from '@agm/core';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     TankMasterComponent
@@ -16,6 +17,7 @@ import { AgmCoreModule } from '@agm/core';
     ReactiveFormsModule,
     NgxSelectModule,
     NgxPaginationModule,
+    FormsModule,
      AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
       language: 'en',
