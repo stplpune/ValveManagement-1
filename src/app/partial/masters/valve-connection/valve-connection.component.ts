@@ -148,7 +148,7 @@ export class ValveConnectionComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.yoganaArray = res.responseData;
-        this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetworkDropdown()) : '';
+        this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.editObj.yojanaId),this.getNetworkDropdown()) : '';
 
       }
       else {
@@ -169,7 +169,7 @@ export class ValveConnectionComponent implements OnInit {
           if (res.statusCode == '200') {
             flag == 'filter' ?   this.networkArrayFilter = res.responseData :
             this.networkArray = res.responseData;
-            this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
+            this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId),this.getValveConnectionDropdown()) : '';
           }
           else {
              flag == 'filter' ? this.networkArrayFilter = [] :  this.networkArray = [] ;
