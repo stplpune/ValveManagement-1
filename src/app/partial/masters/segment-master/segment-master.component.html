@@ -84,17 +84,17 @@
                     <div class="row g-2">
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
-                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = [];getValveSegmentList()"
-                                (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
+                                (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
+                                (select)="getNetworkIdAdd(segmentMasterForm.value.yojanaId)" optionValueField="yojanaId"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
                             <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
                         </div>
                         <div class="col-sm">
-                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="getValveSegmentList()"
+                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
-                                optionTextField="networkName" (remove)="valveSegmentList = [];getValveSegmentList()"
+                                optionTextField="networkName" (remove)="clearMapData()"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                            </ngx-select>
                            <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
@@ -121,19 +121,14 @@
                     <a (click)="removeShape()" *ngIf="isShapeDrawn" aria-label="Remove Shape" close="closeShape" class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253" (mapReady)="onMapReady($event)">
-
-
-                        <agm-polyline  [title]="'DOT-to-DOT site'"></agm-polyline>
-
-                        <agm-marker
-                        *ngFor="let m of tank_ValveArray; let i = index"
-                        [latitude]="m.latitude"
-                        [longitude]="m.longitude"
-                        [iconUrl]="m.iconUrl"
-                      >
-                      </agm-marker>
-
+                    <agm-map [fitBounds]="true" [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253"
+                        (mapReady)="onMapReady($event)">
+                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
+                            [iconUrl]="m.iconUrl">
+                        </agm-marker>
+                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude"
+                            [longitude]="m.longitude" [iconUrl]="m.url" [label]="m.label">
+                        </agm-marker>
                     </agm-map>
                 </div>
                 <hr>
