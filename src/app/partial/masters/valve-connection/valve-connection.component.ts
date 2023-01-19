@@ -172,7 +172,7 @@ export class ValveConnectionComponent implements OnInit {
             this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
           }
           else {
-            // flag == 'filter' ? this.networkArrayFilter = [] :  this.networkArray = [] ;
+             flag == 'filter' ? this.networkArrayFilter = [] :  this.networkArray = [] ;
              this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toasterService.error(res.statusMessage);
           }
         },
@@ -192,7 +192,7 @@ export class ValveConnectionComponent implements OnInit {
       flag == 'filter' ? this.valveConnectionArrayFilter = res.responseData : this.valveConnectionArray = res.responseData;
         }
       else {
-      // flag == 'filter' ? this.valveConnectionArrayFilter = [] : this.valveConnectionArray = [];
+      flag == 'filter' ? this.valveConnectionArrayFilter = [] : this.valveConnectionArray = [];
          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toasterService.error(res.statusMessage);
       }
     },
@@ -311,13 +311,13 @@ export class ValveConnectionComponent implements OnInit {
       this.searchForm.controls['network'].setValue('');
       this.searchForm.controls['valveMaster'].setValue('')
     }
-    else (flag == 'network')
+    else if(flag == 'network')
     {
       this.searchForm.controls['valveMaster'].setValue('')
     }
-    // else if (flag == 'valveMaster') {
-    //   this.searchForm.controls['valveMaster'].setValue('');
-    // }
+     else if(flag == 'valveMaster') {
+       this.searchForm.controls['valveMaster'].setValue('');
+     }
     this.pageNumber = 1;
     this.bindValveConnectionsTable();
     this.clearForm();
