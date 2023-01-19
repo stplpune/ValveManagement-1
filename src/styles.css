@@ -153,4 +153,34 @@ tr.active {
 .pac-container{
     z-index: 9999 !important;
 }
+.ngx-select__toggle,
+.ngx-select input,
+.ngx-select__toggle {
+    font-size: 0.85rem !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: 1px solid #ced4da !important;
+}
 
+.ngx-select,
+.ngx-select__item,
+.ngx-select__clear,
+.ngx-select__selected-plural {
+    font-size: 0.8rem !important;
+    box-shadow: none;
+}
+
+.ngx-select__item {
+    color: #000 !important;
+}
+
+.ngx-select_multiple .ngx-select__clear {
+    color: var(--main-color) !important;
+    opacity: 0.9;
+}
+
+.ngx-select__item_active {
+    background-color: var(--main-color) !important;
+    color: #fff !important;
+    box-shadow: none;
+}

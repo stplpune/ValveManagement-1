@@ -29,8 +29,7 @@ export class ValveConnectionComponent implements OnInit {
   networkArray = new Array();
   networkArrayFilter = new Array();
   editObj: any;
-  arrLength:any;
-  // @ViewChild('formDirective')
+ // @ViewChild('formDirective')
   // private formDirective!: NgForm;
   @ViewChild('closebutton') closebutton: any;
   data: any;
@@ -64,7 +63,7 @@ export class ValveConnectionComponent implements OnInit {
       "yojanaId": ['', [Validators.required]],
       "networkId": ['', [Validators.required]],
       "consumerUserId": [0],
-      "totalConnection": [this.arrLength , [Validators.required]],
+      "totalConnection": [0, [Validators.required]],
       "connectiondetails": this.fb.array([
         this.fb.group({
           "pipeDiameter": ['', [Validators.required]],
@@ -90,7 +89,7 @@ export class ValveConnectionComponent implements OnInit {
   get f() {
     return this.valveConnectionForm.controls;
   }
-
+ 
   get connectionForm(): FormArray {
     return this.valveConnectionForm.get('connectiondetails') as FormArray;
   }

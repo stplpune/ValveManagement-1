@@ -22,13 +22,13 @@
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
+          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
           (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
-          optionValueField="tankId" optionTextField="tankName" (remove)="clearSerach('tank')"
+          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network"
           (select)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>
@@ -127,7 +127,7 @@
                 <div class="mb-3">
                   <label class="form-label">Yojana</label>
                   <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" (select)="getAllNetwork(true)"
-                    placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
+                    placeholder="Select Yojana" (remove)="clearDropdown('yojana')" optionValueField="yojanaId" optionTextField="yojanaName"
                     [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
@@ -139,9 +139,9 @@
               <div class="col-6">
                 <div class="mb-3">
                   <label class="form-label">Network</label>
-                  <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" (select)="getAllTank(true)"
-                    placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                    [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
+                  <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" (select)="getAllTank(true);getAllSim(true)"
+                    placeholder="Select Network" (remove)="clearDropdown('network')" optionValueField="networkId" optionTextField="networkName"
+                    [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!tankSensorDeviceFrm.value.yojanaId">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                     <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Type is
@@ -154,7 +154,7 @@
               <label class="form-label">SIM No</label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
-                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f.simId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simId.errors?.required">Sim Number is
@@ -165,7 +165,7 @@
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId"
                 placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
-                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank Type is
@@ -212,7 +212,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header bg-transparent border-bottom-0">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="highlitedRow=0;"
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="highlitedRow=0"
           aria-label="Close"></button>
       </div>
       <div class="modal-body text-center pb-5">
