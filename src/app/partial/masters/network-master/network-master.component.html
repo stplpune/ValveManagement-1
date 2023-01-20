@@ -90,7 +90,8 @@
                         </div>
                         <div class="d-flex justify-content-end gap-2 mb-0">
                             <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-                            <button type="submit" class="btn btn-main">{{buttonName}}</button>
+                            <button type="submit" class="btn btn-main" *ngIf="editFlag">Update</button>
+                            <button type="submit" class="btn btn-main" *ngIf="!editFlag">Submit</button>
                         </div>
                     </div>
                 </div>

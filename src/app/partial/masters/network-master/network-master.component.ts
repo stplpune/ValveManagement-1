@@ -24,7 +24,6 @@ export class NetworkMasterComponent implements OnInit {
   editFlag:boolean = false;
   deleteSegmentId: any;
   submitted:boolean =false;
-  buttonName:string = 'Submit';
   highlitedRow:any; 
   getAllLocalStorageData:any;
   @ViewChild('closebutton') closebutton:any;
@@ -109,7 +108,6 @@ export class NetworkMasterComponent implements OnInit {
           this.toastrService.success(res.statusMessage);
           this.getAllNetworkTableData();
           this.closebutton.nativeElement.click();
-          this.buttonName = 'Submit';
           this.clearForm();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -127,7 +125,6 @@ export class NetworkMasterComponent implements OnInit {
 onEdit(data?:any){
   this.editFlag = true;
   this.highlitedRow = data.id;
-  this.buttonName = 'Update';
   this.networkRegForm.patchValue({
     id:data.id,
     networkName : data.networkName,
@@ -141,7 +138,6 @@ clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.submitted = false;
   this.editFlag = false;
-  this.buttonName = 'Submit';
 }
 
 deleteConformation(id?:any){
