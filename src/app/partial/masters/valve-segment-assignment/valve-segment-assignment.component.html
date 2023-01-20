@@ -3,14 +3,14 @@
   <div class="row">
     <div class="col-3">
       <!-- <label class="form-label">Yojna</label> -->
-      <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-        optionValueField="yojanaId" optionTextField="yojanaName"
-        (select)="getAllNetwork('yojana');pageNumber = 1;getAllValveTableData()" (remove)="clearfilter('yojana')">
+      <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+        optionValueField="yojanaId" optionTextField="yojanaName" 
+        (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getAllValveTableData()" (remove)="clearfilter('yojana')">
       </ngx-select>
     </div>
     <div class="col-3">
       <!-- <label class="form-label">Network</label> -->
-      <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
+      <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId" placeholder="Select Network"
         optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId"
         (select)="getAllValveTableData();" (remove)="clearfilter('network')">
       </ngx-select>

@@ -18,16 +18,16 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
                     placeholder="Select District" optionValueField="id"
-                    (select)="getTaluka('tal');filterData()"
-                    optionTextField="districtName" (remove)="clearfilter('district');">
+                    (select)="clearfilter('district');getTaluka('tal');filterData()"
+                    optionTextField="districtName" (remove)="clearfilter('district');filterData()">
                 </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
                                 placeholder="Select Taluka" optionValueField="id"
                                 [disabled]="!this.filterForm.value.districtId"
-                                (select)="getVillage('vil');filterData();"
-                                optionTextField="talukaName" (remove)="clearfilter('taluka');">
+                                (select)="clearfilter('taluka');getVillage('vil');filterData();"
+                                optionTextField="talukaName" (remove)="clearfilter('taluka');filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">

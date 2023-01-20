@@ -49,8 +49,8 @@ export class SegmentMasterComponent implements OnInit {
   ngOnInit(): void {
     this.defaultForm();
     this.defaultFilterForm();
-    this.getAllSegmentMaster();
     this.getYoganaId();
+    this.getAllSegmentMaster();
   }
 
   defaultFilterForm() {
@@ -140,7 +140,7 @@ export class SegmentMasterComponent implements OnInit {
 
   getAllSegmentMaster() {
     this.spinner.show();
-    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
       + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'api/SegmentMaster/GetAll?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({

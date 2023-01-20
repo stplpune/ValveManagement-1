@@ -10,6 +10,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 import { number } from '@amcharts/amcharts4/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { ValidationService } from 'src/app/core/services/validation.service';
 @Component({
   selector: 'app-valve-list',
   templateUrl: './valve-list.component.html',
@@ -51,6 +52,7 @@ export class ValveListComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private localStorage: LocalstorageService,
     private ngZone: NgZone,
+    public validation:ValidationService
   ) { }
 
   ngOnInit() {
@@ -58,7 +60,7 @@ export class ValveListComponent implements OnInit {
     this.defaultForm();
     this.getAllValveData();
     this.getAllYojana();
-    this.getValveList();
+    // this.getValveList();
     this.getTankList();
     this.searchAddress();
     this.mapsAPILoader.load().then(() => {
@@ -105,8 +107,8 @@ export class ValveListComponent implements OnInit {
     })
   }
 
-  getValveList() {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId=0&NetworkId=0', false, false, false, 'valvemgt');
+  getValveList(yojana:any,network:any) {
+    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId='+yojana+'&NetworkId='+network, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -179,6 +181,28 @@ export class ValveListComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.networkArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false
+            ? this.errorSerivce.handelError(res.statusCode)
+            : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    });
+  }
+
+  ToBindSimNumberList(yojana: any, network: any) {
+    this.spinner.show();
+    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === '200') {
+          this.spinner.hide();
+          this.simArray = res.responseData;
+        } else {
+          this.spinner.hide();
+          this.simArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
             : this.toastrService.error(res.statusMessage);
@@ -410,29 +434,6 @@ export class ValveListComponent implements OnInit {
     this.HighlightRow = 0;
   }
 
-
-  ToBindSimNumberList(yojana: any, network: any) {
-    this.spinner.show();
-    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.simArray = res.responseData;
-        } else {
-          this.spinner.hide();
-          this.simArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
-  }
-
   onRadioChange(ele: any) {
     if (ele == 1) {
       this.valveListForm.controls['valvelist'].setValidators([Validators.required]);
@@ -452,8 +453,12 @@ export class ValveListComponent implements OnInit {
   clearFilter(flag: any) {
     if (flag == 'yojana') {
       this.valveListForm.controls['network'].setValue('');
+      this.valveListForm.controls['valvelist'].setValue('');
+      this.valveListForm.controls['tankist'].setValue('');
       this.valveListForm.controls['simNumber'].setValue('');
     } else if (flag == 'network') {
+      this.valveListForm.controls['valvelist'].setValue('');
+      this.valveListForm.controls['tankist'].setValue('');
       this.valveListForm.controls['simNumber'].setValue('');
     }
   }
@@ -499,7 +504,6 @@ export class ValveListComponent implements OnInit {
   }
 
   markerAddressDragEnd($event: any) {
-    console.log($event);
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
     this.findAddressByCoordinates();
@@ -513,8 +517,6 @@ export class ValveListComponent implements OnInit {
         lng: this.addLongitude
       }
     }, (results: any) => {
-      console.log(results);
-
       this.findAddress(results[0]);
     });
   }
@@ -522,7 +524,6 @@ export class ValveListComponent implements OnInit {
   findAddress(results: any) {
     if (results) {
       this.addressNameforAddress = results.formatted_address;
-      console.log(this.addressNameforAddress);
       this.addressZoomSize = 12;
       this.searchAdd.setValue(this.addressNameforAddress);
     }

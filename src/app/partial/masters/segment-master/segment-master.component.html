@@ -14,7 +14,7 @@
             <div class="row g-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')"
-                        (select)="getAllSegmentMaster();getNetworkId()"
+                        (select)="getAllSegmentMaster();getNetworkId()" [disabled]="yoganaIdArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
@@ -90,7 +90,7 @@
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
-                                (select)="getNetworkIdAdd()" optionValueField="yojanaId"
+                                (select)="getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
