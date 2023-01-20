@@ -18,8 +18,8 @@
         <div class="col-sm">
           <!-- <label class="form-label">Yojana Name</label> -->
           <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
-            optionValueField="yojanaId" optionTextField="yojanaName"
-            (select)="clearfilter('yojana');filterData();getNetworkByYojanaId(filterFrm.value.yojanaId);" (remove)="clearfilter('yojana');filterData()">
+            optionValueField="yojanaId" optionTextField="yojanaName" [disabled]="yojanaArray.length == 1"
+            (select)="clearfilter('yojana');filterData();getNetworkByYojanaId();" (remove)="clearfilter('yojana');filterData()">
           </ngx-select>
         </div>
         <div class="col-sm">
