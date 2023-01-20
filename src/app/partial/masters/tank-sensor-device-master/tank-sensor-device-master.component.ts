@@ -36,7 +36,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   submitted = false;
   highlitedRow:any;
   dropdownFlag!:string;
-  buttonName!:string;
   headerName!:any;
   getAllLocalStorageData!:any;
   @ViewChild('closebutton') closebutton:any;
@@ -86,7 +85,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   onEdit(data?:any){
   this.editFlag = true;
   this.editData = data;
-  this.buttonName = 'Update';
   console.log(this.editData);
   
   this.headerName = 'Update Tank Sensor Device Master';
@@ -177,7 +175,6 @@ getAllNetwork(flag?:any) {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.getAllTankArray = [];
-  this.buttonName = 'Submit';
   this.getAllNetworkArray = [];
   this.getAllSimArray = [];
   this.editFlag = false;
