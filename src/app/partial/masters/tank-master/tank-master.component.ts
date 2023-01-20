@@ -130,6 +130,7 @@ export class TankMasterComponent implements OnInit {
           this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
+          this.filterYojanaArray= [];
         }
       }), error: (error: any) => {
         this.error.handelError(error.status);
@@ -148,6 +149,7 @@ export class TankMasterComponent implements OnInit {
             this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
           } else {
             this.networkArray = [];
+            this.filterNetworkArray = [];
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
