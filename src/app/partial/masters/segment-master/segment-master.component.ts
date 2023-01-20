@@ -93,8 +93,8 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkId(yojanaId?: number) {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkId() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.filterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
@@ -110,8 +110,8 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkIdAdd(yojanaId?: number) { // For Filter
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkIdAdd() { // For Filter
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.segmentMasterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
@@ -311,7 +311,7 @@ export class SegmentMasterComponent implements OnInit {
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
     this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
-    this.getNetworkIdAdd(this.editObj.yojanaId);
+    this.getNetworkIdAdd();
     this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
   }
 
