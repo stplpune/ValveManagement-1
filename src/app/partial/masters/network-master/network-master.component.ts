@@ -24,8 +24,8 @@ export class NetworkMasterComponent implements OnInit {
   editFlag:boolean = false;
   deleteSegmentId: any;
   submitted:boolean =false;
-  buttonName:string = 'Submit';
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  highlitedRow:any; 
+  getAllLocalStorageData:any;
   @ViewChild('closebutton') closebutton:any;
   get f(){
     return this.networkRegForm.controls;
@@ -41,6 +41,7 @@ export class NetworkMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.controlForm();
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.getAllNetworkTableData();
     this.getAllYojana();
   }
@@ -67,7 +68,6 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   getAllNetworkTableData() {
-    // ValveManagement/Network/GetAllNetwork?YojanaId=1&pageno=1&pagesize=10
     this.spinner.show();
     this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -76,6 +76,7 @@ export class NetworkMasterComponent implements OnInit {
         if (res.statusCode == "200") {
           this.allNetworkArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+          this.highlitedRow=0;
         } else {
           this.spinner.hide();
           this.allNetworkArray = [];
@@ -94,22 +95,12 @@ export class NetworkMasterComponent implements OnInit {
       return;
     }else{
       let formData = this.networkRegForm.value;
-    let obj = {
-      ...formData,
-      "createdBy": this.localStorage.userId(),
-      // "createdDate": new Date(),
-      // "modifiedby": this.localStorage.userId(),
-      // "modifiedDate": new Date(),
-      // "isDeleted": false,
-      "timestamp": new Date(),
-    }
+      formData.createdBy=this.localStorage.userId();
+      formData.timestamp=new Date();
     this.spinner.show();
-    let id:any;
-    let urlType
-    this.editFlag ? (urlType = 'PUT') : (urlType = 'POST');
-    let urlName 
-    this.editFlag ? (urlName = 'ValveManagement/Network/UpdateNetwork') : (urlName = 'ValveManagement/Network/AddNetwork');
-    this.apiService.setHttp(urlType,urlName,false,obj,false,'valvemgt');
+    let urlType= this.editFlag ? 'PUT':'POST';
+    let urlName= this.editFlag ? ('ValveManagement/Network/UpdateNetwork') : ('ValveManagement/Network/AddNetwork');
+    this.apiService.setHttp(urlType,urlName,false,formData,false,'valvemgt');
     this.apiService.getHttp().subscribe(
       (res: any) => {
         if (res.statusCode == '200') {
@@ -117,7 +108,6 @@ export class NetworkMasterComponent implements OnInit {
           this.toastrService.success(res.statusMessage);
           this.getAllNetworkTableData();
           this.closebutton.nativeElement.click();
-          this.buttonName = 'Submit';
           this.clearForm();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -134,8 +124,7 @@ export class NetworkMasterComponent implements OnInit {
 
 onEdit(data?:any){
   this.editFlag = true;
-  this.buttonName = 'Update';
-  console.log(data,'editData');
+  this.highlitedRow = data.id;
   this.networkRegForm.patchValue({
     id:data.id,
     networkName : data.networkName,
@@ -149,12 +138,11 @@ clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.submitted = false;
   this.editFlag = false;
-  this.buttonName = 'Submit';
-  this.controlForm();
 }
 
 deleteConformation(id?:any){
   this.deleteSegmentId = id;
+  this.highlitedRow = id;
 }
 
 deleteNetworkMaster(){

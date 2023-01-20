@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class YojanaMasterComponent implements OnInit {
     public apiService: ApiService,
     private errorSerivce: ErrorsService,
     private toastrService: ToastrService,
-    public commonService: CommonService
+    public commonService: CommonService,
+    public validation:ValidationService
   ) { }
 
   ngOnInit(): void {
@@ -67,9 +69,9 @@ export class YojanaMasterComponent implements OnInit {
 
    getFilterFrm(){
     this.filterForm = this.fb.group({
-      districtId: [''],
-      talukaId: [''],
-      villageId: ['']
+      districtId: [0],
+      talukaId: [0],
+      villageId: [0]
     });
    }
 
@@ -165,14 +167,14 @@ export class YojanaMasterComponent implements OnInit {
   clearfilter(flag:any){
     switch (flag) {
       case 'district':
-        this.filterForm.controls['talukaId'].setValue('');
-        this.filterForm.controls['villageId'].setValue('');
+        this.filterForm.controls['talukaId'].setValue(0);
+        this.filterForm.controls['villageId'].setValue(0);
         break;
       case 'taluka':
-        this.filterForm.controls['villageId'].setValue('');
+        this.filterForm.controls['villageId'].setValue(0);
         break;
     }
-    this.getAllYojanaList();
+    // this.filterData();
   }
 
   filterData(){
@@ -183,7 +185,8 @@ export class YojanaMasterComponent implements OnInit {
   getAllYojanaList() {
     this.spinner.show();
     let formData = this.filterForm.value;
-    let str ='DistrictId='+ (formData.districtId || 0) +'&TalukaId='+ (formData.talukaId || 0) +'&VillageId='+ (formData.villageId || 0) +'&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    console.log(formData)
+    let str ='DistrictId='+ (formData.districtId ? formData.districtId : 0) +'&TalukaId='+ (formData.talukaId ? formData.talukaId : 0) +'&VillageId='+ (formData.villageId ? formData.villageId :0) +'&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get','ValveManagement/Yojana-Master/GetAllYojana?' + str, false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {

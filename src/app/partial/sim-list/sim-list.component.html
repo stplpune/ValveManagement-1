@@ -21,7 +21,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let simData of simArray | paginate: { itemsPerPage: pagesize, currentPage: pageNumber, totalItems:listCount };let i = index ">
+        <tr *ngFor="let simData of simArray | paginate: { itemsPerPage: pagesize, currentPage: pageNumber, totalItems:listCount };let i = index"
+        [class.active]="simData.id == highlitedRow">
           <td>{{(+(pageNumber-1+"0")+i+1)}}</td>
           <td>{{simData.operatorName}}</td>
           <td>{{simData.simNo}}</td>
@@ -59,7 +60,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddSIMModalLabel">{{headerText}}</p>
-        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective)" #addSimData data-bs-dismiss="modal"
+        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0" #addSimData data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -95,45 +96,41 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Operator <span class="text-danger">*</span></label>
-              <!-- <select class="form-control" formControlName="OperatorId"
-                [ngClass]="{ 'is-invalid': submitted && f.OperatorId.errors }" (change)="getOperatorName($event)">
-                <option value="0">Select Operator</option>
-                <option *ngFor="let simData of simOperatorList" value={{simData.id}}>{{simData.operatorName}}</option>
-              </select> -->
-              <ngx-select [allowClear]="true" [items]="simOperatorList" formControlName="OperatorId" (change)="getOperatorName($event)"
+              <label class="form-label">Operator</label>
+              <ngx-select [allowClear]="true" [items]="simOperatorList" formControlName="operatorId"
               placeholder="Select Operator" optionValueField="id" optionTextField="operatorName"
-              [ngClass]="{ 'is-invalid': submitted && f['OperatorId'].errors }">
+              [ngClass]="{ 'is-invalid': submitted && f.operatorId.errors }">
             </ngx-select>
-              <div *ngIf="submitted && f.OperatorId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.OperatorId.errors?.pattern">Operator Is Required</div>
+              <div *ngIf="submitted && f.operatorId.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.operatorId.errors?.required">Operator Is Required</div>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">SIM No.<span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="SimNo" placeholder="SIM No."
-                [ngClass]="{ 'is-invalid': submitted && f.SimNo.errors }" />
-              <div *ngIf="submitted && f.SimNo.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.SimNo.errors?.required">Sim No Is Required.</div>
-                <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
-                  Valid Sim No.<br>Sim No Should be 20 digit</div>
-              </div>
+              <label class="form-label">SIM No.</label>
+              <input type="text" class="form-control" maxlength="20" formControlName="simNo" placeholder="SIM No."
+                [ngClass]="{ 'is-invalid': submitted && f.simNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
+              <div *ngIf="submitted && f.simNo.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.simNo.errors?.required">Sim No Is Required.</div>
+                <!-- <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
+                  Valid Sim No.<br>Sim No Should be 20 digit</div> -->
+              </div> 
             </div>
             <div class="mb-3">
               <label class="form-label">IMSI No.</label>
-              <input type="text" class="form-control" formControlName="IMSINo" placeholder="IMSI No."
-                [ngClass]="{ 'is-invalid': submitted && f.IMSINo.errors }" />
-              <div *ngIf="submitted && f.IMSINo.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.IMSINo.errors?.required">IMSI No Is Required.</div>
-                <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
-                  Valid IMSI No.<br>IMSI No Should be 15 digit</div>
-              </div>
+              <input type="text" class="form-control" formControlName="imsiNo" maxlength="15" placeholder="IMSI No."
+                [ngClass]="{ 'is-invalid': submitted && f.imsiNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
+              <div *ngIf="submitted && f.imsiNo.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.imsiNo.errors?.required">IMSI No Is Required.</div>
+                <!-- <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
+                  Valid IMSI No.<br>IMSI No Should be 15 digit</div> -->
+              </div> 
             </div>
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
-              <button type="submit" class="btn btn-main" (click)="onSubmit()">{{buttonName}}</button>
+              <button type="submit" class="btn btn-main" (click)="onSubmit()" *ngIf="!editFlag">Submit</button>
+              <button type="submit" class="btn btn-main" (click)="onSubmit()" *ngIf="editFlag">Update</button>
             </div>
           </div>
         </form>
@@ -148,7 +145,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header bg-transparent border-bottom-0">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="highlitedRow=0"></button>
       </div>
       <div class="modal-body text-center pb-5">
         <h3 class="my-3">Are You Sure?</h3>

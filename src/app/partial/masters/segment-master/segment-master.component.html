@@ -14,7 +14,7 @@
             <div class="row g-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')"
-                        (select)="getAllSegmentMaster();getNetworkId(filterForm.value.yojanaId)"
+                        (select)="getAllSegmentMaster();getNetworkId()" [disabled]="yoganaIdArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
@@ -22,7 +22,7 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.filterForm.value.yojanaId" optionTextField="networkName"
+                        [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" optionTextField="networkName"
                         (remove)="clearFilter('network')" (select)="getAllSegmentMaster()">
                     </ngx-select>
                 </div>
@@ -89,19 +89,18 @@
                     <div class="row g-2 form-container">
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
-                                (remove)="segmentMasterForm.controls['networkId'].setValue('');valveSegmentList = [];getValveSegmentList()"
-                                (select)="getValveSegmentList();getNetworkIdAdd(segmentMasterForm.value.yojanaId)"
-                                optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
-                                formControlName="yojanaId" [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
+                                (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
+                                (select)="getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1"
+                                optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
+                                [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
                             <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required
                             </div>
                         </div>
                         <div class="col-sm">
-                            <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId"
-                                (select)="getValveSegmentList()" placeholder="Select Network"
-                                optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId"
-                                optionTextField="networkName" (remove)="valveSegmentList = [];getValveSegmentList()"
+                                <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
+                                placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length == 0"
+                                optionTextField="networkName" (remove)="clearMapData()"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                             </ngx-select>
                             <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required
@@ -131,16 +130,14 @@
                         class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [latitude]="23.7541318" [zoom]="zoom" [longitude]="80.3681253"
+                    <agm-map [fitBounds]="true" [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
                         (mapReady)="onMapReady($event)">
-
-
-                        <agm-polyline [title]="'DOT-to-DOT site'"></agm-polyline>
-
-                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude"
-                            [longitude]="m.longitude" [iconUrl]="m.iconUrl">
+                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
+                            [iconUrl]="m.iconUrl">
                         </agm-marker>
-
+                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
+                            [longitude]="m.longitude || 76.5240298" [label]="m.label">
+                        </agm-marker>
                     </agm-map>
                 </div>
                 <hr>

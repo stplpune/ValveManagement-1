@@ -18,16 +18,16 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
                     placeholder="Select District" optionValueField="id"
-                    (select)="getTaluka('tal');filterData()"
-                    optionTextField="districtName" (remove)="clearfilter('district');">
+                    (select)="clearfilter('district');getTaluka('tal');filterData()"
+                    optionTextField="districtName" (remove)="clearfilter('district');filterData()">
                 </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
                                 placeholder="Select Taluka" optionValueField="id"
                                 [disabled]="!this.filterForm.value.districtId"
-                                (select)="getVillage('vil');filterData();"
-                                optionTextField="talukaName" (remove)="clearfilter('taluka');">
+                                (select)="clearfilter('taluka');getVillage('vil');filterData();"
+                                optionTextField="talukaName" (remove)="clearfilter('taluka');filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
@@ -48,7 +48,7 @@
             <thead>
                 <tr>
                     <th>Sr. No.</th>
-                    <th>Yojanan Name</th>
+                    <th>Yojana Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -100,7 +100,8 @@
                     <div class="form-container">
                         <div class="mb-3">
                             <label class="form-label">Yojana Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" placeholder="Name" formControlName="yojanaName"
+                            <input type="text" class="form-control" placeholder="Name" formControlName="yojanaName" 
+                            (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event);"
                                 [ngClass]="{ 'is-invalid': submitted && f.yojanaName.errors }" />
                             <div *ngIf="submitted && f.yojanaName.errors" class="invalid-feedback">
                                 <div class="text-danger" *ngIf="f.yojanaName.errors?.required">Name is

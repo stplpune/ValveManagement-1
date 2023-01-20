@@ -1,41 +1,61 @@
-
- <form [formGroup]="filterForm">
+<div class="col-sm-4">Valve Segment Assignment</div>
+<form [formGroup]="filterForm">
   <div class="row">
     <div class="col-3">
       <!-- <label class="form-label">Yojna</label> -->
-      <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-        optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork();">
+      <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+        optionValueField="yojanaId" optionTextField="yojanaName" 
+        (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getAllValveTableData()" (remove)="clearfilter('yojana')">
       </ngx-select>
     </div>
-    
     <div class="col-3">
       <!-- <label class="form-label">Network</label> -->
-      <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
-        optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId">
+      <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId" placeholder="Select Network"
+        optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId"
+        (select)="getAllValveTableData();" (remove)="clearfilter('network')">
       </ngx-select>
     </div>
-
-    <div class="col-4">
+    <!-- <div class="col-4">
       <button type="submit" class="btn btn-main" (click)="getAllValveTableData()">Search</button>
       <button type="button" class="btn btn-main ms-2" (click)="clearFilter()">Clear</button>
-    </div>
+    </div> -->
   </div>
 </form>
-
 <div class="card plain-card">
   <div class="card-header">
     <div class="row justify-content-between align-items-center">
-      <div class="col-sm-4">Valve Segment Assignment
-      </div>    
-
+      <div class="col-sm-4"></div>
       <div class="col-sm-4 text-end">
-        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
-            class="fas fa-sync-alt"></i></button>
+        <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve Segment Assignment
+          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve Segment
+          Assignment
         </button>
       </div>
     </div>
+
+    <!-- <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-3">
+         
+          <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+            optionValueField="yojanaId" optionTextField="yojanaName" (select)="getAllNetwork();">
+          </ngx-select>
+        </div>
+        
+        <div class="col-3">
+          
+          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
+            optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId">
+          </ngx-select>
+        </div>
+    
+        <div class="col-4">
+          <button type="submit" class="btn btn-main" (click)="getAllValveTableData()">Search</button>
+          <button type="button" class="btn btn-light-main ms-2">Clear</button>
+        </div>
+      </div>
+    </form> -->
   </div>
   <div class="card-body">
     <table class="table align-middle dashboard-table">
@@ -76,13 +96,12 @@
       <div class="alert alert-danger text-center py-2">No Data Found..!
       </div>
     </div>
-      <div class="mt-2 text-end" *ngIf="valveArray?.length != 0">
-        <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
-        </pagination-controls>
+    <div class="mt-2 text-end" *ngIf="valveArray?.length != 0">
+      <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
+      </pagination-controls>
     </div>
   </div>
 </div>
-
 
 <!-- Modal for adding new valve -->
 <div class="modal fade" id="AddValveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -91,70 +110,55 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">
-         {{editFlag ? 'Update Valve Segment Assignment' : 'Add Valve Segment Assignment'}}
+          {{editFlag ? 'Update Valve Segment Assignment' : 'Add Valve Segment Assignment'}}
         </p>
-        <button type="button" class="btn-close btn-close-inverse"
-          data-bs-dismiss="modal" aria-label="Close" (click)="clearForm(formDirective)" #closebutton></button>
+        <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
+          (click)="clearForm(formDirective)" #closebutton></button>
       </div>
       <form [formGroup]="valveRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
         <div class="modal-body">
           <div class="form-container">
             <div class="row">
               <div class="col-6">
-                <label class="form-label">Yojna</label>              
-                  <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" (remove)="clearFormData('yojana')"
-                  placeholder="Select Yojna" optionValueField="yojanaId" (select)="getAllNetwork();"
-                 optionTextField="yojanaName" 
-                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }" >
+                <label class="form-label">Yojna</label>
+                <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
+                  (remove)="clearFormData('yojana')" placeholder="Select Yojna" optionValueField="yojanaId"
+                  (select)="getAllNetwork();" optionTextField="yojanaName"
+                  [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
               </div>
-  
               <div class="col-6">
-                <label class="form-label">Network</label>             
-                  <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" (remove)="clearFormData('network')"
-                  placeholder="Select Network" optionValueField="networkId" (select)="getAllvalve();getAllSegment()"
-                 optionTextField="networkName" [disabled]="!this.valveRegForm.value.yojanaId"
-                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }" >
+                <label class="form-label">Network</label>
+                <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
+                  (remove)="clearFormData('network')" placeholder="Select Network" optionValueField="networkId"
+                  (select)="getAllvalve();getAllSegment()" optionTextField="networkName"
+                  [disabled]="!this.valveRegForm.value.yojanaId"
+                  [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
               </div>
             </div>
-           
-
-
             <div class="mb-3">
-              <label class="form-label">Valve</label>
-                <!-- <select class="form-select" class="form-control" aria-label="Default select example">
-                  <option selected>Valve</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select> -->
-                <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
-                placeholder="Select valve" optionValueField="valveId" (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')"
-               optionTextField="valveName" [disabled]="!this.valveRegForm.value.networkId"
-               [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
+              <label class="form-label">Valve</label>            
+              <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
+                (remove)="clearFormData('valve')" placeholder="Select valve" optionValueField="valveId"
+                (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')" optionTextField="valveName"
+                [disabled]="!this.valveRegForm.value.networkId"
+                [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
               </ngx-select>
               <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve is Required </div>
             </div>
             <div class="mb-3">
-            
               <!-- <div> -->
-                <label class="form-label">Segment</label>
+              <label class="form-label">Segment</label>
               <!-- </div> -->
-              <div class="d-flex  gap-2">
-                <!-- <select class="form-select" class="form-control"  aria-label="Default select example">
-                  <option selected>Segment</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select> -->
-                <ngx-select  [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
-                placeholder="Select Segment" optionValueField="segmentId" 
-               optionTextField="segmentName" [disabled]="!this.valveRegForm.value.networkId">
-              </ngx-select>
-              <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
+              <div class="d-flex  gap-2">              
+                <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
+                  placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
+                  [disabled]="!this.valveRegForm.value.networkId">
+                </ngx-select>
+                <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
               </div>
             </div>
             <div class="mb-0">
@@ -167,20 +171,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let segment of segmentShowArray; let i = index" >
+                  <tr *ngFor="let segment of segmentShowArray; let i = index">
                     <td>{{i+1}}</td>
                     <td>{{segment?.segmentName}}</td>
                     <td>
-                      <button class="btn bg-danger bg-opacity-10 text-danger rounded" (click)="deleteSegment(i)" title="Delete"
-                    >
-                      <i class="fa-solid fa-trash-can"></i>
-                    </button>
+                      <button class="btn bg-danger bg-opacity-10 text-danger rounded" (click)="deleteSegment(i)"
+                        title="Delete">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
                     </td>
-                  </tr>                 
+                  </tr>
                 </tbody>
               </table>
-            
-          </div>
+            </div>
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">

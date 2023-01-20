@@ -49,8 +49,8 @@ export class SegmentMasterComponent implements OnInit {
   ngOnInit(): void {
     this.defaultForm();
     this.defaultFilterForm();
-    this.getAllSegmentMaster();
     this.getYoganaId();
+    this.getAllSegmentMaster();
   }
 
   defaultFilterForm() {
@@ -79,7 +79,7 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
-        this.yoganaIdArray = res.responseData; 
+        this.yoganaIdArray = res.responseData;
         this.yoganaIdArray.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkId()) : '';
         this.yoganaIdArray.length == 1 ? (this.segmentMasterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkIdAdd()) : '';
       }
@@ -93,19 +93,16 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkId(yojanaId?: number) {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkId() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.filterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        (this.networkIdArray.length == 1 && this.onEditFlag == true )? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId })) : '';
-         if(this.networkIdArray.length != 1 && this.onEditFlag == true){
-          this.filterForm.patchValue({ networkId: this.editObj.networkId })
-        }
+        this.networkIdArray.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
       }
       else {
         this.networkIdArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
@@ -113,16 +110,16 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkIdAdd(yojanaId?: number) { // For Filter
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkIdAdd() { // For Filter
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.segmentMasterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
-        this.networkIdAddArray.length == 1 ? (this.segmentMasterForm.patchValue({ networkId: this.networkIdAddArray[0].networkId }),this.getValveSegmentList()) : '';
+        this.networkIdAddArray.length == 1 ? (this.segmentMasterForm.patchValue({ networkId: this.networkIdAddArray[0].networkId }), this.getValveSegmentList()) : '';
       }
       else {
         this.networkIdAddArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
@@ -143,7 +140,7 @@ export class SegmentMasterComponent implements OnInit {
 
   getAllSegmentMaster() {
     this.spinner.show();
-    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
       + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
     this.apiService.setHttp('get', 'api/SegmentMaster/GetAll?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -178,6 +175,7 @@ export class SegmentMasterComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.valveSegmentList = [];
+          this.valveSegmentList = '';
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -278,7 +276,7 @@ export class SegmentMasterComponent implements OnInit {
 
   editObj: any;
   zoom = 6;
-  editPatchShape: any;
+  editPatchShape: undefined | any;
   onEditFlag!: boolean;
   splitedEditObjData: any;
   insertNewLineFlag: boolean = false;
@@ -297,22 +295,23 @@ export class SegmentMasterComponent implements OnInit {
     polyline: undefined,
   };
 
+  markerArray: any;
   lineSymbol = {
     path: 'M 1.5 1 L 1 0 L 1 2 M 0.5 1 L 1 0',
     fillColor: '#4d5ebf',
     strokeColor: '#4d5ebf',
     strokeWeight: 3,
     strokeOpacity: 1
-};
+  };
 
-  patchSegmentTable(obj:any){
+  patchSegmentTable(obj: any) {
     this.onEditFlag = true;
-    this.textName = 'Update'; 
-    this.editObj = obj ;
+    this.textName = 'Update';
+    this.editObj = obj;
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
     this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
-    this.getNetworkIdAdd(this.editObj.yojanaId);
+    this.getNetworkIdAdd();
     this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
   }
 
@@ -324,18 +323,23 @@ export class SegmentMasterComponent implements OnInit {
       mainArray.segmenDetailsModels.splice(index, 1);
 
       this.add_editCommonData(mainArray);
-     
+
       //.........................................  get Edit Object code Start Here.................................//
       let stringtoArray = this.editObj?.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
-     
+
       this.splitedEditObjData = finalLatLngArray;
+
       //.........................................  get Edit Object Segment code End Here.................................//
     }
     this.onMapReady(this.map);
   }
 
   add_editCommonData(mainArray: any) {
+
+    this.markerArray = mainArray.segmenDetailsModels.map((ele: any) => { //Marker show Code
+      return ele = { latitude: ele.startPoints.split(' ')[0], longitude: ele.startPoints.split(' ')[1], label: ele.segmentName };
+    })
 
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
       ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; return ele
@@ -348,6 +352,7 @@ export class SegmentMasterComponent implements OnInit {
     this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels);
 
     //.........................................  get Edit All Other Segment Array code Start Here.................................//
+
 
     let getOtherAllSegment = mainArray.segmenDetailsModels.map((ele: any) => {
       let stringtoArray = ele.midpoints.split(',');
@@ -400,25 +405,26 @@ export class SegmentMasterComponent implements OnInit {
     //............................   Edit Code Start Here ..................  //
 
     // drawingManager.setDrawingMode(null);
-  
-    this.getAllSegmentArray.map((ele:any)=>{
 
+    this.getAllSegmentArray.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
         geodesic: true,
         strokeColor: '#FF0000',
         strokeOpacity: 0.8,
         strokeWeight: 4,
-        icons: [{ icon: this.lineSymbol,offset: '25px',repeat: '100px'}]
+        icons: [{ icon: this.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.editPatchShape.setMap(this.map);
 
     })
 
+    let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
+    this.map.setCenter(latLng);
 
+    //         var OBJ_fitBounds = new google.maps.LatLngBounds();
+    //  this.map.fitBounds(OBJ_fitBounds);
 
-    // let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
-    // this.map.setCenter(latLng);
 
     if (this.onEditFlag == true) {
       drawingManager.setOptions({ drawingControl: false });
@@ -428,10 +434,11 @@ export class SegmentMasterComponent implements OnInit {
         geodesic: true,
         strokeColor: '#8000FF',
         strokeOpacity: 1.0,
-        strokeWeight: 3,
+        strokeWeight: 4,
+        icons: [{ icon: this.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.setSelection(patchShapeEditedObj);
-    }else if(this.onEditFlag == false){
+    } else if (this.onEditFlag == false) {
       drawingManager.setOptions({ drawingControl: false });
     }
     //............................   Edit Code End Here ..................  //
@@ -453,7 +460,6 @@ export class SegmentMasterComponent implements OnInit {
     if (this.newRecord.polyline) { // new polyline Add then before polyline map data clear 
       this.newRecord.polyline.setMap(null);
     }
-
     this.newRecord.polyline = shape;
     this.newRecord.polyline.setMap(this.map);
 
@@ -467,12 +473,6 @@ export class SegmentMasterComponent implements OnInit {
 
     this.segmentMasterForm.controls['startPoints'].setValue(firstObj?.lat + ' ' + firstObj?.lng);
     this.segmentMasterForm.controls['endPoints'].setValue(lastObj?.lat + ' ' + lastObj?.lng);
-
-
-
-    //     var OBJ_fitBounds = new google.maps.LatLngBounds();
-    //  this.map.fitBounds(OBJ_fitBounds);
-
   }
 
   getAllLatLongFromPolyline(polyline: any) {
@@ -492,31 +492,39 @@ export class SegmentMasterComponent implements OnInit {
   }
 
   mapModelClose() {
-    this.newRecord.polyline?.setMap(null);
-    this.editPatchShape?.setMap(null);
+    this.editPatchShape && (this.editPatchShape.setMap(null), this.editPatchShape = undefined);
     this.tank_ValveArray = [];
+    this.markerArray = [];
     this.removeShape();
     this.clearForm();
+    this.searchElementRef.nativeElement.value = '';
+  }
+
+  clearMapData() {
+    this.editPatchShape && (this.editPatchShape.setMap(null), this.editPatchShape = undefined);
+    this.tank_ValveArray = [];
+    this.markerArray = [];
+    this.removeShape();
   }
 
   FN_CN_poly2latLang(poly: any) {
-    var lowx,
+    let lowx,
       highx,
       lowy,
       highy,
-      lats = [],
-      lngs = [],
-      vertices = poly.getPath();
-    for (var i = 0; i < vertices.length; i++) {
+      lats: any[] = [],
+      lngs: any[] = [],
+      vertices = poly?.getPath();
+    for (let i = 0; i < vertices?.length; i++) {
       lngs.push(vertices.getAt(i).lng());
       lats.push(vertices.getAt(i).lat());
     }
     lats.sort();
     lngs.sort();
     lowx = lats[0];
-    highx = lats[vertices.length - 1];
+    highx = lats[vertices?.length - 1];
     lowy = lngs[0];
-    highy = lngs[vertices.length - 1];
+    highy = lngs[vertices?.length - 1];
     const center_x = lowx + ((highx - lowx) / 2);
     const center_y = lowy + ((highy - lowy) / 2);
     return (new google.maps.LatLng(center_x, center_y));

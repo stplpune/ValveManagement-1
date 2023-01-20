@@ -25,7 +25,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let showAllNetwork of allNetworkArray | paginate: {itemsPerPage: 10,
-                    currentPage: pageNumber, totalItems:totalRows}; let i = index">
+                    currentPage: pageNumber, totalItems:totalRows}; let i = index" [class.active]="showAllNetwork.id == highlitedRow">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{showAllNetwork?.networkName}}</td>
                     <td>{{showAllNetwork?.yojanaName}}</td>
@@ -62,7 +62,7 @@
             <form [formGroup]="networkRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
                 <div class="modal-header bg-main">
                     <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
-                    <button type="button" (click)="clearForm(formDirective)" #closebutton class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" (click)="clearForm(formDirective);highlitedRow=0" #closebutton class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-container ">
@@ -90,7 +90,8 @@
                         </div>
                         <div class="d-flex justify-content-end gap-2 mb-0">
                             <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-                            <button type="submit" class="btn btn-main">{{buttonName}}</button>
+                            <button type="submit" class="btn btn-main" *ngIf="editFlag">Update</button>
+                            <button type="submit" class="btn btn-main" *ngIf="!editFlag">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -106,7 +107,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-inverse" (click)="highlitedRow=0" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>
