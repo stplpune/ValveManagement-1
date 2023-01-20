@@ -35,9 +35,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   totalRows: any;
   submitted = false;
   highlitedRow:any;
-  buttonName:string = 'Submit';
   dropdownFlag!:string;
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  buttonName!:string;
+  headerName!:any;
+  getAllLocalStorageData!:any;
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
     private fb: FormBuilder,
@@ -49,12 +50,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     private errorSerivce: ErrorsService) { }
 
   ngOnInit(): void {
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.controlForm();
     this.searchFormControl();
-    // this.getAllSim();
     this.getAllYojana();
-    // this.getAllTank();
-    // this.getAllNetwork();
     this.getAllSensorDeviceTableData();
   }
 
@@ -88,26 +87,24 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   this.editFlag = true;
   this.editData = data;
   this.buttonName = 'Update';
+  console.log(this.editData);
+  
+  this.headerName = 'Update Tank Sensor Device Master';
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
       deviceId: data.deviceId,
       deviceName: data.deviceName,
       deviceDescription: data.deviceDescription,
-      // simId: data.simId,
-      // tankId: data.tankId,
       tankName: data.tankName,
       isDeleted: data.isDeleted,
       createdBy: data.createdBy,
       modifiedBy: data.modifiedBy,
   })
-  console.log(data,'editData');
   this.getAllYojana();
 }
 
 getAllYojana() {
-  // console.log(this.editFlag,'yojanaflag');
-  
   this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
@@ -127,10 +124,6 @@ getAllNetwork(flag?:any) {
   let networkFlag = flag ;
   let editYojanaId;
   this.editFlag ? (editYojanaId = this.editData.yojanaId) : ''
-  console.log(editYojanaId,'ppp');
-  
-  
-  // http://valvemgt.erpguru.in/api/MasterDropdown/GetAllNetworkbyUserId?UserId=1&YojanaId=1
   this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.getAllLocalStorageData.userId
   +'&YojanaId=' +  ((networkFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) || 0) , false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
@@ -148,7 +141,6 @@ getAllNetwork(flag?:any) {
 }
 
   getAllSim(flag?:any) {
-    // SimMaster/GetSimListDropdownList?YojanaId=0&NetworkId=0
     this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId='+ this.tankSensorDeviceFrm.value.yojanaId+'&NetworkId=' + this.tankSensorDeviceFrm.value.networkId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -166,15 +158,13 @@ getAllNetwork(flag?:any) {
 
   getAllTank(flag?:any){
     let tankFlag = flag;
-    // console.log(tankFlag,'tankFlag');
-    
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) +'&NetworkId=' + 
     (tankFlag?this.tankSensorDeviceFrm.value.networkId:this.searchForm.value.network), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
-          this.editFlag ? (this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId)) : ''
+          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : ''
         }else{
           tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
         }
@@ -187,26 +177,22 @@ getAllNetwork(flag?:any) {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.getAllTankArray = [];
+  this.buttonName = 'Submit';
   this.getAllNetworkArray = [];
   this.getAllSimArray = [];
   this.editFlag = false;
   this.submitted = false;
-  this.buttonName = 'Submit';
   this.controlForm();
 }
 
 getAllSensorDeviceTableData() {
-  let yojanaIds = this.tankSensorDeviceFrm.value.yojanaId;
-  let networkIds = this.tankSensorDeviceFrm.value.networkId;
-  let tankIds = this.tankSensorDeviceFrm.value.tankId;
-  console.log(networkIds,'re');
-  // this.spinner.show();
+  this.spinner.show();
   this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
   this.pageNumber+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana ? this.searchForm.value.yojana : 0) +
   '&NetworkId='+ (this.searchForm.value.network ? this.searchForm.value.network : 0) +'&TankId=' + (this.searchForm.value.tank ? this.searchForm.value.tank : 0), false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
-      // this.spinner.hide();
+      this.spinner.hide();
       if (res.statusCode == "200") {
         this.allSensorDeviceArray = res.responseData.responseData1;
         this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
@@ -250,7 +236,7 @@ onSubmit() {
           this.toastrService.success(res.statusMessage);
           this.getAllSensorDeviceTableData();
           this.clearForm();
-          this.buttonName = 'Submit'
+          this.headerName = 'Add Tank Sensor Device Master';
           this.closebutton.nativeElement.click();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -319,13 +305,14 @@ clearDropdown(flag?:any){
     this.getAllNetworkArray = [];
     this.getAllTankArray = [];
     this.getAllSimArray = [];
+    this.editFlag = false;
   }
   else if(flag == 'network'){
     this.tankSensorDeviceFrm.controls['tankId'].setValue(''),
     this.tankSensorDeviceFrm.controls['simId'].setValue('')
     this.getAllTankArray = [];
     this.getAllSimArray = [];
+    this.editFlag = false;
   }
 }
-
 }

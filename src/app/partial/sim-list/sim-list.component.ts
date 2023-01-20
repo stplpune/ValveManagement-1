@@ -18,16 +18,19 @@ export class SimListComponent implements OnInit {
   editData!: any;
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] = [];
   simFormData: FormGroup | any;
+  searchForm!: FormGroup;
   submitted: boolean = false;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
   getAllYojanaArray = new Array();
   getAllNetworkArray = new Array();
+  getAllFilterNetworkArray = new Array();
   simArray = new Array();
   listCount!: number;
+  buttonName:string = 'Submit';
   headerText: string = 'Add Sim';
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  getAllLocalStorageData!:any;
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
   highlitedRow: any;
@@ -44,7 +47,9 @@ export class SimListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.controlForm();
+    this.searchFormControl();
     this.getSimOperator();
     this.getAllYojana();
     this.getAllSimData();
@@ -56,14 +61,18 @@ export class SimListComponent implements OnInit {
       id: [0],
       yojanaId: ['', Validators.required],
       networkId: ['', Validators.required],
-      simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')],
-      ],
-      imsiNo: [
-        '',
-        [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
-      ],
+      simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],
+      imsiNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')]],
       operatorId: ['', [Validators.required,Validators.pattern('[^0]+')]],
     });
+  }
+
+  // SearchForm Initialize
+  searchFormControl(){
+    this.searchForm=this.fb.group({
+      yojana:[''],
+      network:['']
+    })
   }
 
   // Yojana Array
@@ -81,13 +90,13 @@ export class SimListComponent implements OnInit {
   }
 
   // Network Array
-  getAllNetwork() {
+  getAllNetwork(flag?:any) {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId
       + '&YojanaId=' + (this.simFormData.value.yojanaId || 0), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode == '200') {
-          this.getAllNetworkArray = res.responseData;
+        if (res.statusCode == '200') { 
+          flag == 'false' ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
         } else {
           this.getAllNetworkArray = [];
@@ -127,6 +136,7 @@ export class SimListComponent implements OnInit {
     this.getAllNetworkArray = [];
     this.editFlag = false;
     this.headerText = 'Add Sim';
+    this.buttonName = 'Submit'
     this.submitted = false;
   }
 
@@ -154,6 +164,7 @@ export class SimListComponent implements OnInit {
             this.toastrService.success(res.statusMessage);
             this.editFlag = false;
             this.addSimData.nativeElement.click();
+            this.buttonName = 'Submit'
             this.getAllSimData();
           } else {
             this.toastrService.error(res.statusMessage);
@@ -176,8 +187,8 @@ export class SimListComponent implements OnInit {
   //Get Sim Details
   getAllSimData() {
     this.spinner.show();
-    let obj = 'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get', 'SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + 
+    this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana || 0) +'&NetworkId=' + (this.searchForm.value.network || 0), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -206,6 +217,7 @@ export class SimListComponent implements OnInit {
 
   //Update Sim Data
   updateSimData(simData: any) {
+    this.buttonName = 'Update';
     this.editData = simData;
     this.highlitedRow = simData.id;
     this.editFlag = true;
@@ -251,8 +263,20 @@ export class SimListComponent implements OnInit {
     });
   }
 
+  clearSerach(flag: any) {
+    this.pageNumber = 1;
+    this.getAllSimData();
+    this.clearForm();
+    if(flag == 'yojana'){
+      this.searchForm.controls['network'].setValue('')
+      this.getAllFilterNetworkArray = [];
+      this.getAllSimData();
+    }
+  }
+
   clearDropdown() {
     this.simFormData.controls['networkId'].setValue('');
     this.getAllNetworkArray = [];
+    // this.editFlag = false;
   }
 }

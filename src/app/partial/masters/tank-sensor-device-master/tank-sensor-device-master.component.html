@@ -95,7 +95,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Sensor Device Master</p>
+        <p class="modal-title mb-0" id="AddValveModalLabel">{{headerName}}</p>
         <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0"
           #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -186,7 +186,7 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center">{{ buttonName }}</button>
+              <button type="submit" class="btn btn-main text-center">{{buttonName}}</button>
             </div>
           </div>
         </div>
