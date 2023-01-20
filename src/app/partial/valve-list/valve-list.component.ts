@@ -355,7 +355,8 @@ export class ValveListComponent implements OnInit {
       longitude: obj.longitude,
     });
     this.getAllNetwork(obj.yojanaId);
-    this.ToBindSimNumberList(obj.yojanaId, obj.networkId)
+    this.ToBindSimNumberList(obj.yojanaId, obj.networkId);
+    this.getValveList(obj.yojanaId, obj.networkId);
     this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
     this.addLatitude = obj.latitude;
     this.addLongitude = obj.longitude;

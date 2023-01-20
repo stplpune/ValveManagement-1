@@ -130,6 +130,7 @@ export class TankMasterComponent implements OnInit {
           this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
+          this.filterYojanaArray= [];
         }
       }), error: (error: any) => {
         this.error.handelError(error.status);
@@ -148,6 +149,7 @@ export class TankMasterComponent implements OnInit {
             this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
           } else {
             this.networkArray = [];
+            this.filterNetworkArray = [];
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
@@ -234,7 +236,6 @@ export class TankMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.toastrService.success(res.statusMessage);
-          // this.pageNumber = 1;
           this.getTableData();
         }
       }, error: (error: any) => {
@@ -243,7 +244,7 @@ export class TankMasterComponent implements OnInit {
     })
   }
 
-
+//#region -----------------------------------------Search Address Method Starts Here----------------------------------------------------------
   geocoder: any;
   addLatitude: any = 19.0898177;
   addLongitude: any = 76.5240298;
@@ -280,7 +281,6 @@ export class TankMasterComponent implements OnInit {
   markerAddressDragEnd($event: MouseEvent) {
     this.addLatitude = $event.coords.lat;
     this.addLongitude = $event.coords.lng;
-
     this.findAddressByCoordinates();
     this.addressMarkerShow = true;
   }
@@ -311,10 +311,8 @@ export class TankMasterComponent implements OnInit {
     this.addPrevious = infowindow;
 
   }
-
   newAddedAddressLat: any;
   newAddedAddressLang: any;
-
 
   addAddress() {
     this.tankForm.controls['address'].setValue(this.addressNameforAddress);
@@ -346,5 +344,5 @@ export class TankMasterComponent implements OnInit {
       this.clearAddress();
     }
   }
-
 }
+//#endregion-----------------------------------------Search Address Method Ends Here----------------------------------------------------------
