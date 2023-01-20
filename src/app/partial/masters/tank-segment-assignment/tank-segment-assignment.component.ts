@@ -30,7 +30,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   filterYojanaArray = new Array();
   filterNetworkArray = new Array();
   @ViewChild('closebutton') closebutton: any;
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  getAllLocalStorageData:any
 
   constructor(private service: ApiService,
     private error: ErrorsService,
@@ -40,6 +40,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
     private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.formField();
     this.filterFormField();
     this.getTableData();
