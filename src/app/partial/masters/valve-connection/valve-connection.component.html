@@ -10,34 +10,36 @@
 
         <form [formGroup]="searchForm">
             <div class="row">
-              <div class="col-sm-3">
-                <ngx-select [allowClear]="true" [items]="yoganaArray" formControlName="yojana"
-                placeholder="Select Yojana" optionValueField="yojanaId"
-                optionTextField="yojanaName" 
-                (remove)="clearSearch('yojana');filterData()"
-                (select)="clearSearch('yojana');getNetworkDropdown('filter');filterData()">
-              </ngx-select>
-              </div>
-              <div class="col-sm-3">
-                <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
-                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
-                     optionTextField="networkName" (remove)="clearSearch('network');filterData()" 
-                     (select)="clearSearch('network');getValveConnectionDropdown('filter');filterData()">
-                </ngx-select>
-              </div>
-              <div class="col-sm-3">
-                <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
-                placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName" 
-                [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster');filterData()" 
-                (select)="filterData()">
-           </ngx-select>
-        
-              </div>
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana"
+                        placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
+                        (remove)="clearSearch('yojana');filterData()"
+                        (select)="filterFlag='filter';clearSearch('yojana');getNetworkDropdown();filterData()"
+                        [disabled]="yoganaArray.length==1">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
+                        placeholder="Select Network" optionValueField="networkId"
+                        [disabled]="!this.searchForm.value.yojana" optionTextField="networkName"
+                        (remove)="clearSearch('network');filterData()"
+                        (select)="filterFlag ='filter';clearSearch('network');getValveConnectionDropdown('filter');filterData()"
+                        [disabled]="networkArrayFilter.length==1">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
+                        placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName"
+                        [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster');filterData()"
+                        (select)="filterFlag ='filter';filterData()">
+                    </ngx-select>
+
+                </div>
             </div>
-          </form>
+        </form>
     </div>
 
-    
+
 
 
     <div class="card-body">
@@ -118,8 +120,8 @@
 
 
 <!--Add/Update Modal Pop Up -->
-<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModal" data-bs-keyboard="false" data-bs-backdrop="static"
-    aria-hidden="true">
+<div class="modal fade" id="addconnectionModal" tabindex="-1" aria-labelledby="addconnectionModal"
+    data-bs-keyboard="false" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main">
@@ -137,38 +139,42 @@
                             <div class="mb-3">
                                 <label for="" class="form-label"> Yojana<span class="text-danger">*</span></label>
                                 <ngx-select [items]="yoganaArray" formControlName="yojanaId" [allowClear]="true"
-                                     placeholder="Select Yojana" optionValueField="yojanaId"
-                                     optionTextField="yojanaName" [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
-                                   (remove)="clearDropdown('yojanaId')"
-                                     (select)="clearDropdown('yojanaId');getNetworkDropdown();">
+                                    placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
+                                    (remove)="clearDropdown('yojanaId')"
+                                    (select)="clearDropdown('yojanaId');filterFlag ='add';;getNetworkDropdown();"
+                                    [disabled]="this.yoganaArray.length==1">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
-                                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
-                                    Required.</div>
+                                    <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
+                                        Required.</div>
                                 </div>
-                              </div>
+                            </div>
 
-                             <div class="mb-3">   
+                            <div class="mb-3">
                                 <label for="" class="form-label">Network <span class="text-danger">*</span></label>
                                 <ngx-select [items]="networkArray" formControlName="networkId" [allowClear]="true"
-                                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveConnectionForm.value.yojanaId"
-                                     optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
-                                     (remove)="clearDropdown('networkId')"
-                                     (select)="clearDropdown('networkId');getValveConnectionDropdown();">
+                                    placeholder="Select Network" optionValueField="networkId"
+                                    [disabled]="!this.valveConnectionForm.value.yojanaId" optionTextField="networkName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
+                                    (remove)="clearDropdown('networkId')"
+                                    (select)="clearDropdown('networkId');filterFlag ='add';getValveConnectionDropdown();"
+                                    [disabled]="networkArray.length==1">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
-                                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network Is
-                                    Required.</div>
+                                    <div class="text-danger" *ngIf="f.networkId.errors?.required">Network Is
+                                        Required.</div>
                                 </div>
-                              </div>
+                            </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Valve Name <span class="text-danger">*</span></label>
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
-                                    optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveConnectionForm.value.networkId"
+                                    optionValueField="valveId" optionTextField="valveName"
+                                    [disabled]="!this.valveConnectionForm.value.networkId"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }"
-                                    (remove)="clearDropdown('valveMasterId')">
+                                    (remove)="clearDropdown('valveMasterId')" (select)="filterFlag ='add';">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">
@@ -178,9 +184,10 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Person Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Person Name" formControlName="personName"
-                                (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)" 
-                                [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                <input type="text" class="form-control" placeholder="Person Name"
+                                    formControlName="personName"
+                                    (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
+                                    [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
                                 <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName.errors?.required">
                                         Person Name Is Required</div>
@@ -189,21 +196,27 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Mobile Number" formControlName="mobileNo"
-                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"   
-                                [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
+                                <input type="text" class="form-control" placeholder="Mobile Number"
+                                    formControlName="mobileNo"
+                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                                    [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
                                 <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
-                              <div *ngIf="f.mobileNo.errors?.required" class="text-danger" >Mobile Number Is Required</div>
-                              <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid Mobile Number</div>
-                             
-                            </div>
+                                    <div *ngIf="f.mobileNo.errors?.required" class="text-danger">Mobile Number Is
+                                        Required</div>
+                                    <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid
+                                        Mobile Number</div>
+
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Number of Connection <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Number of Connection" formControlName="totalConnection"
-                                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"    
-                                [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }" [readOnly]="true">
+                                <label class="form-label">Number of Connection <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Number of Connection"
+                                    formControlName="totalConnection"
+                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                                    [ngClass]="{ 'is-invalid': submitted && f.totalConnection.errors }"
+                                    [readOnly]="true">
                                 <div *ngIf="submitted && f.totalConnection.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.totalConnection.errors?.required">
                                         Total Connection Is Required.</div>
@@ -212,42 +225,48 @@
 
                             <div class="mb-3">
                                 <div class="card card-body border shadow-none">
-                                     <div formArrayName="connectiondetails"
+                                    <div formArrayName="connectiondetails"
                                         *ngFor="let connection of connectionForm?.controls;let i = index;">
                                         <div [formGroupName]="i">
 
                                             <div class="mb-3">
-                                                <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
+                                                <label class="form-label">Pipe Diameter <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
-                                                formControlName="pipeDiameter" (keypress)="validation.noSpacesAtStart($event)">
-                                                <div class="text-danger" *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['required']">
+                                                    formControlName="pipeDiameter"
+                                                    (keypress)="validation.noSpacesAtStart($event)">
+                                                <div class="text-danger"
+                                                    *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['required']">
                                                     Pipe Diameter Is Required.
-                                               </div>
+                                                </div>
                                             </div>
-                                           
-                                            <div class="mb-3">
-                                                <label class="form-label">Connection No. <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Connection No."
-                                                formControlName="connectionNo" (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
-                                                <div class="text-danger" *ngIf="submitted && connectionForm.controls[i]?.get('connectionNo')?.errors?.['required']">
-                                                    Connection Number Is Required.</div>
-                                         </div>
 
-                                           <ng-container *ngIf="valveConnectionForm.value.totalConnection >= 0">
-                                            <div class="text-end mb-2">
-                                                <span class="ms-2">
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        (click)="removeItem(i)">
-                                                        Remove
-                                                    </button>
-                                                </span>
+                                            <div class="mb-3">
+                                                <label class="form-label">Connection No. <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Connection No."
+                                                    formControlName="connectionNo"
+                                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
+                                                <div class="text-danger"
+                                                    *ngIf="submitted && connectionForm.controls[i]?.get('connectionNo')?.errors?.['required']">
+                                                    Connection Number Is Required.</div>
                                             </div>
-                                           </ng-container>
+
+                                            <ng-container *ngIf="valveConnectionForm.value.totalConnection >= 0">
+                                                <div class="text-end mb-2">
+                                                    <span class="ms-2">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                            (click)="removeItem(i)">
+                                                            Remove
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </ng-container>
                                         </div>
                                     </div>
                                     <div class="text-danger" *ngIf="submitted && connectionForm.errors?.['required']">
                                         Please Add connection
-                                   </div>
+                                    </div>
                                     <button type="button" class="btn btn-outline-primary btn-sm"
                                         (click)="addConnection()">
                                         Add
@@ -266,7 +285,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between align-items-center w-100">
-                        <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
+                        <button type="button" class="btn btn-light-main"
+                            (click)="clearForm(formDirective)">Clear</button>
                         <button type="submit" class="btn btn-main text-center">{{ editFlag ? 'Update' :
                             'Submit'}}</button>
                     </div>
