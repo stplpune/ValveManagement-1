@@ -16,10 +16,10 @@ import { CommonService } from 'src/app/core/services/common.service';
 export class TankMasterComponent implements OnInit {
   tankForm: FormGroup | any;
   getData:any;
-  yojanaArray = new Array();
-  networkArray = new Array();
+  yojanaArray :any
+  networkArray :any
   editFlag: boolean = false;
-  responseArray = new Array();
+  responseArray :any
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -29,8 +29,8 @@ export class TankMasterComponent implements OnInit {
   pinCode: any;
   editObj: any;
   submitted:boolean =false;
-  filterYojanaArray = new Array();
-  filterNetworkArray = new Array();
+  filterYojanaArray :any
+  filterNetworkArray :any
   
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
@@ -54,7 +54,7 @@ export class TankMasterComponent implements OnInit {
     this.geFormData();
     this.getFilterFormData();
     this.getTableData();
-    this.getYojana()
+    this.getYojana();
     this.searchAddress();
   }
 
@@ -63,7 +63,7 @@ export class TankMasterComponent implements OnInit {
       "id": [0],
       "tankName": ['', [Validators.required,Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
-      "yojanaId": ['', [Validators.required]],
+      "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
       "networkId": ['', Validators.required],
       "latitude": [''],
       "longitude": [''],
@@ -76,18 +76,14 @@ export class TankMasterComponent implements OnInit {
 
   clearFormDataDropDown(flag?: any) {
     if (flag == 'formYojana') {
-      this.tankForm.controls['yojanaId'].setValue(0);
-      this.tankForm.controls['networkId'].setValue(0);
-    } else if (flag == 'networkId') {
-      this.tankForm.controls['yojanaId'].setValue(this.tankForm.value.yojanaId);
       this.tankForm.controls['networkId'].setValue(0);
     }
   }
 
   getFilterFormData() {
     this.filterFrm = this.fb.group({
-      yojanaId: [0],
-      networkId: [0]
+      yojanaId: [''],
+      networkId: ['']
     })
   }
 
@@ -103,7 +99,7 @@ export class TankMasterComponent implements OnInit {
   getTableData() {
     this.spinner.show();
     let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (this.getData.yojanaId || formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -127,7 +123,8 @@ export class TankMasterComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
           this.filterYojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
+          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId)) : '';
+          this.filterYojanaArray?.length == 1 ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
           this.filterYojanaArray= [];
@@ -140,6 +137,8 @@ export class TankMasterComponent implements OnInit {
   getNetwork(status?: any) {
     let netId: any;
     netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+    console.log(status,'status');
+    console.log(netId,'netId');
     if (netId) {
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + netId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
@@ -147,6 +146,11 @@ export class TankMasterComponent implements OnInit {
           if (res.statusCode == '200') {
             status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
             this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
+            
+            this.filterNetworkArray?.length == 1   ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }),this.getTableData()) : '';
+
+            this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId }), this.getTableData()) : '';
+            
           } else {
             this.networkArray = [];
             this.filterNetworkArray = [];

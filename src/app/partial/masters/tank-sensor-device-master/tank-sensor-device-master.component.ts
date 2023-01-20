@@ -36,7 +36,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   submitted = false;
   highlitedRow:any;
   dropdownFlag!:string;
-  buttonName!:string;
   headerName!:any;
   getAllLocalStorageData!:any;
   @ViewChild('closebutton') closebutton:any;
@@ -70,14 +69,14 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       simId: ['',Validators.required],
       deviceDescription: ['',Validators.required],
       tankId: ['',Validators.required],
-      yojanaId: [(this.getAllLocalStorageData.userId!=1?this.getAllLocalStorageData.yojanaId:''),Validators.required],
+      yojanaId: ['',Validators.required],
       networkId: ['',Validators.required]
     })
   }
 
   searchFormControl(){
     this.searchForm=this.fb.group({
-      yojana:[this.getAllLocalStorageData.yojanaId],
+      yojana:[''],
       network:[''],
       tank:['']
     })
@@ -86,7 +85,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   onEdit(data?:any){
   this.editFlag = true;
   this.editData = data;
-  this.buttonName = 'Update';
   console.log(this.editData);
   
   this.headerName = 'Update Tank Sensor Device Master';
@@ -177,7 +175,6 @@ getAllNetwork(flag?:any) {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.getAllTankArray = [];
-  this.buttonName = 'Submit';
   this.getAllNetworkArray = [];
   this.getAllSimArray = [];
   this.editFlag = false;
@@ -188,7 +185,7 @@ clearForm(formDirective?:any){
 getAllSensorDeviceTableData() {
   this.spinner.show();
   this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
-  (!this.searchForm.value.yojana ? (this.pageNumber) : (this.pageNumber = 1))+'&pagesize='+ this.pagesize +'&YojanaId='+ ((this.getAllLocalStorageData.userId == 1)?(this.searchForm.value.yojana || 0):(this.getAllLocalStorageData.yojanaId)) +
+  (!this.searchForm.value.yojana ? (this.pageNumber) : (this.pageNumber = 1))+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana || 0) +
   '&NetworkId='+ (this.searchForm.value.network || 0) +'&TankId=' + (this.searchForm.value.tank || 0), false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {

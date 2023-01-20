@@ -104,6 +104,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
           this.filterYojanaArray = res.responseData;
+          this.filterYojanaArray?.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getAllNetwork()) : '';
+          this.yojanaArr?.length == 1 ? (this.tankSegmentForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -121,9 +123,10 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
-          label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData
+          label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData;
+          // this.networkArr?.length == 1 ? (this.tankSegmentForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getAllSegment()) : '';
+          // this.networkArr?.length > 1 && label == 'yojana' ? (this.tankSegmentForm.patchValue({ networkId: this.tankSegmentForm.value.networkId }), this.getAllSegment()) : '';
           // this.networkArr = res.responseData;
-
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
         } else {
           this.networkArr = [];
@@ -193,7 +196,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       }
     }
     this.tankSegmentTable.push(array);
-    this.f['segmentId'].setValue(0);
+    this.f['segmentId'].setValue('');
   }
 
   deleteTankSegment(index: number) {

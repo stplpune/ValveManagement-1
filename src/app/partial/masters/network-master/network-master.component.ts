@@ -18,6 +18,7 @@ export class NetworkMasterComponent implements OnInit {
   networkRegForm!: FormGroup | any;
   allNetworkArray = new Array();
   allYojanaArray = new Array();
+  yojanaAddResp:any;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -26,6 +27,7 @@ export class NetworkMasterComponent implements OnInit {
   submitted: boolean = false;
   highlitedRow: any;
   getAllLocalStorageData: any;
+  respYojanaId:any;
   yojana = new FormControl('');
   @ViewChild('closebutton') closebutton: any;
   get f() {
@@ -51,8 +53,9 @@ export class NetworkMasterComponent implements OnInit {
     this.networkRegForm = this.fb.group({
       id: [0],
       networkName: ['', Validators.required],
-      yojanaId: ['', Validators.required]
+      yojanaId: [this.allYojanaArray?.length == 1 ? this.allYojanaArray[0].yojanaId : '', Validators.required]
     })
+    
   }
 
   getAllYojana() {
@@ -61,6 +64,12 @@ export class NetworkMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.allYojanaArray = res.responseData;
+          this.allYojanaArray?.length == 1 ? (this.yojana.setValue(this.allYojanaArray[0].yojanaId),this.getAllNetworkTableData()) : '';
+          this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId }), this.getAllNetworkTableData()) : '';
+  
+        } else {
+          this.allYojanaArray = [];
+          this.toastrService.error(res.statusMessage);
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -140,6 +149,8 @@ export class NetworkMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.submitted = false;
     this.editFlag = false;
+    this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId }), this.getAllNetworkTableData()) : '';
+  
   }
 
   deleteConformation(id?: any) {
