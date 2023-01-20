@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between w-100 mb-3">
             Valve Connection
             <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
-                data-bs-target="#addconnectionModal">
+                data-bs-target="#addconnectionModal" (click)="this.filterFlag = 'add';this.getYoganaDropdown()">
                 <i class="fa-solid fa-plus me-2"></i> Add Connection
             </button>
         </div>
@@ -14,33 +14,29 @@
                     <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana"
                         placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                         (remove)="clearSearch('yojana');filterData()"
-                        (select)="filterFlag='filter';clearSearch('yojana');getNetworkDropdown();filterData()"
+                        (select)="this.filterFlag = 'filter';clearSearch('yojana');getNetworkDropdown();filterData()"
                         [disabled]="yoganaArray.length==1">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.searchForm.value.yojana" optionTextField="networkName"
+                        [disabled]="!this.searchForm.value.yojana || networkArrayFilter.length==1" optionTextField="networkName"
                         (remove)="clearSearch('network');filterData()"
-                        (select)="filterFlag ='filter';clearSearch('network');getValveConnectionDropdown('filter');filterData()"
-                        [disabled]="networkArrayFilter.length==1">
+                        (select)="this.filterFlag = 'filter';clearSearch('network');getValveConnectionDropdown();filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
                         placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName"
-                        [disabled]="!this.searchForm.value.network" (remove)="clearSearch('valveMaster');filterData()"
-                        (select)="filterFlag ='filter';filterData()">
+                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter.length==1" (remove)="clearSearch('valveMaster');filterData()"
+                        (select)="filterData()">
                     </ngx-select>
 
                 </div>
             </div>
         </form>
     </div>
-
-
-
 
     <div class="card-body">
         <div class="row">
@@ -69,7 +65,7 @@
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded"
                                         data-bs-toggle="modal" data-bs-target="#addconnectionModal"
-                                        (click)="onClickEdit(data)">
+                                        (click)="this.filterFlag = 'add';onClickEdit(data)">
                                         <i class="far fa-edit"></i></button>
                                     <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
                                         data-bs-toggle="modal" data-bs-target="#deleteModel"
@@ -142,7 +138,7 @@
                                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                                     [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
                                     (remove)="clearDropdown('yojanaId')"
-                                    (select)="clearDropdown('yojanaId');filterFlag ='add';;getNetworkDropdown();"
+                                    (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();"
                                     [disabled]="this.yoganaArray.length==1">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
@@ -158,7 +154,7 @@
                                     [disabled]="!this.valveConnectionForm.value.yojanaId" optionTextField="networkName"
                                     [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                     (remove)="clearDropdown('networkId')"
-                                    (select)="clearDropdown('networkId');filterFlag ='add';getValveConnectionDropdown();"
+                                    (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();"
                                     [disabled]="networkArray.length==1">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
@@ -172,9 +168,9 @@
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
                                     optionValueField="valveId" optionTextField="valveName"
-                                    [disabled]="!this.valveConnectionForm.value.networkId"
+                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }"
-                                    (remove)="clearDropdown('valveMasterId')" (select)="filterFlag ='add';">
+                                    (remove)="clearDropdown('valveMasterId')">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">
