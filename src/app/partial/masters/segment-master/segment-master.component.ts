@@ -22,7 +22,7 @@ export class SegmentMasterComponent implements OnInit{
   textName = 'Submit';
   segmentMasterArray: any;
   valveSegmentList: any;
-  pageNumber: number = 1;
+  pageNumber: number = 1; 
   pagesize: number = 10;
   totalRows: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
