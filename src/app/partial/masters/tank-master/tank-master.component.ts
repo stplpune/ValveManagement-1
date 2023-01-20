@@ -94,11 +94,10 @@ export class TankMasterComponent implements OnInit {
   clearfilter(flag: any) {
     if (flag == 'yojana') {
       this.filterFrm.controls['networkId'].setValue(0);
-      this.getTableData();
     }else if(flag == 'network'){
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
-      this.getTableData();
     }
+    this.getTableData();
   }
 
   getTableData() {

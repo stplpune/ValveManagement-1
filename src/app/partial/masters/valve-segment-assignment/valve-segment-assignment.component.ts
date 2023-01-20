@@ -31,7 +31,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   valvelabel: any;
-  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  getAllLocalStorageData:any;
   @ViewChild('closebutton') closebutton: any;
 
   constructor(private apiService: ApiService,
@@ -43,6 +43,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.formData();
     this.filterFormField();
     this.getAllValveTableData();
