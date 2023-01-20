@@ -14,7 +14,7 @@
             <div class="row g-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')"
-                        (select)="getAllSegmentMaster();getNetworkId()" [disabled]="yoganaIdArray?.length == 1"
+                        (select)="pageNumber = 1;getAllSegmentMaster();getNetworkId()" [disabled]="yoganaIdArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
@@ -23,7 +23,7 @@
                     <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" optionTextField="networkName"
-                        (remove)="clearFilter('network')" (select)="getAllSegmentMaster()">
+                        (remove)="clearFilter('network')" (select)="pageNumber = 1;getAllSegmentMaster()">
                     </ngx-select>
                 </div>
             </div>

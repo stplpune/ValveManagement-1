@@ -8,6 +8,7 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,10 @@ export class DashboardComponent implements OnInit {
   valveSummaryArray: any;
   lat: any = 19.7515;
   lng: any = 75.7139;
+  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+  filterForm: FormGroup | any;
+  yoganaIdArray: any;
+  networkIdArray: any;
 
   constructor(
     public commonService: CommonService,
@@ -27,11 +32,61 @@ export class DashboardComponent implements OnInit {
     private errorSerivce: ErrorsService,
     private spinner: NgxSpinnerService,
     private localStorage: LocalstorageService,
+    private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
+    this.defaultFilterForm();
+    this.getYogana();
     this.getValveSummary();
   }
+
+  defaultFilterForm() {
+    this.filterForm = this.fb.group({
+      yojanaId: [''],
+      networkId: [''],
+      searchText: ['']
+    })
+  }
+
+  clearForm() {
+    // this.defaultForm();
+  }
+
+  getYogana() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res: any) => {
+      if (res.statusCode == "200") {
+        this.yoganaIdArray = res.responseData;
+        this.yoganaIdArray?.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetwork()) : '';
+      }
+      else {
+        this.yoganaIdArray = [];
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      })
+  }
+
+  getNetwork() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.filterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res: any) => {
+      if (res.statusCode == "200") {
+        this.networkIdArray = res.responseData;
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId })) : '';
+      }
+      else {
+        this.networkIdArray = [];
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+      }
+    },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      })
+  }
+
 
   getValveSummary() {
     this.spinner.show();
