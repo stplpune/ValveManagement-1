@@ -14,7 +14,7 @@ import { CommonService } from 'src/app/core/services/common.service';
   styleUrls: ['./tank-master.component.css']
 })
 export class TankMasterComponent implements OnInit {
-  tankForm!: FormGroup;
+  tankForm: FormGroup | any;
   getData:any;
   yojanaArray = new Array();
   networkArray = new Array();
@@ -211,7 +211,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    this.submitted=true;
+    this.submitted=false;
     this.editFlag = false;
     this.geFormData();
   }

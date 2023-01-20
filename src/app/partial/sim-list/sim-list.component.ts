@@ -6,6 +6,7 @@ import { ErrorsService } from 'src/app/core/services/errors.service';
 import { CommonService } from 'src/app/core/services/common.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
+import { ValidationService } from 'src/app/core/services/validation.service';
 @Component({
   selector: 'app-sim-list',
   templateUrl: './sim-list.component.html',
@@ -18,7 +19,6 @@ export class SimListComponent implements OnInit {
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] = [];
   simFormData: FormGroup | any;
   submitted: boolean = false;
-  opeartorName: string = '';
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -36,6 +36,7 @@ export class SimListComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public apiService: ApiService,
     public commonService: CommonService,
+    public validations: ValidationService,
     private errorSerivce: ErrorsService,
     private toastrService: ToastrService,
     private fb: FormBuilder,
@@ -61,7 +62,7 @@ export class SimListComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
       ],
-      operatorId: ['', [Validators.pattern('[^0]+')]],
+      operatorId: ['', [Validators.required,Validators.pattern('[^0]+')]],
     });
   }
 
@@ -138,7 +139,7 @@ export class SimListComponent implements OnInit {
     } else {
       let obj = {
         ...formData,
-        operatorName: this.opeartorName,
+        operatorName:"",
         createdBy: this.localStorage.userId(),
       };
       this.spinner.show();
@@ -170,14 +171,6 @@ export class SimListComponent implements OnInit {
   //Get Form Data using Validation Purpose
   get f() {
     return this.simFormData.controls;
-  }
-
-  //Get Operator Name
-  getOperatorName(event: any) {
-    let selectedOptions = event.target['options'];
-    let selectedIndex = selectedOptions.selectedIndex;
-    let selectElementText = selectedOptions[selectedIndex].text;
-    this.opeartorName = selectElementText;
   }
 
   //Get Sim Details
