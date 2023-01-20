@@ -90,13 +90,11 @@
             <div class="mb-2">
               <label class="form-label">Tank Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank Name" formControlName="tankName"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
+                (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
               <div *ngIf="submitted && f['tankName'].errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f['tankName'].errors?.['required']">Tank Name is Required.</div>
+                <div class="text-danger" *ngIf="f['tankName'].errors?.['required']">Tank Name Is Required.</div>
               </div>
-              <!-- <div class="text-danger" *ngIf="f.['tankName'].errors?.['required']">Tank Name Is Required.</div> -->
-              <!-- <div class="validation-css" *ngIf="f['tankName'].errors['tankName']"> Tank Name Is Required </div> -->
             </div>
             <div class="mb-2">
               <label class="form-label">Address<span class="text-danger">*</span></label>
@@ -104,15 +102,12 @@
                 <input type="text" class="form-control" placeholder="Address" formControlName="address" maxlength="500"
                   (keypress)="validation.noFirstSpaceAllow($event)"
                   [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
-                <!-- <div *ngIf="f['address'].touched && f['address'].errors" class="invalid-feedback">
-                  <div class="validation-css" *ngIf="f['address'].errors['address']">Address Is Required </div>
-                </div> -->
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" (click)="openAddressModel()"
                   data-bs-target="#MapModal">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
                 <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f['address'].errors?.['required']">Address is Required.</div>
+                  <div class="text-danger" *ngIf="f['address'].errors?.['required']">Address Is Required.</div>
                 </div>
               </div>
             </div>
@@ -125,11 +120,8 @@
                   [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
+                  <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Is Required.</div>
                 </div>
-                <!--  <div *ngIf="f.yojanaId.errors" class="invalid-feedback">
-                  <div class="validation-css" *ngIf="f.yojanaId.errors?.required"> Yojana Is Required </div>
-                </div>-->
               </div>
 
               <div class="col-6">
@@ -140,11 +132,8 @@
                     [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormDataDropDown('formnetwork')"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>
-                  <!-- <div *ngIf="f['networkId'].touched && f['networkId'].errors" class="invalid-feedback">
-                    <div class="validation-css" *ngIf="f['networkId'].errors['networkId']"> Network Is Required </div>
-                  </div> -->
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
+                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Is Required.</div>
                   </div>
                   <div class="invalid-feedback">
                   </div>
