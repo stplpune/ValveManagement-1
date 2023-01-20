@@ -21,7 +21,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   sgmentDropdownArray = new Array();
   segmentShowArray = new Array();
   yojanaArr = new Array();
+  filterYojanaArr = new Array();
   networkArr = new Array();
+  FilterNetworkArr = new Array();
   editFlag: boolean = false;
   submited: boolean = false;
   editObj: any;
@@ -71,14 +73,15 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   clearfilter(flag: any) {
     if (flag == 'yojana') {
-      this.filterForm.controls['yojanaId'].setValue(0);
+      // this.filterForm.controls['yojanaId'].setValue(0);
       this.filterForm.controls['networkId'].setValue(0);    
-      this.getAllValveTableData();
+      // this.getAllValveTableData();
     } else if (flag == 'network') {
       this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
-      this.filterForm.controls['networkId'].setValue(0);      
-      this.getAllValveTableData();
+      // this.filterForm.controls['networkId'].setValue(0);      
+      // this.getAllValveTableData();
     }
+    this.getAllValveTableData();
   }
 
   getAllYojana() {
@@ -87,6 +90,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
+          this.filterYojanaArr =res.responseData;
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -104,7 +108,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {
-          this.networkArr = res.responseData;
+          // this.networkArr = res.responseData;
+          yId == 'yojana' ?this.FilterNetworkArr = res.responseData: this.networkArr = res.responseData;
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
           this.networkArr = [];
