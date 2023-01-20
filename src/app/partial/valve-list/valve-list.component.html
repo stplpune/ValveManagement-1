@@ -17,7 +17,7 @@
         <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana"
         placeholder="Select Yojana" optionValueField="yojanaId"
         optionTextField="yojanaName"  (select)="getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()"
-        (remove)="clearSerach('yojana')">
+        (remove)="clearSerach('yojana')" [disabled]="yojanaArray?.length == 1">
       </ngx-select>
       </div>
       <div class="col-sm-3">
@@ -226,7 +226,7 @@
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
-                (remove)="clearFilter('yojana')"
+                (remove)="clearFilter('yojana')"  [disabled]="yojanaArray?.length == 1"
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
