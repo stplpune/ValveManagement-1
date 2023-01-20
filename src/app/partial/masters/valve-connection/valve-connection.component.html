@@ -143,7 +143,7 @@
                                      (select)="clearDropdown('yojanaId');getNetworkDropdown();">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
-                                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
+                                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
                                     Required.</div>
                                 </div>
                               </div>
@@ -157,7 +157,7 @@
                                      (select)="clearDropdown('networkId');getValveConnectionDropdown();">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
-                                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
+                                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network Is
                                     Required.</div>
                                 </div>
                               </div>
@@ -233,7 +233,7 @@
                                                     Connection Number Is Required.</div>
                                          </div>
 
-                                           <ng-container *ngIf="valveConnectionForm.value.totalConnection > 1">
+                                           <ng-container *ngIf="valveConnectionForm.value.totalConnection >= 0">
                                             <div class="text-end mb-2">
                                                 <span class="ms-2">
                                                     <button type="button" class="btn btn-outline-danger btn-sm"
