@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { MapsAPILoader } from '@agm/core';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -13,8 +13,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   templateUrl: './segment-master.component.html',
   styleUrls: ['./segment-master.component.css']
 })
-export class SegmentMasterComponent implements OnInit {
-
+export class SegmentMasterComponent implements OnInit{
 
   filterForm: FormGroup | any;
 
@@ -68,7 +67,7 @@ export class SegmentMasterComponent implements OnInit {
       startPoints: [''],
       endPoints: [''],
       midpoints: [''],
-      yojanaId: ['', [Validators.required]],
+      yojanaId: [this.yoganaIdArray?.length == 1 ? this.yoganaIdArray[0].yojanaId : '', [Validators.required]],
       networkId: ['', [Validators.required]],
     })
   }
@@ -80,8 +79,8 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.yoganaIdArray = res.responseData;
-        this.yoganaIdArray.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkId()) : '';
-        this.yoganaIdArray.length == 1 ? (this.segmentMasterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkIdAdd()) : '';
+        this.yoganaIdArray?.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkId()) : '';
+        this.yoganaIdArray?.length == 1 ? (this.segmentMasterForm.patchValue({ yojanaId: this.yoganaIdArray[0].yojanaId }), this.getNetworkIdAdd()) : '';
       }
       else {
         this.yoganaIdArray = [];
@@ -98,7 +97,7 @@ export class SegmentMasterComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
       }
       else {
         this.networkIdArray = [];
@@ -110,12 +109,13 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkIdAdd() { // For Filter
+  getNetworkIdAdd(flag?:any) { // For Filter
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.segmentMasterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
-        this.networkIdAddArray.length == 1 ? (this.segmentMasterForm.patchValue({ networkId: this.networkIdAddArray[0].networkId }), this.getValveSegmentList()) : '';
+        this.networkIdAddArray?.length == 1 ? (this.segmentMasterForm.patchValue({ networkId: this.networkIdAddArray[0].networkId }), this.getValveSegmentList()) : '';
+        this.networkIdAddArray?.length > 1 && flag == 'bind' ? (this.segmentMasterForm.patchValue({ networkId: this.segmentMasterForm.value.networkId }), this.getValveSegmentList()) : '';
       }
       else {
         this.networkIdAddArray = [];
@@ -311,8 +311,8 @@ export class SegmentMasterComponent implements OnInit {
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
     this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
-    this.getNetworkIdAdd();
     this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
+    this.getNetworkIdAdd('bind');
   }
 
   valveSegPatchData(mainArray: any) {
