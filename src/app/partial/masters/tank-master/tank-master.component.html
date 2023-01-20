@@ -16,14 +16,14 @@
               <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="filterFrm.controls['networkId'].setValue('');getNetwork('net');pageNumber = 1;getTableData()"
-                (remove)="clearfilter('yojana')">
+                [disabled]="filterYojanaArray?.length == 1" (remove)="clearfilter('yojana')">
               </ngx-select>
             </div>
             <div class="col-sm-3">
               <label class="form-label">Network Name</label>
               <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId"
                 placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                [disabled]="!this.filterFrm.value.yojanaId" (select)="pageNumber = 1;getTableData()"
+                [disabled]="!this.filterFrm.value.yojanaId || filterNetworkArray?.length == 0" (select)="pageNumber = 1;getTableData()"
                 (remove)="clearfilter('network')">
               </ngx-select>
             </div>
@@ -117,6 +117,7 @@
                 <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId"
                   placeholder="Select Yojana" optionValueField="yojanaId" (ngModelChange)="getNetwork()"
                   optionTextField="yojanaName" (remove)="clearFormDataDropDown('formYojana')"
+                  [disabled]="yojanaArray?.length == 1"
                   [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
@@ -129,7 +130,7 @@
                   <label class="form-label">Network <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                    [disabled]="!this.tankForm.value.yojanaId" (remove)="clearFormDataDropDown('formnetwork')"
+                    [disabled]="!this.tankForm.value.yojanaId || networkArray?.length == 0" (remove)="clearFormDataDropDown('formnetwork')"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
