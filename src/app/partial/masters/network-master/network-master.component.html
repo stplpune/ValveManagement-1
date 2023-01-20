@@ -16,7 +16,7 @@
             <div class="col-sm-3">
                 <ngx-select [allowClear]="true" [items]="allYojanaArray" [formControl]="yojana"
                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                    (select)="defaultPageNo()" (remove)="defaultPageNo()">
+                    (select)="defaultPageNo()" [disabled]="allYojanaArray?.length == 1" (remove)="defaultPageNo()">
                 </ngx-select>
             </div>
         </div>
@@ -93,7 +93,7 @@
                             <label class="form-label">Select Yojana</label>
                             <ngx-select [allowClear]="true" [items]="allYojanaArray" formControlName="yojanaId"
                                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                                (remove)="clearDropdown('yojana')"
+                                (remove)="clearDropdown('yojana')" [disabled]="allYojanaArray?.length == 1"
                                 [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                             </ngx-select>
                             <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
