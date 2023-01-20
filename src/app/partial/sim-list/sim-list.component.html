@@ -97,18 +97,18 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Operator</label>
-              <ngx-select [allowClear]="true" [items]="simOperatorList" formControlName="operatorId" (change)="getOperatorName($event)"
+              <ngx-select [allowClear]="true" [items]="simOperatorList" formControlName="operatorId"
               placeholder="Select Operator" optionValueField="id" optionTextField="operatorName"
               [ngClass]="{ 'is-invalid': submitted && f.operatorId.errors }">
             </ngx-select>
               <div *ngIf="submitted && f.operatorId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.operatorId.errors?.pattern">Operator Is Required</div>
+                <div class="text-danger" *ngIf="f.operatorId.errors?.required">Operator Is Required</div>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">SIM No.</label>
               <input type="text" class="form-control" maxlength="20" formControlName="simNo" placeholder="SIM No."
-                [ngClass]="{ 'is-invalid': submitted && f.simNo.errors }" />
+                [ngClass]="{ 'is-invalid': submitted && f.simNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
               <div *ngIf="submitted && f.simNo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simNo.errors?.required">Sim No Is Required.</div>
                 <!-- <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
@@ -118,7 +118,7 @@
             <div class="mb-3">
               <label class="form-label">IMSI No.</label>
               <input type="text" class="form-control" formControlName="imsiNo" maxlength="15" placeholder="IMSI No."
-                [ngClass]="{ 'is-invalid': submitted && f.imsiNo.errors }" />
+                [ngClass]="{ 'is-invalid': submitted && f.imsiNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
               <div *ngIf="submitted && f.imsiNo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.imsiNo.errors?.required">IMSI No Is Required.</div>
                 <!-- <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
