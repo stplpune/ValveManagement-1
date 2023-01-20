@@ -188,7 +188,7 @@ clearForm(formDirective?:any){
 getAllSensorDeviceTableData() {
   this.spinner.show();
   this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
-  (!this.searchForm.value.yojana ? this.pageNumber : 1)+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana ? this.searchForm.value.yojana : 0) +
+  (!this.searchForm.value.yojana ? (this.pageNumber) : (this.pageNumber = 1))+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana ? this.searchForm.value.yojana : 0) +
   '&NetworkId='+ (this.searchForm.value.network ? this.searchForm.value.network : 0) +'&TankId=' + (this.searchForm.value.tank ? this.searchForm.value.tank : 0), false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
