@@ -294,15 +294,8 @@ export class SegmentMasterComponent implements OnInit{
   newRecord: any = {
     polyline: undefined,
   };
-
   markerArray: any;
-  lineSymbol = {
-    path: 'M 1.5 1 L 1 0 L 1 2 M 0.5 1 L 1 0',
-    fillColor: '#4d5ebf',
-    strokeColor: '#4d5ebf',
-    strokeWeight: 3,
-    strokeOpacity: 1
-  };
+
 
   patchSegmentTable(obj: any) {
     this.onEditFlag = true;
@@ -413,13 +406,12 @@ export class SegmentMasterComponent implements OnInit{
         strokeColor: '#FF0000',
         strokeOpacity: 0.8,
         strokeWeight: 4,
-        icons: [{ icon: this.lineSymbol, offset: '25px', repeat: '100px' }]
+        icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.editPatchShape.setMap(this.map);
-
     })
 
-    let latLng = this.FN_CN_poly2latLang(this.editPatchShape);
+    let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
     this.map.setCenter(latLng);
 
     //         var OBJ_fitBounds = new google.maps.LatLngBounds();
@@ -435,7 +427,7 @@ export class SegmentMasterComponent implements OnInit{
         strokeColor: '#8000FF',
         strokeOpacity: 1.0,
         strokeWeight: 4,
-        icons: [{ icon: this.lineSymbol, offset: '25px', repeat: '100px' }]
+        icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.setSelection(patchShapeEditedObj);
     } else if (this.onEditFlag == false) {
@@ -505,30 +497,6 @@ export class SegmentMasterComponent implements OnInit{
     this.tank_ValveArray = [];
     this.markerArray = [];
     this.removeShape();
-  }
-
-  FN_CN_poly2latLang(poly: any) {
-    let lowx,
-      highx,
-      lowy,
-      highy,
-      lats: any[] = [],
-      lngs: any[] = [],
-      vertices = poly?.getPath();
-    for (let i = 0; i < vertices?.length; i++) {
-      lngs.push(vertices.getAt(i).lng());
-      lats.push(vertices.getAt(i).lat());
-    }
-    lats.sort();
-    lngs.sort();
-    lowx = lats[0];
-    highx = lats[vertices?.length - 1];
-    lowy = lngs[0];
-    highy = lngs[vertices?.length - 1];
-    const center_x = lowx + ((highx - lowx) / 2);
-    const center_y = lowy + ((highy - lowy) / 2);
-    return (new google.maps.LatLng(center_x, center_y));
-    //return center_x + ' ' + center_y
   }
 
 }

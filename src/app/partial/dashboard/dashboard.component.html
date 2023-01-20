@@ -8,15 +8,15 @@
             <form [formGroup]="filterForm">
                 <div class="row g-2">
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getNetwork()"
-                            [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId"
+                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();getNetwork()"
+                            [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
-                            placeholder="Select Network" optionValueField="networkId"
-                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0"
+                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId"
+                            placeholder="Select Network" (select)="editPatchShape.setMap(null);getValveSegmentList()" 
+                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
                     </div>
@@ -85,9 +85,18 @@
                 <div class="card dashboardChart">
                     <div class="card-header">Location</div>
                     <div class="card-body text-center pt-0">
-                        <agm-map [latitude]="lat" [longitude]="lng">
+                        <!-- <agm-map [latitude]="lat" [longitude]="lng" [fullscreenControl]="true">
                             <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-                        </agm-map>
+                        </agm-map> -->
+                        <agm-map [fitBounds]="true" [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
+                        (mapReady)="onMapReady($event)" [fullscreenControl]="true">
+                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
+                            [iconUrl]="m.iconUrl">
+                        </agm-marker>
+                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
+                            [longitude]="m.longitude || 76.5240298" [label]="m.label">
+                        </agm-marker>
+                    </agm-map>
                     </div>
                 </div>
             </div>
