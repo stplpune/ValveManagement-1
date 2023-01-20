@@ -27,6 +27,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
   editFlag: boolean = false;
   tankLabel !: string;
   submitted: boolean = false;
+  filterYojanaArray = new Array();
+  filterNetworkArray = new Array();
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
 
@@ -100,6 +102,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
+          this.filterYojanaArray = res.responseData;
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -117,7 +120,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
-          this.networkArr = res.responseData;
+          label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData
+          // this.networkArr = res.responseData;
+
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
         } else {
           this.networkArr = [];
@@ -208,16 +213,16 @@ export class TankSegmentAssignmentComponent implements OnInit {
     else {
       let obj = {
         "id": formValue.id,
-        "tankId": [formValue.tankId, Validators.required],
-        "segmentId": [formValue.segmentId, Validators.required],
+        "tankId": [formValue.tankId],
+        "segmentId": [formValue.segmentId],
         "isDeleted": true,
         "createdBy": this.localStorage.userId(),
         "createdDate": new Date(),
         "modifiedBy": this.localStorage.userId(),
         "modifiedDate": new Date(),
         "timestamp": new Date(),
-        "yojanaId": [formValue.yojanaId, Validators.required],
-        "networkId": [formValue.networkId, Validators.required],
+        "yojanaId": [formValue.yojanaId],
+        "networkId": [formValue.networkId],
         tanksegment: this.tankSegmentTable
       }
 
@@ -290,14 +295,12 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
   clearfilter(label: any) {
     if (label == 'Yojana') {
-      this.filterForm.controls['yojanaId'].setValue(0);
       this.filterForm.controls['networkId'].setValue(0);
-      this.getTableData();
     } else if (label == 'Network') {
       this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
-      this.filterForm.controls['networkId'].setValue(0);
-      this.getTableData();
     }
+    this.getTableData();
+
   }
 
 }

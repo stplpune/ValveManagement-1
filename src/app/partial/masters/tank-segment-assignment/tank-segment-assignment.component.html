@@ -18,15 +18,15 @@
       <div class="row g-2">
         <div class="col-sm">
           <!-- <label class="form-label">Yojna</label> -->
-          <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-            optionValueField="yojanaId" optionTextField="yojanaName" (select)="getTableData(); getAllNetwork('yojana');"
-            (remove)="clearfilter('Yojana')">
+          <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId" placeholder="Select Yojna"
+            optionValueField="yojanaId" optionTextField="yojanaName" 
+            (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getTableData()" (remove)="clearfilter('Yojana')">
           </ngx-select>
         </div>
 
         <div class="col-sm">
           <!-- <label class="form-label">Network</label> -->
-          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId" placeholder="Select Network"
+          <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId" placeholder="Select Network"
             optionValueField="networkId" optionTextField="networkName" (select)="getTableData();"
             (remove)="clearfilter('Network')" [disabled]="!this.filterForm.value.yojanaId">
           </ngx-select>
