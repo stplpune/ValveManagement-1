@@ -44,6 +44,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
+    console.log(" this.getAllLocalStorageData", this.getAllLocalStorageData);
+    
     this.formData();
     this.filterFormField();
     this.getAllValveTableData();
@@ -52,7 +54,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   formData() {
     this.valveRegForm = this.fb.group({
-      "id": [this.editObj ? this.editObj.id : 0],
+      "id": [this.editFlag ? this.editObj.id : 0],
       "valveId": ['', Validators.required],
       "segmentId": [''],
       "yojanaId": ['', Validators.required],
@@ -92,6 +94,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
           this.filterYojanaArr =res.responseData;
+
+          this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
+          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
+
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -111,6 +117,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == 200) {
           // this.networkArr = res.responseData;
           yId == 'yojana' ?this.FilterNetworkArr = res.responseData: this.networkArr = res.responseData;
+          // this.networkArr.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
           this.networkArr = [];
@@ -153,7 +160,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   getAllValveTableData() {
     this.spinner.show();
-    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo=' + this.pageNumber + '&pageSize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0) + '&networkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo=' + this.pageNumber + '&pageSize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 || this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0 || this.getAllLocalStorageData.networkId), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         this.spinner.hide();
@@ -212,7 +219,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       formValue.valvesegmet = this.segmentShowArray;
       let obj = {
         "id": formValue.id,
-        "valveId": formValue.valveId,
+        "valveId": formValue.valveId || 0,
         "segmentId": 0,
         "isDeleted": false,
         "createdBy": this.localStorage.userId(),
@@ -224,6 +231,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         "yojanaId": formValue.yojanaId,
         "valvesegmet": this.segmentShowArray
       }
+      console.log("editFlag",this.editFlag);
+      
+      console.log("formvalueobj",obj);
+      
       this.spinner.show();
       this.apiService.setHttp('PUT', 'ValveManagement/Valvesegment/Updatevalvesegmentassignment', false, obj, false, 'valvemgt');
       this.apiService.getHttp().subscribe(

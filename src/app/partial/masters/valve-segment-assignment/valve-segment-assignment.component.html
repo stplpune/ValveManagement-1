@@ -1,26 +1,4 @@
 <div class="col-sm-4">Valve Segment Assignment</div>
-<form [formGroup]="filterForm">
-  <div class="row">
-    <div class="col-3">
-      <!-- <label class="form-label">Yojna</label> -->
-      <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-        optionValueField="yojanaId" optionTextField="yojanaName" 
-        (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getAllValveTableData()" (remove)="clearfilter('yojana')">
-      </ngx-select>
-    </div>
-    <div class="col-3">
-      <!-- <label class="form-label">Network</label> -->
-      <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId" placeholder="Select Network"
-        optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId"
-        (select)="getAllValveTableData();" (remove)="clearfilter('network')">
-      </ngx-select>
-    </div>
-    <!-- <div class="col-4">
-      <button type="submit" class="btn btn-main" (click)="getAllValveTableData()">Search</button>
-      <button type="button" class="btn btn-main ms-2" (click)="clearFilter()">Clear</button>
-    </div> -->
-  </div>
-</form>
 <div class="card plain-card">
   <div class="card-header">
     <div class="row justify-content-between align-items-center">
@@ -31,6 +9,28 @@
           Assignment
         </button>
       </div>
+      <form [formGroup]="filterForm">
+        <div class="row">
+          <div class="col-3">
+            <!-- <label class="form-label">Yojna</label> -->
+            <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
+              optionValueField="yojanaId" optionTextField="yojanaName" 
+              (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getAllValveTableData()" (remove)="clearfilter('yojana')">
+            </ngx-select>
+          </div>
+          <div class="col-3">
+            <!-- <label class="form-label">Network</label> -->
+            <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId" placeholder="Select Network"
+              optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId"
+              (select)="getAllValveTableData();" (remove)="clearfilter('network')">
+            </ngx-select>
+          </div>
+          <!-- <div class="col-4">
+            <button type="submit" class="btn btn-main" (click)="getAllValveTableData()">Search</button>
+            <button type="button" class="btn btn-main ms-2" (click)="clearFilter()">Clear</button>
+          </div> -->
+        </div>
+      </form>
     </div>
 
     <!-- <form [formGroup]="filterForm">
@@ -157,7 +157,7 @@
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
                   [disabled]="!this.valveRegForm.value.networkId">
                 </ngx-select>
-                <button type="button" class="btn btn-main" (click)="addSegment()">Add</button>
+                <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId" (click)="addSegment()">Add</button>
               </div>
             </div>
             <div class="mb-0">
