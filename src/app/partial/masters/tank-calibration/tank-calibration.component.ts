@@ -64,8 +64,8 @@ export class TankCalibrationComponent implements OnInit {
 
   getFilterForm() {
     this.filterFrm = this.fb.group({
-      yojanaId: [0],
-      networkId: [0]
+      yojanaId: [''],
+      networkId: ['']
     })
   }
 
@@ -79,6 +79,7 @@ export class TankCalibrationComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
+          this.yojanaArray?.length == 1 ? (this.filterFrm.controls['yojanaId'].setValue(this.yojanaArray[0].yojanaId), this.getNetworkByYojanaId()) : '';
         } else {
           this.yojanaArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -92,7 +93,8 @@ export class TankCalibrationComponent implements OnInit {
     });
   }
 
-  getNetworkByYojanaId(yojanaId: any) {
+  getNetworkByYojanaId() {
+    let yojanaId=this.filterFrm.value.yojanaId;
     this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+ this.localstorageData.userId +'&YojanaId=' + yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -135,7 +137,8 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0);
+    console.log(filterValue);
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0 || this.localstorageData.yojanaId) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0);
     this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -172,7 +175,7 @@ export class TankCalibrationComponent implements OnInit {
   clearfilter(flag: any) {
     if (flag == 'yojana') {
       // this.filterFrm.controls['yojanaId'].setValue(''); 
-      this.filterFrm.controls['networkId'].setValue(0);           
+      this.filterFrm.controls['networkId'].setValue('');           
     } 
     // else if (flag == 'network') {
     //   this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId); 
