@@ -93,19 +93,16 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkId(yojanaId?: number) {
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkId() {
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.filterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        (this.networkIdArray.length == 1 && this.onEditFlag == true) ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId })) : '';
-        if (this.networkIdArray.length != 1 && this.onEditFlag == true) {
-          this.filterForm.patchValue({ networkId: this.editObj.networkId })
-        }
+        this.networkIdArray.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
       }
       else {
         this.networkIdArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
@@ -113,8 +110,8 @@ export class SegmentMasterComponent implements OnInit {
       })
   }
 
-  getNetworkIdAdd(yojanaId?: number) { // For Filter
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+  getNetworkIdAdd() { // For Filter
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?YojanaId=' + this.segmentMasterForm.value.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdAddArray = res.responseData;
@@ -122,7 +119,7 @@ export class SegmentMasterComponent implements OnInit {
       }
       else {
         this.networkIdAddArray = [];
-        this.toastrService.error(res.statusMessage);
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
@@ -314,7 +311,7 @@ export class SegmentMasterComponent implements OnInit {
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
     this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
-    this.getNetworkIdAdd(this.editObj.yojanaId);
+    this.getNetworkIdAdd();
     this.segmentMasterForm.controls['networkId'].setValue(this.editObj.networkId);
   }
 

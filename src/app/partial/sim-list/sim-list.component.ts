@@ -15,9 +15,8 @@ export class SimListComponent implements OnInit {
   //Initialize variable
   editFlag!: boolean;
   editData!: any;
-  buttonName: string = 'Submit';
   simOperatorList: { id: number; operatorName: string; sortOrder: number }[] = [];
-  simFormData: FormGroup |any;
+  simFormData: FormGroup | any;
   submitted: boolean = false;
   opeartorName: string = '';
   pageNumber: number = 1;
@@ -25,14 +24,7 @@ export class SimListComponent implements OnInit {
   totalRows: any;
   getAllYojanaArray = new Array();
   getAllNetworkArray = new Array();
-  simArray: {
-    id: number;
-    simNo: string;
-    imsiNo: string;
-    operatorId: number;
-    operatorName: string;
-    createdBy: number;
-  }[] = [];
+  simArray = new Array();
   listCount!: number;
   headerText: string = 'Add Sim';
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
@@ -51,25 +43,25 @@ export class SimListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.defaultForm();
+    this.controlForm();
     this.getSimOperator();
     this.getAllYojana();
     this.getAllSimData();
   }
 
   //Form Initialize
-  defaultForm() {
+  controlForm() {
     this.simFormData = this.fb.group({
-      Id: [0],
+      id: [0],
       yojanaId: ['', Validators.required],
       networkId: ['', Validators.required],
-      SimNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')],
+      simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')],
       ],
-      IMSINo: [
+      imsiNo: [
         '',
         [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')],
       ],
-      OperatorId: ['0', [Validators.pattern('[^0]+')]],
+      operatorId: ['', [Validators.pattern('[^0]+')]],
     });
   }
 
@@ -108,14 +100,7 @@ export class SimListComponent implements OnInit {
   //Get Sim Operator
   getSimOperator() {
     this.spinner.show();
-    this.apiService.setHttp(
-      'get',
-      'SimMaster/GetSIMOperatorList',
-      false,
-      false,
-      false,
-      'valvemgt'
-    );
+    this.apiService.setHttp('get','SimMaster/GetSIMOperatorList',false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -141,9 +126,7 @@ export class SimListComponent implements OnInit {
     this.getAllNetworkArray = [];
     this.editFlag = false;
     this.headerText = 'Add Sim';
-    this.buttonName = 'Submit';
     this.submitted = false;
-    // this.defaultForm();
   }
 
   //To Submit the Data
@@ -154,25 +137,14 @@ export class SimListComponent implements OnInit {
       return;
     } else {
       let obj = {
-        id: formData.Id,
-        simNo: formData.SimNo,
-        imsiNo: formData.IMSINo,
-        yojanaId: formData.yojanaId,
-        networkId: formData.networkId,
-        operatorId: formData.OperatorId,
+        ...formData,
         operatorName: this.opeartorName,
         createdBy: this.localStorage.userId(),
       };
       this.spinner.show();
       let urlType;
-      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
-      this.apiService.setHttp(
-        urlType,
-        'SimMaster',
-        false,
-        JSON.stringify(obj),
-        false,
-        'valvemgt'
+      formData.id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
+      this.apiService.setHttp(urlType,'SimMaster',false, obj,false,'valvemgt'
       );
       this.apiService.getHttp().subscribe(
         (res: any) => {
@@ -180,7 +152,6 @@ export class SimListComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.editFlag = false;
-            this.buttonName = 'Update';
             this.addSimData.nativeElement.click();
             this.getAllSimData();
           } else {
@@ -212,8 +183,8 @@ export class SimListComponent implements OnInit {
   //Get Sim Details
   getAllSimData() {
     this.spinner.show();
-    let obj ='UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get','SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize,false,false,false,'valvemgt');
+    let obj = 'UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
+    this.apiService.setHttp('get', 'SimMaster?UserId=1&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -245,14 +216,13 @@ export class SimListComponent implements OnInit {
     this.editData = simData;
     this.highlitedRow = simData.id;
     this.editFlag = true;
-    this.buttonName = 'Update';
     this.headerText = 'Update Sim';
     this.simFormData.patchValue({
-      Id: simData.id,
+      id: simData.id,
       yojanaId: simData.yojanaId,
-      SimNo: simData.simNo,
-      IMSINo: simData.imsiNo,
-      OperatorId: simData.operatorId,
+      simNo: simData.simNo,
+      imsiNo: simData.imsiNo,
+      operatorId: simData.operatorId,
     });
     this.getAllNetwork();
   }
@@ -269,13 +239,7 @@ export class SimListComponent implements OnInit {
       id: this.deleteSimId,
       deletedBy: this.localStorage.userId(),
     };
-    this.apiService.setHttp(
-      'DELETE',
-      'SimMaster',
-      false,
-      obj,
-      false,
-      'valvemgt'
+    this.apiService.setHttp('DELETE','SimMaster',false,obj,false,'valvemgt'
     );
     this.apiService.getHttp().subscribe({
       next: (res: any) => {

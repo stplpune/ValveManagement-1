@@ -14,7 +14,7 @@ import { CommonService } from 'src/app/core/services/common.service';
   styleUrls: ['./tank-master.component.css']
 })
 export class TankMasterComponent implements OnInit {
-  tankForm!: FormGroup;
+  tankForm: FormGroup | any;
   getData:any;
   yojanaArray = new Array();
   networkArray = new Array();
@@ -61,7 +61,7 @@ export class TankMasterComponent implements OnInit {
   geFormData() {
     this.tankForm = this.fb.group({
       "id": [0],
-      "tankName": ['', [Validators.required]],
+      "tankName": ['', [Validators.required,Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": ['', [Validators.required]],
       "networkId": ['', Validators.required],
@@ -94,8 +94,11 @@ export class TankMasterComponent implements OnInit {
   clearfilter(flag: any) {
     if (flag == 'yojana') {
       this.filterFrm.controls['networkId'].setValue(0);
+      this.getTableData();
+    }else if(flag == 'network'){
+      this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
+      this.getTableData();
     }
-    this.getTableData();
   }
 
   getTableData() {
@@ -208,7 +211,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    this.submitted=true;
+    this.submitted=false;
     this.editFlag = false;
     this.geFormData();
   }
