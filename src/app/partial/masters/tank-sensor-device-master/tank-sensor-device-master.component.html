@@ -17,18 +17,18 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
-          (select)="getAllSensorDeviceTableData();getAllNetwork(false)">
+          (select)="getAllSensorDeviceTableData();getAllNetwork(false)" [disabled]="getAllLocalStorageData.userId != 1">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
+          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length == 0"
           (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
-          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network"
+          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length == 0"
           (select)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>
@@ -128,7 +128,7 @@
                   <label class="form-label">Yojana</label>
                   <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" (select)="getAllNetwork(true)"
                     placeholder="Select Yojana" (remove)="clearDropdown('yojana')" optionValueField="yojanaId" optionTextField="yojanaName"
-                    [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
+                    [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"  [disabled]="getAllLocalStorageData.userId != 1">
                   </ngx-select>
                   <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
                     <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is
