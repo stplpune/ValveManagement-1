@@ -7,6 +7,22 @@
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
           data-bs-target="#AddSIMModal"><i class="fa-solid fa-plus me-2"></i>Add SIM</button>
       </div>
+      <form class="ms-3" [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-sm-3">
+            <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana" placeholder="Select Yojana"
+              optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
+              (select)="getAllSimData();getAllNetwork('false')">
+            </ngx-select>
+          </div>
+          <div class="col-sm-3">
+            <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
+              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
+              (remove)="clearSerach('network')" (select)="getAllSimData()">
+            </ngx-select>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
   <div class="card-body">
@@ -85,7 +101,7 @@
                     <label class="form-label">Network</label>
                     <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId"
                       placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                      [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
+                      [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!simFormData.value.yojanaId">
                     </ngx-select>
                     <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                       <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Type is
@@ -129,8 +145,7 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
-              <button type="submit" class="btn btn-main" (click)="onSubmit()" *ngIf="!editFlag">Submit</button>
-              <button type="submit" class="btn btn-main" (click)="onSubmit()" *ngIf="editFlag">Update</button>
+              <button type="submit" class="btn btn-main" (click)="onSubmit()">{{buttonName}}</button>
             </div>
           </div>
         </form>
