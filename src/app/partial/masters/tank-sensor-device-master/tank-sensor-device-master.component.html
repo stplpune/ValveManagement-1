@@ -95,7 +95,8 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddValveModalLabel">{{headerName}}</p>
+        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="!editFlag">Add Tank Sensor Device Master</p>
+        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="editFlag">Update Tank Sensor Device Master</p>
         <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0"
           #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>

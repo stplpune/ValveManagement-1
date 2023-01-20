@@ -36,7 +36,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   submitted = false;
   highlitedRow:any;
   dropdownFlag!:string;
-  headerName!:string;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -83,7 +82,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
 
   onEdit(data?:any){
   this.editFlag = true;
-  this.headerName = 'Update Tank Sensor Device Master';
   this.editData = data;
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
@@ -172,7 +170,6 @@ getAllNetwork(flag?:any) {
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();
-  this.headerName = 'Add Tank Sensor Device Master';
   this.getAllTankArray = [];
   this.getAllNetworkArray = [];
   this.getAllSimArray = [];
@@ -308,5 +305,4 @@ clearDropdown(flag?:any){
     this.getAllSimArray = [];
   }
 }
-
 }
