@@ -111,9 +111,9 @@
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
-              <label class="form-label">Valve ID</label>
+              <label class="form-label">Valve ID<span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="valveId" placeholder="Valve ID"
-                [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }" (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.valveId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.valveId.errors?.required">Valve ID is
                   required.</div>
@@ -122,9 +122,9 @@
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">Valve Name</label>
+              <label class="form-label">Valve Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
-                [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }" (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name is
                   required.</div>
@@ -135,9 +135,9 @@
 
             <div class="row mb-2">
               <div class="col-sm-6">
-                <label class="form-label">Pipe Diameter</label>
+                <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
-                  [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }">
+                  [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }" (keypress)="validation.noSpacesAtStart($event)">
                 <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
                     required.</div>
@@ -158,9 +158,9 @@
               </div> -->
             </div>
             <div class="mb-2">
-              <label class="form-label">Company Name</label>
+              <label class="form-label">Company Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name"
-                [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }" (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.companyName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.companyName.errors?.required">Company Name is
                   required.</div>
@@ -169,10 +169,10 @@
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">Address</label>
+              <label class="form-label">Address <span class="text-danger">*</span></label>
               <div class="input-group">
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
-                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }" (keypress)="validation.noSpacesAtStart($event)">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapSelectModalForAddress"
                 (click)="openAddressModel()" >
                   <i class="fa-solid fa-location-dot"></i>
@@ -199,8 +199,8 @@
               </div>
             </div>
           
-            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
-              <label class="form-label">Valve List</label>
+            <!-- <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
+              <label class="form-label">Valve List<span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
                 optionValueField="valveId" optionTextField="valveName"
                 [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
@@ -211,7 +211,7 @@
             </div>
 
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
-              <label class="form-label">Tank List</label>
+              <label class="form-label">Tank List <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" 
                 [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
@@ -219,10 +219,10 @@
               <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is required</div>
               </div>
-            </div>
+            </div> -->
 
             <div class="mb-3">
-              <label for="" class="form-label">Yojana </label>
+              <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
@@ -236,9 +236,9 @@
             </div>
 
             <div class="mb-3">
-              <label for="" class="form-label">Network </label>
+              <label for="" class="form-label">Network <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network" placeholder="Select Network"
-              (select)="clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
+              (select)="clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value);getValveList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
               optionValueField="networkId" optionTextField="networkName" [disabled]="!this.valveListForm.value.yojana"
               (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
             </ngx-select>
@@ -247,8 +247,30 @@
               </div>
             </div>
 
+            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
+              <label class="form-label">Valve List<span class="text-danger">*</span></label>
+              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
+                optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveListForm.value.network"
+                [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
+              </ngx-select>
+              <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.valvelist.errors?.required">Valve List is required</div>
+              </div>
+            </div>
+
+            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
+              <label class="form-label">Tank List <span class="text-danger">*</span></label>
+              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
+              optionValueField="tankId" optionTextField="tankName" [disabled]="!this.valveListForm.value.network"
+                [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
+              </ngx-select>
+              <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is required</div>
+              </div>
+            </div>
+
             <div class="col-sm-12">
-              <label class="form-label">Sim Number</label>
+              <label class="form-label">Sim Number <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
                 optionValueField="id" optionTextField="simNo" [disabled]="!this.valveListForm.value.network"
                 [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
@@ -262,9 +284,9 @@
             </div>
             
             <div class="mb-0">
-              <label class="form-label">Description</label>
+              <label class="form-label">Description <span class="text-danger">*</span></label>
               <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
-                [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                [ngClass]="{ 'is-invalid': submitted && f.description.errors }" (keypress)="validation.noSpacesAtStart($event)"></textarea>
               <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                 <span class="text-danger" *ngIf="f.description.errors?.required">
                   Job Description is required.</span>
