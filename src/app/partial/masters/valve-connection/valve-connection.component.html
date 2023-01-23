@@ -17,8 +17,6 @@
                         (select)="this.filterFlag = 'filter';clearSearch('yojana');getNetworkDropdown();filterData()"
                         [disabled]="yoganaArray.length==1">
                     </ngx-select>
-                    <!-- (remove)="clearFilter('yojana')"
-                        (select)="pageNumber = 1;getAllSegmentMaster();getNetworkId()" -->
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
