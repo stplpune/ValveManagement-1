@@ -20,17 +20,17 @@
           <!-- <label class="form-label">Yojna</label> -->
           <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
             placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
-            (select)="filterForm.controls['networkId'].setValue('');getAllNetwork('yojana');pageNumber = 1;getTableData()"
-            (remove)="clearfilter('Yojana')">
+            (select)="pageNumber = 1; getAllNetwork(); getTableData()"
+            (remove)="clearfilter('Yojana')" [disabled]="filterYojanaArray?.length == 1">
           </ngx-select>
         </div>
 
         <div class="col-sm">
           <!-- <label class="form-label">Network</label> -->
-          <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId"
+          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
             placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-            (select)="getTableData();" (remove)="clearfilter('Network')"
-            [disabled]="!this.filterForm.value.yojanaId && this.filterNetworkArray.length==0">
+            (select)="pageNumber = 1; getTableData();" (remove)="clearfilter('Network')"
+            [disabled]="!this.filterForm.value.yojanaId || this.networkArr.length == 0">
           </ngx-select>
         </div>
       </div>
@@ -94,9 +94,9 @@
           Add Tank Segment Assignment
         </p>
         <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
-          (click)="clearForm(formDirective)" #closebutton></button>
+          (click)="clearForm()" #closebutton></button>
       </div>
-      <form [formGroup]="tankSegmentForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
+      <form [formGroup]="tankSegmentForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
           <div class="form-container">
 
@@ -105,8 +105,8 @@
                 <label class="form-label">Yojna</label>
                 <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
                   placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
-                  (select)="getAllNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
-                  (remove)="onChangeDropdown('Yojna');">
+                  (select)="getAllFilterNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
+                  (remove)="onChangeDropdown('Yojna');" [disabled]="yojanaArr?.length == 1">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
@@ -179,7 +179,7 @@
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
-              <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
+              <button type="button" class="btn btn-light-main" (click)="clearForm()">Clear</button>
               <button type="submit" class="btn btn-main" data-dismiss="modal">{{editFlag ? 'Update' :
                 'Submit'}}</button>
             </div>

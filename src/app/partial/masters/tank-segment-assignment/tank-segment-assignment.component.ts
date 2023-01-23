@@ -44,9 +44,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.formField();
     this.filterFormField();
     this.getTableData();
+    this.getAllYojana();
     // this.getAllTank();
     // this.getAllSegment();
-    this.getAllYojana();
   }
 
   formField() {
@@ -61,7 +61,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       // "modifiedDate": new Date(),
       // "timestamp": new Date(),
       tanksegment: [],
-      "yojanaId": ['', Validators.required],
+      "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
       "networkId": ['', Validators.required]
     })
   }
@@ -80,7 +80,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   getTableData() {
     console.log("Filter form : ", this.filterForm.value);
 
-    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0) + '&networkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 ||  this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0 ||  this.getAllLocalStorageData.networkId), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         // console.log("Table res : ", res);
@@ -105,7 +105,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
           this.yojanaArr = res.responseData;
           this.filterYojanaArray = res.responseData;
           this.filterYojanaArray?.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getAllNetwork()) : '';
-          this.yojanaArr?.length == 1 ? (this.tankSegmentForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
+          this.yojanaArr?.length == 1 ? (this.tankSegmentForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllFilterNetwork()) : '';
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -117,17 +117,40 @@ export class TankSegmentAssignmentComponent implements OnInit {
     })
   }
 
-  getAllNetwork(label?: string) {
-    let yojanaId = label == 'yojana' ? this.filterForm.value.yojanaId : this.tankSegmentForm.value.yojanaId;
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+  getAllNetwork() {
+    // let yojanaId = label == 'yojana' ? this.filterForm.value.yojanaId : this.tankSegmentForm.value.yojanaId;
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
-          label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData;
-          // this.networkArr?.length == 1 ? (this.tankSegmentForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getAllSegment()) : '';
+          // label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData;
           // this.networkArr?.length > 1 && label == 'yojana' ? (this.tankSegmentForm.patchValue({ networkId: this.tankSegmentForm.value.networkId }), this.getAllSegment()) : '';
-          // this.networkArr = res.responseData;
+          this.networkArr = res.responseData;
+          this.networkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getTableData()) : '';
+
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
+        } else {
+          this.networkArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
+  }
+
+  getAllFilterNetwork(label?: string) {
+    // let yojanaId = label == 'yojana' ? this.filterForm.value.yojanaId : this.tankSegmentForm.value.yojanaId;
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.tankSegmentForm.value.yojanaId, false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == '200') {
+          this.filterNetworkArray = res.responseData;
+          // label == 'yojana' ? this.filterNetworkArray = res.responseData : this.networkArr = res.responseData;
+          this.networkArr?.length == 1 ? (this.tankSegmentForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getAllSegment()) : '';
+          this.networkArr?.length > 1  ? (this.tankSegmentForm.patchValue({ networkId: this.tankSegmentForm.value.networkId }), this.getAllSegment()) : '';
+          
+          // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), (this.getAllTank(), this.getAllSegment())) : '';
         } else {
           this.networkArr = [];
         }
@@ -156,7 +179,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getAllSegment() {
-    this.service.setHttp('get', 'api/MasterDropdown/GetAllSegmentForTank?YojanaId=' + this.tankSegmentForm.value.yojanaId + '&NetworkId=' + this.tankSegmentForm.value.networkId, false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'api/MasterDropdown/GetAllSegmentForTank?YojanaId=' + (this.tankSegmentForm.value.yojanaId || 0) + '&NetworkId=' + (this.tankSegmentForm.value.networkId || 0), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
@@ -216,7 +239,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
     }
     else {
       let obj = {
-        "id": formValue.id,
+        "id": [formValue.id],
         "tankId": [formValue.tankId],
         "segmentId": [formValue.segmentId],
         "isDeleted": true,
@@ -235,10 +258,10 @@ export class TankSegmentAssignmentComponent implements OnInit {
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
+            this.getTableData();
             this.closebutton.nativeElement.click();
             this.toastrService.success(res.statusMessage);
             this.spinner.hide();
-            this.getTableData();
           }
           else {
             this.toastrService.error(res.statusMessage);
@@ -253,12 +276,22 @@ export class TankSegmentAssignmentComponent implements OnInit {
     }
   }
 
-  clearForm(formDirective?: any) {
-    formDirective?.resetForm();
+  // clearForm(formDirective?: any) {
+  //   formDirective?.resetForm();
+  //   this.editFlag = false;
+  //   this.editObj = '';
+  //   // this.tankSegmentForm.reset();
+  //   this.formField();
+  //   this.tankSegmentTable = [];
+  //   this.submitted = false;
+  // }
+
+  clearForm() {
+    this.formField();
+    // formDirective?.resetForm();
     this.editFlag = false;
     this.editObj = '';
     // this.tankSegmentForm.reset();
-    this.formField();
     this.tankSegmentTable = [];
     this.submitted = false;
   }
@@ -304,6 +337,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
       this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
     }
     this.getTableData();
+    this.pageNumber = 1;
+    
 
   }
 
