@@ -4,7 +4,7 @@
       <div class="col-sm-4">SIM List</div>
       <div class="col-sm-4 text-end">
         <!-- <button (click)="refreshData()" title="Refresh Valve"  class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
-        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
+        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" (click)="getAllNetwork(true)" data-bs-toggle="modal"
           data-bs-target="#AddSIMModal"><i class="fa-solid fa-plus me-2"></i>Add SIM</button>
       </div>
       <form class="ms-3" [formGroup]="searchForm">
@@ -77,7 +77,7 @@
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddSIMModalLabel" *ngIf="!editData">Add Sim</p>
         <p class="modal-title mb-0" id="AddSIMModalLabel" *ngIf="editData">Update Sim</p>
-        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0" #addSimData data-bs-dismiss="modal"
+        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0;getAllNetwork(false)" #addSimData data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
       <div class="modal-body">
