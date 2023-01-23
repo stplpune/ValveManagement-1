@@ -29,6 +29,7 @@ export class NetworkMasterComponent implements OnInit {
   getAllLocalStorageData: any;
   respYojanaId: any;
   allYojanaFilterArray: any;
+  filterFlag: any = 'filter';
   yojana = new FormControl('');
   @ViewChild('closebutton') closebutton: any;
   get f() {
@@ -66,13 +67,13 @@ export class NetworkMasterComponent implements OnInit {
         if (res.statusCode == '200') {
           this.allYojanaArray = res.responseData;
           this.allYojanaFilterArray = res.responseData;
-          // this.editFlag == 'true' ? (this.allYojanaFilterArray = res.responseData) :  (this.allYojanaArray = res.responseData);
-          // this.editFlag==true?
-          this.allYojanaArray?.length == 1 ? (this.yojana.setValue(this.allYojanaArray[0].yojanaId), this.getAllNetworkTableData()) : '';
-          this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaFilterArray[0].yojanaId })) : '';
+          this.filterFlag == 'filter' ? this.allYojanaFilterArray = res.responseData : this.allYojanaArray = res.responseData;
+          this.allYojanaFilterArray?.length == 1 ? (this.yojana.setValue(this.allYojanaFilterArray[0].yojanaId), this.getAllNetworkTableData()) : '';
+          this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId })) : '';
 
         } else {
           this.allYojanaArray = [];
+          this.filterFlag == 'filter' ? this.allYojanaFilterArray = [] : this.allYojanaArray = [];
           this.toastrService.error(res.statusMessage);
         }
       }, error: (error: any) => {
@@ -84,7 +85,7 @@ export class NetworkMasterComponent implements OnInit {
   getAllNetworkTableData() {
     let formData = this.yojana.value || 0;
     this.spinner.show();
-    this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + formData + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'ValveManagement/Network/GetAllNetwork?YojanaId=' + (formData ||  this.getAllLocalStorageData.yojanaId) + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         this.spinner.hide();
@@ -122,6 +123,7 @@ export class NetworkMasterComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.getAllNetworkTableData();
+            this.filterFlag = 'filter';
             this.closebutton.nativeElement.click();
             this.clearForm();
           } else {

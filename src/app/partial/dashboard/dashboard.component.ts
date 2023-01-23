@@ -9,6 +9,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+declare var google: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -42,6 +43,7 @@ export class DashboardComponent implements OnInit {
     this.getValveSummary();
     this.getValveSegmentList();
     this.getDeviceCurrentSensorValue();
+    this.waterTankChartData();
   }
 
   defaultFilterForm() {
@@ -57,6 +59,8 @@ export class DashboardComponent implements OnInit {
       this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'network') {
     } 
+    this.tankFilterDrop.setValue('');
+    this.getDeviceCurrentSensorValue();
     // this.editPatchShape.setMap(null);
     this.editPatchShape = undefined
     // this.getValveSegmentList();
@@ -83,7 +87,7 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSegmentList()) : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
       }
       else {
         this.networkIdArray = [];
@@ -120,7 +124,6 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === "200") {
           this.DeviceCurrentSensorArray = res.responseData;
-          this.waterTankChartData();
         } else {
           this.DeviceCurrentSensorArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
@@ -142,7 +145,7 @@ export class DashboardComponent implements OnInit {
     am4core.addLicense("ch-custom-attribution");
 
     // Create chart instance
-    let chart = am4core.create("valvePiChart", am4charts.XYChart3D);
+    let chart = am4core.create("valveCylenderChart", am4charts.XYChart3D);
     chart.titles.create().text = "Water reserves";
     chart.data = chartData;
 
