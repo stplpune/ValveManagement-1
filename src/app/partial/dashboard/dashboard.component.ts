@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
     this.getValveSegmentList();
     this.getDeviceCurrentSensorValue();
     this.waterTankChartData();
+    // this.localStorage.userId() != 1 ? (this.getDeviceCurrentSensorValue(),this.waterTankChartData()) : '';
   }
 
   defaultFilterForm() {
