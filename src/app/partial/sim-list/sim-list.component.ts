@@ -76,6 +76,8 @@ export class SimListComponent implements OnInit {
     })
   }
 
+ 
+
   // Yojana Array
   getAllYojana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
@@ -83,7 +85,7 @@ export class SimListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.getAllYojanaArray = res.responseData;
-          (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
+          // (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -92,8 +94,7 @@ export class SimListComponent implements OnInit {
   }
 
   // Network Array
-  getAllNetwork(flag?:any) {
-    let networkFlag = flag;
+  getAllNetwork(networkFlag?:any) {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId
       + '&YojanaId=' + ((networkFlag?this.simFormData.value.yojanaId:this.searchForm.value.yojana) || 0), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
