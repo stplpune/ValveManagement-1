@@ -63,7 +63,7 @@
       </div>
     </div>
    <ng-container *ngIf="simArray?.length != 0">
-    <pagination-controls (pageChange)="pageNumber = $event" (click)="selPagination(pageNumber)"></pagination-controls>
+    <pagination-controls (pageChange)="pageNumber = $event" previousLabel="" nextLabel="" (click)="selPagination(pageNumber)"></pagination-controls>
    </ng-container>
   </div>
 </div>
