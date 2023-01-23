@@ -66,8 +66,6 @@ export class NetworkMasterComponent implements OnInit {
         if (res.statusCode == '200') {
           this.allYojanaArray = res.responseData;
           this.allYojanaFilterArray = res.responseData;
-          // this.editFlag == 'true' ? (this.allYojanaFilterArray = res.responseData) :  (this.allYojanaArray = res.responseData);
-          // this.editFlag==true?
           this.allYojanaArray?.length == 1 ? (this.yojana.setValue(this.allYojanaArray[0].yojanaId), this.getAllNetworkTableData()) : '';
           this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaFilterArray[0].yojanaId })) : '';
 
