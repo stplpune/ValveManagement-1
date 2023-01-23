@@ -79,7 +79,8 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddValveModalLabel">Add Tank Master
+        <p class="modal-title mb-0" id="AddValveModalLabel">
+          {{!editFlag ? 'Add Tank Master' : 'Update Tank Master' }}
         </p>
         <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
           (click)="clearForm(formDirective)" #closebutton></button>
