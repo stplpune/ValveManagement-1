@@ -105,7 +105,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   getAllNetworkFilter() {
     console.log("this.yojanaArr",this.yojanaArr);
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.filterForm.value.yojanaId , false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {         
@@ -123,7 +123,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   getAllNetwork() {   
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.valveRegForm.value.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.valveRegForm.value.yojanaId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {
