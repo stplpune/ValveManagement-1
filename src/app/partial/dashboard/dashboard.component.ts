@@ -113,75 +113,64 @@ export class DashboardComponent implements OnInit {
   }
 
   piechartData(chartArray: any) {
-    let valveChart: any[] = [];
-    delete chartArray['totalValve']
-    Object.keys(chartArray).forEach(key => {
-      valveChart.push({ 'Category': key, 'categoryCount': chartArray[key] })
-    })
-
-    valveChart.map((ele:any)=>{
-      switch(ele.Category){
-          case 'totalOn': ele.Category = 'On' ;return;
-          case 'totalOff': ele.Category = 'Off' ;return;
-          case 'totalWaitedOn': ele.Category = 'Waited On' ;return;
-          case 'totalWaitedOff': ele.Category = 'Waited Off' ;return;
-      }
-    })
 
     am4core.useTheme(am4themes_animated);
-
+    // Themes end
+    
     // Create chart instance
-    let chart = am4core.create("valvePiChart", am4charts.PieChart);
-    // Add and configure Series
-    let pieSeries = chart.series.push(new am4charts.PieSeries());
-    pieSeries.colors.list = [
-      am4core.color("#80DEEA"),
-      am4core.color("#FF8A65"),
-      am4core.color("#E57373"),
-      am4core.color("rgb(205, 130, 184)"),
-      am4core.color("#4DB6AC"),
-    ];
-
-    pieSeries.dataFields.value = "categoryCount";
-    pieSeries.dataFields.category = "Category";
-
-    // Put a thick white border around each Slice
-    pieSeries.slices.template.stroke = am4core.color("#fff");
-    pieSeries.slices.template.strokeWidth = 2;
-    pieSeries.slices.template.strokeOpacity = 1;
-    pieSeries.slices.template
-      .cursorOverStyle = [
-        {
-          "property": "cursor",
-          "value": "pointer"
-        }
-      ];
-
-    // Create a base filter effect (as if it's not there) for the hover to return to
-    let shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
-    shadow.opacity = 0;
-
-    // Create hover state
-    let hoverState: any = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
-
-    // Slightly shift the shadow and make it more prominent on hover
-    let hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
-    hoverShadow.opacity = 0.7;
-    hoverShadow.blur = 5;
-    chart.radius = am4core.percent(90);
-    // Add a legend
-    chart.legend = new am4charts.Legend();
-    chart.legend.maxWidth = 100;
-    chart.legend.fontSize = 14;
-    chart.legend.scrollable = true;
-    chart.legend.position = "bottom";
-    chart.legend.contentAlign = "right";
-
-    let markerTemplate = chart.legend.markers.template;
-    markerTemplate.width = 15;
-    markerTemplate.height = 15;
-    pieSeries.labels.template.disabled = true;
-    chart.data = valveChart;
+    let chart = am4core.create("valvePiChart", am4charts.XYChart3D);
+    
+    chart.titles.create().text = "Water reserves";
+    
+    // Add data
+    chart.data = [{
+      "category": "Koregoan Water Tank",
+      "value1": 80,
+      "value2": 100
+    }];
+    
+    // Create axes
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.grid.template.strokeOpacity = 0;
+    
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.renderer.grid.template.strokeOpacity = 0;
+    valueAxis.min = -10;
+    valueAxis.max = 100;
+    valueAxis.strictMinMax = true;
+    valueAxis.renderer.baseGrid.disabled = true;
+    valueAxis.renderer.labels.template.adapter.add("text", function(text:any) {
+      if ((text > 100) || (text < 0)) {
+        return "";
+      }
+      else {
+        return text + "%";
+      }
+    })
+    
+    // Create series
+    let series1 = chart.series.push(new am4charts.ConeSeries());
+    series1.dataFields.valueY = "value1";
+    series1.dataFields.categoryX = "category";
+    series1.columns.template.width = am4core.percent(80);
+    series1.columns.template.fillOpacity = 0.9;
+    series1.columns.template.strokeOpacity = 1;
+    series1.columns.template.strokeWidth = 2;
+    
+    let series2 = chart.series.push(new am4charts.ConeSeries());
+    series2.dataFields.valueY = "value2";
+    series2.dataFields.categoryX = "category";
+    series2.stacked = true;
+    series2.columns.template.width = am4core.percent(80);
+    series2.columns.template.fill = am4core.color("#000");
+    series2.columns.template.fillOpacity = 0.1;
+    series2.columns.template.stroke = am4core.color("#000");
+    series2.columns.template.strokeOpacity = 0.2;
+    series2.columns.template.strokeWidth = 2;
+    
+    
   }
 
   //..................................................... new Code StartHere ..................... ...............//

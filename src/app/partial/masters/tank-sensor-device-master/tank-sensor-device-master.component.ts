@@ -36,7 +36,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   submitted = false;
   highlitedRow:any;
   dropdownFlag!:string;
-  headerName!:any;
   getAllLocalStorageData!:any;
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -87,7 +86,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   this.editData = data;
   console.log(this.editData);
   
-  this.headerName = 'Update Tank Sensor Device Master';
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
@@ -178,6 +176,7 @@ clearForm(formDirective?:any){
   this.getAllNetworkArray = [];
   this.getAllSimArray = [];
   this.editFlag = false;
+  this.editData = '';
   this.submitted = false;
   this.controlForm();
 }
@@ -185,7 +184,7 @@ clearForm(formDirective?:any){
 getAllSensorDeviceTableData() {
   this.spinner.show();
   this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
-  (!this.searchForm.value.yojana ? (this.pageNumber) : (this.pageNumber = 1))+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana || 0) +
+  (!this.searchForm.value.yojana ? (this.pageNumber) : (this.pageNumber = 1))+'&pagesize='+ this.pagesize +'&YojanaId='+ (this.searchForm.value.yojana || this.getAllLocalStorageData.yojanaId) +
   '&NetworkId='+ (this.searchForm.value.network || 0) +'&TankId=' + (this.searchForm.value.tank || 0), false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
@@ -233,7 +232,6 @@ onSubmit() {
           this.toastrService.success(res.statusMessage);
           this.getAllSensorDeviceTableData();
           this.clearForm();
-          this.headerName = 'Add Tank Sensor Device Master';
           this.closebutton.nativeElement.click();
         } else {
           this.toastrService.error(res.statusMessage);
@@ -302,14 +300,12 @@ clearDropdown(flag?:any){
     this.getAllNetworkArray = [];
     this.getAllTankArray = [];
     this.getAllSimArray = [];
-    this.editFlag = false;
   }
   else if(flag == 'network'){
     this.tankSensorDeviceFrm.controls['tankId'].setValue(''),
     this.tankSensorDeviceFrm.controls['simId'].setValue('')
     this.getAllTankArray = [];
     this.getAllSimArray = [];
-    this.editFlag = false;
   }
 }
 }
