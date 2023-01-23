@@ -22,13 +22,13 @@
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length == 0"
+          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
           (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
-          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length == 0"
+          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network"
           (select)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>
@@ -95,7 +95,8 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddValveModalLabel">{{headerName}}</p>
+        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="!editData">Add Tank Sensor Device Master</p>
+        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="editData">Update Tank Sensor Device Master</p>
         <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0"
           #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -186,8 +187,8 @@
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" (click)="clearForm(formDirective)" class="btn btn-light-main">Clear</button>
-              <button type="submit" class="btn btn-main text-center" *ngIf="!editFlag">Submit</button>
-              <button type="submit" class="btn btn-main text-center" *ngIf="editFlag">Update</button>
+              <button type="submit" class="btn btn-main text-center" *ngIf="!editData">Submit</button>
+              <button type="submit" class="btn btn-main text-center" *ngIf="editData">Update</button>
             </div>
           </div>
         </div>
