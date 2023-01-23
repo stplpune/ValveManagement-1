@@ -161,8 +161,8 @@ export class ValveConnectionComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.filterFlag=='filter'?this.yoganaArrayFilter = res.responseData:this.yoganaArray = res.responseData;
-        this.yoganaArrayFilter.length==1?(this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId)): '' ;
-        this.yoganaArray.length==1?(this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId)):'';
+        this.yoganaArrayFilter.length==1?(this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId),this.getNetworkDropdown()): '' ;
+        this.yoganaArray.length==1?(this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId),this.getNetworkDropdown()):'';
 
         this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetworkDropdown()) : '';
       }
@@ -184,8 +184,8 @@ export class ValveConnectionComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.filterFlag=='filter'?this.networkArrayFilter = res.responseData:this.networkArray = res.responseData;
-          this.networkArrayFilter.length==1?(this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId)): '';
-          this.valveConnectionArray.length==1?(this.valveConnectionForm.controls['networkId'].setValue(this.valveConnectionArray[0].networkId)):'';
+          this.networkArrayFilter.length==1?(this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId),this.getValveConnectionDropdown()): '';
+          this.valveConnectionArray.length==1?(this.valveConnectionForm.controls['networkId'].setValue(this.valveConnectionArray[0].networkId),this.getValveConnectionDropdown()):'';
 
           this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
         }
