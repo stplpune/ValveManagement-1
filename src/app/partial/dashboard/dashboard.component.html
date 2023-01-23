@@ -37,6 +37,15 @@
                 </div>
             </div>
             <div class="col-sm">
+                <div class="card card-body bg-primary bg-opacity-10 border-0">
+                    <p class="fw-bold mb-3 small">Total Tanks</p>
+                    <h4 class="mb-0 fw-bold text-primary lh-1">{{valveSummaryArray?.totalTank}}</h4>
+                    <div class="cardImgOuter">
+                        <img src="../../../assets/images/waterTank2.png" alt="valve-icon">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
                 <div class="card card-body bg-success bg-opacity-10 border-0">
                     <p class="fw-bold mb-3 small">ON Valves</p>
                     <h4 class="mb-0 fw-bold text-success lh-1">{{valveSummaryArray?.totalOn}}</h4>
@@ -56,7 +65,7 @@
             </div>
             <div class="col-sm">
                 <div class="card card-body bg-success bg-opacity-10 border-0">
-                    <p class="fw-bold mb-3 small">Waited for ON Valves</p>
+                    <p class="fw-bold mb-3 small">Waited ON Valves</p>
                     <h4 class="mb-0 fw-bold text-success lh-1">{{valveSummaryArray?.totalWaitedOn}}</h4>
                     <div class="cardImgOuter">
                         <img src="../../../assets/images/valve-3.png" alt="valve-icon">
@@ -65,7 +74,7 @@
             </div>
             <div class="col-sm">
                 <div class="card card-body bg-danger bg-opacity-10 border-0">
-                    <p class="fw-bold mb-3 small">Waited for OFF Valves</p>
+                    <p class="fw-bold mb-3 small">Waited OFF Valves</p>
                     <h4 class="mb-0 fw-bold text-danger lh-1">{{valveSummaryArray?.totalWaitedOff}}</h4>
                     <div class="cardImgOuter">
                         <img src="../../../assets/images/valve-3.png" alt="valve-icon">
@@ -80,12 +89,12 @@
                     <div class="p-2 offset-6">     
                         <ngx-select [allowClear]="true" [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
                         [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" 
-                        optionTextField="tankName" placeholder="Select Water Tank" [formControl]="tankFilterDrop">
+                        optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
                     </ngx-select>
                 </div>
                 <ul class="cylenderLabel" *ngIf="chartObj">
                     <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
-                    <li><span class="fw-bold">Liter : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
+                    <li><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
                     <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
                     <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
                 </ul>
