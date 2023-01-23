@@ -80,12 +80,12 @@
                     <div class="p-2 offset-6">     
                         <ngx-select [allowClear]="true" [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
                         [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" 
-                        optionTextField="tankName" placeholder="Select Water Tank" [formControl]="tankFilterDrop">
+                        optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
                     </ngx-select>
                 </div>
                 <ul class="cylenderLabel" *ngIf="chartObj">
                     <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
-                    <li><span class="fw-bold">Liter : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
+                    <li><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
                     <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
                     <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
                 </ul>
