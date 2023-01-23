@@ -13,15 +13,14 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana"
                         placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                        (remove)="clearSearch('yojana');filterData()"
-                        (select)="this.filterFlag = 'filter';clearSearch('yojana');getNetworkDropdown();filterData()"
-                        [disabled]="yoganaArray.length==1">
+                        (remove)="clearSearch('yojana');filterData()" [disabled]="yoganaArrayFilter?.length == 1"
+                        (select)="this.filterFlag = 'filter';clearSearch('yojana');getNetworkDropdown();filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.searchForm.value.yojana || networkArrayFilter.length==1" optionTextField="networkName"
+                        [disabled]="!this.searchForm.value.yojana || networkArrayFilter?.length == 1" optionTextField="networkName"
                         (remove)="clearSearch('network');filterData()"
                         (select)="this.filterFlag = 'filter';clearSearch('network');getValveConnectionDropdown();filterData()">
                     </ngx-select>
@@ -29,7 +28,7 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
                         placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName"
-                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter.length==1" (remove)="clearSearch('valveMaster');filterData()"
+                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter.length <=1" (remove)="clearSearch('valveMaster');filterData()"
                         (select)="filterData()">
                     </ngx-select>
 
@@ -137,9 +136,8 @@
                                 <ngx-select [items]="yoganaArray" formControlName="yojanaId" [allowClear]="true"
                                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                                     [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
-                                    (remove)="clearDropdown('yojanaId')"
+                                    (remove)="clearDropdown('yojanaId')" [disabled]="this.yoganaArray?.length == 1"
                                     (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();">
-                                    <!-- [disabled]="this.yoganaArray.length==1" -->
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
@@ -151,7 +149,7 @@
                                 <label for="" class="form-label">Network <span class="text-danger">*</span></label>
                                 <ngx-select [items]="networkArray" formControlName="networkId" [allowClear]="true"
                                     placeholder="Select Network" optionValueField="networkId"
-                                    [disabled]="!this.valveConnectionForm.value.yojanaId" optionTextField="networkName"
+                                    [disabled]="!this.valveConnectionForm.value.yojanaId || networkArray?.length <=1" optionTextField="networkName"
                                     [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                     (remove)="clearDropdown('networkId')"
                                     (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();">
