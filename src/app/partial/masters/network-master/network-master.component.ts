@@ -18,7 +18,7 @@ export class NetworkMasterComponent implements OnInit {
   networkRegForm!: FormGroup | any;
   allNetworkArray = new Array();
   allYojanaArray = new Array();
-  yojanaAddResp:any;
+  yojanaAddResp: any;
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -27,7 +27,8 @@ export class NetworkMasterComponent implements OnInit {
   submitted: boolean = false;
   highlitedRow: any;
   getAllLocalStorageData: any;
-  respYojanaId:any;
+  respYojanaId: any;
+  allYojanaFilterArray: any;
   yojana = new FormControl('');
   @ViewChild('closebutton') closebutton: any;
   get f() {
@@ -55,7 +56,7 @@ export class NetworkMasterComponent implements OnInit {
       networkName: ['', Validators.required],
       yojanaId: [this.allYojanaArray?.length == 1 ? this.allYojanaArray[0].yojanaId : '', Validators.required]
     })
-    
+
   }
 
   getAllYojana() {
@@ -64,9 +65,12 @@ export class NetworkMasterComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.allYojanaArray = res.responseData;
-          this.allYojanaArray?.length == 1 ? (this.yojana.setValue(this.allYojanaArray[0].yojanaId),this.getAllNetworkTableData()) : '';
-          this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId }), this.getAllNetworkTableData()) : '';
-  
+          this.allYojanaFilterArray = res.responseData;
+          // this.editFlag == 'true' ? (this.allYojanaFilterArray = res.responseData) :  (this.allYojanaArray = res.responseData);
+          // this.editFlag==true?
+          this.allYojanaArray?.length == 1 ? (this.yojana.setValue(this.allYojanaArray[0].yojanaId), this.getAllNetworkTableData()) : '';
+          this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaFilterArray[0].yojanaId })) : '';
+
         } else {
           this.allYojanaArray = [];
           this.toastrService.error(res.statusMessage);
@@ -149,8 +153,8 @@ export class NetworkMasterComponent implements OnInit {
     formDirective?.resetForm();
     this.submitted = false;
     this.editFlag = false;
-    this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId }), this.getAllNetworkTableData()) : '';
-  
+    this.allYojanaArray?.length == 1 ? (this.networkRegForm.patchValue({ yojanaId: this.allYojanaArray[0].yojanaId })) : '';
+
   }
 
   deleteConformation(id?: any) {
