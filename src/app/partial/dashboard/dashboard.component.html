@@ -8,14 +8,14 @@
             <form [formGroup]="filterForm">
                 <div class="row g-2">
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();getNetwork()"
+                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();tankFilterDrop.setValue('');getDeviceCurrentSensorValue();getNetwork()"
                             [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
                         <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId"
-                            placeholder="Select Network" (select)="editPatchShape.setMap(null);getValveSegmentList()" 
+                            placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');getDeviceCurrentSensorValue()" 
                             [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
@@ -75,9 +75,23 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
+          
                 <div class="card dashboardChart">
-                    <div class="card-header">Pie Chart</div>
-                    <div class="card-body text-center valvePiChart">
+                    <div class="p-2 offset-6">     
+                        <ngx-select [allowClear]="true" [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
+                        [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" 
+                        optionTextField="tankName" placeholder="Select Water Tank" [formControl]="tankFilterDrop">
+                    </ngx-select>
+                </div>
+                <ul class="cylenderLabel" *ngIf="chartObj">
+                    <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
+                    <li><span class="fw-bold">Liter : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
+                    <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
+                    <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
+                </ul>
+                    <!-- <div class="card-header">Pie Chart</div> -->
+                    <div class="card-body text-center valveCylenderChart">
+                        
                     </div>
                 </div>
             </div>

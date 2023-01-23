@@ -53,6 +53,9 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     this.searchFormControl();
     this.getAllYojana();
     this.getAllSensorDeviceTableData();
+    if(this.getAllLocalStorageData.userId != 1){
+      this.getAllNetwork();
+    }
   }
 
   //Get Form Control Values
@@ -68,14 +71,14 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       simId: ['',Validators.required],
       deviceDescription: ['',Validators.required],
       tankId: ['',Validators.required],
-      yojanaId: ['',Validators.required],
+      yojanaId: [this.getAllLocalStorageData.yojanaId || '',Validators.required],
       networkId: ['',Validators.required]
     })
   }
 
   searchFormControl(){
     this.searchForm=this.fb.group({
-      yojana:[''],
+      yojana:+[this.getAllLocalStorageData.yojanaId || ''],
       network:[''],
       tank:['']
     })
@@ -106,7 +109,8 @@ getAllYojana() {
     next: (res: any) => {
       if (res.statusCode == '200') {
         this.getAllYojanaArray = res.responseData;
-        this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : '';
+        this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : 
+        (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
       }else{
         this.getAllYojanaArray = [];
       }
@@ -173,7 +177,7 @@ getAllNetwork(flag?:any) {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.getAllTankArray = [];
-  this.getAllNetworkArray = [];
+  // this.getAllNetworkArray = [];
   this.getAllSimArray = [];
   this.editFlag = false;
   this.editData = '';
@@ -221,9 +225,9 @@ onSubmit() {
     this.spinner.show();
     let id:any;
     let urlType:any;
-    urlType = (this.editFlag ? (urlType = 'PUT') : (urlType = 'POST'));
+    urlType = (this.editData ? (urlType = 'PUT') : (urlType = 'POST'));
     let urlName:any;
-    urlName = this.editFlag ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
+    urlName = this.editData ? (urlName = 'DeviceInfo/UpdateDeviceDetails') : (urlName = 'DeviceInfo/AddDeviceDetails');
     this.apiService.setHttp(urlType,urlName,false,this.postObj,false,'valvemgt');
     this.apiService.getHttp().subscribe(
       (res: any) => {
@@ -307,5 +311,6 @@ clearDropdown(flag?:any){
     this.getAllTankArray = [];
     this.getAllSimArray = [];
   }
+  this.editFlag = false;
 }
 }

@@ -9,6 +9,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+declare var google: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,9 @@ export class DashboardComponent implements OnInit {
   filterForm: FormGroup | any;
   yoganaIdArray: any;
   networkIdArray: any;
+  DeviceCurrentSensorArray:any;
+  tankFilterDrop = new FormControl('');
+  chartObj:any;
 
   constructor(
     public commonService: CommonService,
@@ -38,6 +42,8 @@ export class DashboardComponent implements OnInit {
     this.getYogana();
     this.getValveSummary();
     this.getValveSegmentList();
+    this.getDeviceCurrentSensorValue();
+    this.waterTankChartData();
   }
 
   defaultFilterForm() {
@@ -53,6 +59,8 @@ export class DashboardComponent implements OnInit {
       this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'network') {
     } 
+    this.tankFilterDrop.setValue('');
+    this.getDeviceCurrentSensorValue();
     // this.editPatchShape.setMap(null);
     this.editPatchShape = undefined
     // this.getValveSegmentList();
@@ -79,7 +87,7 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSegmentList()) : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
       }
       else {
         this.networkIdArray = [];
@@ -100,8 +108,6 @@ export class DashboardComponent implements OnInit {
         if (res.statusCode === "200") {
           this.spinner.hide();
           this.valveSummaryArray = res.responseData;
-          let valveSummaryArray = JSON.parse(JSON.stringify(this.valveSummaryArray))
-          this.piechartData(valveSummaryArray);
         } else {
           this.spinner.hide();
           this.valveSummaryArray = [];
@@ -112,23 +118,37 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  piechartData(chartArray: any) {
+  getDeviceCurrentSensorValue() {
+    this.apiService.setHttp('get', "DeviceInfo/GetDeviceCurrentSensorValue?YojanaId=" + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === "200") {
+          this.DeviceCurrentSensorArray = res.responseData;
+        } else {
+          this.DeviceCurrentSensorArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+    });
+  }
+
+  filterTankData(obj:any){ // percentage   tankName
+    this.waterTankChartData(obj[0]?.data);
+  }
+
+  waterTankChartData(data?: any) {
+    this.chartObj = data;
+    let chartData = data ? [{"category": data.tankName,"value1": data.percentage,"value2": 100}] :  [{"category": "","value1": 0,"value2": 100}];
 
     am4core.useTheme(am4themes_animated);
-    // Themes end
-    
+    am4core.addLicense("ch-custom-attribution");
+
     // Create chart instance
-    let chart = am4core.create("valvePiChart", am4charts.XYChart3D);
-    
+    let chart = am4core.create("valveCylenderChart", am4charts.XYChart3D);
     chart.titles.create().text = "Water reserves";
-    
-    // Add data
-    chart.data = [{
-      "category": "Koregoan Water Tank",
-      "value1": 80,
-      "value2": 100
-    }];
-    
+    chart.data = chartData;
+
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "category";
@@ -142,12 +162,8 @@ export class DashboardComponent implements OnInit {
     valueAxis.strictMinMax = true;
     valueAxis.renderer.baseGrid.disabled = true;
     valueAxis.renderer.labels.template.adapter.add("text", function(text:any) {
-      if ((text > 100) || (text < 0)) {
-        return "";
-      }
-      else {
-        return text + "%";
-      }
+      if ((text > 100) || (text < 0)) { return "";}
+      else { return text + "%";}
     })
     
     // Create series
@@ -169,7 +185,6 @@ export class DashboardComponent implements OnInit {
     series2.columns.template.stroke = am4core.color("#000");
     series2.columns.template.strokeOpacity = 0.2;
     series2.columns.template.strokeWidth = 2;
-    
     
   }
 
