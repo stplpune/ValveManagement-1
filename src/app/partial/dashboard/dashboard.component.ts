@@ -22,6 +22,9 @@ export class DashboardComponent implements OnInit {
   filterForm: FormGroup | any;
   yoganaIdArray: any;
   networkIdArray: any;
+  DeviceCurrentSensorArray:any;
+  tankFilterDrop = new FormControl('');
+  chartObj:any;
 
   constructor(
     public commonService: CommonService,
@@ -38,6 +41,7 @@ export class DashboardComponent implements OnInit {
     this.getYogana();
     this.getValveSummary();
     this.getValveSegmentList();
+    this.getDeviceCurrentSensorValue();
   }
 
   defaultFilterForm() {
@@ -100,8 +104,6 @@ export class DashboardComponent implements OnInit {
         if (res.statusCode === "200") {
           this.spinner.hide();
           this.valveSummaryArray = res.responseData;
-          let valveSummaryArray = JSON.parse(JSON.stringify(this.valveSummaryArray))
-          this.piechartData(valveSummaryArray);
         } else {
           this.spinner.hide();
           this.valveSummaryArray = [];
@@ -112,9 +114,32 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  piechartData(chartArray: any) {
+  getDeviceCurrentSensorValue() {
+    this.apiService.setHttp('get', "DeviceInfo/GetDeviceCurrentSensorValue?YojanaId=" + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === "200") {
+          this.DeviceCurrentSensorArray = res.responseData;
+          this.waterTankChartData();
+        } else {
+          this.DeviceCurrentSensorArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+    });
+  }
+
+  filterTankData(obj:any){ // percentage   tankName
+    this.waterTankChartData(obj[0]?.data);
+  }
+
+  waterTankChartData(data?: any) {
+    this.chartObj = data;
+    let chartData = data ? [{"category": data.tankName,"value1": data.percentage,"value2": 100}] :  [{"category": "","value1": 0,"value2": 100}];
 
     am4core.useTheme(am4themes_animated);
+    am4core.addLicense("ch-custom-attribution");
     // Themes end
     
     // Create chart instance
@@ -123,12 +148,14 @@ export class DashboardComponent implements OnInit {
     chart.titles.create().text = "Water reserves";
     
     // Add data
-    chart.data = [{
-      "category": "Koregoan Water Tank",
-      "value1": 80,
-      "value2": 100
-    }];
-    
+    chart.data = chartData;
+
+
+chart.marginTop = 10;
+// chart.paddingRight = 10;
+// chart.paddingBottom = 10;
+// chart.paddingLeft = 10;
+
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "category";
@@ -169,7 +196,6 @@ export class DashboardComponent implements OnInit {
     series2.columns.template.stroke = am4core.color("#000");
     series2.columns.template.strokeOpacity = 0.2;
     series2.columns.template.strokeWidth = 2;
-    
     
   }
 
