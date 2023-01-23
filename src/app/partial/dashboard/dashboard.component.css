@@ -4,16 +4,28 @@
     right: 12px;
     bottom: 8px;
 }
+
+agm-map {
+    height: 400px;
+}
+
 .cardImgOuter img {
     width: 100%;
     opacity: .1;
 }
 
-.valvePiChart{
-    width:500px;
-    height: 400px
+.valvePiChart {
+    width: 400px;
+    height: 400px;
 }
 
-agm-map {
-    height: 312px;
-  }
+ul.cylenderLabel {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 200px;
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 25px;
+}
