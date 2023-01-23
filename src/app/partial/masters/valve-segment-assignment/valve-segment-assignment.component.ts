@@ -32,6 +32,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   totalRows: any;
   valvelabel: any;
   getAllLocalStorageData:any;
+  valveId : any;
+
   @ViewChild('closebutton') closebutton: any;
 
   constructor(private apiService: ApiService,
@@ -43,9 +45,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
-    console.log(" this.getAllLocalStorageData", this.getAllLocalStorageData);
-    
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();   
     this.formData();
     this.filterFormField();
     this.getAllValveTableData();
@@ -129,8 +129,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == 200) {
           this.networkArr = res.responseData;  
           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
-          this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';      
-          // this.networkArr.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
+          this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
           this.networkArr = [];
@@ -244,10 +243,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         "yojanaId": formValue.yojanaId,
         "valvesegmet": this.segmentShowArray
       }
-      console.log("editFlag",this.editFlag);
-      
-      console.log("formvalueobj",obj);
-      
+            
       this.spinner.show();
       this.apiService.setHttp('PUT', 'ValveManagement/Valvesegment/Updatevalvesegmentassignment', false, obj, false, 'valvemgt');
       this.apiService.getHttp().subscribe(
@@ -281,6 +277,37 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   deleteSegment(index: any) {
     this.segmentShowArray.splice(index, 1);
+  }
+
+
+  deleteConformation(id:any){
+    this.valveId = id ;
+  }
+  onDeleteValve() {
+   
+    
+    let obj = {
+      id:this.valveId ,
+      deletedBy: this.localStorage.userId(),
+    };
+
+    console.log("hello delete",obj);
+
+    this.apiService.setHttp('DELETE', 'ValveManagement/Valvesegment', false, obj, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === '200') {
+          this.toastrService.success(res.statusMessage);
+          this.getAllValveTableData();
+          // this.clearForm();
+        } else {
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    });
   }
 
   clearForm() {   
