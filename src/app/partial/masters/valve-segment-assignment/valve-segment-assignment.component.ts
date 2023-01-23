@@ -90,9 +90,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
           this.filterYojanaArr =res.responseData;
-          this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId })) : '';
+          this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
           this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }),this.getAllNetworkFilter()) : '';
-          this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
+          this.editObj && this.getAllLocalStorageData.userId == 1  ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
         }
