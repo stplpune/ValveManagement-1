@@ -156,13 +156,13 @@ export class ValveConnectionComponent implements OnInit {
   }
   //#region -------------------Start Dropdown Here-----------------------------------------
   getYoganaDropdown() {
-    
+
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getLoginData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.filterFlag=='filter'?this.yoganaArrayFilter = res.responseData:this.yoganaArray = res.responseData;
-        this.yoganaArrayFilter.length==1?(this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId),this.getNetworkDropdown()): '' ;
-        this.yoganaArray.length==1?(this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId),this.getNetworkDropdown()):'';
+        this.yoganaArrayFilter.length==1?(this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId)): '' ;
+        this.yoganaArray.length==1?(this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId)):'';
 
         this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetworkDropdown()) : '';
       }
@@ -177,7 +177,6 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   getNetworkDropdown() {
-    // debugger
     console.log("fgdfgfd", this.filterFlag);
     let id = this.filterFlag == 'filter' ? this.searchForm.value.yojana : this.valveConnectionForm.value.yojanaId;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.localStorage.userId() + '&YojanaId=' + (id || this.getLoginData.yojanaId), false, false, false, 'valvemgt');
@@ -185,10 +184,8 @@ export class ValveConnectionComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.filterFlag=='filter'?this.networkArrayFilter = res.responseData:this.networkArray = res.responseData;
-          // this.networkArray.length==1?(this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId),this.getValveConnectionDropdown()):
-          // this.networkArrayFilter.length==1?(this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId),this.getValveConnectionDropdown()):'';
-          this.networkArrayFilter.length==1?(this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId),this.getValveConnectionDropdown()): '';
-          this.valveConnectionArray.length==1?(this.valveConnectionForm.controls['networkId'].setValue(this.valveConnectionArray[0].networkId),this.getValveConnectionDropdown()):'';
+          this.networkArrayFilter.length==1?(this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId)): '';
+          this.valveConnectionArray.length==1?(this.valveConnectionForm.controls['networkId'].setValue(this.valveConnectionArray[0].networkId)):'';
 
           this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
         }
