@@ -97,8 +97,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
           this.yojanaArr = res.responseData;
           this.filterYojanaArray = res.responseData;
           this.filterYojanaArray?.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getAllFilterNetwork()) : '';
-          this.yojanaArr?.length == 1 ? (this.tankSegmentForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId })) : '';
-          this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
+          this.yojanaArr?.length == 1 ? (this.tankSegmentForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getNetwork()) : '';
+          this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getNetwork()) : '';
         } else {
           this.yojanaArr = [];
         }

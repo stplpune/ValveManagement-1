@@ -5,7 +5,7 @@
       </div>
       <div class="col-sm-4 text-end">
         <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
-        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
+        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" (click)="getAllNetwork(true)" data-bs-toggle="modal"
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Sensor Device
           Master
         </button>
@@ -97,7 +97,7 @@
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="!editData">Add Tank Sensor Device Master</p>
         <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="editData">Update Tank Sensor Device Master</p>
-        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0"
+        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0;getAllNetwork(false)"
           #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form [formGroup]="tankSensorDeviceFrm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
@@ -155,7 +155,7 @@
               <label class="form-label">SIM No</label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
-                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
+                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllSimArray.length < 1">
               </ngx-select>
               <div *ngIf="submitted && f.simId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simId.errors?.required">Sim Number is
@@ -166,7 +166,7 @@
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId"
                 placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
-                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
+                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllTankArray.length < 1">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank Type is

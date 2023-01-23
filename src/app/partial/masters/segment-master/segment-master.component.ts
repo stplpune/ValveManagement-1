@@ -68,7 +68,7 @@ export class SegmentMasterComponent implements OnInit{
       endPoints: [''],
       midpoints: [''],
       yojanaId: [this.yoganaIdArray?.length == 1 ? this.yoganaIdArray[0].yojanaId : '', [Validators.required]],
-      networkId: ['', [Validators.required]],
+      networkId: [this.networkIdAddArray?.length == 1 ? this.networkIdAddArray[0].networkId : '', [Validators.required]],
     })
   }
 
