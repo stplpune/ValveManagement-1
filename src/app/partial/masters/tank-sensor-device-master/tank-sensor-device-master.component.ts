@@ -109,8 +109,7 @@ getAllYojana() {
     next: (res: any) => {
       if (res.statusCode == '200') {
         this.getAllYojanaArray = res.responseData;
-        this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : 
-        (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
+        this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : '';
       }else{
         this.getAllYojanaArray = [];
       }
