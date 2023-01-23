@@ -10,8 +10,8 @@
 }
 
 .valvePiChart{
-    width:'100%';
-    height: 332px
+    width:500px;
+    height: 400px
 }
 
 agm-map {

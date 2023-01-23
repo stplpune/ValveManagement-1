@@ -58,7 +58,7 @@ export class SimListComponent implements OnInit {
   //Form Initialize
   controlForm() {
     this.simFormData = this.fb.group({
-      id: [0],
+      id: +[''],
       yojanaId: ['', Validators.required],
       networkId: ['', Validators.required],
       simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],

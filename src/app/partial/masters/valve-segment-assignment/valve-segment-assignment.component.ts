@@ -57,7 +57,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       "id": [this.editFlag ? this.editObj.id : 0],
       "valveId": ['', Validators.required],
       "segmentId": [''],
-      "yojanaId": ['', Validators.required],
+      "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
       "networkId": ['', Validators.required],
       "valvesegmet": []
     })
@@ -75,14 +75,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   clearfilter(flag: any) {
-    if (flag == 'yojana') {
-      // this.filterForm.controls['yojanaId'].setValue(0);
-      this.filterForm.controls['networkId'].setValue(0);    
-      // this.getAllValveTableData();
+    if (flag == 'yojana') {   
+      this.filterForm.controls['networkId'].setValue(0);         
     } else if (flag == 'network') {
-      this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
-      // this.filterForm.controls['networkId'].setValue(0);      
-      // this.getAllValveTableData();
+      this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);       
     }
     this.getAllValveTableData();
   }
@@ -94,10 +90,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
           this.filterYojanaArr =res.responseData;
-
           this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
-          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
-
+          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }), this.getAllNetworkFilter()) : '';
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -109,14 +103,30 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     })
   }
 
-  getAllNetwork(yId?: any) {
-    let yojanaId = yId == 'yojana' ? this.filterForm.value.yojanaId : this.valveRegForm.value.yojanaId;
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + yojanaId, false, false, false, 'valvemgt');
+  getAllNetworkFilter() {
+    console.log("this.yojanaArr",this.yojanaArr);
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.filterForm.value.yojanaId , false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == 200) {         
+          this.FilterNetworkArr = res.responseData;        
+          this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
+        } else {
+          this.FilterNetworkArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      }
+    })
+  }
+
+  getAllNetwork() {   
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + this.valveRegForm.value.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {
-          // this.networkArr = res.responseData;
-          yId == 'yojana' ?this.FilterNetworkArr = res.responseData: this.networkArr = res.responseData;
+          this.networkArr = res.responseData;        
           // this.networkArr.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
@@ -270,8 +280,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.segmentShowArray.splice(index, 1);
   }
 
-  clearForm(formDirective: any) {
-    formDirective?.resetForm();
+  clearForm() {   
+    this.formData();
     this.editFlag = false;
     this.editObj = '';
     this.segmentShowArray = [];
