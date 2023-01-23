@@ -41,10 +41,10 @@ export class DashboardComponent implements OnInit {
     this.defaultFilterForm();
     this.getYogana();
     this.getValveSummary();
-    this.getValveSegmentList();
-    this.getDeviceCurrentSensorValue();
+    // this.getValveSegmentList();
+    // this.getDeviceCurrentSensorValue();
     this.waterTankChartData();
-    // this.localStorage.userId() != 1 ? (this.getDeviceCurrentSensorValue(),this.waterTankChartData()) : '';
+    this.localStorage.userId() == 1 ? (this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
   }
 
   defaultFilterForm() {
