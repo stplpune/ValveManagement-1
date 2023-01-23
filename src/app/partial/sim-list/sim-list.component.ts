@@ -28,8 +28,6 @@ export class SimListComponent implements OnInit {
   getAllFilterNetworkArray = new Array();
   simArray = new Array();
   listCount!: number;
-  buttonName:string = 'Submit';
-  headerText: string = 'Add Sim';
   getAllLocalStorageData!:any;
   @ViewChild('addSimData') addSimData: any;
   deleteSimId: number = 0;
@@ -140,8 +138,7 @@ export class SimListComponent implements OnInit {
     formDirective?.resetForm();
     // this.getAllNetworkArray = [];
     this.editFlag = false;
-    this.headerText = 'Add Sim';
-    this.buttonName = 'Submit'
+    this.editData = '';
     this.submitted = false;
     this.controlForm();
   }
@@ -170,7 +167,6 @@ export class SimListComponent implements OnInit {
             this.toastrService.success(res.statusMessage);
             this.editFlag = false;
             this.addSimData.nativeElement.click();
-            this.buttonName = 'Submit'
             this.getAllSimData();
           } else {
             this.toastrService.error(res.statusMessage);
@@ -223,13 +219,9 @@ export class SimListComponent implements OnInit {
 
   //Update Sim Data
   updateSimData(simData: any) {
-    console.log(simData,'editData');
-    
-    this.buttonName = 'Update';
     this.editData = simData;
     this.highlitedRow = simData.id;
     this.editFlag = true;
-    this.headerText = 'Update Sim';
     this.simFormData.patchValue({
       id: simData.id,
       yojanaId: simData.yojanaId,
@@ -285,6 +277,6 @@ export class SimListComponent implements OnInit {
   clearDropdown() {
     this.simFormData.controls['networkId'].setValue('');
     this.getAllNetworkArray = [];
-    // this.editFlag = false;
+    this.editFlag = false;
   }
 }

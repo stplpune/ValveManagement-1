@@ -20,7 +20,7 @@
           <!-- <label class="form-label">Yojna</label> -->
           <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
             placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
-            (select)="pageNumber = 1; getAllNetwork(); getTableData()"
+            (select)="pageNumber = 1; getAllFilterNetwork(); getTableData()"
             (remove)="clearfilter('Yojana')" [disabled]="filterYojanaArray?.length == 1">
           </ngx-select>
         </div>
@@ -65,7 +65,7 @@
               <i class="fa-regular fa-pen-to-square"></i>
             </button>
             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve" data-bs-toggle="modal"
-              data-bs-target="#deleteModel">
+              data-bs-target="#deleteModel" (click)="deleteConformation(data.tankId)">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -105,7 +105,7 @@
                 <label class="form-label">Yojna</label>
                 <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
                   placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
-                  (select)="getAllFilterNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
+                  (select)="getNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
                   (remove)="onChangeDropdown('Yojna');" [disabled]="yojanaArr?.length == 1">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
@@ -115,7 +115,7 @@
 
               <div class="col-6">
                 <label class="form-label">Network</label>
-                <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
+                <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId"
                   placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                   (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')"
                   [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
@@ -215,7 +215,7 @@
         <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
           aria-label="Close">Cancel</button>
         <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
-          data-bs-dismiss="modal" aria-label="Close">I'm
+          data-bs-dismiss="modal" aria-label="Close" (click)="deleteSegMaster()">I'm
           Sure</button>
       </div>
     </div>

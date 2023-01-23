@@ -136,66 +136,36 @@ export class TankMasterComponent implements OnInit {
     })
   }
   getNetwork(status?: any) {
-    // let netId: any;
-    // netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-    // console.log(status, 'status');
-    // console.log(netId, 'netId');
-    // if (netId) {
-
-    console.log("yojana network  Id",this.tankForm.value.yojanaId);
-
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.tankForm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
             this.networkArray = res.responseData
-            // status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
             this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
-
-            // this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }), this.getTableData()) : '';
-
-            this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId }), this.getTableData()) : '';
-
+            this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId })) : '';
           } else {
             this.networkArray = [];
-            // this.filterNetworkArray = [];
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
         }
       })
-    // }
   }
 
   getNetworkFilter(status?: any) {
-    // let netId: any;
-    // netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-    // console.log(status, 'status');
-    // console.log(netId, 'netId');
-    // if (netId) {
-      console.log("yojana Id",this.filterFrm.value.yojanaId);
-      
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.filterFrm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
             this.filterNetworkArray = res.responseData 
-            // status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
-            this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
-
-            this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }), this.getTableData()) : '';
-
-            // this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId }), this.getTableData()) : '';
-
+            this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId })) : '';
           } else {
-            // this.networkArray = [];
             this.filterNetworkArray = [];
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
         }
       })
-    // }
   }
 
   onSubmit() {
