@@ -90,8 +90,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
           this.filterYojanaArr =res.responseData;
-          this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
-          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }), this.getAllNetworkFilter()) : '';
+          this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId })) : '';
+          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }),this.getAllNetworkFilter()) : '';
           this.editObj ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
@@ -109,8 +109,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {         
-          this.FilterNetworkArr = res.responseData;        
-          this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId),this.getAllvalve(), this.getAllSegment()) : '';
+          this.FilterNetworkArr = res.responseData; 
+          this.FilterNetworkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.FilterNetworkArr[0].networkId })) : '';       
+          // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId),this.getAllvalve(), this.getAllSegment()) : '';
         } else {
           this.FilterNetworkArr = [];
         }
@@ -126,7 +127,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {
-          this.networkArr = res.responseData;        
+          this.networkArr = res.responseData;  
+          this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
+          this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';      
           // this.networkArr.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
