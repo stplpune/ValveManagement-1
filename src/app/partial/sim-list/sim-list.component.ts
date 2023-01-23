@@ -52,6 +52,9 @@ export class SimListComponent implements OnInit {
     this.searchFormControl();
     this.getSimOperator();
     this.getAllYojana();
+    if(this.getAllLocalStorageData.userId != 1){
+      this.getAllNetwork();
+    }
     this.getAllSimData();
   }
 
@@ -59,7 +62,7 @@ export class SimListComponent implements OnInit {
   controlForm() {
     this.simFormData = this.fb.group({
       id: +[''],
-      yojanaId: ['', Validators.required],
+      yojanaId:[(this.getAllLocalStorageData.yojanaId || ''), Validators.required],
       networkId: ['', Validators.required],
       simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],
       imsiNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')]],
@@ -70,7 +73,7 @@ export class SimListComponent implements OnInit {
   // SearchForm Initialize
   searchFormControl(){
     this.searchForm=this.fb.group({
-      yojana:[''],
+      yojana:[this.getAllLocalStorageData.yojanaId || ''],
       network:['']
     })
   }
@@ -82,6 +85,7 @@ export class SimListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.getAllYojanaArray = res.responseData;
+          (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -91,12 +95,13 @@ export class SimListComponent implements OnInit {
 
   // Network Array
   getAllNetwork(flag?:any) {
+    let networkFlag = flag;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId
-      + '&YojanaId=' + (this.simFormData.value.yojanaId || 0), false, false, false, 'valvemgt');
+      + '&YojanaId=' + ((networkFlag?this.simFormData.value.yojanaId:this.searchForm.value.yojana) || 0), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') { 
-          flag == 'false' ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
+          !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
         } else {
           this.getAllNetworkArray = [];
@@ -133,11 +138,12 @@ export class SimListComponent implements OnInit {
   //Clear Form Data
   clearForm(formDirective?: any) {
     formDirective?.resetForm();
-    this.getAllNetworkArray = [];
+    // this.getAllNetworkArray = [];
     this.editFlag = false;
     this.headerText = 'Add Sim';
     this.buttonName = 'Submit'
     this.submitted = false;
+    this.controlForm();
   }
 
   //To Submit the Data
@@ -217,6 +223,8 @@ export class SimListComponent implements OnInit {
 
   //Update Sim Data
   updateSimData(simData: any) {
+    console.log(simData,'editData');
+    
     this.buttonName = 'Update';
     this.editData = simData;
     this.highlitedRow = simData.id;
@@ -229,7 +237,7 @@ export class SimListComponent implements OnInit {
       imsiNo: simData.imsiNo,
       operatorId: simData.operatorId,
     });
-    this.getAllNetwork();
+    this.getAllNetwork(true);
   }
 
   //Bind We need to deleted Id
