@@ -123,8 +123,8 @@ export class TankMasterComponent implements OnInit {
         if (res.statusCode == '200') {
           this.yojanaArray = res.responseData;
           this.filterYojanaArray = res.responseData;
-          this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId)) : '';
-          this.filterYojanaArray?.length == 1 ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetworkFilter()) : '';
+          this.editFlag && this.getData.userId == 1 ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId),this.getNetwork()) : '';
+          this.filterYojanaArray?.length == 1  ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetworkFilter()) : '';
           this.yojanaArray?.length == 1 ? (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
