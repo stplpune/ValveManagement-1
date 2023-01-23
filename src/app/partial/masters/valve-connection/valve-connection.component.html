@@ -17,6 +17,8 @@
                         (select)="this.filterFlag = 'filter';clearSearch('yojana');getNetworkDropdown();filterData()"
                         [disabled]="yoganaArray.length==1">
                     </ngx-select>
+                    <!-- (remove)="clearFilter('yojana')"
+                        (select)="pageNumber = 1;getAllSegmentMaster();getNetworkId()" -->
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
@@ -138,8 +140,8 @@
                                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                                     [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
                                     (remove)="clearDropdown('yojanaId')"
-                                    (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();"
-                                    [disabled]="this.yoganaArray.length==1">
+                                    (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();">
+                                    <!-- [disabled]="this.yoganaArray.length==1" -->
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
@@ -154,8 +156,8 @@
                                     [disabled]="!this.valveConnectionForm.value.yojanaId" optionTextField="networkName"
                                     [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                     (remove)="clearDropdown('networkId')"
-                                    (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();"
-                                    [disabled]="networkArray.length==1">
+                                    (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();">
+                                    <!-- [disabled]="networkArray.length==1" -->
                                 </ngx-select>
                                 <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.networkId.errors?.required">Network Is
@@ -168,10 +170,11 @@
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveMasterId" placeholder="Select Valve"
                                     optionValueField="valveId" optionTextField="valveName"
-                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1"
+                                
                                     [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }"
                                     (remove)="clearDropdown('valveMasterId')">
                                 </ngx-select>
+                                <!-- [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1" -->
                                 <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">
                                         Valve Is Required</div>

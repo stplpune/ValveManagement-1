@@ -16,7 +16,7 @@
     <div class="row">
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana" placeholder="Select Yojana"
-          optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
+          optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')" [disabled]="getAllYojanaArray.length == 1"
           (select)="getAllSensorDeviceTableData();getAllNetwork(false)">
         </ngx-select>
       </div>
@@ -29,7 +29,7 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
           optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network"
-          (select)="getAllSensorDeviceTableData()">
+          (select)="getAllSensorDeviceTableData()" (remove)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>
     </div>
@@ -129,7 +129,7 @@
                   <label class="form-label">Yojana</label>
                   <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" (select)="getAllNetwork(true)"
                     placeholder="Select Yojana" (remove)="clearDropdown('yojana')" optionValueField="yojanaId" optionTextField="yojanaName"
-                    [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
+                    [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }" [disabled]="getAllYojanaArray.length == 1">
                   </ngx-select>
                   <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
                     <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is

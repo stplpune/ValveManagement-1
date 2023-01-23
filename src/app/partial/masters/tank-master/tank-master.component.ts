@@ -15,11 +15,11 @@ import { CommonService } from 'src/app/core/services/common.service';
 })
 export class TankMasterComponent implements OnInit {
   tankForm: FormGroup | any;
-  getData:any;
-  yojanaArray :any
-  networkArray :any
+  getData: any;
+  yojanaArray: any
+  networkArray: any
   editFlag: boolean = false;
-  responseArray :any
+  responseArray: any
   pageNumber: number = 1;
   pagesize: number = 10;
   totalRows: any;
@@ -28,10 +28,10 @@ export class TankMasterComponent implements OnInit {
   filterFrm!: FormGroup;
   pinCode: any;
   editObj: any;
-  submitted:boolean =false;
-  filterYojanaArray :any
-  filterNetworkArray :any
-  
+  submitted: boolean = false;
+  filterYojanaArray: any
+  filterNetworkArray: any
+
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
 
@@ -61,7 +61,7 @@ export class TankMasterComponent implements OnInit {
   geFormData() {
     this.tankForm = this.fb.group({
       "id": [0],
-      "tankName": ['', [Validators.required,Validators.maxLength(100)]],
+      "tankName": ['', [Validators.required, Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
       "networkId": ['', Validators.required],
@@ -82,15 +82,15 @@ export class TankMasterComponent implements OnInit {
 
   getFilterFormData() {
     this.filterFrm = this.fb.group({
-      yojanaId: [''],
-      networkId: ['']
+      yojanaId: [0],
+      networkId: [0]
     })
   }
 
   clearfilter(flag: any) {
     if (flag == 'yojana') {
       this.filterFrm.controls['networkId'].setValue(0);
-    }else if(flag == 'network'){
+    } else if (flag == 'network') {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
     }
     this.getTableData();
@@ -124,10 +124,11 @@ export class TankMasterComponent implements OnInit {
           this.yojanaArray = res.responseData;
           this.filterYojanaArray = res.responseData;
           this.editFlag ? (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId)) : '';
-          this.filterYojanaArray?.length == 1 ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetwork()) : '';
+          this.filterYojanaArray?.length == 1 ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetworkFilter()) : '';
+          this.yojanaArray?.length == 1 ? (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork()) : '';
         } else {
           this.yojanaArray = [];
-          this.filterYojanaArray= [];
+          this.filterYojanaArray = [];
         }
       }), error: (error: any) => {
         this.error.handelError(error.status);
@@ -135,45 +136,80 @@ export class TankMasterComponent implements OnInit {
     })
   }
   getNetwork(status?: any) {
-    let netId: any;
-    netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
-    console.log(status,'status');
-    console.log(netId,'netId');
-    if (netId) {
-      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + netId, false, false, false, 'valvemgt');
+    // let netId: any;
+    // netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+    // console.log(status, 'status');
+    // console.log(netId, 'netId');
+    // if (netId) {
+
+    console.log("yojana network  Id",this.tankForm.value.yojanaId);
+
+      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.tankForm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
-            status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
+            this.networkArray = res.responseData
+            // status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
             this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
-            
-            this.filterNetworkArray?.length == 1   ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }),this.getTableData()) : '';
+
+            // this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }), this.getTableData()) : '';
 
             this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId }), this.getTableData()) : '';
-            
+
           } else {
             this.networkArray = [];
+            // this.filterNetworkArray = [];
+          }
+        }), error: (error: any) => {
+          this.error.handelError(error.status);
+        }
+      })
+    // }
+  }
+
+  getNetworkFilter(status?: any) {
+    // let netId: any;
+    // netId = status == 'net' ? this.filterFrm.value.yojanaId : this.tankForm.value.yojanaId
+    // console.log(status, 'status');
+    // console.log(netId, 'netId');
+    // if (netId) {
+      console.log("yojana Id",this.filterFrm.value.yojanaId);
+      
+      this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.filterFrm.value.yojanaId, false, false, false, 'valvemgt');
+      this.service.getHttp().subscribe({
+        next: ((res: any) => {
+          if (res.statusCode == '200') {
+            this.filterNetworkArray = res.responseData 
+            // status == 'net' ? this.filterNetworkArray = res.responseData : this.networkArray = res.responseData
+            this.editFlag ? this.tankForm.controls['networkId'].setValue(this.editObj.networkId) : '';
+
+            this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }), this.getTableData()) : '';
+
+            // this.networkArray?.length == 1 ? (this.tankForm.patchValue({ networkId: this.networkArray[0].networkId }), this.getTableData()) : '';
+
+          } else {
+            // this.networkArray = [];
             this.filterNetworkArray = [];
           }
         }), error: (error: any) => {
           this.error.handelError(error.status);
         }
       })
-    }
+    // }
   }
 
   onSubmit() {
-    this.submitted=true;
+    this.submitted = true;
     let formData = this.tankForm.value;
     if (this.tankForm.invalid) {
       return;
     } else {
-      formData.latitude=(formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString();
-      formData.longitude= (formData.address == this.addressNameforAddress ? this.addLongitude || '' : '').toString();
-      formData.isDeleted=false;
-      formData.createdBy=this.local.userId();
-      formData.modifiedBy=this.local.userId();
-   
+      formData.latitude = (formData.address == this.addressNameforAddress ? this.addLatitude || '' : '').toString();
+      formData.longitude = (formData.address == this.addressNameforAddress ? this.addLongitude || '' : '').toString();
+      formData.isDeleted = false;
+      formData.createdBy = this.local.userId();
+      formData.modifiedBy = this.local.userId();
+
       this.service.setHttp(!this.editFlag ? 'post' : 'put', 'DeviceInfo/' + (!this.editFlag ? 'AddTankDetails' : 'UpdateTankDetails'), false, formData, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
@@ -216,7 +252,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    this.submitted=false;
+    this.submitted = false;
     this.editFlag = false;
     this.geFormData();
   }
@@ -248,7 +284,7 @@ export class TankMasterComponent implements OnInit {
     })
   }
 
-//#region -----------------------------------------Search Address Method Starts Here----------------------------------------------------------
+  //#region -----------------------------------------Search Address Method Starts Here----------------------------------------------------------
   geocoder: any;
   addLatitude: any = 19.0898177;
   addLongitude: any = 76.5240298;
