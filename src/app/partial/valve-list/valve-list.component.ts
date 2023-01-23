@@ -169,7 +169,6 @@ export class ValveListComponent implements OnInit {
           this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : ''; 
         } else {
           this.spinner.hide();
-          
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = [] : this.yojanaArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
@@ -183,7 +182,7 @@ export class ValveListComponent implements OnInit {
   }
 
   getAllNetwork(val: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetwork?YojanaId=' + val, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getAllLocalStorageData.userId+'&YojanaId=' + val, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -197,7 +196,6 @@ export class ValveListComponent implements OnInit {
 
         } else {
           this.spinner.hide();
-          // this.networkArray = [];
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
