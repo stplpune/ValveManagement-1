@@ -250,7 +250,7 @@ export class DashboardComponent implements OnInit {
 
   onMapReady(map: any) {
     this.map = map;
-    this.getAllSegmentArray.map((ele: any) => {
+    this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
         geodesic: true,

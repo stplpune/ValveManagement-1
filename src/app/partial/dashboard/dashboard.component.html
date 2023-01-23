@@ -16,7 +16,7 @@
                     <div class="col-sm-3">
                         <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId"
                             placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');getDeviceCurrentSensorValue()" 
-                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length == 0" (remove)="clearFilter('network')"
+                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
                     </div>
