@@ -140,21 +140,11 @@ export class DashboardComponent implements OnInit {
 
     am4core.useTheme(am4themes_animated);
     am4core.addLicense("ch-custom-attribution");
-    // Themes end
-    
+
     // Create chart instance
     let chart = am4core.create("valvePiChart", am4charts.XYChart3D);
-    
     chart.titles.create().text = "Water reserves";
-    
-    // Add data
     chart.data = chartData;
-
-
-chart.marginTop = 10;
-// chart.paddingRight = 10;
-// chart.paddingBottom = 10;
-// chart.paddingLeft = 10;
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -169,12 +159,8 @@ chart.marginTop = 10;
     valueAxis.strictMinMax = true;
     valueAxis.renderer.baseGrid.disabled = true;
     valueAxis.renderer.labels.template.adapter.add("text", function(text:any) {
-      if ((text > 100) || (text < 0)) {
-        return "";
-      }
-      else {
-        return text + "%";
-      }
+      if ((text > 100) || (text < 0)) { return "";}
+      else { return text + "%";}
     })
     
     // Create series
