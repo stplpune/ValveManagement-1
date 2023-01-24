@@ -82,9 +82,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       network:+[this.getAllLocalStorageData.networkId || ''],
       tank:['']
     })
-    if(this.getAllFilterNetworkArray.length < 2){
       this.getAllTank(false);
-    }
   }
 
   onEdit(data?:any){
@@ -133,6 +131,7 @@ getAllNetwork(flag?:any) {
       if (res.statusCode == '200') {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
+          this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -161,12 +160,13 @@ getAllNetwork(flag?:any) {
   getAllTank(flag?:any){
     let tankFlag = flag;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) +'&NetworkId=' + 
-    (tankFlag?this.tankSensorDeviceFrm.value.networkId:this.searchForm.value.network), false, false, false, 'valvemgt');
+    (tankFlag?this.tankSensorDeviceFrm.value.networkId:(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
-          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : ''
+          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : '';
+          this.getAllFilterTankArray.length == 1 ? this.searchForm.patchValue({tank: this.getAllFilterTankArray[0].tankId }) : '';
         }else{
           tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
         }

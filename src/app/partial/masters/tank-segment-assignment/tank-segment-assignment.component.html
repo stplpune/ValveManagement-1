@@ -27,10 +27,10 @@
 
         <div class="col-sm">
           <!-- <label class="form-label">Network</label> -->
-          <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
+          <ngx-select [allowClear]="true" [items]="filterNetworkArr" formControlName="networkId"
             placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
             (select)="pageNumber = 1; getTableData();" (remove)="clearfilter('Network')"
-            [disabled]="!this.filterForm.value.yojanaId || this.networkArr.length == 0">
+            [disabled]="!this.filterForm.value.yojanaId || filterNetworkArr?.length == 1">
           </ngx-select>
         </div>
       </div>
@@ -115,11 +115,11 @@
 
               <div class="col-6">
                 <label class="form-label">Network</label>
-                <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId"
+                <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
                   placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                   (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')"
                   [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
-                  (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId">
+                  (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId || networkArr?.length == 1">
                 </ngx-select>
                 <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>

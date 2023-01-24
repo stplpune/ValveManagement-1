@@ -102,6 +102,8 @@ export class SimListComponent implements OnInit {
         if (res.statusCode == '200') { 
           !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
+          // this.yojanaArray?.length == 1 ? (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork()) : '';
+          this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId }) : '';
         } else {
           this.getAllNetworkArray = [];
         }

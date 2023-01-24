@@ -29,7 +29,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   tankLabel !: string;
   submitted: boolean = false;
   filterYojanaArray = new Array();
-  filterNetworkArray = new Array();
+  filterNetworkArr = new Array();
   deleteTankSegId : any;
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData:any
@@ -57,7 +57,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
       "segmentId": [''],
       tanksegment: [],
       "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
-      "networkId": ['', Validators.required]
+      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId : '', Validators.required]
     })
   }
 
@@ -113,10 +113,10 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
-        if (res.statusCode == '200') {this.networkArr = res.responseData;
-          this.networkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getTableData()) : '';
+        if (res.statusCode == '200') {this.filterNetworkArr = res.responseData;
+          this.filterNetworkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.filterNetworkArr[0].networkId }), this.getTableData()) : '';
         } else {
-          this.networkArr = [];
+          this.filterNetworkArr = [];
         }
       }),
       error: (error: any) => {
@@ -125,12 +125,12 @@ export class TankSegmentAssignmentComponent implements OnInit {
     })
   }
 
-  getNetwork(label?: string) {
+  getNetwork() {
     this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.tankSegmentForm.value.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {
-          this.filterNetworkArray = res.responseData;
+          this.networkArr = res.responseData;
           this.networkArr?.length == 1 ? (this.tankSegmentForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
           this.networkArr?.length > 1  ? (this.tankSegmentForm.patchValue({ networkId: this.tankSegmentForm.value.networkId })) : '';
           
