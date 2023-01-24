@@ -132,7 +132,7 @@
                 <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
                   (remove)="clearFormData('network')" placeholder="Select Network" optionValueField="networkId"
                   (select)="getAllvalve();getAllSegment()" optionTextField="networkName"
-                  [disabled]="!this.valveRegForm.value.yojanaId || networkArr?.length == 1"
+                  [disabled]="!this.valveRegForm.value.yojanaId || networkArr?.length <= 1"
                   [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
@@ -143,7 +143,7 @@
               <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
                 (remove)="clearFormData('valve')" placeholder="Select valve" optionValueField="valveId"
                 (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')" optionTextField="valveName"
-                [disabled]="!this.valveRegForm.value.networkId"
+                [disabled]="!this.valveRegForm.value.networkId  || valveDropdownArray?.length <= 1"
                 [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
               </ngx-select>
               <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve is Required </div>
@@ -155,7 +155,7 @@
               <div class="d-flex  gap-2">              
                 <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  [disabled]="!this.valveRegForm.value.networkId">
+                  [disabled]="!this.valveRegForm.value.networkId || sgmentDropdownArray?.length <= 1">
                 </ngx-select>
                 <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId" (click)="addSegment()">Add</button>
               </div>
