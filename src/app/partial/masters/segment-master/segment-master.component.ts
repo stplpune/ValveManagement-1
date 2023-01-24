@@ -49,7 +49,7 @@ export class SegmentMasterComponent implements OnInit{
     this.defaultForm();
     this.defaultFilterForm();
     this.getYoganaId();
-    this.getAllSegmentMaster();
+    this.localStorage.userId() == 1 ? this.getAllSegmentMaster() : '';
   }
 
   defaultFilterForm() {
