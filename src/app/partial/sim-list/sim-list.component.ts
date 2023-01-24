@@ -72,7 +72,7 @@ export class SimListComponent implements OnInit {
   searchFormControl(){
     this.searchForm=this.fb.group({
       yojana:[this.getAllLocalStorageData.yojanaId || ''],
-      network:['']
+      network:[this.getAllLocalStorageData.networkId || '']
     })
   }
 
