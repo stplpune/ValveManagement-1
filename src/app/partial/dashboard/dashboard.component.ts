@@ -279,29 +279,29 @@ chart.colors.step = 2;
 // Add data
 chart.data = [
    {
-  "year": "1999",
+  "year": "0:00",
   "cars": 50,
 }, {
-  "year": "2000",
+  "year": "1:00",
   "cars": 16,
 }, {
-  "year": "2001",
+  "year": "2:00",
   "cars": 12,
 }, {
-  "year": "2002",
-  "cars": 127,
+  "year": "3:30",
+  "cars": 60,
 }, {
-  "year": "2003",
-  "cars": 124,
+  "year": "4:00",
+  "cars": 100,
 }, {
-  "year": "2004",
-  "cars": 121,
+  "year": "5:00",
+  "cars": 100,
 }];
 
 // Create axes
 let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
 categoryAxis.dataFields.category = "year";
-categoryAxis.title.text = "Year";
+categoryAxis.title.text = "Time";
 categoryAxis.renderer.grid.template.location = 0;
 categoryAxis.renderer.minGridDistance = 20;
 
@@ -351,11 +351,11 @@ series.fillOpacity = 0.85;
 series.stacked = true;
 
 // static
-series.legendSettings.labelText = "Cars total:";
+series.legendSettings.labelText = "Water Level:";
 series.legendSettings.valueText = "{valueY.close}";
 
 // hovering
-series.legendSettings.itemLabelText = "Cars:";
+series.legendSettings.itemLabelText = "Water:";
 series.legendSettings.itemValueText = "{valueY}";
 
 
