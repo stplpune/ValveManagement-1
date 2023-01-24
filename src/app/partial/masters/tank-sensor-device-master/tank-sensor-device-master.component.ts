@@ -132,6 +132,7 @@ getAllNetwork(flag?:any) {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
+          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -142,7 +143,7 @@ getAllNetwork(flag?:any) {
 }
 
   getAllSim(flag?:any) {
-    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId='+ this.tankSensorDeviceFrm.value.yojanaId+'&NetworkId=' + this.tankSensorDeviceFrm.value.networkId , false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId='+ this.tankSensorDeviceFrm.value.yojanaId+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0) , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -160,13 +161,14 @@ getAllNetwork(flag?:any) {
   getAllTank(flag?:any){
     let tankFlag = flag;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) +'&NetworkId=' + 
-    (tankFlag?this.tankSensorDeviceFrm.value.networkId:(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
+    (tankFlag?(this.tankSensorDeviceFrm.value.networkId || 0):(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
           tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
           this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : '';
           this.getAllFilterTankArray.length == 1 ? this.searchForm.patchValue({tank: this.getAllFilterTankArray[0].tankId }) : '';
+          this.getAllTankArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({tankId: this.getAllTankArray[0].tankId }) : '';
         }else{
           tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
         }
