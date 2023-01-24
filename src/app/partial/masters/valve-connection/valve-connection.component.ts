@@ -34,6 +34,7 @@ export class ValveConnectionComponent implements OnInit {
   @ViewChild('closebutton') closebutton: any;
   data: any;
   submitted: boolean = false;
+  editChangeFlag:any;  // note 1 is Edit & 0 is any
 
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -50,7 +51,7 @@ export class ValveConnectionComponent implements OnInit {
     this.defaultValveConnectionForm();
     this.filterFormControl();
     this.getYoganaDropdown();
-    this.bindValveConnectionsTable();
+    this.localStorage.userId() == 1 ? this.bindValveConnectionsTable() : '';
   }
   // alt(){
   //   alert()
@@ -62,9 +63,9 @@ export class ValveConnectionComponent implements OnInit {
       "personName": ['', [Validators.required]],
       "mobileNo": ['', [Validators.required, Validators.pattern('[6-9]\\d{9}')]],
       "remark": [''],
-      "createdBy": this.localStorage.userId(),
-      "yojanaId": ['', [Validators.required]],
-      "networkId": ['', [Validators.required]],
+      "createdBy": this.localStorage.userId(),   
+      "yojanaId": [this.yoganaArray?.length == 1 ? this.yoganaArray[0].yojanaId : '', [Validators.required]],
+      "networkId": [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', [Validators.required]],
       "consumerUserId": [0],
       "totalConnection": [0, [Validators.required]],
       "connectiondetails": this.fb.array([
@@ -130,7 +131,7 @@ export class ValveConnectionComponent implements OnInit {
   bindValveConnectionsTable() {
     this.spinner.show();
     let obj = 'YojanaId=' + (this.searchForm.value.yojana ? this.searchForm.value.yojana : this.getLoginData.yojanaId)
-      + '&NetworkId=' + (this.searchForm.value.network ? this.searchForm.value.network : 0)
+      + '&NetworkId=' + (this.searchForm.value.network || 0)
       + '&UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize
       + '&ValveMasterId=' + (this.searchForm.value.valveMaster ? this.searchForm.value.valveMaster : 0);
 
@@ -154,13 +155,13 @@ export class ValveConnectionComponent implements OnInit {
       },
     });
   }
-  //#region -------------------Start Dropdown Here-----------------------------------------
+  //#region -------------------Start Dropdown Here----------------------------------------- 
   getYoganaDropdown() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getLoginData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yoganaArray = res.responseData;
-        (this.yoganaArrayFilter?.length == 1 && !this.editFlag) ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getNetworkDropdown()) : '';
+        (this.filterFlag == 'filter' && this.yoganaArrayFilter?.length == 1 && !this.editFlag) ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getNetworkDropdown()) : '';
         (this.yoganaArray?.length == 1 && !this.editFlag) ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId), this.getNetworkDropdown()) : '';
         this.editFlag ? (this.valveConnectionForm.controls['yojanaId'].setValue(this.editObj.yojanaId), this.getNetworkDropdown()) : '';
       }
@@ -181,10 +182,9 @@ export class ValveConnectionComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.filterFlag == 'filter' ? this.networkArrayFilter = res.responseData : this.networkArray = res.responseData;
-          this.networkArrayFilter?.length == 1 ? (this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId), this.getValveConnectionDropdown()) : '';
-          this.networkArray?.length == 1 ? (this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId), this.getValveConnectionDropdown()) : '';
-
-          this.editFlag ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
+          (this.filterFlag == 'filter' && this.networkArrayFilter?.length == 1 && !this.editFlag) ? (this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId),this.bindValveConnectionsTable(), this.getValveConnectionDropdown()) : '';
+          (this.networkArray?.length == 1 && !this.editFlag) ? (this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId), this.getValveConnectionDropdown()) : '';
+          (this.editFlag && this.editChangeFlag) ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
         }
         else {
           this.filterFlag == 'filter' ? this.networkArrayFilter = [] : this.networkArray = [];
@@ -252,7 +252,6 @@ export class ValveConnectionComponent implements OnInit {
 
   onClickEdit(Obj: any) {
     this.editObj = Obj;
-    console.log("editObj", this.editObj);
     this.connectionForm.clear()
     this.highlitedRow = this.editObj.id;
     this.editFlag = true;

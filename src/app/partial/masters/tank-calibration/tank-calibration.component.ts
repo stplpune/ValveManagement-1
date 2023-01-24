@@ -47,9 +47,8 @@ export class TankCalibrationComponent implements OnInit {
     this.localstorageData = this.localStorage.getLoggedInLocalstorageData();
     this.defaultForm();
     this.getFilterForm();
-    this.getAllYojana(this.localstorageData.yojanaId);
-    this.getAllTankCalibration();
-
+    this.getAllYojana();
+   this.localStorage.userId() == 1 ? this.getAllTankCalibration() : '';
   }
 
   defaultForm() {
@@ -73,8 +72,8 @@ export class TankCalibrationComponent implements OnInit {
   get f() { return this.tankForm.controls }
 
 
-  getAllYojana(id: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + id, false, false, false, 'valvemgt');
+  getAllYojana() {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' +this.localstorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -100,6 +99,7 @@ export class TankCalibrationComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
+          this.networkArray.length == 1 ? (this.filterFrm.controls['networkId'].setValue(this.networkArray[0].networkId),this.getAllTankCalibration()) : '';
         } else {
           this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -137,8 +137,8 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    console.log(filterValue);
-    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0 || this.localstorageData.yojanaId) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0);
+    console.log('filter',filterValue);
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0 || this.localstorageData.yojanaId) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0 || this.localstorageData.networkId);
     this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
