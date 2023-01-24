@@ -173,6 +173,7 @@ export class ValveListComponent implements OnInit {
     this.btnText = 'Save Changes';
     this.headingText = 'Add Valve';
     this.yojanaArray?.length == 1 ? (this.valveListForm.patchValue({ yojana: this.yojanaArray[0].yojanaId })) : '';
+    this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
 
   }
 

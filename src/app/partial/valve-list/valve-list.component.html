@@ -115,7 +115,7 @@
             <div class="mb-3">
               <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
-                optionValueField="yojanaId" optionTextField="yojanaName"
+                optionValueField="yojanaId" optionTextField="yojanaName"  [disabled]="yojanaArray?.length == 1"
                 (select)="clearFilter('yojana');getAllNetwork()"
                 (remove)="clearFilter('yojana')" 
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
@@ -132,7 +132,7 @@
                 placeholder="Select Network"
                 (select)="clearFilter('network');ToBindSimNumberList();"
                 optionValueField="networkId" optionTextField="networkName"
-                [disabled]="!this.valveListForm.value.yojana"
+                [disabled]="!this.valveListForm.value.yojana || networkArray?.length == 1"
                 (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
