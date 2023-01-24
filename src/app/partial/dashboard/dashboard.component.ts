@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   DeviceCurrentSensorArray:any;
   tankFilterDrop = new FormControl('');
   chartObj:any;
+  tankDeviceHourlyArray:any;
 
   constructor(
     public commonService: CommonService,
@@ -45,7 +46,8 @@ export class DashboardComponent implements OnInit {
     // this.getDeviceCurrentSensorValue();
     this.waterTankChartData();
     this.localStorage.userId() == 1 ? (this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
-    this.asd()
+    this.getTankDeviceHourlyValue();
+    // this.asd();
   }
 
   defaultFilterForm() {
@@ -187,7 +189,103 @@ export class DashboardComponent implements OnInit {
     series2.columns.template.stroke = am4core.color("#000");
     series2.columns.template.strokeOpacity = 0.2;
     series2.columns.template.strokeWidth = 2;
-    
+  }
+
+  getTankDeviceHourlyValue() {
+    let obj = 'cbrA001' + '&DisplayDate=' + '2023-01-23'
+    this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValue?DeviceId=" + obj, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode === "200") {
+          this.tankDeviceHourlyArray = res.responseData;
+          this.asd();
+        } else {
+          this.tankDeviceHourlyArray = [];
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
+        }
+      },
+      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+    });
+  }
+
+  asd(){
+
+    console.log(this.tankDeviceHourlyArray);
+
+    am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+let chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.colors.step = 2;
+
+// Add data
+chart.data = this.tankDeviceHourlyArray
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "hourValue";
+categoryAxis.title.text = "Time";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 20;
+
+categoryAxis.startLocation = 0.5;
+categoryAxis.endLocation = 0.5;
+
+
+let  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Percent";
+valueAxis.calculateTotals = true;
+valueAxis.min = 0;
+valueAxis.max = 100;
+valueAxis.strictMinMax = true;
+valueAxis.renderer.labels.template.adapter.add("text", function(text) {
+  return text + "%";
+});
+
+
+// Create series
+let series:any = chart.series.push(new am4charts.LineSeries());
+
+series.dataFields.valueY = "percent";
+series.dataFields.dateX = "totalPercent";
+series.dataFields.categoryX = "hourValue";
+series.name = "Percent";
+series.strokeWidth = 3;
+series.fillOpacity = 0.5;
+
+var bullet = series.bullets.push(new am4charts.CircleBullet());
+bullet.circle.radius = 6;
+bullet.circle.fill = am4core.color("#fff");
+bullet.circle.strokeWidth = 3;
+
+// series.tooltipHTML = "<img src='https://www.amcharts.com/lib/3/images/car.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+
+series.tooltip.getFillFromObject = false;
+series.tooltip.background.fill = am4core.color("#FFF");
+
+series.tooltip.getStrokeFromObject = true;
+series.tooltip.background.strokeWidth = 3;
+
+series.fillOpacity = 0.85;
+series.stacked = true;
+
+// static
+series.legendSettings.labelText = "Water Level:";
+series.legendSettings.valueText = "{valueY.close}";
+
+// hovering
+series.legendSettings.itemLabelText = "Water:";
+series.legendSettings.itemValueText = "{valueY}";
+
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+
+// add legend
+chart.legend = new am4charts.Legend();
+
+
   }
 
   //..................................................... new Code StartHere ..................... ...............//
@@ -266,107 +364,5 @@ export class DashboardComponent implements OnInit {
     let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
     this.map.setCenter(latLng);
   }
-
-  asd(){
-
-    am4core.useTheme(am4themes_animated);
-// Themes end
-
-// Create chart instance
-let chart = am4core.create("chartdiv", am4charts.XYChart);
-chart.colors.step = 2;
-
-// Add data
-chart.data = [
-   {
-  "year": "0:00",
-  "cars": 50,
-}, {
-  "year": "1:00",
-  "cars": 16,
-}, {
-  "year": "2:00",
-  "cars": 12,
-}, {
-  "year": "3:30",
-  "cars": 60,
-}, {
-  "year": "4:00",
-  "cars": 100,
-}, {
-  "year": "5:00",
-  "cars": 100,
-}];
-
-// Create axes
-let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "year";
-categoryAxis.title.text = "Time";
-categoryAxis.renderer.grid.template.location = 0;
-categoryAxis.renderer.minGridDistance = 20;
-
-categoryAxis.startLocation = 0.5;
-categoryAxis.endLocation = 0.5;
-
-
-let  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis.title.text = "Percent";
-valueAxis.calculateTotals = true;
-valueAxis.min = 0;
-valueAxis.max = 100;
-valueAxis.strictMinMax = true;
-valueAxis.renderer.labels.template.adapter.add("text", function(text) {
-  return text + "%";
-});
-
-
-
-
-
-// Create series
-let series:any = chart.series.push(new am4charts.LineSeries());
-
-series.dataFields.valueY = "cars";
-series.dataFields.dateX = "totalPercent";
-series.dataFields.categoryX = "year";
-series.name = "Cars";
-series.strokeWidth = 3;
-series.fillOpacity = 0.5;
-
-
-// series.dataFields.valueY = "cars";
-// series.dataFields.valueYShow = "totalPercent";
-// series.dataFields.categoryX = "year";
-// series.name = "Cars";
-
-series.tooltipHTML = "<img src='https://www.amcharts.com/lib/3/images/car.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
-
-series.tooltip.getFillFromObject = false;
-series.tooltip.background.fill = am4core.color("#FFF");
-
-series.tooltip.getStrokeFromObject = true;
-series.tooltip.background.strokeWidth = 3;
-
-series.fillOpacity = 0.85;
-series.stacked = true;
-
-// static
-series.legendSettings.labelText = "Water Level:";
-series.legendSettings.valueText = "{valueY.close}";
-
-// hovering
-series.legendSettings.itemLabelText = "Water:";
-series.legendSettings.itemValueText = "{valueY}";
-
-
-// Add cursor
-chart.cursor = new am4charts.XYCursor();
-
-// add legend
-chart.legend = new am4charts.Legend();
-
-
-  }
-
 
 }
