@@ -100,7 +100,7 @@ export class TankCalibrationComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
-          this.networkArray.length == 1 ? (this.filterFrm.controls['networkId'].setValue(this.networkArray[0].networkId)) : '';
+          this.networkArray.length == 1 ? (this.filterFrm.controls['networkId'].setValue(this.networkArray[0].networkId),this.getAllTankCalibration()) : '';
         } else {
           this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
