@@ -183,7 +183,7 @@ export class ValveConnectionComponent implements OnInit {
         if (res.statusCode == '200') {
           this.filterFlag == 'filter' ? this.networkArrayFilter = res.responseData : this.networkArray = res.responseData;
           (this.filterFlag == 'filter' && this.networkArrayFilter?.length == 1 && !this.editFlag) ? (this.searchForm.controls['network'].setValue(this.networkArrayFilter[0].networkId),this.bindValveConnectionsTable(), this.getValveConnectionDropdown()) : '';
-          (this.networkArray?.length == 1 && !this.editFlag) ? (this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId), this.getValveConnectionDropdown()) : '';
+          this.networkArray?.length == 1 ? (this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId), this.getValveConnectionDropdown()) : '';
           (this.editFlag && this.editChangeFlag) ? (this.valveConnectionForm.controls['networkId'].setValue(this.editObj.networkId), this.getValveConnectionDropdown()) : '';
         }
         else {

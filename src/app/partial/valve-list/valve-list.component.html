@@ -6,7 +6,8 @@
         <!-- <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
             class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" (click)="onRadioChange(1)" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve</button>
+          data-bs-target="#AddValveModal" (click)="this.filterFlag = 'add';onRadioChange(1);getAllYojana()" #addValveModal><i
+            class="fa-solid fa-plus me-2"></i>Add Valve</button>
       </div>
     </div>
   </div>
@@ -14,26 +15,27 @@
   <form [formGroup]="searchForm">
     <div class="row">
       <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana"
-        placeholder="Select Yojana" optionValueField="yojanaId"
-        optionTextField="yojanaName"  (select)="getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()"
-        (remove)="clearSerach('yojana')" [disabled]="yojanaArray?.length == 1">
-      </ngx-select>
+        <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
+          optionValueField="yojanaId" optionTextField="yojanaName"
+          (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()" (remove)="clearSerach('yojana')"
+          [disabled]="yoganaArrayFilter?.length == 1">
+        </ngx-select>
       </div>
       <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
-             placeholder="Select Network" optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0"
-             optionTextField="networkName"   (remove)="clearSerach('network')" (select)="defaultPageNo()">
+        <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network" placeholder="Select Network"
+          optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0 || networkArrayfilter?.length==1" optionTextField="networkName"
+          (remove)="clearSerach('network')" (select)="this.filterFlag = 'filter';defaultPageNo()">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <div class="input-group">
           <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Valve Name"
-          (keyup)="onKeyUpFilter()" />
-          <button type="button" class="btn btn-light btn-sm"  (click)="clearSerach('search')"
-          *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i class="fas fa-search"></i></button>
-      </div>
+            (keyup)="onKeyUpFilter()" />
+          <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
+            *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
+              class="fas fa-search"></i></button>
+        </div>
 
       </div>
     </div>
@@ -74,7 +76,7 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                (click)="updateValveData(valveStatus)" data-bs-target="#AddValveModal">
+                (click)="this.filterFlag = 'add';updateValveData(valveStatus);onRadioChange(1);getAllYojana()" data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -91,8 +93,8 @@
       </div>
     </div>
     <pagination-controls *ngIf="valveStatusArray?.length != 0" previousLabel="" nextLabel=""
-            (pageChange)="onClickPagintion($event)">
-        </pagination-controls>
+      (pageChange)="onClickPagintion($event)">
+    </pagination-controls>
   </div>
 </div>
 
@@ -104,8 +106,8 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">{{headingText}}</p>
-        <button type="button" class="btn-close btn-close-inverse" #addValveModel (click)="clearForm();clearhighlightrow()"
-          data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-inverse" #addValveModel
+          (click)="clearForm();clearhighlightrow()" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form [formGroup]="valveListForm">
         <div class="modal-body">
@@ -113,7 +115,8 @@
             <div class="mb-2">
               <label class="form-label">Valve ID<span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="valveId" placeholder="Valve ID"
-                [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }" (keypress)="validation.noSpacesAtStart($event)">
+                [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }"
+                (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.valveId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.valveId.errors?.required">Valve ID is
                   required.</div>
@@ -124,7 +127,8 @@
             <div class="mb-2">
               <label class="form-label">Valve Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
-                [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }" (keypress)="validation.noSpacesAtStart($event)">
+                [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
+                (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name is
                   required.</div>
@@ -137,7 +141,8 @@
               <div class="col-sm-6">
                 <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
-                  [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }" (keypress)="validation.noSpacesAtStart($event)">
+                  [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }"
+                  (keypress)="validation.noSpacesAtStart($event)">
                 <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
                     required.</div>
@@ -160,7 +165,8 @@
             <div class="mb-2">
               <label class="form-label">Company Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name"
-                [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }" (keypress)="validation.noSpacesAtStart($event)">
+                [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }"
+                (keypress)="validation.noSpacesAtStart($event)">
               <div *ngIf="submitted && f.companyName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.companyName.errors?.required">Company Name is
                   required.</div>
@@ -172,9 +178,10 @@
               <label class="form-label">Address <span class="text-danger">*</span></label>
               <div class="input-group">
                 <input type="text" class="form-control" formControlName="address" placeholder="Address"
-                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }" (keypress)="validation.noSpacesAtStart($event)">
-                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#MapSelectModalForAddress"
-                (click)="openAddressModel()" >
+                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }"
+                  (keypress)="validation.noSpacesAtStart($event)">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                  data-bs-target="#MapSelectModalForAddress" (click)="openAddressModel()">
                   <i class="fa-solid fa-location-dot"></i>
                 </button>
                 <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
@@ -198,35 +205,13 @@
                 </label>
               </div>
             </div>
-          
-            <!-- <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
-              <label class="form-label">Valve List<span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
-                optionValueField="valveId" optionTextField="valveName"
-                [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
-              </ngx-select>
-              <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.valvelist.errors?.required">Valve List is required</div>
-              </div>
-            </div>
-
-            <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
-              <label class="form-label">Tank List <span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
-                optionValueField="tankId" optionTextField="tankName" 
-                [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
-              </ngx-select>
-              <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is required</div>
-              </div>
-            </div> -->
 
             <div class="mb-3">
               <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
-                (select)="clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
-                (remove)="clearFilter('yojana')"  [disabled]="yojanaArray?.length == 1"
+                (select)="this.filterFlag = 'add';clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
+                (remove)="clearFilter('yojana')" [disabled]="yojanaArray?.length == 1"
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
@@ -237,11 +222,13 @@
 
             <div class="mb-3">
               <label for="" class="form-label">Network <span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network" placeholder="Select Network"
-              (select)="clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value);getValveList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
-              optionValueField="networkId" optionTextField="networkName" [disabled]="!this.valveListForm.value.yojana"
-              (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
-            </ngx-select>
+              <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
+                placeholder="Select Network"
+                (select)="this.filterFlag = 'add';clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value);getValveList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
+                optionValueField="networkId" optionTextField="networkName"
+                [disabled]="!this.valveListForm.value.yojana"
+                (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
+              </ngx-select>
               <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.network.errors?.required">Network is required.</div>
               </div>
@@ -249,8 +236,9 @@
 
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='1'">
               <label class="form-label">Valve List<span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist" placeholder="Select Valve"
-                optionValueField="valveId" optionTextField="valveName" [disabled]="!this.valveListForm.value.network"
+              <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist"
+                placeholder="Select Valve" optionValueField="valveId" optionTextField="valveName"
+                [disabled]="!this.valveListForm.value.network"
                 [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
@@ -261,7 +249,7 @@
             <div class="mb-3" *ngIf="valveListForm.controls['list'].value=='2'">
               <label class="form-label">Tank List <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist" placeholder="Select Tank"
-              optionValueField="tankId" optionTextField="tankName" [disabled]="!this.valveListForm.value.network"
+                optionValueField="tankId" optionTextField="tankName" [disabled]="!this.valveListForm.value.network"
                 [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
@@ -271,8 +259,9 @@
 
             <div class="col-sm-12">
               <label class="form-label">Sim Number <span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber" placeholder="Select Sim Number"
-                optionValueField="id" optionTextField="simNo" [disabled]="!this.valveListForm.value.network"
+              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber"
+                placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
+                [disabled]="!this.valveListForm.value.network"
                 [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
               </ngx-select>
               <!-- <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
@@ -282,11 +271,12 @@
                 <div class="text-danger" *ngIf="f.simNumber.errors?.required">Sim Number is required.</div>
               </div>
             </div>
-            
+
             <div class="mb-0">
               <label class="form-label">Description <span class="text-danger">*</span></label>
               <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
-                [ngClass]="{ 'is-invalid': submitted && f.description.errors }" (keypress)="validation.noSpacesAtStart($event)"></textarea>
+                [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+                (keypress)="validation.noSpacesAtStart($event)"></textarea>
               <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                 <span class="text-danger" *ngIf="f.description.errors?.required">
                   Job Description is required.</span>
@@ -309,38 +299,43 @@
 
 
 <!-- Modal to select Map Address   -->
-<div class="modal fade" id="MapSelectModalForAddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="MapSelectModalLabel1" aria-hidden="true">
+<div class="modal fade" id="MapSelectModalForAddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="MapSelectModalLabel1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-          <div class="modal-header">
-              <p class="modal-title" id="MapSelectModalLabel1">Address Details</p>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"  data-bs-toggle="modal" data-bs-target="#AddValveModal"  #searchAddressModel aria-label="Close"></button>
-          </div>
-          <div class="modal-body mt-20 py-2">
-              <div class="form-container mb-2 input-group">
-                  <input class="form-control" type="text" autocapitalize="off" [formControl]="searchAdd" spellcheck="off" #searchAddress>
-                  <button type="button" class="btn btn-light btn-sm" (click)="searchAdd.setValue('')"
-                   *ngIf="searchAdd.value"><i class="fas fa-times"></i></button>
-              </div>
-
-              <agm-map [latitude]="addLatitude || 19.0898177" [longitude]="addLongitude || 76.5240298" [zoom]="addressZoomSize" (mapClick)="markerAddressDragEnd($event)">
-                  <div >
-                      <agm-marker *ngIf="addressMarkerShow == true" [latitude]="addLatitude" [longitude]="addLongitude" (dragEnd)="markerAddressDragEnd($event)"
-                          [markerDraggable]="true" (markerClick)="clickedAddressMarker(infowindow)">
-                          <agm-info-window #infowindow>
-                              <strong>Address - {{addressNameforAddress}}</strong>
-                          </agm-info-window>
-                      </agm-marker>
-                  </div>
-              </agm-map>
-          </div>
-          <div class="modal-footer py-1">
-              <div  class="d-flex justify-content-between align-items-center float-end">
-                  <button type="button" class="btn btn-secondary" (click)="clearAddress()">Clear</button>
-                  <button type="button" class="btn btn-main ms-2" (click)="addAddress()">Add</button>
-              </div>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="MapSelectModalLabel1">Address Details</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="modal"
+          data-bs-target="#AddValveModal" #searchAddressModel aria-label="Close"></button>
       </div>
+      <div class="modal-body mt-20 py-2">
+        <div class="form-container mb-2 input-group">
+          <input class="form-control" type="text" autocapitalize="off" [formControl]="searchAdd" spellcheck="off"
+            #searchAddress>
+          <button type="button" class="btn btn-light btn-sm" (click)="searchAdd.setValue('')" *ngIf="searchAdd.value"><i
+              class="fas fa-times"></i></button>
+        </div>
+
+        <agm-map [latitude]="addLatitude || 19.0898177" [longitude]="addLongitude || 76.5240298"
+          [zoom]="addressZoomSize" (mapClick)="markerAddressDragEnd($event)">
+          <div>
+            <agm-marker *ngIf="addressMarkerShow == true" [latitude]="addLatitude" [longitude]="addLongitude"
+              (dragEnd)="markerAddressDragEnd($event)" [markerDraggable]="true"
+              (markerClick)="clickedAddressMarker(infowindow)">
+              <agm-info-window #infowindow>
+                <strong>Address - {{addressNameforAddress}}</strong>
+              </agm-info-window>
+            </agm-marker>
+          </div>
+        </agm-map>
+      </div>
+      <div class="modal-footer py-1">
+        <div class="d-flex justify-content-between align-items-center float-end">
+          <button type="button" class="btn btn-secondary" (click)="clearAddress()">Clear</button>
+          <button type="button" class="btn btn-main ms-2" (click)="addAddress()">Add</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

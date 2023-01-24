@@ -163,10 +163,9 @@ export class ValveListComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;
-          this.yojanaArray = res.responseData;
-          this.yoganaArrayFilter = res.responseData;
-          this.yoganaArrayFilter.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
-          this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : ''; 
+          this.yoganaArrayFilter.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
+          this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
+         
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = [] : this.yojanaArray = [];
@@ -182,17 +181,16 @@ export class ValveListComponent implements OnInit {
   }
 
   getAllNetwork(val: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId='+this.getAllLocalStorageData.userId+'&YojanaId=' + val, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + val, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
-          this.networkArray = res.responseData;
-          this.networkArrayfilter = res.responseData;
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
           this.networkArrayfilter?.length == 1 ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId })) : '';
           this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
-
+          // this.iseditbtn ? (this.valveListForm.controls['network'].setValue(this.editId.networkId)) : '';
+          console.log(this.filterFlag);
 
         } else {
           this.spinner.hide();
@@ -268,7 +266,7 @@ export class ValveListComponent implements OnInit {
       "YojanaId": formdata.yojana || this.getAllLocalStorageData.yojanaId || 0,
       "NetworkId": formdata.network || 0
     }
-    this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' +(obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=' + obj.Search, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' + (obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=' + obj.Search, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -292,6 +290,7 @@ export class ValveListComponent implements OnInit {
   onClickPagintion(pageNo: any) {
     this.pageNumber = pageNo;
     this.getAllValveData();
+    this.onRadioChange();
   }
 
   onSubmit() {
@@ -350,6 +349,7 @@ export class ValveListComponent implements OnInit {
 
   updateValveData(obj: any) {
     this.editId = obj;
+    // debugger;
     this.iseditbtn = true;
     this.btnText = 'Update Changes';
     this.headingText = 'Update Valve';
@@ -375,7 +375,7 @@ export class ValveListComponent implements OnInit {
     this.getAllNetwork(obj.yojanaId);
     this.getValveList(obj.yojanaId, obj.networkId);
     this.ToBindSimNumberList(obj.yojanaId, obj.networkId);
-   
+
     this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
     this.addLatitude = obj.latitude;
     this.addLongitude = obj.longitude;
@@ -454,7 +454,7 @@ export class ValveListComponent implements OnInit {
     this.HighlightRow = 0;
   }
 
-  onRadioChange(ele: any) {
+  onRadioChange(ele?: any) {
     if (ele == 1) {
       this.valveListForm.controls['valvelist'].setValidators([Validators.required]);
       this.valveListForm.controls['valvelist'].updateValueAndValidity();

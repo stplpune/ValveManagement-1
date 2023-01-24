@@ -72,7 +72,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       deviceDescription: ['',Validators.required],
       tankId: ['',Validators.required],
       yojanaId: [this.getAllLocalStorageData.yojanaId || '',Validators.required],
-      networkId: ['',Validators.required]
+      networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '',Validators.required]
     })
   }
 
@@ -178,9 +178,9 @@ getAllNetwork(flag?:any) {
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();
-  this.getAllTankArray = [];
+  // this.getAllTankArray = [];
   // this.getAllNetworkArray = [];
-  this.getAllSimArray = [];
+  // this.getAllSimArray = [];
   this.editFlag = false;
   this.editData = '';
   this.submitted = false;

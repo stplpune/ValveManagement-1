@@ -142,7 +142,7 @@
                   <label class="form-label">Network</label>
                   <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" (select)="getAllTank(true);getAllSim(true)"
                     placeholder="Select Network" (remove)="clearDropdown('network')" optionValueField="networkId" optionTextField="networkName"
-                    [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!tankSensorDeviceFrm.value.yojanaId">
+                    [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!tankSensorDeviceFrm.value.yojanaId || getAllNetworkArray.length < 2">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                     <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Type is
@@ -155,7 +155,7 @@
               <label class="form-label">SIM No</label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
-                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllSimArray.length < 1">
+                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f.simId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simId.errors?.required">Sim Number is
@@ -166,7 +166,7 @@
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId"
                 placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
-                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllTankArray.length < 1">
+                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank Type is
