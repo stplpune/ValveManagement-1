@@ -106,7 +106,7 @@
                 <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
                   placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
                   (select)="getNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
-                  (remove)="onChangeDropdown('Yojna');" [disabled]="yojanaArr?.length == 1">
+                  (remove)="onChangeDropdown('Yojna');" [disabled]="yojanaArr?.length <= 1">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
@@ -119,7 +119,7 @@
                   placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                   (select)="getAllTank(); getAllSegment();" (click)="onLable('tank')"
                   [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }"
-                  (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId || networkArr?.length == 1">
+                  (remove)="onChangeDropdown('Network');" [disabled]="!this.tankSegmentForm.value.yojanaId || networkArr?.length <= 1">
                 </ngx-select>
                 <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
@@ -132,7 +132,7 @@
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" (remove)="onChangeDropdown('Tank');"
                 (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }"
-                [disabled]="!this.tankSegmentForm.value.networkId">
+                [disabled]="!this.tankSegmentForm.value.networkId  || tankArr?.length <= 1">
               </ngx-select>
               <div *ngIf="submitted && f['tankId'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f['tankId'].errors?.['required']">Tank is Required.</div>
@@ -147,10 +147,10 @@
                 <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
                   class="form-control" aria-label="Default select example"
-                  [disabled]="!this.tankSegmentForm.value.networkId">
+                  [disabled]="!tankSegmentForm.value.networkId || !tankSegmentForm.value.tankId || segmentArr.length <=1">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()"
-                  [disabled]="!this.tankSegmentForm.value.segmentId">Add</button>
+                  [disabled]="!tankSegmentForm.value.segmentId ">Add</button>
               </div>
             </div>
             <div class="mb-0">

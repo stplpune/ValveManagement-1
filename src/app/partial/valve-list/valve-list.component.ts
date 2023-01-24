@@ -64,8 +64,9 @@ export class ValveListComponent implements OnInit {
     this.Filter();
     this.defaultForm();
     this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
-    this.getAllValveData();
+    //  this.getAllValveData();
     this.getAllYojana();
+     this.localStorage.userId() == 1 ?  this.getAllValveData() : '';
   }
   get f() {
     return this.valveListForm.controls;
@@ -96,7 +97,9 @@ export class ValveListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode =='200') {
           this.spinner.hide();
-          this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;   
+          this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData; 
+          this.yoganaArrayFilter.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork()) : '';
+          this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork()) : '';  
           // this.editObj ? (this.valveListForm.controls['yojana'].setValue(this.editObj.yojanaId).getAllNetwork()) :'';
         } else {
           this.spinner.hide();
@@ -115,7 +118,7 @@ export class ValveListComponent implements OnInit {
   getAllNetwork(){
     let id = this.filterFlag == 'filter' ? this.searchForm.value.yojana : this.valveListForm.value.yojana;
     console.log('id',id)
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + id, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + (id || this.getAllLocalStorageData.yojanaId), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
@@ -123,13 +126,15 @@ export class ValveListComponent implements OnInit {
           // this.networkArrayfilter = res.responseData ;
           //  this.networkArray = res.responseData
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
+          this.networkArrayfilter?.length == 1 ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }),this.getAllValveData()) : '';
+          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }),this.ToBindSimNumberList()) : '';
           // this.editObj ? (this.valveListForm.controls['network'].setValue(this.editObj.networkId),this.ToBindSimNumberList()) :'';
 
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
+            ? this.errorSerivce.handelError(res.statusCode) 
             : this.toastrService.error(res.statusMessage);
         }
       },
@@ -168,6 +173,7 @@ export class ValveListComponent implements OnInit {
     this.btnText = 'Save Changes';
     this.headingText = 'Add Valve';
     this.yojanaArray?.length == 1 ? (this.valveListForm.patchValue({ yojana: this.yojanaArray[0].yojanaId })) : '';
+    this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
 
   }
 
@@ -177,7 +183,7 @@ export class ValveListComponent implements OnInit {
     let obj = {
       "pageno": this.pageNumber,
       "YojanaId": formdata.yojana || this.getAllLocalStorageData.yojanaId || 0,
-      "NetworkId": formdata.network || 0
+      "NetworkId": formdata.network || this.getAllLocalStorageData.networkId || 0
     }
     this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' + (obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=', false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
