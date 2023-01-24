@@ -64,7 +64,7 @@
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded"
                                         data-bs-toggle="modal" data-bs-target="#addconnectionModal"
-                                        (click)="this.filterFlag = 'add';onClickEdit(data)">
+                                        (click)="this.filterFlag = 'add';onClickEdit(data);editChangeFlag = 1">
                                         <i class="far fa-edit"></i></button>
                                     <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
                                         data-bs-toggle="modal" data-bs-target="#deleteModel"
@@ -137,7 +137,7 @@
                                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                                     [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
                                     (remove)="clearDropdown('yojanaId')" [disabled]="this.yoganaArray?.length == 1"
-                                    (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();">
+                                    (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();editChangeFlag = 0">
                                 </ngx-select>
                                 <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana Is
@@ -152,7 +152,7 @@
                                     [disabled]="!this.valveConnectionForm.value.yojanaId || networkArray?.length <=1" optionTextField="networkName"
                                     [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                     (remove)="clearDropdown('networkId')"
-                                    (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();">
+                                    (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();editChangeFlag = 0">
                                     <!-- [disabled]="networkArray.length==1" -->
                                 </ngx-select>
                                 <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
