@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'valve-list', loadChildren: () => import('../partial/valve-list/valve-list.module').then(m => m.ValveListModule),
     data: { breadcrumb: [{ title: 'Valve List', active: true }] }
   },
+  { 
+    path: 'valve-detail', loadChildren: () => import('../partial/masters/valve-detail/valve-detail.module').then(m => m.ValveDetailModule), 
+    data: { breadcrumb: [{ title: 'Valve Detail', active: true }] }
+  },
   {
     path: 'sim-list', loadChildren: () => import('../partial/sim-list/sim-list.module').then(m => m.SimListModule),
     data: { breadcrumb: [{ title: 'SIM List', active: true }] }
