@@ -79,9 +79,12 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   searchFormControl(){
     this.searchForm=this.fb.group({
       yojana:+[this.getAllLocalStorageData.yojanaId || ''],
-      network:[''],
+      network:+[this.getAllLocalStorageData.networkId || ''],
       tank:['']
     })
+    if(this.getAllFilterNetworkArray.length < 2){
+      this.getAllTank(false);
+    }
   }
 
   onEdit(data?:any){
