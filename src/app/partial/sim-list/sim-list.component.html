@@ -17,7 +17,7 @@
           </div>
           <div class="col-sm-3">
             <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
+              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length < 2"
               (remove)="clearSerach('network')" (select)="getAllSimData()">
             </ngx-select>
           </div>
@@ -102,7 +102,7 @@
                     <label class="form-label">Network</label>
                     <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId"
                       placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                      [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!simFormData.value.yojanaId">
+                      [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!simFormData.value.yojanaId || this.getAllNetworkArray.length < 2">
                     </ngx-select>
                     <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
                       <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Type is

@@ -61,7 +61,7 @@ export class SimListComponent implements OnInit {
     this.simFormData = this.fb.group({
       id: +[''],
       yojanaId:[(this.getAllLocalStorageData.yojanaId || ''), Validators.required],
-      networkId: ['', Validators.required],
+      networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '', Validators.required],
       simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],
       imsiNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')]],
       operatorId: ['', [Validators.required,Validators.pattern('[^0]+')]],
@@ -72,7 +72,7 @@ export class SimListComponent implements OnInit {
   searchFormControl(){
     this.searchForm=this.fb.group({
       yojana:[this.getAllLocalStorageData.yojanaId || ''],
-      network:['']
+      network:[this.getAllLocalStorageData.networkId || '']
     })
   }
 
@@ -102,6 +102,8 @@ export class SimListComponent implements OnInit {
         if (res.statusCode == '200') { 
           !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
+          // this.yojanaArray?.length == 1 ? (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork()) : '';
+          this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId }) : '';
         } else {
           this.getAllNetworkArray = [];
         }
