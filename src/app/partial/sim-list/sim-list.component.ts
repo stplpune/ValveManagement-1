@@ -102,8 +102,8 @@ export class SimListComponent implements OnInit {
         if (res.statusCode == '200') { 
           !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
-          // this.yojanaArray?.length == 1 ? (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork()) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId }) : '';
+          this.getAllNetworkArray.length == 1 ? this.simFormData.patchValue({networkId: this.getAllNetworkArray[0].networkId }) : '';
         } else {
           this.getAllNetworkArray = [];
         }
@@ -268,7 +268,6 @@ export class SimListComponent implements OnInit {
 
   clearSerach(flag: any) {
     this.pageNumber = 1;
-    this.getAllSimData();
     this.clearForm();
     if(flag == 'yojana'){
       this.searchForm.controls['network'].setValue('')
