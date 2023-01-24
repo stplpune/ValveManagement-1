@@ -127,7 +127,7 @@ export class ValveListComponent implements OnInit {
           //  this.networkArray = res.responseData
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
           this.networkArrayfilter?.length == 1 ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }),this.getAllValveData()) : '';
-          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
+          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }),this.ToBindSimNumberList()) : '';
           // this.editObj ? (this.valveListForm.controls['network'].setValue(this.editObj.networkId),this.ToBindSimNumberList()) :'';
 
         } else {
