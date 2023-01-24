@@ -100,6 +100,7 @@ export class TankCalibrationComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
+          this.networkArray.length == 1 ? (this.filterFrm.controls['networkId'].setValue(this.networkArray[0].networkId)) : '';
         } else {
           this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
@@ -137,8 +138,8 @@ export class TankCalibrationComponent implements OnInit {
   getAllTankCalibration() {
     this.spinner.show();
     let filterValue = this.filterFrm.value;
-    console.log(filterValue);
-    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0 || this.localstorageData.yojanaId) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0);
+    console.log('filter',filterValue);
+    let str = 'UserId=' + this.localstorageData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (filterValue.yojanaId ? filterValue.yojanaId : 0 || this.localstorageData.yojanaId) + '&NetworkId=' + (filterValue.networkId ? filterValue.networkId : 0 || this.localstorageData.networkId);
     this.apiService.setHttp('get', 'TankInfo/GetAllTankCalibration?' + str, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
