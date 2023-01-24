@@ -18,8 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('./partial/partial-layout.module').then(m => m.PartialLayoutModule)
   },
   { path: 'valve-connection', loadChildren: () => import('./partial/masters/valve-connection/valve-connection.module').then(m => m.ValveConnectionModule) },
-  
-  
+ 
   { path: '**', component: PageNotFoundComponent},
   
 ];

@@ -155,7 +155,7 @@
               <label class="form-label">SIM No</label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
-                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
+                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllSimArray.length < 2">
               </ngx-select>
               <div *ngIf="submitted && f.simId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simId.errors?.required">Sim Number is
@@ -166,7 +166,7 @@
               <label class="form-label">Tank</label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId"
                 placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
-                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId">
+                [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllTankArray.length < 2">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank Type is

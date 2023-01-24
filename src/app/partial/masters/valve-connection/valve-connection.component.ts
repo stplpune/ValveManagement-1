@@ -157,8 +157,6 @@ export class ValveConnectionComponent implements OnInit {
   }
   //#region -------------------Start Dropdown Here----------------------------------------- 
   getYoganaDropdown() {
-    // debugger;
-    console.log("flag",this.filterFlag)
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getLoginData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
