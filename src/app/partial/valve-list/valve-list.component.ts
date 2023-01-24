@@ -21,7 +21,8 @@ export class ValveListComponent implements OnInit {
   searchForm!: FormGroup;
   submitted = false;
   iseditbtn = false;
-  editId: any;
+  editFlag:boolean=false;
+  editObj: any;
   readioSelected: any;
   btnText = 'Save Changes';
   headingText = 'Add Valve';
@@ -65,38 +66,18 @@ export class ValveListComponent implements OnInit {
     this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.getAllValveData();
     this.getAllYojana();
-    this.getTankList();
-    this.searchAddress();
-
-    this.searchFilters('false');
   }
   get f() {
     return this.valveListForm.controls;
   }
 
-  precesidingList = [
-    { "id": 1, name: 'valve' },
-    { "id": 2, name: 'tank' },
-  ]
-
   defaultForm() {
     this.valveListForm = this.fb.group({
-      Id: [0],
-      valveName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
-      pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9.]*$')],],
-      // noOfConnections: ['', [Validators.required, Validators.pattern('^[0-9]*$')],],
-      simNumber: ['', [Validators.required]],
-      address: ['', [Validators.required],],
-      valvelist: ['', [Validators.required],],
-      tankist: ['', [Validators.required],],
+      simId: ['', [Validators.required]],     
       yojana: ['', [Validators.required],],
-      network: ['', [Validators.required],],
-      list: [1],
+      network: ['', [Validators.required],],     
       valveId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
-      companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
-      description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
-      latitude: [''],
-      longitude: [''],
+      companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],    
 
     });
   }
@@ -105,62 +86,18 @@ export class ValveListComponent implements OnInit {
     this.searchForm = this.fb.group({
       yojana: [''],
       network: [''],
-      searchField: [''],
+      
     })
-  }
-
-  getValveList(yojana: any, network: any) {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.valvelistArray = res.responseData;
-        } else {
-          this.spinner.hide();
-          this.valvelistArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
-  }
-
-  getTankList() {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllTank', false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.tankArray = res.responseData;
-        } else {
-          this.spinner.hide();
-          this.tankArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
   }
 
   getAllYojana() {
     this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === '200') {
+        if (res.statusCode =='200') {
           this.spinner.hide();
-          this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;
-          this.yoganaArrayFilter.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
-          this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
-         
+          this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;   
+          // this.editObj ? (this.valveListForm.controls['yojana'].setValue(this.editObj.yojanaId).getAllNetwork()) :'';
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = [] : this.yojanaArray = [];
@@ -175,17 +112,18 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  getAllNetwork(val: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + val, false, false, false, 'valvemgt');
+  getAllNetwork(){
+    let id = this.filterFlag == 'filter' ? this.searchForm.value.yojana : this.valveListForm.value.yojana;
+    console.log('id',id)
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + id, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === '200') {
+        if (res.statusCode == '200') {
           this.spinner.hide();
+          // this.networkArrayfilter = res.responseData ;
+          //  this.networkArray = res.responseData
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
-          this.networkArrayfilter?.length == 1 ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId })) : '';
-          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
-          // this.iseditbtn ? (this.valveListForm.controls['network'].setValue(this.editId.networkId)) : '';
-          console.log(this.filterFlag);
+          // this.editObj ? (this.valveListForm.controls['network'].setValue(this.editObj.networkId),this.ToBindSimNumberList()) :'';
 
         } else {
           this.spinner.hide();
@@ -201,14 +139,15 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  ToBindSimNumberList(yojana: any, network: any) {
-    this.spinner.show();
-    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
+  ToBindSimNumberList() {
+   let formData= this.valveListForm.value
+    this.apiService.setHttp('get', 'SimMaster/GetSimListDropdownList?YojanaId=' + formData.yojana + '&NetworkId=' + formData.network, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.simArray = res.responseData;
+          // this.editObj ? (this.valveListForm.controls['simId'].setValue(this.editObj.simId)) :'';
         } else {
           this.spinner.hide();
           this.simArray = [];
@@ -232,39 +171,18 @@ export class ValveListComponent implements OnInit {
 
   }
 
-  onKeyUpFilter() {
-    this.subject.next(true);
-  }
-
-  searchFilters(flag: any) {
-    if (flag == 'true') {
-      if (this.searchForm.value.searchField == "" || this.searchForm.value.searchField == null) {
-        this.toastrService.error("Please search and try again");
-        return
-      }
-    }
-    this.subject
-      .pipe(debounceTime(700))
-      .subscribe(() => {
-        this.searchForm.value.searchField;
-        this.pageNumber = 1;
-        this.getAllValveData();
-      });
-  }
-
   getAllValveData() {
     let formdata = this.searchForm.value;
     this.spinner.show();
     let obj = {
       "pageno": this.pageNumber,
-      "Search": formdata.searchField || "",
       "YojanaId": formdata.yojana || this.getAllLocalStorageData.yojanaId || 0,
       "NetworkId": formdata.network || 0
     }
-    this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' + (obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=' + obj.Search, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' + (obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=', false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === '200') {
+        if (res.statusCode == '200') {
           this.spinner.hide();
           this.valveStatusArray = res.responseData.responseData1;
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
@@ -285,7 +203,7 @@ export class ValveListComponent implements OnInit {
   onClickPagintion(pageNo: any) {
     this.pageNumber = pageNo;
     this.getAllValveData();
-    this.onRadioChange();
+    
   }
 
   onSubmit() {
@@ -295,31 +213,32 @@ export class ValveListComponent implements OnInit {
       return;
     } else {
       let obj = {
-        "id": formData.Id,
-        "valveName": formData.valveName,
+        "id": this.editFlag ? this.editObj.id : 0,
+        "valveName":'',
         "valveId": formData.valveId,
         "companyName": formData.companyName,
-        "description": formData.description,
+        "description": '',
         "createdBy": this.localStorage.userId(),
         "statusId": 0,
         "valveStatus": "",
         "statusDate": new Date(),
-        "valvePipeDiameter": formData.pipeDiameter,
-        "noOfConnection": formData.noOfConnections,
-        "simid": formData.simNumber,
-        "latitude": this.addLatitude,
-        "longitude": this.addLongitude,
+        "valvePipeDiameter": '',
+        "noOfConnection": 0,
+        "simid": formData.simId,
+        "latitude": 0,
+        "longitude": 0,
         "simNo": "",
         "actionDate": new Date(),
-        "valveAddress": formData.address,
-        "isPrecidingValve": formData.list,
-        "valveId_TankId": formData.list == '1' ? formData.valvelist : formData.tankist,
-        "yojanaId": Number(formData.yojana),
-        "networkId": Number(formData.network)
+        "valveAddress": '',
+        "isPrecidingValve": 0,
+        "valveId_TankId": 0,
+        "yojanaId":formData.yojana,
+        "networkId":formData.network,
+         "isScheduler": 0
       }
       this.spinner.show();
       let urlType;
-      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
+      this.editFlag ? (urlType = 'PUT') : (urlType = 'POST');
       this.apiService.setHttp(urlType, 'ValveMaster', false, JSON.stringify(obj), false, 'valvemgt');
       this.apiService.getHttp().subscribe(
         (res: any) => {
@@ -327,7 +246,7 @@ export class ValveListComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.addValveModel.nativeElement.click();
-            this.filterFlag = 'filter';
+            // this.filterFlag = 'filter';
             this.getAllValveData();
           } else {
             this.toastrService.error(res.statusMessage);
@@ -343,41 +262,22 @@ export class ValveListComponent implements OnInit {
   }
 
   updateValveData(obj: any) {
-    this.editId = obj;
-    // debugger;
+    this.editObj= obj;
+    this.editFlag=true;
     this.iseditbtn = true;
     this.btnText = 'Update Changes';
     this.headingText = 'Update Valve';
     this.HighlightRow = obj.id;
-    this.valveListForm.patchValue({
-      Id: obj.id,
-      valveName: obj.valveName,
-      valveId: obj.valveId,
-      companyName: obj.companyName,
-      description: obj.description,
-      simNumber: Number(obj.simid),
-      pipeDiameter: obj.valvePipeDiameter,
-      noOfConnections: obj.noOfConnection,
-      address: obj.valveAddress,
-      valvelist: obj.valveId_TankId,
-      tankist: obj.valveId_TankId,
-      yojana: obj.yojanaId,
-      network: obj.networkId,
-      list: obj.isPrecidingValve,
-      latitude: obj.latitude,
-      longitude: obj.longitude,
-    });
-    this.getAllNetwork(obj.yojanaId);
-    this.getValveList(obj.yojanaId, obj.networkId);
-    this.ToBindSimNumberList(obj.yojanaId, obj.networkId);
-
-    this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
-    this.addLatitude = obj.latitude;
-    this.addLongitude = obj.longitude;
-    this.newAddedAddressLat = obj.latitude;
-    this.newAddedAddressLang = obj.longitude;
-    this.addressNameforAddress = obj.valveAddress;
-    this.copyAddressNameforAddress = obj.valveAddress;
+    this.valveListForm.patchValue({     
+      valveId:this.editObj.valveId ,
+      companyName:this.editObj.companyName,    
+      yojana:this.editObj.yojanaId,
+      network:this.editObj.networkId,
+      simId:this.editObj.simid
+    });  
+    this.getAllYojana();
+    this.getAllNetwork();
+    this.ToBindSimNumberList();
   }
 
   deleteConformation(id: any) {
@@ -409,37 +309,12 @@ export class ValveListComponent implements OnInit {
     });
   }
 
-  // refreshValveStatus() {
-  //   this.spinner.show();
-  //   this.apiService.setHttp('get', 'ValveMaster/RefreshValveStatus?UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
-  //   this.apiService.getHttp().subscribe({
-  //     next: (res: any) => {
-  //       if (res.statusCode === '200') {
-  //         this.spinner.hide();
-  //         this.getAllValveData();
-  //         // this.valveStatusArray = res.responseData;
-  //       } else {
-  //         this.spinner.hide();
-  //         // this.valveStatusArray = [];
-  //         this.commonService.checkDataType(res.statusMessage) == false
-  //           ? this.errorSerivce.handelError(res.statusCode)
-  //           : this.toastrService.error(res.statusMessage);
-  //       }
-  //     },
-  //     error: (error: any) => {
-  //       this.errorSerivce.handelError(error.status), this.spinner.hide();
-  //     },
-  //   });
-  // }
+ 
 
   clearSerach(flag: any) {
     if (flag == 'yojana') {
       this.searchForm.controls['network'].setValue('');
-    } else if (flag == 'network') {
-      this.searchForm.controls['network'].setValue('');
-    } else if (flag == 'search') {
-      this.searchForm.controls['searchField'].setValue('');
-    }
+    } 
     this.pageNumber = 1;
     this.getAllValveData();
     this.clearForm();
@@ -449,32 +324,12 @@ export class ValveListComponent implements OnInit {
     this.HighlightRow = 0;
   }
 
-  onRadioChange(ele?: any) {
-    if (ele == 1) {
-      this.valveListForm.controls['valvelist'].setValidators([Validators.required]);
-      this.valveListForm.controls['valvelist'].updateValueAndValidity();
-      this.valveListForm.controls['tankist'].clearValidators();
-      this.valveListForm.controls['tankist'].updateValueAndValidity();
-      this.valveListForm.controls['tankist'].setValue('');
-    } else {
-      this.valveListForm.controls['tankist'].setValidators([Validators.required]);
-      this.valveListForm.controls['tankist'].updateValueAndValidity();
-      this.valveListForm.controls['valvelist'].clearValidators();
-      this.valveListForm.controls['valvelist'].updateValueAndValidity();
-      this.valveListForm.controls['valvelist'].setValue('');
-    }
-  }
-
   clearFilter(flag: any) {
     if (flag == 'yojana') {
       this.valveListForm.controls['network'].setValue('');
-      this.valveListForm.controls['valvelist'].setValue('');
-      this.valveListForm.controls['tankist'].setValue('');
-      this.valveListForm.controls['simNumber'].setValue('');
+      this.valveListForm.controls['simId'].setValue('');
     } else if (flag == 'network') {
-      this.valveListForm.controls['valvelist'].setValue('');
-      this.valveListForm.controls['tankist'].setValue('');
-      this.valveListForm.controls['simNumber'].setValue('');
+      this.valveListForm.controls['simId'].setValue('');
     }
   }
 
@@ -483,108 +338,5 @@ export class ValveListComponent implements OnInit {
     this.getAllValveData()
   }
 
-
-  //......................................... Address Code Start Here ..................................................//
-
-  geocoder: any;
-  addLatitude: any = 19.7515;
-  addLongitude: any = 75.7139;
-  addPrevious: any;
-  addressNameforAddress: any;
-  copyAddressNameforAddress: any;
-  @ViewChild('searchAddress') public searchElementRefAddress!: ElementRef;
-  searchAdd = new FormControl('');
-  addressMarkerShow: boolean = true;
-  @ViewChild('searchAddressModel') searchAddressModel: any;
-
-  searchAddress() {
-    this.mapsAPILoader.load().then(() => {
-      this.geocoder = new google.maps.Geocoder();
-      let autocomplete = new google.maps.places.Autocomplete(
-        this.searchElementRefAddress.nativeElement
-      );
-      autocomplete.addListener('place_changed', () => {
-        this.ngZone.run(() => {
-          let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-          if (place.geometry === undefined || place.geometry === null) {
-            return;
-          }
-          this.addLatitude = place.geometry.location.lat();
-          this.addLongitude = place.geometry.location.lng();
-          this.findAddressByCoordinates();
-          this.addressMarkerShow = true;
-        });
-      });
-    });
-  }
-
-  markerAddressDragEnd($event: any) {
-    this.addLatitude = $event.coords.lat;
-    this.addLongitude = $event.coords.lng;
-    this.findAddressByCoordinates();
-    this.addressMarkerShow = true;
-  }
-
-  findAddressByCoordinates() {
-    this.geocoder.geocode({
-      'location': {
-        lat: this.addLatitude,
-        lng: this.addLongitude
-      }
-    }, (results: any) => {
-      this.findAddress(results[0]);
-    });
-  }
-
-  findAddress(results: any) {
-    if (results) {
-      this.addressNameforAddress = results.formatted_address;
-      this.addressZoomSize = 12;
-      this.searchAdd.setValue(this.addressNameforAddress);
-    }
-  }
-
-  clickedAddressMarker(infowindow: any) {
-    if (this.addPrevious) {
-      this.addPrevious.close();
-    }
-    this.addPrevious = infowindow;
-  }
-
-  newAddedAddressLat: any;
-  newAddedAddressLang: any;
-
-  addAddress() {
-    this.valveListForm.controls['address'].setValue(this.addressNameforAddress);
-    this.searchAdd.setValue(this.addressNameforAddress);
-    this.copyAddressNameforAddress = this.addressNameforAddress;
-    this.newAddedAddressLat = this.addLatitude;
-    this.newAddedAddressLang = this.addLongitude;
-    this.addValveModal.nativeElement.click();
-  }
-
-  clearAddress() {
-    this.addressMarkerShow = false;
-    this.searchAdd.setValue('');
-    this.addressZoomSize = 6;
-    this.addressNameforAddress = '';
-    this.addLatitude = 19.7515;
-    this.addLongitude = 75.7139;
-  }
-
-  openAddressModel() {
-    if (this.iseditbtn) {
-      this.addressZoomSize = 6;
-      this.searchAdd.setValue(this.copyAddressNameforAddress);
-      this.addLatitude = this.newAddedAddressLat;
-      this.addLongitude = this.newAddedAddressLang;
-      this.addressMarkerShow = this.copyAddressNameforAddress ? true : false;
-      this.addressNameforAddress = this.copyAddressNameforAddress;
-    } else {
-      this.clearAddress();
-    }
-  }
-
-  //.........................................Address code End Here ....................................//
 
 }

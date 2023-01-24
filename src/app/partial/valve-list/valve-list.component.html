@@ -6,7 +6,7 @@
         <!-- <button (click)="refreshValveStatus()" title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i
             class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" (click)="this.filterFlag = 'add';onRadioChange(1);getAllYojana()" #addValveModal><i
+          data-bs-target="#AddValveModal" (click)="this.filterFlag = 'add';getAllYojana()" #addValveModal><i
             class="fa-solid fa-plus me-2"></i>Add Valve</button>
       </div>
     </div>
@@ -17,26 +17,15 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName"
-          (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()" (remove)="clearSerach('yojana')"
+          (select)="this.filterFlag = 'filter';clearSerach('yojana');getAllNetwork();defaultPageNo()" (remove)="clearSerach('yojana')"
           [disabled]="yoganaArrayFilter?.length == 1">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network" placeholder="Select Network"
-          optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0 || networkArrayfilter?.length==1" optionTextField="networkName"
-          (remove)="clearSerach('network')" (select)="this.filterFlag = 'filter';defaultPageNo()">
+          optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0" optionTextField="networkName"
+          (remove)="defaultPageNo()" (select)="this.filterFlag = 'filter';defaultPageNo()">
         </ngx-select>
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Valve Name"
-            (keyup)="onKeyUpFilter()" />
-          <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
-            *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
-              class="fas fa-search"></i></button>
-        </div>
-
       </div>
     </div>
   </form>
@@ -61,7 +50,7 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                (click)="this.filterFlag = 'add';updateValveData(valveStatus);onRadioChange(1);getAllYojana()" data-bs-target="#AddValveModal">
+                (click)="this.filterFlag = 'add';updateValveData(valveStatus);getAllYojana()" data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -123,14 +112,12 @@
               </div>
             </div>
 
-
-
             <div class="mb-3">
               <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
-                (select)="this.filterFlag = 'add';clearFilter('yojana');getAllNetwork(valveListForm.controls['yojana'].value)"
-                (remove)="clearFilter('yojana')" [disabled]="yojanaArray?.length == 1"
+                (select)="clearFilter('yojana');getAllNetwork()"
+                (remove)="clearFilter('yojana')" 
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
               </ngx-select>
               <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
@@ -143,7 +130,7 @@
               <label for="" class="form-label">Network <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
                 placeholder="Select Network"
-                (select)="this.filterFlag = 'add';clearFilter('network');ToBindSimNumberList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value);getValveList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
+                (select)="clearFilter('network');ToBindSimNumberList();"
                 optionValueField="networkId" optionTextField="networkName"
                 [disabled]="!this.valveListForm.value.yojana"
                 (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
@@ -155,16 +142,16 @@
 
             <div class="col-sm-12">
               <label class="form-label">Sim Number <span class="text-danger">*</span></label>
-              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simNumber"
+              <ngx-select [allowClear]="true" [items]="simArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
                 [disabled]="!this.valveListForm.value.network"
-                [ngClass]="{ 'is-invalid': submitted && f.simNumber.errors }">
+                [ngClass]="{ 'is-invalid': submitted && f.simId.errors }">
               </ngx-select>
               <!-- <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simNumber.errors?.required">Sim Number is required</div>
               </div> -->
-              <div *ngIf="submitted && f.simNumber.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.simNumber.errors?.required">Sim Number is required.</div>
+              <div *ngIf="submitted && f.simId.errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f.simId.errors?.required">Sim Number is required.</div>
               </div>
             </div>
 

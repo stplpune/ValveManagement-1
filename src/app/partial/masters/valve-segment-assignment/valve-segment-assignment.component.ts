@@ -16,13 +16,13 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   valveRegForm: FormGroup | any;
   filterForm!: FormGroup;
-  valveArray = new Array();
-  valveDropdownArray = new Array();
-  sgmentDropdownArray = new Array();
+  valveArray :any;
+  valveDropdownArray :any;
+  sgmentDropdownArray : any;
   segmentShowArray = new Array();
-  yojanaArr = new Array();
+  yojanaArr : any;
   filterYojanaArr = new Array();
-  networkArr = new Array();
+  networkArr : any;
   FilterNetworkArr = new Array();
   editFlag: boolean = false;
   submited: boolean = false;
@@ -49,7 +49,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.formData();
     this.filterFormField();
     this.getAllValveTableData();
-    this.getAllYojana();
+      this.getAllYojana();
+      // || networkIdAddArray?.length <= 1
   }
 
   formData() {
@@ -128,9 +129,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == 200) {
           this.networkArr = res.responseData;   
-           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
+           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
           this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
-          this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
+          this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';      
         } else {
           this.networkArr = [];
         }
