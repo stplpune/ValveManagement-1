@@ -29,3 +29,8 @@ ul.cylenderLabel {
     margin-bottom: 0;
     padding-left: 25px;
 }
+
+.chartdiv {
+    width: 1100px;
+    height: 400px;
+}

@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
     // this.getDeviceCurrentSensorValue();
     this.waterTankChartData();
     this.localStorage.userId() == 1 ? (this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
+    this.asd()
   }
 
   defaultFilterForm() {
@@ -264,6 +265,107 @@ export class DashboardComponent implements OnInit {
     })
     let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
     this.map.setCenter(latLng);
+  }
+
+  asd(){
+
+    am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+let chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.colors.step = 2;
+
+// Add data
+chart.data = [
+   {
+  "year": "1999",
+  "cars": 50,
+}, {
+  "year": "2000",
+  "cars": 16,
+}, {
+  "year": "2001",
+  "cars": 12,
+}, {
+  "year": "2002",
+  "cars": 127,
+}, {
+  "year": "2003",
+  "cars": 124,
+}, {
+  "year": "2004",
+  "cars": 121,
+}];
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "year";
+categoryAxis.title.text = "Year";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 20;
+
+categoryAxis.startLocation = 0.5;
+categoryAxis.endLocation = 0.5;
+
+
+let  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Percent";
+valueAxis.calculateTotals = true;
+valueAxis.min = 0;
+valueAxis.max = 100;
+valueAxis.strictMinMax = true;
+valueAxis.renderer.labels.template.adapter.add("text", function(text) {
+  return text + "%";
+});
+
+
+
+
+
+// Create series
+let series:any = chart.series.push(new am4charts.LineSeries());
+
+series.dataFields.valueY = "cars";
+series.dataFields.dateX = "totalPercent";
+series.dataFields.categoryX = "year";
+series.name = "Cars";
+series.strokeWidth = 3;
+series.fillOpacity = 0.5;
+
+
+// series.dataFields.valueY = "cars";
+// series.dataFields.valueYShow = "totalPercent";
+// series.dataFields.categoryX = "year";
+// series.name = "Cars";
+
+series.tooltipHTML = "<img src='https://www.amcharts.com/lib/3/images/car.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+
+series.tooltip.getFillFromObject = false;
+series.tooltip.background.fill = am4core.color("#FFF");
+
+series.tooltip.getStrokeFromObject = true;
+series.tooltip.background.strokeWidth = 3;
+
+series.fillOpacity = 0.85;
+series.stacked = true;
+
+// static
+series.legendSettings.labelText = "Cars total:";
+series.legendSettings.valueText = "{valueY.close}";
+
+// hovering
+series.legendSettings.itemLabelText = "Cars:";
+series.legendSettings.itemValueText = "{valueY}";
+
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+
+// add legend
+chart.legend = new am4charts.Legend();
+
+
   }
 
 
