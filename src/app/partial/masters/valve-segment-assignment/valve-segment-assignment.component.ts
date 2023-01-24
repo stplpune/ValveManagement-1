@@ -128,7 +128,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == 200) {
           this.networkArr = res.responseData;   
-           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
+           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
           this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {
