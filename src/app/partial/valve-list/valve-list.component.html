@@ -23,7 +23,7 @@
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network" placeholder="Select Network"
-          optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0" optionTextField="networkName"
+          optionValueField="networkId" [disabled]="this.networkArrayfilter?.length == 1 || searchForm.controls['yojana'].value==0" optionTextField="networkName"
           (remove)="defaultPageNo()" (select)="this.filterFlag = 'filter';defaultPageNo()">
         </ngx-select>
       </div>
