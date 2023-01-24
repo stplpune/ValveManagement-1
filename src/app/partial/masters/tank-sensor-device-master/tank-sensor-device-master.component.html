@@ -22,13 +22,13 @@
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
+          placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length == 1"
           (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
-          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network"
+          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length == 0"
           (select)="getAllSensorDeviceTableData()" (remove)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>
