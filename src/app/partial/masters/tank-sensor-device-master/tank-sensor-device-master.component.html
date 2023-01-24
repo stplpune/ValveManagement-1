@@ -28,7 +28,7 @@
       </div>
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
-          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length == 0"
+          optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length < 2"
           (select)="getAllSensorDeviceTableData()" (remove)="getAllSensorDeviceTableData()">
         </ngx-select>
       </div>

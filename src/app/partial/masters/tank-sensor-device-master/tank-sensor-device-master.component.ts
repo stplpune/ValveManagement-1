@@ -133,6 +133,7 @@ getAllNetwork(flag?:any) {
       if (res.statusCode == '200') {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
+          this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -166,7 +167,8 @@ getAllNetwork(flag?:any) {
       next: (res: any) => {
         if (res.statusCode == '200') {
           tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
-          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : ''
+          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : '';
+          this.getAllFilterTankArray.length == 1 ? this.searchForm.patchValue({tank: this.getAllFilterTankArray[0].tankId }) : '';
         }else{
           tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
         }
