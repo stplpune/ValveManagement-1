@@ -11,12 +11,14 @@ import { number } from '@amcharts/amcharts4/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ValidationService } from 'src/app/core/services/validation.service';
+
 @Component({
-  selector: 'app-valve-list',
-  templateUrl: './valve-list.component.html',
-  styleUrls: ['./valve-list.component.css'],
+  selector: 'app-valve-detail',
+  templateUrl: './valve-detail.component.html',
+  styleUrls: ['./valve-detail.component.css']
 })
-export class ValveListComponent implements OnInit {
+export class ValveDetailComponent implements OnInit {
+
   valveListForm: FormGroup | any;
   searchForm!: FormGroup;
   submitted = false;
@@ -57,6 +59,7 @@ export class ValveListComponent implements OnInit {
     private localStorage: LocalstorageService,
     private ngZone: NgZone,
     public validation: ValidationService,
+
   ) { }
 
   ngOnInit() {
@@ -67,8 +70,12 @@ export class ValveListComponent implements OnInit {
     this.getAllYojana();
     this.getTankList();
     this.searchAddress();
-
+    this.mapsAPILoader.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder();
+    });
     this.searchFilters('false');
+
+
   }
   get f() {
     return this.valveListForm.controls;
