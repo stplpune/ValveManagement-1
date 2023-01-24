@@ -82,9 +82,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       network:+[this.getAllLocalStorageData.networkId || ''],
       tank:['']
     })
-    if(this.getAllFilterNetworkArray.length < 2){
       this.getAllTank(false);
-    }
   }
 
   onEdit(data?:any){
@@ -162,7 +160,7 @@ getAllNetwork(flag?:any) {
   getAllTank(flag?:any){
     let tankFlag = flag;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?this.tankSensorDeviceFrm.value.yojanaId:this.searchForm.value.yojana) +'&NetworkId=' + 
-    (tankFlag?this.tankSensorDeviceFrm.value.networkId:this.searchForm.value.network), false, false, false, 'valvemgt');
+    (tankFlag?this.tankSensorDeviceFrm.value.networkId:(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
