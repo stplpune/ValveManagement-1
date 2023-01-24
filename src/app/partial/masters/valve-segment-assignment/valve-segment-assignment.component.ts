@@ -58,7 +58,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       "valveId": ['', Validators.required],
       "segmentId": [''],
       "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
-      "networkId": ['', Validators.required],
+      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId :'', Validators.required],
       "valvesegmet": []
     })
   }
@@ -127,8 +127,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == 200) {
-          this.networkArr = res.responseData;  
-          this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
+          this.networkArr = res.responseData;   
+           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId })) : '';
           this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
           this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
         } else {

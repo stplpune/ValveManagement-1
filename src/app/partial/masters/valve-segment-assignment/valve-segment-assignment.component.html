@@ -132,7 +132,7 @@
                 <ngx-select [allowClear]="true" [items]="networkArr" formControlName="networkId"
                   (remove)="clearFormData('network')" placeholder="Select Network" optionValueField="networkId"
                   (select)="getAllvalve();getAllSegment()" optionTextField="networkName"
-                  [disabled]="!this.valveRegForm.value.yojanaId"
+                  [disabled]="!this.valveRegForm.value.yojanaId || networkArr?.length == 1"
                   [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>

@@ -17,7 +17,7 @@
           </div>
           <div class="col-sm-3">
             <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
-              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana"
+              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length < 2"
               (remove)="clearSerach('network')" (select)="getAllSimData()">
             </ngx-select>
           </div>
