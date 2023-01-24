@@ -47,9 +47,8 @@ export class TankCalibrationComponent implements OnInit {
     this.localstorageData = this.localStorage.getLoggedInLocalstorageData();
     this.defaultForm();
     this.getFilterForm();
-    this.getAllYojana(this.localstorageData.yojanaId);
-    this.getAllTankCalibration();
-
+    this.getAllYojana();
+   this.localStorage.userId() == 1 ? this.getAllTankCalibration() : '';
   }
 
   defaultForm() {
@@ -73,8 +72,8 @@ export class TankCalibrationComponent implements OnInit {
   get f() { return this.tankForm.controls }
 
 
-  getAllYojana(id: any) {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + id, false, false, false, 'valvemgt');
+  getAllYojana() {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' +this.localstorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
