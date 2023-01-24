@@ -20,20 +20,17 @@
           <a routerLink="network-master">Network Master</a>
         </li>
         <li>
-          <a routerLink="sim-list">Sim</a>
+          <a routerLink="sim-list">Sim Master</a>
             <!-- <i class="fa-solid fa-sim-card"></i> -->
         </li>
         <li>
           <a routerLink="tank-master">Tank Master</a>
         </li>
         <li>
-          <a routerLink="tank-calibration">Tank Calibration</a>
-        </li>
-        <li>
           <a routerLink="tank-sensor-device-master">Tank Sensor Device Master</a>
         </li>
         <li>
-          <a routerLink="valve-list">Valve
+          <a routerLink="valve-list">Valve Master
             <!-- <i class="fa-solid fa-list-ul"></i> -->
           </a>
         </li>
@@ -54,19 +51,23 @@
             <!-- <i class="fa-solid fa-user-plus"></i> -->
           </a>
         </li>
-  
-      
-      
-    
       </ul>
     </li>
     
-    <!-- routerLinkActive="active" -->
+    <li> 
+      <a href="#settingSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+        <i class="fa-solid fas fa-cog"></i>Setting
+      </a>
+      <ul class="collapse list-unstyled" id="settingSubmenu">
+        <li>
+          <a routerLink="tank-calibration">Tank Calibration</a>
+        </li>
+        <li>
+          <a routerLink="page-right-access">Page Right Access</a>
+        </li>
+      </ul>
+    </li>
 
-    <li>
-      <a routerLink="page-right-access"routerLinkActive="active">
-        <i class="fa-solid fa-fingerprint"></i>Page Right Access</a>
-    </li> 
     <!-- <li>
       <a href="#pageSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
       <ul class="collapse list-unstyled" id="pageSubmenu">
