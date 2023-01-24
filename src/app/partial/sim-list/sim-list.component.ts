@@ -61,7 +61,7 @@ export class SimListComponent implements OnInit {
     this.simFormData = this.fb.group({
       id: +[''],
       yojanaId:[(this.getAllLocalStorageData.yojanaId || ''), Validators.required],
-      networkId: ['', Validators.required],
+      networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '', Validators.required],
       simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],
       imsiNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')]],
       operatorId: ['', [Validators.required,Validators.pattern('[^0]+')]],
