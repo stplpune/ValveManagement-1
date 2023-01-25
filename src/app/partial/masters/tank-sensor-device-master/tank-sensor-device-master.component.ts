@@ -18,6 +18,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   // Variable Declaration & Initialization
   editFlag:boolean = false;
   editData!:any;
+  buttonValue:string='Submit';
   deleteSegmentId!:any;
   postObj!:any;
   formData!:any;
@@ -92,6 +93,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     
   this.editFlag = true;
   this.editData = data;
+  this.buttonValue = 'Update';
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
@@ -188,6 +190,7 @@ getAllNetwork(flag?:any) {
 clearForm(formDirective?:any){
   formDirective?.resetForm();
   this.editFlag = false;
+  this.buttonValue = 'Submit';
   this.editData = '';
   this.submitted = false;
   this.controlForm();
