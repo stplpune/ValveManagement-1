@@ -14,7 +14,7 @@
             <div class="row g-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
-                        (select)="pageNumber = 1;getAllSegmentMaster();getNetworkId()" [disabled]="yoganaArray?.length == 1"
+                        (select)="pageNumber = 1;getValveNameAssignmentAll();getNetworkId()" [disabled]="yoganaArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
@@ -23,7 +23,7 @@
                     <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
-                        (remove)="clearFilter('network')" (select)="pageNumber = 1;getAllSegmentMaster()">
+                        (remove)="clearFilter('network')" (select)="pageNumber = 1;getValveNameAssignmentAll()">
                     </ngx-select>
                 </div>
             </div>
@@ -37,24 +37,30 @@
             <thead>
                 <tr>
                     <th>Sr. No.</th>
-                    <th>Segment Name</th>
+                    <th>Valve Name</th>
+                    <th>Valve Id</th>
+                    <th>Yojana Name</th>
+                    <th>Network Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let segMaster of segmentMasterArray | paginate: {itemsPerPage: 10,
+                <tr *ngFor="let valveNameAssignment of valveNameAssignmentArray | paginate: {itemsPerPage: 10,
                     currentPage: pageNumber, totalItems:totalRows}; let i = index">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
-                    <td>{{segMaster?.segmentName}}</td>
+                    <td>{{valveNameAssignment?.valveName}}</td>
+                    <td>{{valveNameAssignment?.valveId}}</td>
+                    <td>{{valveNameAssignment?.yojanaName}}</td>
+                    <td>{{valveNameAssignment?.networkName}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve"
-                                data-bs-toggle="modal" data-bs-target="#valveNameAssModal" (click)="patchFormData(segMaster)">
+                                data-bs-toggle="modal" data-bs-target="#valveNameAssModal" (click)="patchFormData(valveNameAssignment)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
                                 data-bs-toggle="modal" data-bs-target="#deleteModel"
-                                (click)="deleteConformation(segMaster.id)">
+                                (click)="deleteConformation(valveNameAssignment.valveAssignmentId)">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -62,11 +68,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length == 0 || segmentMasterArray?.length == null">
+        <div class="mt-2 text-end" *ngIf="valveNameAssignmentArray?.length == 0 || valveNameAssignmentArray?.length == null">
             <div class="alert alert-danger text-center py-2">No Data Found..!
             </div>
         </div>
-        <div class="mt-2 text-end" *ngIf="segmentMasterArray?.length != 0">
+        <div class="mt-2 text-end" *ngIf="valveNameAssignmentArray?.length != 0">
             <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
             </pagination-controls>
         </div>
@@ -90,9 +96,8 @@
               <div class="row">
                 <div class="col-md-6">
                     <ngx-select [allowClear]="true" [items]="yoganaArray"
-                    (remove)="valveNameAssignmtForm.controls['networkId'].setValue('')"
                     (select)="getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaArray?.length == 1"
-                    optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
+                    optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId" (remove)="clearFormDrop('yojana')"
                     [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required
@@ -102,7 +107,7 @@
                   <div class="mb-3">
                     <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="this.getValveNameList();this.getAllMasterValveList()"
                     placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveNameAssignmtForm.value.yojanaId || networkIdAddArray?.length <= 1"
-                    optionTextField="networkName"
+                    optionTextField="networkName" (remove)="clearFormDrop('network')"
                     [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                 </ngx-select>
                 <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required
@@ -113,7 +118,7 @@
             </div>
             <div class="mb-3">
                 <ngx-select [allowClear]="true" [items]="ValveNameListArray"
-                 optionValueField="valveDetailsId" [disabled]="!this.valveNameAssignmtForm.value.networkId || ValveNameListArray?.length <= 1"
+                 optionValueField="valveDetailsId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
                 optionTextField="valveName" placeholder="Select Valve Id" formControlName="valveId"
                 [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
             </ngx-select>
@@ -122,7 +127,7 @@
             </div>
             <div class="mb-3">
                 <ngx-select [allowClear]="true" [items]="masterValveListArray"
-                 optionValueField="valveMasterId" [disabled]="!this.valveNameAssignmtForm.value.networkId || masterValveListArray?.length <= 1"
+                 optionValueField="valveMasterId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
                 optionTextField="valveId" placeholder="Select Valve Name" formControlName="valveNameId"
                 [ngClass]="{ 'is-invalid': submited && f.valveNameId.errors }">
             </ngx-select>

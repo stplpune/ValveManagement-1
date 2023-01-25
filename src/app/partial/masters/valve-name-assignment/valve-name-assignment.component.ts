@@ -19,7 +19,7 @@ export class ValveNameAssignmentComponent implements OnInit {
   valveNameAssignmtForm: FormGroup | any; 
   submited: boolean = false;
   textName = 'Submit';
-  segmentMasterArray: any;
+  valveNameAssignmentArray: any;
   pageNumber: number = 1; 
   pagesize: number = 10;
   totalRows: any;
@@ -47,7 +47,7 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.defaultForm();
     this.defaultFilterForm();
     this.getYoganaId();
-    this.localStorage.userId() == 1 ? this.getAllSegmentMaster() : '';
+    this.localStorage.userId() == 1 ? this.getValveNameAssignmentAll() : '';
   }
 
   defaultFilterForm() {
@@ -65,7 +65,7 @@ export class ValveNameAssignmentComponent implements OnInit {
       networkId: ['', [Validators.required]],
       valveId: ['', [Validators.required]],
       valveNameId: ['', [Validators.required]],
-    })
+    })  
   }  
 
 
@@ -94,7 +94,7 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkArray = res.responseData;
-        this.networkArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArray[0].networkId }),this.getAllSegmentMaster()) : '';
+        this.networkArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArray[0].networkId }),this.getValveNameAssignmentAll()) : '';
       }
       else {
         this.networkArray = [];
@@ -130,6 +130,7 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.ValveNameListArray = res.responseData;
+        this.ValveNameListArray?.length > 1 ? (this.valveNameAssignmtForm.patchValue({ valveId: this.valveNameAssignmtForm.value.valveId })) : '';
     }
       else {
         this.ValveNameListArray = [];
@@ -147,6 +148,7 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.masterValveListArray = res.responseData;
+        this.masterValveListArray?.length > 1 ? (this.valveNameAssignmtForm.patchValue({ valveNameId: this.valveNameAssignmtForm.value.valveNameId })) : '';
     }
       else {
         this.masterValveListArray = [];
@@ -163,24 +165,25 @@ export class ValveNameAssignmentComponent implements OnInit {
       this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'network') {
     } 
-    this.pageNumber = 1;
-    this.getAllSegmentMaster();
+    this.pageNumber = 1;   
+    this.getValveNameAssignmentAll();
   }
 
-  getAllSegmentMaster() {
+
+  getValveNameAssignmentAll() { //table Api
     this.spinner.show();
-    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
-      + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize;
-    this.apiService.setHttp('get', 'api/SegmentMaster/GetAll?' + obj, false, false, false, 'valvemgt');
+    let obj =  this.localStorage.userId() + '&YojanaId=' + (this.filterForm.value.yojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+      + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&Search=' ;
+    this.apiService.setHttp('get', 'ValveNameAssignment/GetValveNameAssignmentAll?userId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
-          this.segmentMasterArray = res.responseData.responseData1;
+          this.valveNameAssignmentArray = res.responseData.responseData1; 
           this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
         } else {
           this.spinner.hide();
-          this.segmentMasterArray = [];
+          this.valveNameAssignmentArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -192,7 +195,7 @@ export class ValveNameAssignmentComponent implements OnInit {
 
   onClickPagintion(pageNo: number) {
     this.pageNumber = pageNo;
-    this.getAllSegmentMaster();
+    this.getValveNameAssignmentAll();
   }
 
   onSubmit() {
@@ -225,7 +228,7 @@ export class ValveNameAssignmentComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.clearForm();
-            this.getAllSegmentMaster();
+            this.getValveNameAssignmentAll();
             this.valveNameAssignmtModel.nativeElement.click();
           } else {
             this.toastrService.error(res.statusMessage);
@@ -263,7 +266,7 @@ export class ValveNameAssignmentComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.toastrService.success(res.statusMessage);
-          this.getAllSegmentMaster();
+          this.getValveNameAssignmentAll();
         } else {
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
@@ -278,13 +281,25 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.textName = 'Update';
 
     this.valveNameAssignmtForm.patchValue({
-      id: obj.id,
+      id: obj.valveAssignmentId,
       yojanaId: obj.yojanaId,
       networkId: obj.networkId,
-      valveId: obj.valveMasterId,
-      valveNameId: obj.valveDetailsId,
+      valveId: obj.valveDetailsId,
+      valveNameId: obj.valveMasterId,
     })
     this.getNetworkIdAdd('bind');
+
+  }
+
+  clearFormDrop(flag: any) {
+    if (flag == 'yojana') {
+      this.valveNameAssignmtForm.controls['networkId'].setValue('');
+      this.valveNameAssignmtForm.controls['valveId'].setValue('');
+      this.valveNameAssignmtForm.controls['valveNameId'].setValue('');
+    } else if (flag == 'network') {
+      this.valveNameAssignmtForm.controls['valveId'].setValue('');
+      this.valveNameAssignmtForm.controls['valveNameId'].setValue('');
+    } 
   }
 
 }
