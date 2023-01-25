@@ -137,35 +137,6 @@ export class TankMasterComponent implements OnInit {
     })
   }
 
-  // getYojana() {
-  //   this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
-  //   this.service.getHttp().subscribe({
-  //     next: ((res: any) => {
-  //       if (res.statusCode == '200') {
-  //         this.yojanaArray = res.responseData;
-  //         this.filterYojanaArray = res.responseData;
-  //         if(this.editFlag ){
-  //           if(this.getData.userId != 1){
-  //             (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }))
-  //           }else{
-  //             (this.tankForm.controls['yojanaId'].setValue(this.editObj.yojanaId))
-  //           }
-  //           this.getNetwork();
-  //         }else{
-  //           if(this.getData.userId != 1){
-  //            (this.tankForm.patchValue({ yojanaId: this.yojanaArray[0].yojanaId }), this.getNetwork())        
-  //           }   
-  //         }
-  //         this.filterYojanaArray?.length == 1  ? (this.filterFrm.patchValue({ yojanaId: this.filterYojanaArray[0].yojanaId }), this.getNetworkFilter()) : '';
-  //       } else {
-  //         this.yojanaArray = [];
-  //         this.filterYojanaArray = [];
-  //       }
-  //     }), error: (error: any) => {
-  //       this.error.handelError(error.status);
-  //     }
-  //   })
-  // }
   getNetwork(status?: any) {
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.tankForm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
