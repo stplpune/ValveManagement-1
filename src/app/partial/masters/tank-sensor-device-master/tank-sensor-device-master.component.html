@@ -104,7 +104,7 @@
               <label class="form-label">Device Id</label>
               <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.onlyDigits($event)">
+                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
               <div *ngIf="submitted && f['deviceId'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.deviceId.errors?.required">Device Id is
                   Required.</div>
