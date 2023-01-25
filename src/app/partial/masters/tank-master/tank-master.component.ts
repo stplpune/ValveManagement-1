@@ -184,9 +184,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   getNetworkFilter() {
-    console.log(this.filterFrm.value.yojanaId,'jk');
-     if(!this.editFlag){
-      console.log(this.filterFrm.value.yojanaId,'jklll');
+     if(!this.editFlag){   
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.filterFrm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
