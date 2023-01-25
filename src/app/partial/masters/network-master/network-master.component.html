@@ -14,9 +14,9 @@
         </div>
         <div class="row">
             <div class="col-sm-3">
-                <ngx-select [allowClear]="true" [items]="allYojanaArray" [formControl]="yojana"
+                <ngx-select [allowClear]="true" [items]="allYojanaFilterArray" [formControl]="yojana"
                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                    (select)="defaultPageNo()" [disabled]="allYojanaArray?.length == 1" (remove)="defaultPageNo()">
+                    (select)="this.filterFlag == 'filter';defaultPageNo()" [disabled]="allYojanaArray?.length == 1" (remove)="defaultPageNo()">
                 </ngx-select>
             </div>
         </div>
