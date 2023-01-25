@@ -124,22 +124,25 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   getAllNetwork() {   
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.valveRegForm.value.yojanaId , false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == 200) {
-          this.networkArr = res.responseData;   
-           this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
-          this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
-          this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';      
-        } else {
-          this.networkArr = [];
+    if(!this.editFlag){
+      this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.valveRegForm.value.yojanaId , false, false, false, 'valvemgt');
+      this.apiService.getHttp().subscribe({
+        next: ((res: any) => {
+          if (res.statusCode == 200) {
+            this.networkArr = res.responseData;   
+             this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
+            this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
+            this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';      
+          } else {
+            this.networkArr = [];
+          }
+        }),
+        error: (error: any) => {
+          this.errorSerivce.handelError(error.status);
         }
-      }),
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      }
-    })
+      })
+    }
+
   }
 
   getAllvalve() {
