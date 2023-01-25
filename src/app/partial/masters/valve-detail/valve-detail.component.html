@@ -17,14 +17,14 @@
         <div class="col-sm-3">
           <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
             optionValueField="yojanaId" optionTextField="yojanaName"
-            (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo()" (remove)="clearSerach('yojana')"
+            (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo();getAllValveData()" (remove)="clearSerach('yojana')"
             [disabled]="yoganaArrayFilter?.length == 1">
           </ngx-select>
         </div>
         <div class="col-sm-3">
           <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network" placeholder="Select Network"
             optionValueField="networkId" [disabled]="searchForm.controls['yojana'].value==0 || networkArrayfilter?.length==1" optionTextField="networkName"
-            (remove)="clearSerach('network')" (select)="this.filterFlag = 'filter';defaultPageNo()">
+            (remove)="clearSerach('network')" (select)="this.filterFlag = 'filter';defaultPageNo();getAllValveData()">
           </ngx-select>
         </div>
         <!-- <div class="col-sm-3">
@@ -47,9 +47,9 @@
           <tr>
             <th>Sr. No.</th>
             <th>Valve Name</th>
-            <th>Valve ID</th>
-            <th>Status</th>
-            <th>Status Date</th>
+            <th>Description</th>
+            <!-- <th>Status</th> -->
+            <th>Address</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -58,10 +58,10 @@
                       currentPage: pageNumber, totalItems:totalRows}; let i = index "
             [class.active]="valveStatus.id == HighlightRow">
             <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
-            <td>{{valveStatus?.valveName}}</td>
-            <td>{{valveStatus?.valveId}}</td>
+            <td>{{valveStatus?.valveName ? valveStatus?.valveName : '-'}}</td>
+            <td>{{valveStatus?.description}}</td>
             <!-- valveMasterId -->
-            <td>
+            <!-- <td>
               <span *ngIf="valveStatus?.statusId == 1"
                 class="badge px-3 py-2 bg-success bg-opacity-10 text-success rounded-pill">ON</span>
               <span *ngIf="valveStatus?.statusId == 2"
@@ -70,8 +70,8 @@
                 class="badge px-3 py-2 bg-warning bg-opacity-10 text-warning rounded-pill">Waited On</span>
               <span *ngIf="valveStatus?.statusId == 4"
                 class="badge px-3 py-2 bg-secondary bg-opacity-10 text-secondary rounded-pill">Waited OFF</span>
-            </td>
-            <td>{{valveStatus?.statusDate | date: 'dd/MM/yyyy hh:mm a'}}</td>
+            </td> -->
+            <td>{{valveStatus?.valveAddress ? valveStatus?.valveAddress : '-'}}</td>
             <td>
               <div class="btn-group">
                 <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
@@ -156,7 +156,7 @@
                 <label class="form-label">Valve Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
-                  (keypress)="validation.noSpacesAtStart($event)">
+                  (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name is
                     required.</div>
@@ -205,7 +205,7 @@
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" id="tank" type="radio" [value]="2" formControlName="list" name="list"
-                    (change)="onRadioChange(2)">
+                    (change)="onRadioChange(2);getTankList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)">
                   <label class="form-check-label" for="flexRadioDefault2">
                     Tank
                   </label>

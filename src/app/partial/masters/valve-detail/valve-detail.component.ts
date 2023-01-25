@@ -69,7 +69,7 @@ export class ValveDetailComponent implements OnInit {
     this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.getAllValveData();
     this.getAllYojana();
-    this.getTankList();
+    // this.getTankList();
     this.searchAddress();
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
@@ -147,8 +147,11 @@ export class ValveDetailComponent implements OnInit {
     });
   }
 
-  getTankList() {
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllTank', false, false, false, 'valvemgt');
+
+
+  getTankList(yojana: any, network: any) {
+    let obj = + yojana + '&NetworkId=' + network
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllSegmentForTank?YojanaId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -157,9 +160,7 @@ export class ValveDetailComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.tankArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
+          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
       error: (error: any) => {
@@ -246,7 +247,8 @@ export class ValveDetailComponent implements OnInit {
   getAllValveData() {
     let formdata = this.searchForm.value;
     this.spinner.show();
-    let obj = this.localStorage.userId() + '&pageNo=' + this.pageNumber + '&pageSize= '+ 10 +'&Search=' + formdata.searchField
+    let obj = this.localStorage.userId() + '&pageNo=' + this.pageNumber + '&pageSize='+ 10 +'&Search=' + formdata.searchField +
+    '&YojanaId=' + (formdata.yojana || 0) +'&NetworkId=' + (formdata.network || 0)
     
     this.apiService.setHttp('get', 'ValveDetails/GetValveDetailsAll?userId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -351,7 +353,6 @@ export class ValveDetailComponent implements OnInit {
       longitude: obj.longitude,
     });
     this.getAllNetwork(obj.yojanaId);
-    this.getValveList(obj.yojanaId, obj.networkId);
 
     this.commonService.checkDataType(obj.latitude) == true ? this.searchAdd.setValue(obj.valveAddress) : '';
     this.addLatitude = obj.latitude;
@@ -360,7 +361,12 @@ export class ValveDetailComponent implements OnInit {
     this.newAddedAddressLang = obj.longitude;
     this.addressNameforAddress = obj.valveAddress;
     this.copyAddressNameforAddress = obj.valveAddress;
+
+    obj.isPrecidingValve == 0 ? (this.onRadioChange(2),this.getTankList(obj.yojanaId, obj.networkId)) : 
+    (this.onRadioChange(1), this.getValveList(obj.yojanaId, obj.networkId))
+
   }
+    
 
   deleteConformation(id: any) {
     this.HighlightRow = id;
