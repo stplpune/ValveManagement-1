@@ -138,7 +138,7 @@ getAllNetwork(flag?:any) {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
-          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllSim(true),this.getAllTank(true)) : '';
+          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -150,7 +150,8 @@ getAllNetwork(flag?:any) {
 
 // Sim Array Declaration and Initialization
   getAllSim(flag?:any) {
-    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId='+ (this.tankSensorDeviceFrm.value.yojanaId || 0)+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0) , false, false, false, 'valvemgt');
+    let simUpdateId = this.editData.simId;
+    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownNewList?YojanaId='+ (this.tankSensorDeviceFrm.value.yojanaId || 0)+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0)+ '&SIMId=' + (this.editData ? simUpdateId : 0) , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
