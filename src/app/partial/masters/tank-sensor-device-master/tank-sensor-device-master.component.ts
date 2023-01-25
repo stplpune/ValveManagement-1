@@ -88,6 +88,8 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   }
 
   onEdit(data?:any){
+    console.log(data,'editData');
+    
   this.editFlag = true;
   this.editData = data;
   this.highlitedRow = data.id;
@@ -134,7 +136,7 @@ getAllNetwork(flag?:any) {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
-          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
+          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllSim(true),this.getAllTank(true)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -152,6 +154,7 @@ getAllNetwork(flag?:any) {
         if (res.statusCode == '200') {
           this.getAllSimArray = res.responseData;
           this.editFlag ? this.tankSensorDeviceFrm.controls['simId'].setValue(this.editData.simId) : '';
+          this.getAllSimArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({simId: this.getAllSimArray[0].id}) : '';
         }else{
           this.getAllSimArray = [];
         }
