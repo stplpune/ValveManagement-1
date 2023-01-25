@@ -150,8 +150,9 @@ getAllNetwork(flag?:any) {
 
 // Sim Array Declaration and Initialization
   getAllSim(flag?:any) {
-    let simUpdateId = this.editData.simId;
-    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownNewList?YojanaId='+ (this.tankSensorDeviceFrm.value.yojanaId || 0)+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0)+ '&SIMId=' + (this.editData ? simUpdateId : 0) , false, false, false, 'valvemgt');
+    let simUpdateId = this.editData ? this.editData.simId : 0 ;
+    this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownNewList?YojanaId='+ (this.tankSensorDeviceFrm.value.yojanaId || 0)+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0)+
+     '&SIMId=' + simUpdateId , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') {
