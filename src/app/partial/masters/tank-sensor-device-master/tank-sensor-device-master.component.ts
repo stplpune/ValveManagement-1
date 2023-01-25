@@ -136,7 +136,7 @@ getAllNetwork(flag?:any) {
     next: (res: any) => {
       if (res.statusCode == '200') {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
-          this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
+          this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllSim(true),this.getAllTank(true)) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
           this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
       }else{
@@ -195,6 +195,8 @@ clearForm(formDirective?:any){
   this.buttonValue = 'Submit';
   this.editData = '';
   this.submitted = false;
+  this.getAllLocalStorageData.userId == 1 ? 
+  this.getAllNetworkArray = [] : '';
   this.controlForm();
 }
 
