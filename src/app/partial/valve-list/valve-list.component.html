@@ -17,7 +17,7 @@
       <div class="col-sm-3">
         <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName"
-          (select)="this.filterFlag = 'filter';clearSerach('yojana');getAllNetwork();defaultPageNo()" (remove)="clearSerach('yojana')"
+          (select)="this.filterFlag = 'filter';clearSerach('yojana');getAllNetwork();defaultPageNo()" (remove)="clearSerach('yojana');defaultPageNo()"
           [disabled]="yoganaArrayFilter?.length == 1">
         </ngx-select>
       </div>
@@ -50,7 +50,7 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                (click)="this.filterFlag = 'add';updateValveData(valveStatus);getAllYojana()" data-bs-target="#AddValveModal">
+                (click)="this.filterFlag = 'add';updateValveData(valveStatus);getAllYojana();editChangeFlag = 1;" data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
               <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
@@ -116,7 +116,7 @@
               <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojana" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"  [disabled]="yojanaArray?.length == 1"
-                (select)="clearFilter('yojana');getAllNetwork()"
+                (select)="this.filterFlag = 'add';clearFilter('yojana');getAllNetwork();editChangeFlag = 0;"
                 (remove)="clearFilter('yojana')" 
                 [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
               </ngx-select>
@@ -130,7 +130,7 @@
               <label for="" class="form-label">Network <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
                 placeholder="Select Network"
-                (select)="clearFilter('network');ToBindSimNumberList();"
+                (select)="this.filterFlag = 'add';clearFilter('network');ToBindSimNumberList();editChangeFlag = 0;"
                 optionValueField="networkId" optionTextField="networkName"
                 [disabled]="!this.valveListForm.value.yojana || networkArray?.length == 1"
                 (remove)="clearFilter('network')" [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
