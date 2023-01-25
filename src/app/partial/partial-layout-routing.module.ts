@@ -63,6 +63,11 @@ const routes: Routes = [
     path: 'tank-calibration', loadChildren: () => import('../partial/masters/tank-calibration/tank-calibration.module').then(m => m.TankCalibrationModule),
     data: { breadcrumb: [{ title: 'Tank Calibration', active: true }] }
   },
+  { 
+    path: 'valve-name-assignment', loadChildren: () => import('../partial/masters/valve-name-assignment/valve-name-assignment.module').then(m => m.ValveNameAssignmentModule), 
+    data: { breadcrumb: [{ title: 'Valve Name Assignment', active: true }] }
+  },
+ 
   { path: 'access-denied', component: AccessDeniedComponent, data: { title: 'Access Denied' } },
 
 ];
