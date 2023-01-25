@@ -71,9 +71,10 @@ export class ValveConnectionComponent implements OnInit {
       "connectiondetails": this.fb.array([
         this.fb.group({
           "pipeDiameter": ['', [Validators.required]],
-          "connectionNo": ['', [Validators.required]]
+          "connectionNo": ['', ]
         })
-      ], [Validators.required]
+      ]
+      // , [Validators.required]
       )
     })
   }
@@ -106,10 +107,10 @@ export class ValveConnectionComponent implements OnInit {
   addConnection() {
     let arrayData = this.fb.group({
       pipeDiameter: ['', Validators.required],
-      connectionNo: ['', Validators.required]
+      connectionNo: ['']
     });
     if (this.valveConnectionForm.value.connectiondetails?.length > 0) {
-      if (this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails?.length - 1].pipeDiameter && this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails?.length - 1].connectionNo) {
+      if (this.valveConnectionForm.value.connectiondetails[this.valveConnectionForm.value.connectiondetails?.length - 1].pipeDiameter) {
         this.connectionForm.push(arrayData);
       } else {
         this.toasterService.error('Please, Enter Pipe Diameter and Connection No. !');
@@ -281,15 +282,20 @@ export class ValveConnectionComponent implements OnInit {
 
   onClickSubmit() {
     this.submitted = true;
-    if (!this.valveConnectionForm.valid) {
-      if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
-        return;
-      }
-      return;
-    }
-    else {
-      this.spinner.show();
+    // if (!this.valveConnectionForm.valid) {
+    //   if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
+    //     return;
+    //   }
+    //   return;
+    // }
+    // else {
+
+      //this.spinner.show();
+  
       let formData = this.valveConnectionForm.value;
+      formData.connectiondetails.map((ele:any,index:number)=>  ele.connectionNo= index+1);//code for connection no ++
+      console.log(formData);
+      
       formData.totalConnection = parseInt(formData.totalConnection);
       formData.connectionNo = parseInt(formData.connectionNo);
       this.apiService.setHttp(this.editFlag ? 'put' : 'post', 'ValveConnection', false, formData, false, 'valvemgt');
@@ -312,7 +318,7 @@ export class ValveConnectionComponent implements OnInit {
           this.errorSerivce.handelError(error.status);
         }
       })
-    }
+    // }
   }
 
   onClickPagintion(pagNo: number) {
