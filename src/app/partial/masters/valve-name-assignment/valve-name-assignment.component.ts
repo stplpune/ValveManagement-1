@@ -206,8 +206,8 @@ export class ValveNameAssignmentComponent implements OnInit {
       let formData = this.valveNameAssignmtForm.value;
       let obj = {
         "id": formData.id,
-        "valveMasterId": formData.valveId,
-        "valveDetailsId": formData.valveNameId,
+        "valveMasterId": formData.valveNameId,
+        "valveDetailsId": formData.valveId,
         "yojanaId": formData.yojanaId,
         "networkId": formData.networkId,
         "isDeleted": false,
@@ -217,6 +217,7 @@ export class ValveNameAssignmentComponent implements OnInit {
         "modifiedDate": new Date(),
         "timestamp": new Date(),
       }
+
 
       this.spinner.show();
       let urlType = formData.id == 0 ? 'POST' : 'PUT';
