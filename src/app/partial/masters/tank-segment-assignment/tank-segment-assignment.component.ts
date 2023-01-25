@@ -110,6 +110,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getAllFilterNetwork() {
+    if (!this.editFlag) {
     this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
@@ -123,6 +124,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
         this.error.handelError(error.status);
       }
     })
+  }
   }
 
   getNetwork() {

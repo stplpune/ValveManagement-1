@@ -15,6 +15,7 @@ import { ValidationService } from 'src/app/core/services/validation.service';
 })
 export class TankSensorDeviceMasterComponent implements OnInit {
 
+  // Variable Declaration & Initialization
   editFlag:boolean = false;
   editData!:any;
   deleteSegmentId!:any;
@@ -35,7 +36,6 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   totalRows: any;
   submitted = false;
   highlitedRow:any;
-  dropdownFlag!:string;
   getAllLocalStorageData!:any;
   @ViewChild('closebutton') closebutton:any;
   constructor(private apiService: ApiService,
@@ -58,11 +58,12 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     }
   }
 
-  //Get Form Control Values
+  // Get Form Control Values
   get f() {
     return this.tankSensorDeviceFrm.controls;
   }
 
+  // Get Controls of Main Form
   controlForm(){
     this.tankSensorDeviceFrm = this.fb.group({
       id:[0],
@@ -76,6 +77,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     })
   }
 
+  // Get Controls of Search/Filter Form
   searchFormControl(){
     this.searchForm=this.fb.group({
       yojana:+[this.getAllLocalStorageData.yojanaId || ''],
@@ -86,10 +88,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   }
 
   onEdit(data?:any){
+    console.log(data,'editData');
+    
   this.editFlag = true;
   this.editData = data;
-  console.log(this.editData);
-  
   this.highlitedRow = data.id;
   this.tankSensorDeviceFrm.patchValue({
       id: data.id,
@@ -104,6 +106,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
   this.getAllYojana();
 }
 
+// Yojana Array Declartion and Initialization
 getAllYojana() {
   this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
   this.apiService.getHttp().subscribe({
@@ -120,6 +123,7 @@ getAllYojana() {
   })
 }
   
+// Network Array Declaration and Initialization
 getAllNetwork(flag?:any) {
   let networkFlag = flag ;
   let editYojanaId;
@@ -132,7 +136,7 @@ getAllNetwork(flag?:any) {
         networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllTank(true),this.getAllSim()) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
-          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
+          this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllSim(true),this.getAllTank(true)) : '';
       }else{
         networkFlag ? (this.getAllNetworkArray = []) : (this.getAllFilterNetworkArray = [])
       }
@@ -142,6 +146,7 @@ getAllNetwork(flag?:any) {
   })
 }
 
+// Sim Array Declaration and Initialization
   getAllSim(flag?:any) {
     this.apiService.setHttp('GET', 'SimMaster/GetSimListDropdownList?YojanaId='+ (this.tankSensorDeviceFrm.value.yojanaId || 0)+'&NetworkId=' + (this.tankSensorDeviceFrm.value.networkId || 0) , false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -149,6 +154,7 @@ getAllNetwork(flag?:any) {
         if (res.statusCode == '200') {
           this.getAllSimArray = res.responseData;
           this.editFlag ? this.tankSensorDeviceFrm.controls['simId'].setValue(this.editData.simId) : '';
+          this.getAllSimArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({simId: this.getAllSimArray[0].id}) : '';
         }else{
           this.getAllSimArray = [];
         }
@@ -158,6 +164,7 @@ getAllNetwork(flag?:any) {
     })
   }
 
+  // Tank Array Declaration and Initialization
   getAllTank(flag?:any){
     let tankFlag = flag;
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?(this.tankSensorDeviceFrm.value.yojanaId || 0):(this.searchForm.value.yojana || 0)) +'&NetworkId=' + 
@@ -180,15 +187,13 @@ getAllNetwork(flag?:any) {
 
 clearForm(formDirective?:any){
   formDirective?.resetForm();
-  // this.getAllTankArray = [];
-  // this.getAllNetworkArray = [];
-  // this.getAllSimArray = [];
   this.editFlag = false;
   this.editData = '';
   this.submitted = false;
   this.controlForm();
 }
 
+// Main Table Array Declaration and Initialization
 getAllSensorDeviceTableData() {
   this.spinner.show();
   this.apiService.setHttp('GET', 'DeviceInfo/GetAllDeviceInformation?UserId='+ this.getAllLocalStorageData.userId +'&pageno='+ 
@@ -213,6 +218,7 @@ getAllSensorDeviceTableData() {
   });
 }
 
+// Submit/ Update Function
 onSubmit() {
   this.submitted = true;
   if(this.tankSensorDeviceFrm.invalid){
@@ -254,6 +260,7 @@ onSubmit() {
   }
 }
 
+// Pagination Functionality
 onClickPagintion(pageNo: number) {
   this.pageNumber = pageNo;
   this.getAllSensorDeviceTableData();
@@ -264,6 +271,7 @@ deleteConformation(data?:any){
   this.highlitedRow = data.id;
 }
 
+// Delete Function
 deleteNetworkMaster(){
   this.deleteObj.isDeleted = true;
   this.apiService.setHttp('DELETE', 'DeviceInfo/DeleteDeviceDetails', false, this.deleteObj, false, 'valvemgt');

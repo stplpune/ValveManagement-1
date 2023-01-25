@@ -85,7 +85,6 @@ export class SimListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.getAllYojanaArray = res.responseData;
-          // (this.getAllLocalStorageData.yojanaId != 0) ? this.getAllNetwork(true) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -139,7 +138,6 @@ export class SimListComponent implements OnInit {
   //Clear Form Data
   clearForm(formDirective?: any) {
     formDirective?.resetForm();
-    // this.getAllNetworkArray = [];
     this.editFlag = false;
     this.editData = '';
     this.submitted = false;
@@ -184,7 +182,7 @@ export class SimListComponent implements OnInit {
     }
   }
 
-  //Get Form Data using Validation Purpose
+  //Get Form Data controls for Validation Purpose
   get f() {
     return this.simFormData.controls;
   }
@@ -235,7 +233,6 @@ export class SimListComponent implements OnInit {
     this.getAllNetwork(true);
   }
 
-  //Bind We need to deleted Id
   deleteConformation(id: any) {
     this.deleteSimId = id;
     this.highlitedRow = id;

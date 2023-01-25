@@ -3,7 +3,6 @@
     <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">SIM List</div>
       <div class="col-sm-4 text-end">
-        <!-- <button (click)="refreshData()" title="Refresh Valve"  class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" (click)="getAllNetwork(true)" data-bs-toggle="modal"
           data-bs-target="#AddSIMModal"><i class="fa-solid fa-plus me-2"></i>Add SIM</button>
       </div>
@@ -128,8 +127,6 @@
                 [ngClass]="{ 'is-invalid': submitted && f.simNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
               <div *ngIf="submitted && f.simNo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.simNo.errors?.required">Sim No Is Required.</div>
-                <!-- <div class="text-danger" *ngIf="f.SimNo.errors?.pattern">Please enter
-                  Valid Sim No.<br>Sim No Should be 20 digit</div> -->
               </div> 
             </div>
             <div class="mb-3">
@@ -138,8 +135,6 @@
                 [ngClass]="{ 'is-invalid': submitted && f.imsiNo.errors }" (keypress)="this.validations.noSpacesAtStart($event);this.validations.onlyDigits($event)" />
               <div *ngIf="submitted && f.imsiNo.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.imsiNo.errors?.required">IMSI No Is Required.</div>
-                <!-- <div class="text-danger" *ngIf="f.IMSINo.errors?.pattern">Please enter
-                  Valid IMSI No.<br>IMSI No Should be 15 digit</div> -->
               </div> 
             </div>
           </div>

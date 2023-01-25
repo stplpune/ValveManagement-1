@@ -183,13 +183,14 @@ export class TankMasterComponent implements OnInit {
       })
   }
 
-  getNetworkFilter(status?: any) {
+  getNetworkFilter() {
+     if(!this.editFlag){   
       this.service.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getData.userId + '&YojanaId=' + this.filterFrm.value.yojanaId, false, false, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
             this.filterNetworkArray = res.responseData 
-            this.filterNetworkArray?.length == 1 ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }),this.getTableData()) : '';
+            this.filterNetworkArray?.length == 1  ? (this.filterFrm.patchValue({ networkId: this.filterNetworkArray[0].networkId }),this.getTableData()) : '';
           } else {
             this.filterNetworkArray = [];
           }
@@ -197,6 +198,7 @@ export class TankMasterComponent implements OnInit {
           this.error.handelError(error.status);
         }
       })
+     }
   }
 
   onSubmit() {

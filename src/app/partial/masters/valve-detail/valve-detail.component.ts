@@ -26,7 +26,7 @@ export class ValveDetailComponent implements OnInit {
   editId: any;
   readioSelected: any;
   btnText = 'Save Changes';
-  headingText = 'Add Valve Details'; 
+  headingText = 'Add Valve Details';
   valveStatusArray: any;
   pageNumber: number = 1;
   pagesize: number = 10;
@@ -38,7 +38,7 @@ export class ValveDetailComponent implements OnInit {
   valvelistArray: any;
   yoganaArrayFilter: any;
   networkArrayfilter: any;
-  getAllLocalStorageData: any;
+  getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   filterFlag: any = 'filter';
   @ViewChild('addValveModel') addValveModel: any;
   @ViewChild('addValveModal', { static: false }) addValveModal: any;
@@ -47,7 +47,7 @@ export class ValveDetailComponent implements OnInit {
   addressZoomSize = 6;
   subject: Subject<any> = new Subject();
   geoCoder: any;
-  getAllMasterValveListArray:any;
+  getAllMasterValveListArray: any;
 
   constructor(
     private mapsAPILoader: MapsAPILoader,
@@ -66,10 +66,9 @@ export class ValveDetailComponent implements OnInit {
   ngOnInit() {
     this.Filter();
     this.defaultForm();
-    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
-    this.getAllValveData();
     this.getAllYojana();
     // this.getTankList();
+    this.localStorage.userId() == 1 ? this.getAllValveData() : '';
     this.searchAddress();
     this.mapsAPILoader.load().then(() => {
       this.geoCoder = new google.maps.Geocoder();
@@ -77,9 +76,9 @@ export class ValveDetailComponent implements OnInit {
     this.searchFilters('false');
   }
 
-  get f() { return this.valveListForm.controls;}
+  get f() { return this.valveListForm.controls; }
 
-  precesidingList = [ { "id": 1, name: 'valve' },{ "id": 2, name: 'tank' }]
+  precesidingList = [{ "id": 1, name: 'valve' }, { "id": 2, name: 'tank' }]
 
   defaultForm() {
     this.valveListForm = this.fb.group({
@@ -89,8 +88,8 @@ export class ValveDetailComponent implements OnInit {
       address: ['', [Validators.required],],
       valvelist: ['', [Validators.required],],
       tankist: ['', [Validators.required],],
-      yojana: ['', [Validators.required],],
-      network: ['', [Validators.required],],
+      yojana: [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
+      network: [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', [Validators.required]],
       list: [1],
       valveMasterId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
       description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
@@ -116,7 +115,7 @@ export class ValveDetailComponent implements OnInit {
           this.getAllMasterValveListArray = res.responseData;
           this.getAllMasterValveListArray?.length == 1 ? (this.valveListForm.patchValue({ valveMasterId: this.getAllMasterValveListArray[0].valveMasterId })) : '';
         } else {
-         this.getAllMasterValveListArray = [];
+          this.getAllMasterValveListArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -176,9 +175,9 @@ export class ValveDetailComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;
-          this.yoganaArrayFilter.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
-          this.yojanaArray.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
-         
+          this.yoganaArrayFilter?.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
+          this.yojanaArray?.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
+
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = [] : this.yojanaArray = [];
@@ -200,8 +199,8 @@ export class ValveDetailComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
-          (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId })) : '';
-          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }),this.getMasterValveList()) : '';
+          (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }), this.getAllValveData()) : '';
+          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }), this.getMasterValveList()) : '';
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
@@ -221,7 +220,6 @@ export class ValveDetailComponent implements OnInit {
     this.defaultForm();
     this.btnText = 'Save Changes';
     this.headingText = 'Add Valve Details';
-    this.yojanaArray?.length == 1 ? (this.valveListForm.patchValue({ yojana: this.yojanaArray[0].yojanaId })) : '';
   }
 
   onKeyUpFilter() {
@@ -247,9 +245,9 @@ export class ValveDetailComponent implements OnInit {
   getAllValveData() {
     let formdata = this.searchForm.value;
     this.spinner.show();
-    let obj = this.localStorage.userId() + '&pageNo=' + this.pageNumber + '&pageSize='+ 10 +'&Search=' + formdata.searchField +
-    '&YojanaId=' + (formdata.yojana || 0) +'&NetworkId=' + (formdata.network || 0)
-    
+    let obj = this.localStorage.userId() + '&pageNo=' + this.pageNumber + '&pageSize=' + this.pagesize + '&Search=' + formdata.searchField +
+      '&YojanaId=' + (formdata.yojana || 0) + '&NetworkId=' + (formdata.network || 0)
+
     this.apiService.setHttp('get', 'ValveDetails/GetValveDetailsAll?userId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -306,7 +304,7 @@ export class ValveDetailComponent implements OnInit {
       this.spinner.show();
       let urlType;
       let urlName;
-      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');  
+      formData.Id == 0 ? (urlType = 'POST') : (urlType = 'PUT');
       formData.Id == 0 ? (urlName = 'ValveDetails/AddValveDetails') : (urlName = 'ValveDetails/UpdateValveDetails');
       this.apiService.setHttp(urlType, urlName, false, JSON.stringify(obj), false, 'valvemgt');
       this.apiService.getHttp().subscribe(
@@ -338,7 +336,7 @@ export class ValveDetailComponent implements OnInit {
     this.HighlightRow = obj.id;
     this.valveListForm.patchValue({
       Id: obj.id,
-      valveMasterId:obj.valveMasterId,
+      valveMasterId: obj.valveMasterId,
       valveName: obj.valveName,
       description: obj.description,
       pipeDiameter: obj.valvePipeDiameter,
@@ -362,11 +360,11 @@ export class ValveDetailComponent implements OnInit {
     this.addressNameforAddress = obj.valveAddress;
     this.copyAddressNameforAddress = obj.valveAddress;
 
-    obj.isPrecidingValve == 0 ? (this.onRadioChange(2),this.getTankList(obj.yojanaId, obj.networkId)) : 
-    (this.onRadioChange(1), this.getValveList(obj.yojanaId, obj.networkId))
+    obj.isPrecidingValve == 0 ? (this.onRadioChange(2), this.getTankList(obj.yojanaId, obj.networkId)) :
+      (this.onRadioChange(1), this.getValveList(obj.yojanaId, obj.networkId))
 
   }
-    
+
 
   deleteConformation(id: any) {
     this.HighlightRow = id;
@@ -444,12 +442,14 @@ export class ValveDetailComponent implements OnInit {
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].setValue('');
+      this.getValveList(this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0)
     } else {
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].setValue('');
+      this.getTankList(this.valveListForm.controls['yojana'].value,this.valveListForm.controls['network'].value)
     }
   }
 

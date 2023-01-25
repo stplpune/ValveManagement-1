@@ -4,7 +4,6 @@
       <div class="col-sm-4">Tank Sensor Device Master
       </div>
       <div class="col-sm-4 text-end">
-        <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button> -->
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" (click)="getAllNetwork(true)" data-bs-toggle="modal"
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Sensor Device
           Master
@@ -41,11 +40,8 @@
           <th>Sr. No.</th>
           <th>Deivce Id</th>
           <th>Deivce Name</th>
-          <!-- <th>SIM No</th> -->
           <th>Description</th>
           <th>Tank</th>
-          <!-- <th>Yojana</th> -->
-          <!-- <th>Network</th> -->
           <th>Actions</th>
         </tr>
       </thead>
@@ -56,11 +52,8 @@
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{allSensorDeviceInfo.deviceId}}</td>
           <td>{{allSensorDeviceInfo.deviceName}}</td>
-          <!-- <td>{{allSensorDeviceInfo.simId}}</td> -->
           <td>{{allSensorDeviceInfo.deviceDescription}}</td>
           <td>{{allSensorDeviceInfo.tankName}}</td>
-          <!-- <td>{{allSensorDeviceInfo.yojanaId}}</td> -->
-          <!-- <td>{{allSensorDeviceInfo.networkId}}</td> -->
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" (click)="onEdit(allSensorDeviceInfo)"
@@ -107,7 +100,7 @@
               <label class="form-label">Device Id</label>
               <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.onlyDigits($event)">
+                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
               <div *ngIf="submitted && f['deviceId'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.deviceId.errors?.required">Device Id is
                   Required.</div>
