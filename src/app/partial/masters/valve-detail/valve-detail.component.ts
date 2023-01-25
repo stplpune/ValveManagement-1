@@ -23,7 +23,7 @@ export class ValveDetailComponent implements OnInit {
   searchForm!: FormGroup;
   submitted = false;
   iseditbtn = false;
-  editId: any;
+  editObj: any;
   readioSelected: any;
   btnText = 'Save Changes';
   headingText = 'Add Valve Details';
@@ -107,7 +107,8 @@ export class ValveDetailComponent implements OnInit {
   }
 
   getMasterValveList() {
-    let obj = (this.valveListForm.value.yojana || 0) + '&NetworkId=' + (this.valveListForm.value.network || 0)
+    let ValveMasterId = this.btnText == 'Save Changes' ? 0 : this.editObj?.valveMasterId;
+    let obj = (this.valveListForm.value.yojana || 0) + '&NetworkId=' + (this.valveListForm.value.network || 0) + '&ValveMasterId=' + ValveMasterId
     this.apiService.setHttp('get', 'api/MasterDropdown/GetAllMasterValveList?YojanaId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -272,7 +273,7 @@ export class ValveDetailComponent implements OnInit {
   onClickPagintion(pageNo: any) {
     this.pageNumber = pageNo;
     this.getAllValveData();
-    this.onRadioChange();
+    // this.onRadioChange();
   }
 
   onSubmit() {
@@ -329,9 +330,9 @@ export class ValveDetailComponent implements OnInit {
   }
 
   updateValveData(obj: any) {
-    this.editId = obj;
-    this.iseditbtn = true;
     this.btnText = 'Update Changes';
+    this.editObj = obj;   
+    this.iseditbtn = true;
     this.headingText = 'Update Valve Details';
     this.HighlightRow = obj.id;
     this.valveListForm.patchValue({
@@ -360,9 +361,8 @@ export class ValveDetailComponent implements OnInit {
     this.addressNameforAddress = obj.valveAddress;
     this.copyAddressNameforAddress = obj.valveAddress;
 
-    obj.isPrecidingValve == 0 ? (this.onRadioChange(2), this.getTankList(obj.yojanaId, obj.networkId)) :
+    obj.isPrecidingValve == 2 ? (this.onRadioChange(2), this.getTankList(obj.yojanaId, obj.networkId)) :
       (this.onRadioChange(1), this.getValveList(obj.yojanaId, obj.networkId))
-
   }
 
 

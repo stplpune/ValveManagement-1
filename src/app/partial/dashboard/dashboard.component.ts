@@ -41,13 +41,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.defaultFilterForm();
     this.getYogana();
-    this.getValveSummary();
-    // this.getValveSegmentList();
-    // this.getDeviceCurrentSensorValue();
     this.waterTankChartData();
-    this.localStorage.userId() == 1 ? (this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
+    this.localStorage.userId() == 1 ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
     this.getTankDeviceHourlyValue();
-    // this.asd();
   }
 
   defaultFilterForm() {
@@ -91,7 +87,8 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
+        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length != 1) ? this.getValveSummary() : '';
       }
       else {
         this.networkIdArray = [];
@@ -106,7 +103,8 @@ export class DashboardComponent implements OnInit {
 
   getValveSummary() {
     this.spinner.show();
-    this.apiService.setHttp('get', "ValveMaster/GetValveSummary?UserId=" + this.localStorage.userId(), false, false, false, 'valvemgt');
+    let obj = this.localStorage.userId() + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    this.apiService.setHttp('get', "ValveMaster/GetValveSummary?UserId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
