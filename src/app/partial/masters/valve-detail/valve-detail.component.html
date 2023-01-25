@@ -50,6 +50,8 @@
           <th>Sr. No.</th>
           <th>Valve Id</th>
           <th>Valve Name</th>
+          <th>No. Of Customer</th>
+          <th>No. Of Connection</th>
           <th>Description</th>
           <!-- <th>Status</th> -->
           <th>Actions</th>
@@ -62,6 +64,8 @@
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{valveStatus?.valveId ? valveStatus?.valveId : '-'}}</td>
           <td>{{valveStatus?.valveName ? valveStatus?.valveName : '-'}}</td>
+          <td>{{valveStatus?.noOfCustomer ? valveStatus?.noOfCustomer : '-'}}</td>
+          <td>{{valveStatus?.noOfConnection ? valveStatus?.noOfConnection : '-'}}</td>
           <td>{{valveStatus?.description ? valveStatus?.description : '-'}}</td>
           <!-- valveMasterId -->
           <!-- <td>
@@ -77,7 +81,7 @@
           <td>
             <div class="btn-group">
               <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
-                (click)="this.filterFlag = 'add';updateValveData(valveStatus);onRadioChange(1);getAllYojana()"
+                (click)="this.filterFlag = 'add';updateValveData(valveStatus);getAllYojana()"
                 data-bs-target="#AddValveModal">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
