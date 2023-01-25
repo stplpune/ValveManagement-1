@@ -147,7 +147,7 @@ export class ValveDetailComponent implements OnInit {
   // }
 
   getValve_TankList(flag:any,yojana: any, network: any) {
-    let obj = this.localStorage.userId() + '&IsValve=' + flag + '&ValveId=' + 0 + '&YojanaId=' + yojana + '&NetworkId=' + network
+    let obj = this.localStorage.userId() + '&IsValve=' + flag + '&ValveId=' + 0 + '&YojanaId=' + (yojana || 0) + '&NetworkId=' + (network || 0)
     this.apiService.setHttp('get', 'ValveMaster/GetValveTankListModelList?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -443,14 +443,14 @@ export class ValveDetailComponent implements OnInit {
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].setValue('');
-      this.btnText == 'Save Changes' ? this.getValve_TankList(1,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
+      // this.btnText == 'Save Changes' ? this.getValve_TankList(1,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
     } else {
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].setValue('');
-      this.btnText == 'Save Changes' ? this.getValve_TankList(2,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
+      // this.btnText == 'Save Changes' ? this.getValve_TankList(2,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
     }
   }
 
