@@ -138,7 +138,7 @@
                 <label for="" class="form-label">Network <span class="text-danger">*</span></label>
                 <ngx-select [allowClear]="true" [items]="networkArray" formControlName="network"
                   placeholder="Select Network"
-                  (select)="this.filterFlag = 'add';clearFilter('network');getMasterValveList();getValveList(valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
+                  (select)="this.filterFlag = 'add';clearFilter('network');getValve_TankList(1,valveListForm.controls['yojana'].value,valveListForm.controls['network'].value)"
                   optionValueField="networkId" optionTextField="networkName"
                   [disabled]="!this.valveListForm.value.yojana || networkArray?.length <= 1" (remove)="clearFilter('network')"
                   [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
@@ -150,7 +150,7 @@
             </div>
 
             <div class="row mb-2">
-              <div class="col-sm-6">
+              <!-- <div class="col-sm-6">
                 <label for="" class="form-label">Valve ID <span class="text-danger">*</span></label>
                 <ngx-select [allowClear]="true" [items]="getAllMasterValveListArray" formControlName="valveMasterId"
                   placeholder="Valve ID" optionValueField="valveMasterId" optionTextField="valveId"
@@ -161,8 +161,8 @@
                   <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">Valve ID is
                     required.</div>
                 </div>
-              </div>
-              <div class="col-sm-6">
+              </div> -->
+              <div class="col-sm-12">
                 <label class="form-label">Valve Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
@@ -212,7 +212,7 @@
               <label class="form-label">Preceding:</label>
               <div class="form-check">
                 <input class="form-check-input" id="valve" type="radio" [value]="1" name="list" formControlName="list"
-                  checked (change)="onRadioChange(1)">
+                  (change)="onRadioChange(1)">
                 <label class="form-check-label" for="flexRadioDefault1"> Valve</label>
               </div>
               <div class="form-check">
@@ -228,9 +228,9 @@
               <div class="col-sm-6">
                 <div *ngIf="valveListForm.controls['list'].value=='1'">
                   <label class="form-label">Valve List<span class="text-danger">*</span></label>
-                  <ngx-select [allowClear]="true" [items]="valvelistArray" formControlName="valvelist"
+                  <ngx-select [allowClear]="true" [items]="valveTankArray" formControlName="valvelist"
                     placeholder="Select Valve" optionValueField="valveId" optionTextField="valveName"
-                    [disabled]="!this.valveListForm.value.network || valvelistArray?.length <= 1"
+                    [disabled]="!this.valveListForm.value.network || valveTankArray?.length <= 1"
                     [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
@@ -239,9 +239,9 @@
                 </div>
                 <div *ngIf="valveListForm.controls['list'].value=='2'">
                   <label class="form-label">Tank List <span class="text-danger">*</span></label>
-                  <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist"
+                  <ngx-select [allowClear]="true" [items]="valveTankArray" formControlName="tankist"
                     placeholder="Select Tank" optionValueField="segmentId" optionTextField="segmentName"
-                    [disabled]="!this.valveListForm.value.network || tankArray?.length <= 1"
+                    [disabled]="!this.valveListForm.value.network || valveTankArray?.length <= 1"
                     [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">

@@ -34,8 +34,7 @@ export class ValveDetailComponent implements OnInit {
   districtArray: any;
   yojanaArray: any;
   networkArray: any;
-  tankArray: any;
-  valvelistArray: any;
+  valveTankArray: any;
   yoganaArrayFilter: any;
   networkArrayfilter: any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
@@ -91,7 +90,7 @@ export class ValveDetailComponent implements OnInit {
       yojana: [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
       network: [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', [Validators.required]],
       list: [1],
-      valveMasterId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
+      // valveMasterId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
       description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
       latitude: [''],
       longitude: [''],
@@ -106,60 +105,58 @@ export class ValveDetailComponent implements OnInit {
     })
   }
 
-  getMasterValveList() {
-    let ValveMasterId = this.btnText == 'Save Changes' ? 0 : this.editObj?.valveMasterId;
-    let obj = (this.valveListForm.value.yojana || 0) + '&NetworkId=' + (this.valveListForm.value.network || 0) + '&ValveMasterId=' + ValveMasterId
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllMasterValveList?YojanaId=' + obj, false, false, false, 'valvemgt');
+  // getMasterValveList() {
+  //   let ValveMasterId = this.btnText == 'Save Changes' ? 0 : this.editObj?.valveMasterId;
+  //   let obj = (this.valveListForm.value.yojana || 0) + '&NetworkId=' + (this.valveListForm.value.network || 0) + '&ValveMasterId=' + ValveMasterId
+  //   this.apiService.setHttp('get', 'api/MasterDropdown/GetAllMasterValveList?YojanaId=' + obj, false, false, false, 'valvemgt');
+  //   this.apiService.getHttp().subscribe({
+  //     next: (res: any) => {
+  //       if (res.statusCode === '200') {
+  //         this.getAllMasterValveListArray = res.responseData;
+  //         this.getAllMasterValveListArray?.length == 1 ? (this.valveListForm.patchValue({ valveMasterId: this.getAllMasterValveListArray[0].valveMasterId })) : '';
+  //       } else {
+  //         this.getAllMasterValveListArray = [];
+  //         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       this.errorSerivce.handelError(error.status);
+  //     },
+  //   });
+  // }
+
+  // getValveList(yojana: any, network: any) {
+  //   this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
+  //   this.apiService.getHttp().subscribe({
+  //     next: (res: any) => {
+  //       if (res.statusCode === '200') {
+  //         this.spinner.hide();
+  //         this.valvelistArray = res.responseData;
+  //       } else {
+  //         this.spinner.hide();
+  //         this.valvelistArray = [];
+  //         this.commonService.checkDataType(res.statusMessage) == false
+  //           ? this.errorSerivce.handelError(res.statusCode)
+  //           : this.toastrService.error(res.statusMessage);
+  //       }
+  //     },
+  //     error: (error: any) => {
+  //       this.errorSerivce.handelError(error.status);
+  //     },
+  //   });
+  // }
+
+  getValve_TankList(flag:any,yojana: any, network: any) {
+    let obj = this.localStorage.userId() + '&IsValve=' + flag + '&ValveId=' + 0 + '&YojanaId=' + yojana + '&NetworkId=' + network
+    this.apiService.setHttp('get', 'ValveMaster/GetValveTankListModelList?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
-          this.getAllMasterValveListArray = res.responseData;
-          this.getAllMasterValveListArray?.length == 1 ? (this.valveListForm.patchValue({ valveMasterId: this.getAllMasterValveListArray[0].valveMasterId })) : '';
-        } else {
-          this.getAllMasterValveListArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
-  }
-
-  getValveList(yojana: any, network: any) {
-    this.apiService.setHttp('get', 'ValveMaster/GetValveNameList?userId=1&YojanaId=' + yojana + '&NetworkId=' + network, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
           this.spinner.hide();
-          this.valvelistArray = res.responseData;
+          this.valveTankArray = res.responseData;
         } else {
           this.spinner.hide();
-          this.valvelistArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode)
-            : this.toastrService.error(res.statusMessage);
-        }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
-  }
-
-
-
-  getTankList(yojana: any, network: any) {
-    let obj = + yojana + '&NetworkId=' + network
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllSegmentForTank?YojanaId=' + obj, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.tankArray = res.responseData;
-        } else {
-          this.spinner.hide();
-          this.tankArray = [];
+          this.valveTankArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
@@ -201,7 +198,7 @@ export class ValveDetailComponent implements OnInit {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
           (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }), this.getAllValveData()) : '';
-          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }), this.getMasterValveList()) : '';
+          this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
@@ -290,7 +287,12 @@ export class ValveDetailComponent implements OnInit {
         "createdBy": this.localStorage.userId(),
         "valvePipeDiameter": formData.pipeDiameter,
         "noOfConnection": 0,
-        "valveMasterId": formData?.valveMasterId,
+
+        "valveDetailsId": 0,
+        "noOfCustomer": 0,
+
+        // "valveMasterId": formData?.valveMasterId,
+        
         "simid": 0,
         "latitude": this.addLatitude,
         "longitude": this.addLongitude,
@@ -337,7 +339,6 @@ export class ValveDetailComponent implements OnInit {
     this.HighlightRow = obj.id;
     this.valveListForm.patchValue({
       Id: obj.id,
-      valveMasterId: obj.valveMasterId,
       valveName: obj.valveName,
       description: obj.description,
       pipeDiameter: obj.valvePipeDiameter,
@@ -347,7 +348,7 @@ export class ValveDetailComponent implements OnInit {
       tankist: obj.valveId_TankId,
       yojana: obj.yojanaId,
       network: obj.networkId,
-      list: obj.isPrecidingValve,
+      list: obj.isPrecidingValve == 2 ? obj.isPrecidingValve : 1,
       latitude: obj.latitude,
       longitude: obj.longitude,
     });
@@ -361,8 +362,8 @@ export class ValveDetailComponent implements OnInit {
     this.addressNameforAddress = obj.valveAddress;
     this.copyAddressNameforAddress = obj.valveAddress;
 
-    obj.isPrecidingValve == 2 ? (this.onRadioChange(2), this.getTankList(obj.yojanaId, obj.networkId)) :
-      (this.onRadioChange(1), this.getValveList(obj.yojanaId, obj.networkId))
+    obj.isPrecidingValve == 2 ? (this.onRadioChange(2), this.getValve_TankList(2,obj.yojanaId, obj.networkId)) :
+      (this.onRadioChange(1), this.getValve_TankList(1,obj.yojanaId, obj.networkId))
   }
 
 
@@ -442,14 +443,14 @@ export class ValveDetailComponent implements OnInit {
       this.valveListForm.controls['tankist'].clearValidators();
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['tankist'].setValue('');
-      this.getValveList(this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0)
+      this.btnText == 'Save Changes' ? this.getValve_TankList(1,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
     } else {
       this.valveListForm.controls['tankist'].setValidators([Validators.required]);
       this.valveListForm.controls['tankist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].clearValidators();
       this.valveListForm.controls['valvelist'].updateValueAndValidity();
       this.valveListForm.controls['valvelist'].setValue('');
-      this.getTankList(this.valveListForm.controls['yojana'].value,this.valveListForm.controls['network'].value)
+      this.btnText == 'Save Changes' ? this.getValve_TankList(2,this.valveListForm.controls['yojana'].value || 0,this.valveListForm.controls['network'].value || 0) : '';
     }
   }
 
@@ -458,10 +459,8 @@ export class ValveDetailComponent implements OnInit {
       this.valveListForm.controls['network'].setValue('');
       this.valveListForm.controls['valvelist'].setValue('');
       this.valveListForm.controls['tankist'].setValue('');
-      this.valveListForm.controls['valveMasterId'].setValue('');
     } else if (flag == 'network') {
       this.valveListForm.controls['valvelist'].setValue('');
-      this.valveListForm.controls['valveMasterId'].setValue('');
       this.valveListForm.controls['tankist'].setValue('');
     }
   }
