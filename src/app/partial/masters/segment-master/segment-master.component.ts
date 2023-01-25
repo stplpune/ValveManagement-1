@@ -63,12 +63,12 @@ export class SegmentMasterComponent implements OnInit{
   defaultForm() {
     this.segmentMasterForm = this.fb.group({
       id: [0],
-      segmentName: ['', [Validators.required]],
+      segmentName: ['', [Validators.required]],  
       startPoints: [''],
       endPoints: [''],
       midpoints: [''],
-      yojanaId: [this.yoganaIdArray?.length == 1 ? this.yoganaIdArray[0].yojanaId : '', [Validators.required]],
-      networkId: [this.networkIdAddArray?.length == 1 ? this.networkIdAddArray[0].networkId : '', [Validators.required]],
+      yojanaId: ['', [Validators.required]],
+      networkId: ['', [Validators.required]],
     })
   }
 
@@ -244,6 +244,9 @@ export class SegmentMasterComponent implements OnInit{
     this.submited = false;
     this.textName = 'Submit';
     this.defaultForm();
+    this.yoganaIdArray?.length == 1 ?  this.segmentMasterForm.controls['yojanaId'].setValue(this.yoganaIdArray[0].yojanaId) : '';
+    (this.networkIdAddArray?.length == 1 && this.segmentMasterForm.value.yojanaId) ? this.segmentMasterForm.controls['networkId'].setValue(this.networkIdAddArray[0].networkId) : '';
+    // this.getYoganaId();
   }
 
   deleteConformation(id: any) {

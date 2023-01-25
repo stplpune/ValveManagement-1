@@ -138,6 +138,8 @@ export class SimListComponent implements OnInit {
   //Clear Form Data
   clearForm(formDirective?: any) {
     formDirective?.resetForm();
+    this.getAllLocalStorageData.userId == 1 ?
+    this.getAllNetworkArray = [] : '';
     this.editFlag = false;
     this.editData = '';
     this.submitted = false;
