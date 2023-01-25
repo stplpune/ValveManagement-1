@@ -236,7 +236,7 @@
                 <div *ngIf="valveListForm.controls['list'].value=='2'">
                   <label class="form-label">Tank List <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="tankArray" formControlName="tankist"
-                    placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
+                    placeholder="Select Tank" optionValueField="segmentId" optionTextField="segmentName"
                     [disabled]="!this.valveListForm.value.network || tankArray?.length <= 1"
                     [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
                   </ngx-select>
