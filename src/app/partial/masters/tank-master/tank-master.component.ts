@@ -183,7 +183,7 @@ export class TankMasterComponent implements OnInit {
       })
   }
 
-  getNetworkFilter(status?: any) {
+  getNetworkFilter() {
     console.log(this.filterFrm.value.yojanaId,'jk');
      if(!this.editFlag){
       console.log(this.filterFrm.value.yojanaId,'jklll');
