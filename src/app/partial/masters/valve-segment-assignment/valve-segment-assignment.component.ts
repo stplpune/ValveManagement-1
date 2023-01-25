@@ -16,13 +16,13 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   valveRegForm: FormGroup | any;
   filterForm!: FormGroup;
-  valveArray :any;
-  valveDropdownArray :any;
-  sgmentDropdownArray : any;
+  valveArray: any;
+  valveDropdownArray: any;
+  sgmentDropdownArray: any;
   segmentShowArray = new Array();
-  yojanaArr : any;
+  yojanaArr: any;
   filterYojanaArr = new Array();
-  networkArr : any;
+  networkArr: any;
   FilterNetworkArr = new Array();
   editFlag: boolean = false;
   submited: boolean = false;
@@ -31,8 +31,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   valvelabel: any;
-  getAllLocalStorageData:any;
-  valveId : any;
+  getAllLocalStorageData: any;
+  valveId: any;
 
   @ViewChild('closebutton') closebutton: any;
 
@@ -45,12 +45,12 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();   
+    this.getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
     this.formData();
     this.filterFormField();
     this.getAllValveTableData();
-      this.getAllYojana();
-      // || networkIdAddArray?.length <= 1
+    this.getAllYojana();
+    // || networkIdAddArray?.length <= 1
   }
 
   formData() {
@@ -59,7 +59,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       "valveId": ['', Validators.required],
       "segmentId": [''],
       "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
-      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId :'', Validators.required],
+      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId : '', Validators.required],
       "valvesegmet": []
     })
   }
@@ -76,10 +76,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   clearfilter(flag: any) {
-    if (flag == 'yojana') {   
-      this.filterForm.controls['networkId'].setValue(0);         
+    if (flag == 'yojana') {
+      this.filterForm.controls['networkId'].setValue(0);
     } else if (flag == 'network') {
-      this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);       
+      this.filterForm.controls['yojanaId'].setValue(this.filterForm.value.yojanaId);
     }
     this.getAllValveTableData();
   }
@@ -90,10 +90,10 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.yojanaArr = res.responseData;
-          this.filterYojanaArr =res.responseData;
+          this.filterYojanaArr = res.responseData;
           this.yojanaArr.length == 1 ? (this.valveRegForm.patchValue({ yojanaId: this.yojanaArr[0].yojanaId }), this.getAllNetwork()) : '';
-          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }),this.getAllNetworkFilter()) : '';
-          this.editObj && this.getAllLocalStorageData.userId == 1  ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
+          this.filterYojanaArr.length == 1 ? (this.filterForm.patchValue({ yojanaId: this.filterYojanaArr[0].yojanaId }), this.getAllNetworkFilter()) : '';
+          this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['yojanaId'].setValue(this.editObj.yojanaId), this.getAllNetwork()) : '';
         } else {
           this.yojanaArr = [];
         }
@@ -105,36 +105,17 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   getAllNetworkFilter() {
-    console.log("this.yojanaArr",this.yojanaArr);
-    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId , false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == 200) {         
-          this.FilterNetworkArr = res.responseData; 
-          this.FilterNetworkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.FilterNetworkArr[0].networkId })) : '';       
-          // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId),this.getAllvalve(), this.getAllSegment()) : '';
-        } else {
-          this.FilterNetworkArr = [];
-        }
-      }),
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      }
-    })
-  }
-
-  getAllNetwork() {   
-    if(!this.editFlag){
-      this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.valveRegForm.value.yojanaId , false, false, false, 'valvemgt');
+    if (!this.editFlag) {
+      console.log("this.yojanaArr", this.yojanaArr);
+      this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == 200) {
-            this.networkArr = res.responseData;   
-             this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }),this.getAllvalve(),this.getAllSegment()) : '';
-            this.networkArr?.length > 1  ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';    
-            this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';      
+            this.FilterNetworkArr = res.responseData;
+            this.FilterNetworkArr?.length == 1 ? (this.filterForm.patchValue({ networkId: this.FilterNetworkArr[0].networkId })) : '';
+            // this.editObj ? (this.f['networkId'].setValue(this.editObj.networkId),this.getAllvalve(), this.getAllSegment()) : '';
           } else {
-            this.networkArr = [];
+            this.FilterNetworkArr = [];
           }
         }),
         error: (error: any) => {
@@ -143,6 +124,25 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       })
     }
 
+  }
+
+  getAllNetwork() {
+    this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.valveRegForm.value.yojanaId, false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == 200) {
+          this.networkArr = res.responseData;
+          this.networkArr?.length == 1 ? (this.valveRegForm.patchValue({ networkId: this.networkArr[0].networkId }), this.getAllvalve(), this.getAllSegment()) : '';
+          this.networkArr?.length > 1 ? (this.valveRegForm.patchValue({ networkId: this.valveRegForm.value.networkId })) : '';
+          this.editObj && this.getAllLocalStorageData.userId == 1 ? (this.f['networkId'].setValue(this.editObj.networkId), this.getAllvalve(), this.getAllSegment()) : '';
+        } else {
+          this.networkArr = [];
+        }
+      }),
+      error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      }
+    })
   }
 
   getAllvalve() {
@@ -247,7 +247,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
         "yojanaId": formValue.yojanaId,
         "valvesegmet": this.segmentShowArray
       }
-            
+
       this.spinner.show();
       this.apiService.setHttp('PUT', 'ValveManagement/Valvesegment/Updatevalvesegmentassignment', false, obj, false, 'valvemgt');
       this.apiService.getHttp().subscribe(
@@ -284,18 +284,18 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
 
-  deleteConformation(id:any){
-    this.valveId = id ;
+  deleteConformation(id: any) {
+    this.valveId = id;
   }
   onDeleteValve() {
-   
-    
+
+
     let obj = {
-      id:this.valveId ,
+      id: this.valveId,
       deletedBy: this.localStorage.userId(),
     };
 
-    console.log("hello delete",obj);
+    console.log("hello delete", obj);
 
     this.apiService.setHttp('DELETE', 'ValveManagement/Valvesegment', false, obj, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -314,7 +314,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     });
   }
 
-  clearForm() {   
+  clearForm() {
     this.formData();
     this.editFlag = false;
     this.editObj = '';
