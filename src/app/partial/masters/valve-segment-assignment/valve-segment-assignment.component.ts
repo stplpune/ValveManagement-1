@@ -105,7 +105,6 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   getAllNetworkFilter() {
-    debugger
     if (!this.editFlag) {
       console.log("this.yojanaArr", this.yojanaArr);
       this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
