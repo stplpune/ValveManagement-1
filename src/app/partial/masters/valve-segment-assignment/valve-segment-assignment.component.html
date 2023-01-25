@@ -13,15 +13,18 @@
         <div class="row">
           <div class="col-3">
             <!-- <label class="form-label">Yojna</label> -->
-            <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId" placeholder="Select Yojna"
-              optionValueField="yojanaId" optionTextField="yojanaName" [disabled]="filterYojanaArr?.length == 1"
-              (select)="filterForm.controls['networkId'].setValue('');pageNumber = 1;getAllNetworkFilter();getAllValveTableData()" (remove)="clearfilter('yojana')">
+            <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId"
+              placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
+              [disabled]="filterYojanaArr?.length == 1"
+              (select)="filterForm.controls['networkId'].setValue('');pageNumber = 1;getAllNetworkFilter();getAllValveTableData()"
+              (remove)="clearfilter('yojana')">
             </ngx-select>
           </div>
           <div class="col-3">
             <!-- <label class="form-label">Network</label> -->
-            <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId" placeholder="Select Network"
-              optionValueField="networkId" optionTextField="networkName" [disabled]="!this.filterForm.value.yojanaId || FilterNetworkArr?.length == 1"
+            <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId"
+              placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
+              [disabled]="!this.filterForm.value.yojanaId || FilterNetworkArr?.length == 1"
               (select)="getAllValveTableData();" (remove)="clearfilter('network')">
             </ngx-select>
           </div>
@@ -139,7 +142,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Valve</label>            
+              <label class="form-label">Valve</label>
               <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
                 (remove)="clearFormData('valve')" placeholder="Select valve" optionValueField="valveId"
                 (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')" optionTextField="valveName"
@@ -152,12 +155,13 @@
               <!-- <div> -->
               <label class="form-label">Segment</label>
               <!-- </div> -->
-              <div class="d-flex  gap-2">              
+              <div class="d-flex  gap-2">
                 <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
                   [disabled]="!this.valveRegForm.value.networkId || sgmentDropdownArray?.length <= 1">
                 </ngx-select>
-                <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId" (click)="addSegment()">Add</button>
+                <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId"
+                  (click)="addSegment()">Add</button>
               </div>
             </div>
             <div class="mb-0">
