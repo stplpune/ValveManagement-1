@@ -31,6 +31,7 @@ export class NetworkMasterComponent implements OnInit {
   allYojanaFilterArray: any;
   filterFlag: any = 'filter';
   yojana = new FormControl('');
+  editData!:any;
   @ViewChild('closebutton') closebutton: any;
   get f() {
     return this.networkRegForm.controls;
@@ -53,7 +54,7 @@ export class NetworkMasterComponent implements OnInit {
 
   controlForm() {
     this.networkRegForm = this.fb.group({
-      id: [0],
+      // id: [0],
       networkName: ['', Validators.required],
       yojanaId: [this.allYojanaArray?.length == 1 ? this.allYojanaArray[0].yojanaId : '', Validators.required]
     })
@@ -111,6 +112,7 @@ export class NetworkMasterComponent implements OnInit {
       return;
     } else {
       let formData = this.networkRegForm.value;
+      if(this.editFlag) {formData.id = this.editData.id};
       formData.createdBy = this.localStorage.userId();
       formData.timestamp = new Date();
       this.spinner.show();
@@ -140,6 +142,7 @@ export class NetworkMasterComponent implements OnInit {
   }
 
   onEdit(data?: any) {
+    this.editData = data;
     this.editFlag = true;
     this.highlitedRow = data.id;
     this.networkRegForm.patchValue({
