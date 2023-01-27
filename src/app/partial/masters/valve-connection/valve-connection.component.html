@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
-                        placeholder="Select Valve Connection" optionValueField="valveId" optionTextField="valveName"
+                        placeholder="Select Valve Connection" optionValueField="valveDetailsId" optionTextField="valveName"
                         [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter.length <=1" (remove)="clearSearch('valveMaster');filterData()"
                         (select)="filterData()">
                     </ngx-select>
@@ -164,15 +164,15 @@
                             <div class="mb-3">
                                 <label class="form-label">Valve Name <span class="text-danger">*</span></label>
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
-                                    formControlName="valveMasterId" placeholder="Select Valve"
-                                    optionValueField="valveId" optionTextField="valveName"
-                                
-                                    [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }"
-                                    (remove)="clearDropdown('valveMasterId')">
+                                    formControlName="valveDetailsId" placeholder="Select Valve"
+                                    optionValueField="valveDetailsId" optionTextField="valveName"
+                                  
+                                    [ngClass]="{ 'is-invalid': submitted && f.valveDetailsId.errors }"
+                                    (remove)="clearDropdown('valveDetailsId')">
                                 </ngx-select>
                                 <!-- [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1" -->
-                                <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
-                                    <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">
+                                <div *ngIf="submitted && f.valveDetailsId.errors" class="invalid-feedback">
+                                    <div class="text-danger" *ngIf="f.valveDetailsId.errors?.required">
                                         Valve Is Required</div>
                                 </div>
                             </div>
