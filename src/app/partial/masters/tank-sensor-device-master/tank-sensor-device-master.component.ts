@@ -72,7 +72,7 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       deviceName: ['',Validators.required],
       simId: ['',Validators.required],
       deviceDescription: ['',Validators.required],
-      tankId: [this.getAllTankArray.length == 1 ? this.getAllTankArray[0].tankId : '',Validators.required],
+      tankId: [(this.getAllTankArray.length == 1 && this.getAllLocalStorageData.userId != 1)? this.getAllTankArray[0].tankId : '',Validators.required],
       yojanaId: [this.getAllLocalStorageData.yojanaId || '',Validators.required],
       networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '',Validators.required]
     })
