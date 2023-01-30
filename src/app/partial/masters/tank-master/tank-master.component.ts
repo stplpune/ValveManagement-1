@@ -31,7 +31,6 @@ export class TankMasterComponent implements OnInit {
   submitted: boolean = false;
   filterYojanaArray: any
   filterNetworkArray: any
-
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
 
@@ -57,7 +56,7 @@ export class TankMasterComponent implements OnInit {
     this.getYojana();
     this.searchAddress();
   }
-
+//#region ------------------------------------------------Forms Methods Starts----------------------------------------------------------
   geFormData() {
     this.tankForm = this.fb.group({
       "id": [0],
@@ -94,26 +93,6 @@ export class TankMasterComponent implements OnInit {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
     }
     this.getTableData();
-  }
-
-  getTableData() {
-    this.spinner.show();
-    let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (this.getData.yojanaId || formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
-    this.service.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == '200') {
-          this.spinner.hide();
-          this.responseArray = res.responseData.responseData1;
-          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
-        } else {
-          this.spinner.hide();
-          this.responseArray = [];
-        }
-      }), error: (error: any) => {
-        this.error.handelError(error.status);
-      }
-    })
   }
 
   getYojana() {
@@ -169,6 +148,29 @@ export class TankMasterComponent implements OnInit {
         }
       })
      }
+  }
+
+//#endregion------------------------------------------------Forms Methods Ends-----------------------------------------------------------
+
+//#region --------------------------------------------------Table Starts-------------------------------------------------------------------
+  getTableData() {
+    this.spinner.show();
+    let formData = this.filterFrm.value;
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (this.getData.yojanaId || formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == '200') {
+          this.spinner.hide();
+          this.responseArray = res.responseData.responseData1;
+          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+        } else {
+          this.spinner.hide();
+          this.responseArray = [];
+        }
+      }), error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
   }
 
   onSubmit() {
@@ -256,6 +258,7 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
+  //#endregion---------------------------------------------Table Ends-----------------------------------------------------------------------
 
   //#region -----------------------------------------Search Address Method Starts Here----------------------------------------------------------
   geocoder: any;
