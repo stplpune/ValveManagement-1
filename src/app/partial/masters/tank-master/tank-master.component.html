@@ -131,7 +131,6 @@
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                     [disabled]="!this.tankForm.value.yojanaId || networkArray?.length < 2"
-                    (remove)="clearFormDataDropDown('formnetwork')"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">

@@ -88,7 +88,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearfilter(flag: any) {
-    if (flag == 'yojana') {
+    if (flag == 'yojana' ) {
       this.filterFrm.controls['networkId'].setValue(0);
     } else if (flag == 'network') {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
@@ -115,7 +115,6 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
-
 
   getYojana() {
     this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
@@ -228,6 +227,7 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     this.submitted = false;
     this.editFlag = false;
+    console.log(this.networkArray.networkId);
     this.geFormData();
   }
 
