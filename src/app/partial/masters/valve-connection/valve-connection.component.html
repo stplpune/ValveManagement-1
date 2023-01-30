@@ -166,7 +166,7 @@
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveDetailsId" placeholder="Select Valve"
                                     optionValueField="valveDetailsId" optionTextField="valveName"
-                                  
+                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveDetailsId.errors }"
                                     (remove)="clearDropdown('valveDetailsId')">
                                 </ngx-select>
