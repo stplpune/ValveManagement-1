@@ -130,7 +130,7 @@
                   <label class="form-label">Network <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                     placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-                    [disabled]="!this.tankForm.value.yojanaId || networkArray?.length == 0"
+                    [disabled]="!this.tankForm.value.yojanaId || networkArray?.length < 2"
                     (remove)="clearFormDataDropDown('formnetwork')"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>
