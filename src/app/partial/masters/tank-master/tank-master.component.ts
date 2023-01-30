@@ -50,14 +50,14 @@ export class TankMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData = this.local.getLoggedInLocalstorageData();
-    this.geFormData();
+    this.getFormData();
     this.getFilterFormData();
     this.getTableData();
     this.getYojana();
     this.searchAddress();
   }
 //#region ------------------------------------------------Forms Methods Starts----------------------------------------------------------
-  geFormData() {
+  getFormData() {
     this.tankForm = this.fb.group({
       "id": [0],
       "tankName": ['', [Validators.required, Validators.maxLength(100)]],
@@ -229,7 +229,7 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     this.submitted = false;
     this.editFlag = false;
-    this.geFormData();
+    this.getFormData();
   }
 
   getDeleteConfirm(getData?: any) {
