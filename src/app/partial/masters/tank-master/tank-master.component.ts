@@ -227,7 +227,6 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     this.submitted = false;
     this.editFlag = false;
-    console.log(this.networkArray.networkId);
     this.geFormData();
   }
 
