@@ -252,7 +252,7 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   onClickEdit(Obj: any) {
-    console.log("editObj",Obj);
+    // console.log("editObj",Obj);
     this.editObj = Obj;
     this.connectionForm.clear()
     this.highlitedRow = this.editObj.id;
@@ -295,7 +295,7 @@ export class ValveConnectionComponent implements OnInit {
   
       let formData = this.valveConnectionForm.value;
       formData.connectiondetails.map((ele:any,index:number)=>  ele.connectionNo= index+1);//code for connection no ++
-      console.log(formData);
+      // console.log(formData);
       
       formData.totalConnection = parseInt(formData.totalConnection);
       // formData.connectionNo = parseInt(formData.connectionNo);

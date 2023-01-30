@@ -28,7 +28,7 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
                         placeholder="Select Valve Connection" optionValueField="valveDetailsId" optionTextField="valveName"
-                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter.length <=1" (remove)="clearSearch('valveMaster');filterData()"
+                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter?.length <=1" (remove)="clearSearch('valveMaster');filterData()"
                         (select)="filterData()">
                     </ngx-select>
 
@@ -166,7 +166,7 @@
                                 <ngx-select [allowClear]="true" [items]="valveConnectionArray"
                                     formControlName="valveDetailsId" placeholder="Select Valve"
                                     optionValueField="valveDetailsId" optionTextField="valveName"
-                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1"
+                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray?.length==1"
                                     [ngClass]="{ 'is-invalid': submitted && f.valveDetailsId.errors }"
                                     (remove)="clearDropdown('valveDetailsId')">
                                 </ngx-select>
