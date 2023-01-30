@@ -283,15 +283,15 @@ export class ValveConnectionComponent implements OnInit {
 
   onClickSubmit() {
     this.submitted = true;
-    // if (!this.valveConnectionForm.valid) {
-    //   if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
-    //     return;
-    //   }
-    //   return;
-    // }
-    // else {
+    if (!this.valveConnectionForm.valid) {
+      if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
+        return;
+      }
+      return;
+    }
+    else {
 
-      //this.spinner.show();
+    this.spinner.show();
   
       let formData = this.valveConnectionForm.value;
       formData.connectiondetails.map((ele:any,index:number)=>  ele.connectionNo= index+1);//code for connection no ++
@@ -319,7 +319,7 @@ export class ValveConnectionComponent implements OnInit {
           this.errorSerivce.handelError(error.status);
         }
       })
-    // }
+    }
   }
 
   onClickPagintion(pagNo: number) {
