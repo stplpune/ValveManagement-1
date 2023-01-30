@@ -105,8 +105,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   getAllNetworkFilter() {
-    if (!this.editFlag) {
-      console.log("this.yojanaArr", this.yojanaArr);
+    if (!this.editFlag) {    
       this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + this.filterForm.value.yojanaId, false, false, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: ((res: any) => {
@@ -270,8 +269,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     }
   }
 
-  onEdit(obj: any) {
-    console.log("this.editObj ", obj);
+  onEdit(obj: any) {   
     this.editFlag = true
     this.editObj = obj;
     this.getAllYojana();
@@ -293,10 +291,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     let obj = {
       id: this.valveId,
       deletedBy: this.localStorage.userId(),
-    };
-
-    console.log("hello delete", obj);
-
+    };  
     this.apiService.setHttp('DELETE', 'ValveManagement/Valvesegment', false, obj, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {

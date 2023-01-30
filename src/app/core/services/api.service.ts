@@ -8,7 +8,14 @@ import { TitleCasePipe } from '@angular/common';
 export class ApiService {
   getBaseurl(url: string) {
     switch (url) {
-      case 'valvemgt': return 'http://valvemgt.erpguru.in/'; break;
+
+      // Live Server
+
+      // case 'valvemgt': return 'http://valvemgt.erpguru.in/'; break;
+
+      // Demo Server
+
+      case 'valvemgt': return 'http://demovalvemgtapi.eanifarm.com/'; break;
       default: return ''; break;
     }
   }
