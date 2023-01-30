@@ -21,8 +21,8 @@ export class ValveConnectionComponent implements OnInit {
   pagesize: number = 10;
   totalRows!: number;
   highlitedRow: any;
-  valveConnectionArray = new Array();
-  valveConnectionArrayFilter = new Array()
+  valveConnectionArray:any;
+  valveConnectionArrayFilter:any;
   editFlag: boolean = false;
   getLoginData: any;
   yoganaArray:any;
@@ -59,7 +59,7 @@ export class ValveConnectionComponent implements OnInit {
   defaultValveConnectionForm() {
     this.valveConnectionForm = this.fb.group({
       "id": [0],
-      "valveMasterId": ['', [Validators.required]],
+      "valveDetailsId": ['', [Validators.required]],
       "personName": ['', [Validators.required]],
       "mobileNo": ['', [Validators.required, Validators.pattern('[6-9]\\d{9}')]],
       "remark": [''],
@@ -134,7 +134,7 @@ export class ValveConnectionComponent implements OnInit {
     let obj = 'YojanaId=' + (this.searchForm.value.yojana ? this.searchForm.value.yojana : this.getLoginData.yojanaId)
       + '&NetworkId=' + (this.searchForm.value.network || 0)
       + '&UserId=' + this.localStorage.userId() + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize
-      + '&ValveMasterId=' + (this.searchForm.value.valveMaster ? this.searchForm.value.valveMaster : 0);
+      + '&valveDetailsId=' + (this.searchForm.value.valveMaster ? this.searchForm.value.valveMaster : 0);
 
     this.apiService.setHttp('get', 'ValveConnection/GetAllRemark?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -207,10 +207,10 @@ export class ValveConnectionComponent implements OnInit {
         if (res.statusCode == '200') {
           this.filterFlag == 'filter' ? this.valveConnectionArrayFilter = res.responseData : this.valveConnectionArray = res.responseData;
 
-          this.valveConnectionArrayFilter?.length == 1 ? this.searchForm.controls['valveMaster'].setValue(this.valveConnectionArrayFilter[0].valveId) : '';
-          this.valveConnectionArray?.length == 1 ? this.valveConnectionForm.controls['valveMasterId'].setValue(this.valveConnectionArray[0].valveId) : '';
+          this.valveConnectionArrayFilter?.length == 1 ? this.searchForm.controls['valveMaster'].setValue(this.valveConnectionArrayFilter[0].valveDetailsId) : '';
+          this.valveConnectionArray?.length == 1 ? this.valveConnectionForm.controls['valveDetailsId'].setValue(this.valveConnectionArray[0].valveDetailsId) : '';
 
-          this.editFlag ? this.valveConnectionForm.controls['valveMasterId'].setValue(this.editObj.valveMasterId) : '';
+          this.editFlag ? this.valveConnectionForm.controls['valveDetailsId'].setValue(this.editObj.valveDetailsId) : '';
         }
         else {
           this.filterFlag == 'filter' ? this.valveConnectionArrayFilter = [] : this.valveConnectionArray = [];
@@ -252,13 +252,14 @@ export class ValveConnectionComponent implements OnInit {
   }
 
   onClickEdit(Obj: any) {
+    console.log("editObj",Obj);
     this.editObj = Obj;
     this.connectionForm.clear()
     this.highlitedRow = this.editObj.id;
     this.editFlag = true;
     this.valveConnectionForm.patchValue({
       "id": this.editObj.id,
-      "valveMasterId": this.editObj.valveMasterId,
+      "valveDetailsId": this.editObj.valveDetailsId,
       "personName": this.editObj.personName,
       "mobileNo": this.editObj.mobileNo,
       "remark": this.editObj.remark,
@@ -266,7 +267,7 @@ export class ValveConnectionComponent implements OnInit {
       "yojanaId": this.editObj.yojanaId,
       "networkId": this.editObj.networkId,
       "consumerUserId": this.editObj.consumerUserId,
-
+      "valveName": this.editObj.valveName
     });
     this.editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({
@@ -297,7 +298,7 @@ export class ValveConnectionComponent implements OnInit {
       console.log(formData);
       
       formData.totalConnection = parseInt(formData.totalConnection);
-      formData.connectionNo = parseInt(formData.connectionNo);
+      // formData.connectionNo = parseInt(formData.connectionNo);
       this.apiService.setHttp(this.editFlag ? 'put' : 'post', 'ValveConnection', false, formData, false, 'valvemgt');
       this.apiService.getHttp().subscribe({
         next: ((res: any) => {
@@ -337,13 +338,13 @@ export class ValveConnectionComponent implements OnInit {
   clearDropdown(flag: any) {
     if (flag == 'yojanaId') {
       this.valveConnectionForm.controls['networkId'].setValue('');
-      this.valveConnectionForm.controls['valveMasterId'].setValue('')
+      this.valveConnectionForm.controls['valveDetailsId'].setValue('')
     }
     else if (flag == 'networkId') {
-      this.valveConnectionForm.controls['valveMasterId'].setValue('')
+      this.valveConnectionForm.controls['valveDetailsId'].setValue('')
     }
-    else if (flag == 'valveMasterId') {
-      this.valveConnectionForm.controls['valveMasterId'].setValue('');
+    else if (flag == 'valveDetailsId') {
+      this.valveConnectionForm.controls['valveDetailsId'].setValue('');
     }
     // this.bindValveConnectionsTable();
   }
