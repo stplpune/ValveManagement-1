@@ -31,7 +31,6 @@ export class TankMasterComponent implements OnInit {
   submitted: boolean = false;
   filterYojanaArray: any
   filterNetworkArray: any
-
   addressZoomSize = 6;
   @ViewChild('closebutton') closebutton: any;
 
@@ -51,20 +50,20 @@ export class TankMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData = this.local.getLoggedInLocalstorageData();
-    this.geFormData();
+    this.getFormData();
     this.getFilterFormData();
     this.getTableData();
     this.getYojana();
     this.searchAddress();
   }
-
-  geFormData() {
+//#region ------------------------------------------------Forms Methods Starts----------------------------------------------------------
+  getFormData() {
     this.tankForm = this.fb.group({
       "id": [0],
       "tankName": ['', [Validators.required, Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
-      "networkId": ['', Validators.required],
+      "networkId": [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', Validators.required],
       "latitude": [''],
       "longitude": [''],
     })
@@ -88,34 +87,13 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearfilter(flag: any) {
-    if (flag == 'yojana') {
+    if (flag == 'yojana' ) {
       this.filterFrm.controls['networkId'].setValue(0);
     } else if (flag == 'network') {
       this.filterFrm.controls['yojanaId'].setValue(this.filterFrm.value.yojanaId);
     }
     this.getTableData();
   }
-
-  getTableData() {
-    this.spinner.show();
-    let formData = this.filterFrm.value;
-    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (this.getData.yojanaId || formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
-    this.service.getHttp().subscribe({
-      next: ((res: any) => {
-        if (res.statusCode == '200') {
-          this.spinner.hide();
-          this.responseArray = res.responseData.responseData1;
-          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
-        } else {
-          this.spinner.hide();
-          this.responseArray = [];
-        }
-      }), error: (error: any) => {
-        this.error.handelError(error.status);
-      }
-    })
-  }
-
 
   getYojana() {
     this.service.setHttp('get', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getData.yojanaId, false, false, false, 'valvemgt');
@@ -170,6 +148,29 @@ export class TankMasterComponent implements OnInit {
         }
       })
      }
+  }
+
+//#endregion------------------------------------------------Forms Methods Ends-----------------------------------------------------------
+
+//#region --------------------------------------------------Table Starts-------------------------------------------------------------------
+  getTableData() {
+    this.spinner.show();
+    let formData = this.filterFrm.value;
+    this.service.setHttp('get', 'DeviceInfo/GetAllTankInformation?UserId=' + this.getData.userId + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&YojanaId=' + (this.getData.yojanaId || formData.yojanaId || 0) + '&NetworkId=' + (formData.networkId || 0), false, false, false, 'valvemgt');
+    this.service.getHttp().subscribe({
+      next: ((res: any) => {
+        if (res.statusCode == '200') {
+          this.spinner.hide();
+          this.responseArray = res.responseData.responseData1;
+          this.totalRows = res.responseData.responseData2.totalPages * this.pagesize;
+        } else {
+          this.spinner.hide();
+          this.responseArray = [];
+        }
+      }), error: (error: any) => {
+        this.error.handelError(error.status);
+      }
+    })
   }
 
   onSubmit() {
@@ -228,7 +229,7 @@ export class TankMasterComponent implements OnInit {
   clearForm(formDirective?: any) {
     this.submitted = false;
     this.editFlag = false;
-    this.geFormData();
+    this.getFormData();
   }
 
   getDeleteConfirm(getData?: any) {
@@ -257,6 +258,7 @@ export class TankMasterComponent implements OnInit {
       }
     })
   }
+  //#endregion---------------------------------------------Table Ends-----------------------------------------------------------------------
 
   //#region -----------------------------------------Search Address Method Starts Here----------------------------------------------------------
   geocoder: any;

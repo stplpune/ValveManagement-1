@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
   yoganaIdArray: any;
   networkIdArray: any;
   DeviceCurrentSensorArray:any;
-  tankFilterDrop = new FormControl('');
+  tankFilterDrop = new FormControl(1);
   chartObj:any;
   tankDeviceHourlyArray:any;
 
