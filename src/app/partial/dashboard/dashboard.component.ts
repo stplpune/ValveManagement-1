@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
   tankFilterDrop = new FormControl(1);
   chartObj:any;
   tankDeviceHourlyArray:any;
+  dateFilter = new FormControl('');
 
   constructor(
     public commonService: CommonService,
@@ -60,6 +61,7 @@ export class DashboardComponent implements OnInit {
     } else if (flag == 'network') {
     } 
     this.tankFilterDrop.setValue('');
+    this.dateFilter.setValue('');
     this.getDeviceCurrentSensorValue();
     // this.editPatchShape.setMap(null);
     this.editPatchShape = undefined
@@ -135,9 +137,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  filterTankData(obj:any){ // percentage   tankName
+  filterTankData(obj:any){ 
     this.waterTankChartData(obj[0]?.data);
-    this.getTankDeviceHourlyValue(obj[0]?.data);
+    this.getTankDeviceHourlyValue();
   }
 
   waterTankChartData(data?: any) {
@@ -190,10 +192,8 @@ export class DashboardComponent implements OnInit {
     series2.columns.template.strokeWidth = 2;
   }
 
-  getTankDeviceHourlyValue(objData?:any) {
-    console.log('aaa',objData);
-    
-    let obj = objData?.deviceId + '&DisplayDate=' + '2023-01-23'
+  getTankDeviceHourlyValue() {
+    let obj:any = this.chartObj.deviceId  + '&DisplayDate=' + (this.dateFilter.value || this.chartObj.lastStatusDate?.split('.')?.join('-'))
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValue?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -210,7 +210,6 @@ export class DashboardComponent implements OnInit {
   }
 
   graphLineChart(){
-    console.log(this.tankDeviceHourlyArray);
     am4core.useTheme(am4themes_animated);
 // Themes end
 

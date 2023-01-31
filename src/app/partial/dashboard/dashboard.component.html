@@ -8,14 +8,14 @@
             <form [formGroup]="filterForm">
                 <div class="row g-2">
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();tankFilterDrop.setValue('');getDeviceCurrentSensorValue();getNetwork()"
+                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue();getNetwork()"
                             [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId"
-                            placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');getDeviceCurrentSensorValue()" 
+                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
+                            placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue()" 
                             [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
@@ -88,7 +88,7 @@
                 <div class="card dashboardChart">
                     <div class="p-2 offset-6">     
                         <ngx-select [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
-                        [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" 
+                        [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" (select)="dateFilter.setValue('')"
                         optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
                     </ngx-select>
                 </div>
@@ -127,6 +127,11 @@
     </div>
 </div>
 
-<div class="chartdiv card">
-
+<div  class="card">
+        <div class="p-2 offset-8">     
+          <input type="date" placeholder="select Date" (change)="getTankDeviceHourlyValue()" class="form-control" [formControl]="dateFilter">
+    </div>
+<div class="chartdiv">
+    dateFilter
+</div>
 </div>
