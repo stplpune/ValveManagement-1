@@ -196,7 +196,7 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === "200") {
           this.tankDeviceHourlyArray = res.responseData;
-          this.asd();
+          this.graphLineChart();
         } else {
           this.tankDeviceHourlyArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
@@ -206,10 +206,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  asd(){
-
+  graphLineChart(){
     console.log(this.tankDeviceHourlyArray);
-
     am4core.useTheme(am4themes_animated);
 // Themes end
 
@@ -225,7 +223,7 @@ let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
 categoryAxis.dataFields.category = "hourValue";
 categoryAxis.title.text = "Time";
 categoryAxis.renderer.grid.template.location = 0;
-categoryAxis.renderer.minGridDistance = 20;
+categoryAxis.renderer.minGridDistance = 45;
 
 categoryAxis.startLocation = 0.5;
 categoryAxis.endLocation = 0.5;
