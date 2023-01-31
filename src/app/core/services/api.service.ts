@@ -11,11 +11,11 @@ export class ApiService {
 
       // Live Server
 
-      // case 'valvemgt': return 'http://valvemgt.erpguru.in/'; break;
+      case 'valvemgt': return 'http://valvemgt.erpguru.in/'; break;
 
       // Demo Server
 
-      case 'valvemgt': return 'http://demovalvemgtapi.eanifarm.com/'; break;
+      // case 'valvemgt': return 'http://demovalvemgtapi.eanifarm.com/'; break;
       default: return ''; break;
     }
   }
