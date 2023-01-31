@@ -137,6 +137,7 @@ export class DashboardComponent implements OnInit {
 
   filterTankData(obj:any){ // percentage   tankName
     this.waterTankChartData(obj[0]?.data);
+    this.getTankDeviceHourlyValue(obj[0]?.data);
   }
 
   waterTankChartData(data?: any) {
@@ -189,8 +190,10 @@ export class DashboardComponent implements OnInit {
     series2.columns.template.strokeWidth = 2;
   }
 
-  getTankDeviceHourlyValue() {
-    let obj = 'cbrA001' + '&DisplayDate=' + '2023-01-23'
+  getTankDeviceHourlyValue(objData?:any) {
+    console.log('aaa',objData);
+    
+    let obj = objData?.deviceId + '&DisplayDate=' + '2023-01-23'
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValue?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {

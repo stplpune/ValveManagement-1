@@ -87,7 +87,7 @@
           
                 <div class="card dashboardChart">
                     <div class="p-2 offset-6">     
-                        <ngx-select [allowClear]="true" [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
+                        <ngx-select [items]="DeviceCurrentSensorArray" (selectionChanges)="filterTankData($event)"
                         [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId" 
                         optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
                     </ngx-select>
