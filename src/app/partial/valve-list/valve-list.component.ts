@@ -28,7 +28,7 @@ export class ValveListComponent implements OnInit {
   headingText = 'Add Valve';
   valveStatusArray: any;
   pageNumber: number = 1;
-  pagesize: number = 10000000000;
+  pagesize: number = 10;
   totalRows: any;
   districtArray: any;
   yojanaArray: any;
@@ -122,7 +122,6 @@ export class ValveListComponent implements OnInit {
 
   getAllNetwork(){
     let id = this.filterFlag == 'filter' ? this.searchForm.value.yojana : this.valveListForm.value.yojana;
-    console.log('id',id)
     this.apiService.setHttp('get', 'api/MasterDropdown/GetAllNetworkbyUserId?UserId=' + this.getAllLocalStorageData.userId + '&YojanaId=' + (id || this.getAllLocalStorageData.yojanaId), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
