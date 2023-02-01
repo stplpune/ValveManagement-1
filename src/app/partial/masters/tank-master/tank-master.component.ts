@@ -50,7 +50,6 @@ export class TankMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData = this.local.getLoggedInLocalstorageData();
-    console.log( this.getData);
     this.getFormData();
     this.getFilterFormData();
     this.getTableData();
