@@ -50,6 +50,7 @@ export class TankMasterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData = this.local.getLoggedInLocalstorageData();
+    console.log( this.getData);
     this.getFormData();
     this.getFilterFormData();
     this.getTableData();
@@ -63,7 +64,7 @@ export class TankMasterComponent implements OnInit {
       "tankName": ['', [Validators.required, Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
-      "networkId": [this.networkArray?.length == 1 && this.getData.userId > 1 ? this.networkArray[0].networkId : '', Validators.required],
+      "networkId": [this.networkArray?.length == 1 && this.getData.userId == 1 ? this.networkArray[0].networkId : '', Validators.required],
       "latitude": [''],
       "longitude": [''],
     })
