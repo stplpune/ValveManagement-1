@@ -9,7 +9,7 @@ import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.co
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { TitleCasePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AgmDrawingModule } from '@agm/drawing';
 import { AgmCoreModule } from '@agm/core';
@@ -43,7 +43,7 @@ import { NgxSelectModule } from 'ngx-select-ex';
     }),
     AgmDrawingModule
   ],
-  providers: [TitleCasePipe],
+  providers: [DatePipe,TitleCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
