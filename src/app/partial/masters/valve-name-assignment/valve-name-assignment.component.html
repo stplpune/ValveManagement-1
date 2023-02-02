@@ -117,15 +117,6 @@
               </div>
             </div>
             <div class="mb-3">
-                <ngx-select [allowClear]="true" [items]="ValveNameListArray"
-                 optionValueField="valveDetailsId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
-                optionTextField="valveName" placeholder="Select Valve Id" formControlName="valveId"
-                [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
-            </ngx-select>
-            <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve Id is Required
-            </div>
-            </div>
-            <div class="mb-3">
                 <ngx-select [allowClear]="true" [items]="masterValveListArray"
                  optionValueField="valveMasterId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
                 optionTextField="valveId" placeholder="Select Valve Name" formControlName="valveNameId"
@@ -134,6 +125,16 @@
             <div *ngIf="submited && f.valveNameId.errors" class="invalid-feedback"> Valve Name is Required
             </div>
             </div>
+            <div class="mb-3">
+                <ngx-select [allowClear]="true" [items]="ValveNameListArray"
+                 optionValueField="valveDetailsId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
+                optionTextField="valveName" placeholder="Select Valve Id" formControlName="valveId"
+                [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
+            </ngx-select>
+            <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve Id is Required
+            </div>
+            </div>
+           
           </div>
           <div class="modal-footer px-0 pb-0">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">

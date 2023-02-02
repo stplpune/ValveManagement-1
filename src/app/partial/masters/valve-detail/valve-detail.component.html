@@ -48,7 +48,7 @@
       <thead>
         <tr>
           <th>Sr. No.</th>
-          <th>Valve Id</th>
+          <!-- <th>Valve Id</th> -->
           <th>Valve Name</th>
           <th>No. Of Customer</th>
           <th>No. Of Connection</th>
@@ -62,7 +62,7 @@
                       currentPage: pageNumber, totalItems:totalRows}; let i = index "
           [class.active]="valveStatus.id == HighlightRow">
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
-          <td>{{valveStatus?.valveId ? valveStatus?.valveId : '-'}}</td>
+          <!-- <td>{{valveStatus?.valveId ? valveStatus?.valveId : '-'}}</td> -->
           <td>{{valveStatus?.valveName ? valveStatus?.valveName : '-'}}</td>
           <td>{{valveStatus?.noOfCustomer ? valveStatus?.noOfCustomer : '-'}}</td>
           <td>{{valveStatus?.noOfConnection ? valveStatus?.noOfConnection : '-'}}</td>

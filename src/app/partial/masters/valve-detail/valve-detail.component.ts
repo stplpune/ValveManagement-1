@@ -82,7 +82,7 @@ export class ValveDetailComponent implements OnInit {
   defaultForm() {
     this.valveListForm = this.fb.group({
       Id: [0],
-      valveName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
+      valveName: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
       pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9.]*$')],],
       address: ['', [Validators.required],],
       valvelist: ['', [Validators.required],],
