@@ -35,6 +35,8 @@ export class ValveConnectionComponent implements OnInit {
   data: any;
   submitted: boolean = false;
   editChangeFlag:any;  // note 1 is Edit & 0 is any
+  isHaveTapArray = [{ id: 1, name: 'Yes' }, { id: 0, name: 'No' }];
+  isHaveMotarArray = [{ id: 1, name: 'Yes' }, { id: 0, name: 'No' }];
 
   constructor(private fb: FormBuilder,
     private localStorage: LocalstorageService,
@@ -73,9 +75,10 @@ export class ValveConnectionComponent implements OnInit {
           "pipeDiameter": ['', [Validators.required]],
           "connectionNo": ['', ]
         })
-      ]
+      ]),
+      "isHaveTap": [1],
+      "isHaveMotar": [0],
       // , [Validators.required]
-      )
     })
   }
 
@@ -267,7 +270,9 @@ export class ValveConnectionComponent implements OnInit {
       "yojanaId": this.editObj.yojanaId,
       "networkId": this.editObj.networkId,
       "consumerUserId": this.editObj.consumerUserId,
-      "valveName": this.editObj.valveName
+      "valveName": this.editObj.valveName,
+      "isHaveTap": this.editObj.isHaveTap,
+      "isHaveMotar": this.editObj.isHaveMotar,
     });
     this.editObj.connectiondetails?.map((element: any) => {
       let arrayData = this.fb.group({

@@ -204,6 +204,41 @@
                                 </div>
                             </div>
 
+
+                            <div class="row mb-2 gx-1">
+                                <div class="col-sm-6">
+                                <label class="form-label">is Have Tap</label>
+                                <div class="d-block">
+                                    <div class="form-check form-check-inline"
+                                        *ngFor="let haveTap of isHaveTapArray; let i=index">
+                                        <input class="form-check-input" type="radio"
+                                            formControlName="isHaveTap" name="isHaveTap"
+                                            [checked]="haveTap?.id == editObj?.isHaveTap"
+                                            id="inlineRadio4{{i}}" [value]="haveTap?.id">
+                                        <label class="form-check-label"
+                                            for="inlineRadio4{{i}}">{{haveTap?.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">is Have Motar</label>
+                                <div class="d-block">
+                                    <div class="form-check form-check-inline"
+                                        *ngFor="let haveMotar of isHaveMotarArray; let i=index">
+                                        <input class="form-check-input" type="radio"
+                                            formControlName="isHaveMotar" name="isHaveMotar"
+                                            [checked]="haveMotar?.id == editObj?.isHaveMotar"
+                                            id="inlineRadio2{{i}}" [value]="haveMotar?.id">
+                                        <label class="form-check-label"
+                                            for="inlineRadio2{{i}}">{{haveMotar?.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+
                             <div class="mb-3">
                                 <label class="form-label">Number of Connection <span
                                         class="text-danger">*</span></label>
