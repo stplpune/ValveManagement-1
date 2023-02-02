@@ -150,7 +150,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == 200) {
           this.valveDropdownArray = res.responseData;
-          this.editObj ? (this.f['valveId'].setValue(this.editObj.valveId)) : '';
+          this.editObj ? (this.f['valveId'].setValue(this.editObj.valveDetailsId)) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -234,7 +234,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       formValue.valvesegmet = this.segmentShowArray;
       let obj = {
         "id": formValue.id,
-        "valveId": formValue.valveId || 0,
+        "valveId": 0,
+        "valveDetailsId" : formValue.valveId || 0,
         "segmentId": 0,
         "isDeleted": false,
         "createdBy": this.localStorage.userId(),
@@ -286,8 +287,6 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.valveId = id;
   }
   onDeleteValve() {
-
-
     let obj = {
       id: this.valveId,
       deletedBy: this.localStorage.userId(),
