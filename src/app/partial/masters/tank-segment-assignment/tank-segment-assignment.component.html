@@ -132,7 +132,7 @@
               <ngx-select [allowClear]="true" [items]="tankArr" formControlName="tankId" placeholder="Select Tank"
                 optionValueField="tankId" optionTextField="tankName" (remove)="onChangeDropdown('Tank');"
                 (click)="onLable('tank')" [ngClass]="{ 'is-invalid': submitted && f['tankId'].errors }"
-                [disabled]="!this.tankSegmentForm.value.networkId  || tankArr?.length <= 1">
+                [disabled]="!this.tankSegmentForm.value.networkId">
               </ngx-select>
               <div *ngIf="submitted && f['tankId'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f['tankId'].errors?.['required']">Tank is Required.</div>
@@ -147,7 +147,7 @@
                 <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
                   class="form-control" aria-label="Default select example"
-                  [disabled]="!tankSegmentForm.value.networkId || !tankSegmentForm.value.tankId || segmentArr.length <=1">
+                  [disabled]="!tankSegmentForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()"
                   [disabled]="!tankSegmentForm.value.segmentId ">Add</button>
