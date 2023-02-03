@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   yoganaIdArray: any;
   networkIdArray: any;
   DeviceCurrentSensorArray:any;
-  tankFilterDrop = new FormControl(1);
+  tankFilterDrop = new FormControl();
   chartObj:any;
   tankDeviceHourlyArray:any;
   dateFilter = new FormControl('');
@@ -50,14 +50,13 @@ export class DashboardComponent implements OnInit {
     this.getYogana();
     this.waterTankChartData();
     this.localStorage.userId() == 1 ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
-    this.getTankDeviceHourlyValue();
+    // this.getTankDeviceHourlyValue();
   }
 
   defaultFilterForm() {
     this.filterForm = this.fb.group({
       yojanaId: [''],
       networkId: [''],
-      searchText: ['']
     })
   }
 
@@ -108,7 +107,6 @@ export class DashboardComponent implements OnInit {
       })
   }
 
-
   getValveSummary() {
     this.spinner.show();
     let obj = this.localStorage.userId() + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
@@ -136,10 +134,13 @@ export class DashboardComponent implements OnInit {
           this.DeviceCurrentSensorArray = res.responseData;   
           
           //////////////////////////////////////////////
+          this.tankFilterDrop.setValue(res.responseData[0]?.tankId); 
           this.waterTankChartData(res.responseData[0]);
-          this.dateFilter.setValue(res.responseData[0]?.lastStatusDate?.split('.')?.join('-')) 
-          this.getTankDeviceHourlyValue();
+          // this.dateFilter.setValue(res.responseData[0]?.lastStatusDate?.split('.')?.join('-')) 
+          // this.getTankDeviceHourlyValue();
           /////////////////////////////////////////////
+
+          this.DeviceCurrentSensorArray?.length == 0 ? (this.tankDeviceHourlyArray = [],this.graphLineChart()) : '';
 
         } else {
           this.DeviceCurrentSensorArray = [];
@@ -151,9 +152,11 @@ export class DashboardComponent implements OnInit {
   }
 
   filterTankData(obj:any){ 
-    this.waterTankChartData(obj[0]?.data);
-    this.dateFilter.setValue(obj[0]?.data.lastStatusDate?.split('.')?.join('-')) 
-    this.getTankDeviceHourlyValue();
+    if(obj[0]?.data?.deviceId){
+      this.waterTankChartData(obj[0]?.data);
+      this.dateFilter.setValue(obj[0]?.data.lastStatusDate?.split('.')?.join('-')) 
+      this.getTankDeviceHourlyValue();  
+    }
   } 
 
   waterTankChartData(data?: any) {
@@ -207,8 +210,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getTankDeviceHourlyValue() {
-    let displyDate = this.chartObj.lastStatusDate ? this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') : (this.dateFilter.value || '2023-02-12')
-    let obj:any = this.chartObj.deviceId  + '&DisplayDate=' + displyDate + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+
+    let obj:any = this.chartObj?.deviceId  + '&DisplayDate=' + this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValueWithEvent?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
@@ -216,93 +219,75 @@ export class DashboardComponent implements OnInit {
           this.tankDeviceHourlyArray = res.responseData[0].tankSensorValues;
           this.valveEventHourlyArray = res.responseData[0].valveEvent;
           this.graphLineChart();
-
         } else {
           this.tankDeviceHourlyArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
       },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+      error: ((error: any) => { this.errorSerivce.handelError(error.status)})
     });
   }
 
-  graphLineChart(){
+  graphLineChart() {
     am4core.useTheme(am4themes_animated);
-// Themes end
+    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    chart.colors.step = 2;
 
-// Create chart instance
-let chart = am4core.create("chartdiv", am4charts.XYChart);
-chart.colors.step = 2;
+    chart.data = this.tankDeviceHourlyArray;  // Add data
 
-// Add data
-chart.data = this.tankDeviceHourlyArray
+    // Create axes
+    let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "hourValue";
+    categoryAxis.title.text = "Time";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 45;
 
-// Create axes
-let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "hourValue";
-categoryAxis.title.text = "Time";
-categoryAxis.renderer.grid.template.location = 0;
-categoryAxis.renderer.minGridDistance = 45;
+    categoryAxis.startLocation = 0.5;
+    categoryAxis.endLocation = 0.5;
 
-categoryAxis.startLocation = 0.5;
-categoryAxis.endLocation = 0.5;
+    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.title.text = "Percent";
+    valueAxis.calculateTotals = true;
+    valueAxis.min = 0;
+    valueAxis.max = 100;
+    valueAxis.strictMinMax = true;
+    valueAxis.renderer.labels.template.adapter.add("text", function (text) {
+      return text + "%";
+    });
 
+    let series: any = chart.series.push(new am4charts.LineSeries()); // Create series
 
-let  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis.title.text = "Percent";
-valueAxis.calculateTotals = true;
-valueAxis.min = 0;
-valueAxis.max = 100;
-valueAxis.strictMinMax = true;
-valueAxis.renderer.labels.template.adapter.add("text", function(text) {
-  return text + "%";
-});
+    series.dataFields.valueY = "percent";
+    series.dataFields.dateX = "totalPercent";
+    series.dataFields.categoryX = "hourValue";
+    series.name = "Percent";
+    series.strokeWidth = 3;
+    series.fillOpacity = 0.5;
 
+    var bullet = series.bullets.push(new am4charts.CircleBullet());
+    bullet.circle.radius = 6;
+    bullet.circle.fill = am4core.color("#fff");
+    bullet.circle.strokeWidth = 3;
 
+    series.tooltip.getFillFromObject = false;
+    series.tooltip.background.fill = am4core.color("#FFF");
 
+    series.tooltip.getStrokeFromObject = true;
+    series.tooltip.background.strokeWidth = 3;
 
-// Create series
-let series:any = chart.series.push(new am4charts.LineSeries());
+    series.fillOpacity = 0.85;
+    series.stacked = true;
 
-series.dataFields.valueY = "percent";
-series.dataFields.dateX = "totalPercent";
-series.dataFields.categoryX = "hourValue";
-series.name = "Percent";
-series.strokeWidth = 3;
-series.fillOpacity = 0.5;
+    // static
+    series.legendSettings.labelText = "Water Level:";
+    series.legendSettings.valueText = "{valueY.close}";
 
-var bullet = series.bullets.push(new am4charts.CircleBullet());
-bullet.circle.radius = 6;
-bullet.circle.fill = am4core.color("#fff");
-bullet.circle.strokeWidth = 3;
+    // hovering
+    series.legendSettings.itemLabelText = "Water:";
+    series.legendSettings.itemValueText = "{valueY}";
 
-// series.tooltipHTML = "<img src='https://www.amcharts.com/lib/3/images/car.png' style='vertical-align:bottom; margin-right: 10px; width:28px; height:21px;'><span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
-
-series.tooltip.getFillFromObject = false;
-series.tooltip.background.fill = am4core.color("#FFF");
-
-series.tooltip.getStrokeFromObject = true;
-series.tooltip.background.strokeWidth = 3;
-
-series.fillOpacity = 0.85;
-series.stacked = true;
-
-// static
-series.legendSettings.labelText = "Water Level:";
-series.legendSettings.valueText = "{valueY.close}";
-
-// hovering
-series.legendSettings.itemLabelText = "Water:";
-series.legendSettings.itemValueText = "{valueY}";
-
-
-// Add cursor
-chart.cursor = new am4charts.XYCursor();
-
-// add legend
-chart.legend = new am4charts.Legend();
-
-
+    chart.cursor = new am4charts.XYCursor(); // Add cursor
+    chart.legend = new am4charts.Legend(); // add legend
   }
 
   //..................................................... new Code StartHere ..................... ...............//
@@ -313,7 +298,6 @@ chart.legend = new am4charts.Legend();
   tank_ValveArray: any;
   getAllSegmentArray: any[] = [];
   map: any;
-
   markerArray: any;
 
   getValveSegmentList() { //All Segment 
