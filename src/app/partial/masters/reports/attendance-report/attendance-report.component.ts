@@ -7,6 +7,7 @@ import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 import { DatePipe } from '@angular/common';
+import { DateTimeAdapter } from 'ng-pick-datetime';
 
 @Component({
   selector: 'app-attendance-report',
@@ -33,7 +34,8 @@ export class AttendanceReportComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private localStorage: LocalstorageService,
     private datePipe: DatePipe,
-  ) {}
+    public dateTimeAdapter: DateTimeAdapter<any>,
+  ) { dateTimeAdapter.setLocale('en-IN'); }
 
   ngOnInit(): void {
     this.dateRange = [this.maxDate, this.maxDate];

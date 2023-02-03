@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DateTimeAdapter } from 'ng-pick-datetime';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -42,8 +41,7 @@ export class TankCalibrationComponent implements OnInit {
     private toastrService: ToastrService,
     public commonService: CommonService,
     public validation: ValidationService,
-    public dateTimeAdapter: DateTimeAdapter<any>,
-    ) { dateTimeAdapter.setLocale('en-IN'); }
+  ) { }
 
   ngOnInit(): void {
     this.localstorageData = this.localStorage.getLoggedInLocalstorageData();
