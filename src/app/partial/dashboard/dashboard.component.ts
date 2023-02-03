@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit {
   filterTankData(obj:any){ 
     if(obj[0]?.data?.deviceId){
       this.waterTankChartData(obj[0]?.data);
-      this.dateFilter.setValue(obj[0]?.data.lastStatusDate?.split('.')?.join('-')) 
+      this.dateFilter.setValue(new Date()) 
       this.getTankDeviceHourlyValue();  
     }
   } 
