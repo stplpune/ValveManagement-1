@@ -36,7 +36,7 @@ export class AttendanceReportComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dateRange = [this.subtractOneMontFromToDate(), this.maxDate];
+    this.dateRange = [this.maxDate, this.maxDate];
     this.defaultFilterForm();
     this.getYogana();
     this.getAttendenceReport();
@@ -49,14 +49,14 @@ export class AttendanceReportComponent implements OnInit {
     })
   }
 
-  subtractOneMontFromToDate(){
-    function subtractMonths(numOfMonths: number, date = new Date()) {
-      date.setMonth(date.getMonth() - numOfMonths);
-      return date;
-    }
-    const date = new Date();
-   return subtractMonths(1, date);
-  }
+  // subtractOneMontFromToDate(){
+  //   function subtractMonths(numOfMonths: number, date = new Date()) {
+  //     date.setMonth(date.getMonth() - numOfMonths);
+  //     return date;
+  //   }
+  //   const date = new Date();
+  //  return subtractMonths(1, date);
+  // }
 
   getYogana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
