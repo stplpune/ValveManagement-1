@@ -173,7 +173,7 @@ export class ValveDetailComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;
-          this.yoganaArrayFilter?.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
+          this.yoganaArrayFilter?.length == 1 && this.filterFlag == 'filter' ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
           this.yojanaArray?.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
 
         } else {
@@ -199,8 +199,9 @@ export class ValveDetailComponent implements OnInit {
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
           (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }), this.getAllValveData()) : '';
           this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
+          this.networkArray?.length == 1 && this.btnText != 'Update Changes' ?  this.getValve_TankList(1,this.searchForm.value.yojana, this.searchForm.value.network) : '';
         } else {
-          this.spinner.hide();
+          this.spinner.hide(); 
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)

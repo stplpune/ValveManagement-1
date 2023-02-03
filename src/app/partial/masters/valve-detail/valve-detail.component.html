@@ -253,7 +253,7 @@
                 <label class="form-label">Description <span class="text-danger">*</span></label>
                 <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                  (keypress)="validation.noSpacesAtStart($event)"></textarea>
+                  (keypress)="validation.noFirstSpaceAllow($event)"></textarea>
                 <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                   <span class="text-danger" *ngIf="f.description.errors?.required">
                     Job Description is required.</span>
