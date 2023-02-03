@@ -8,14 +8,14 @@
             <form [formGroup]="filterForm">
                 <div class="row g-2">
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue();getNetwork()"
+                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue();getNetwork();getDeviceCurrentSensorValue()"
                             [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
                         <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
-                            placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue()" 
+                            placeholder="Select Network" (select)="editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getDeviceCurrentSensorValue();getDeviceCurrentSensorValue()" 
                             [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
@@ -128,13 +128,12 @@
 </div>
 
 <div  class="card">
-        <div class="p-2 offset-8">     
-          <input type="date" placeholder="select Date" (change)="getTankDeviceHourlyValue()" class="form-control" [formControl]="dateFilter">
-    </div>
+        <div class="p-2 offset-8">
+                <input [owlDateTime]="dt2" [formControl]="dateFilter" (dateTimeChange)="getTankDeviceHourlyValue()"
+                 [max]="max" class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date" >
+                <owl-date-time [disabled]="!tankFilterDrop.value" [pickerType]="'calendar'" #dt2></owl-date-time>
+   </div>
 <div class="chartdiv">
     dateFilter
 </div>
 </div>
-
-<input [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Date Time" class="form-control">
-<owl-date-time #dt1></owl-date-time>

@@ -9,6 +9,8 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { DateTimeAdapter } from 'ng-pick-datetime';
 declare var google: any;
 
 @Component({
@@ -28,6 +30,8 @@ export class DashboardComponent implements OnInit {
   chartObj:any;
   tankDeviceHourlyArray:any;
   dateFilter = new FormControl('');
+  max = new Date();
+  valveEventHourlyArray: any;
 
   constructor(
     public commonService: CommonService,
@@ -37,7 +41,9 @@ export class DashboardComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private localStorage: LocalstorageService,
     private fb: FormBuilder,
-  ) { }
+    private datePipe: DatePipe,
+    public dateTimeAdapter: DateTimeAdapter<any>,
+  ) { dateTimeAdapter.setLocale('en-IN'); }
 
   ngOnInit(): void {
     this.defaultFilterForm();
@@ -127,7 +133,13 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
-          this.DeviceCurrentSensorArray = res.responseData;
+          this.DeviceCurrentSensorArray = res.responseData;   
+          
+          
+          this.waterTankChartData(res.responseData[0]);
+          this.dateFilter.setValue(res.responseData[0]?.lastStatusDate?.split('.')?.join('-')) 
+          this.getTankDeviceHourlyValue();
+
         } else {
           this.DeviceCurrentSensorArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
@@ -139,6 +151,7 @@ export class DashboardComponent implements OnInit {
 
   filterTankData(obj:any){ 
     this.waterTankChartData(obj[0]?.data);
+    this.dateFilter.setValue(obj[0]?.data.lastStatusDate?.split('.')?.join('-')) 
     this.getTankDeviceHourlyValue();
   }
 
@@ -193,12 +206,14 @@ export class DashboardComponent implements OnInit {
   }
 
   getTankDeviceHourlyValue() {
-    let obj:any = this.chartObj.deviceId  + '&DisplayDate=' + (this.dateFilter.value || this.chartObj.lastStatusDate?.split('.')?.join('-'))
-    this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValue?DeviceId=" + obj, false, false, false, 'valvemgt');
+    let displyDate = this.dateFilter.value ? this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') : this.dateFilter.value
+    let obj:any = this.chartObj.deviceId  + '&DisplayDate=' + displyDate + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValueWithEvent?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
-          this.tankDeviceHourlyArray = res.responseData;
+          this.tankDeviceHourlyArray = res.responseData[0].tankSensorValues;
+          this.valveEventHourlyArray = res.responseData[0].valveEvent;
           this.graphLineChart();
         } else {
           this.tankDeviceHourlyArray = [];
@@ -240,6 +255,8 @@ valueAxis.strictMinMax = true;
 valueAxis.renderer.labels.template.adapter.add("text", function(text) {
   return text + "%";
 });
+
+
 
 
 // Create series
