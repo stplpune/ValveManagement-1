@@ -67,6 +67,11 @@ const routes: Routes = [
     path: 'valve-name-assignment', loadChildren: () => import('../partial/masters/valve-name-assignment/valve-name-assignment.module').then(m => m.ValveNameAssignmentModule), 
     data: { breadcrumb: [{ title: 'Valve Name Assignment', active: true }] }
   },
+  { 
+    path: 'attendance-report', loadChildren: () => import('../partial/masters/reports/attendance-report/attendance-report.module').then(m => m.AttendanceReportModule),
+    data: { breadcrumb: [{ title: 'Attendance Report', active: true }] }
+  },
+
  
   { path: 'access-denied', component: AccessDeniedComponent, data: { title: 'Access Denied' } },
 

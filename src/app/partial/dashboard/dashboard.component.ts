@@ -135,10 +135,11 @@ export class DashboardComponent implements OnInit {
         if (res.statusCode === "200") {
           this.DeviceCurrentSensorArray = res.responseData;   
           
-          
+          //////////////////////////////////////////////
           this.waterTankChartData(res.responseData[0]);
           this.dateFilter.setValue(res.responseData[0]?.lastStatusDate?.split('.')?.join('-')) 
           this.getTankDeviceHourlyValue();
+          /////////////////////////////////////////////
 
         } else {
           this.DeviceCurrentSensorArray = [];
@@ -153,7 +154,7 @@ export class DashboardComponent implements OnInit {
     this.waterTankChartData(obj[0]?.data);
     this.dateFilter.setValue(obj[0]?.data.lastStatusDate?.split('.')?.join('-')) 
     this.getTankDeviceHourlyValue();
-  }
+  } 
 
   waterTankChartData(data?: any) {
     this.chartObj = data;
@@ -206,7 +207,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getTankDeviceHourlyValue() {
-    let displyDate = this.dateFilter.value ? this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') : this.dateFilter.value
+    let displyDate = this.chartObj.lastStatusDate ? this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') : (this.dateFilter.value || '2023-02-12')
     let obj:any = this.chartObj.deviceId  + '&DisplayDate=' + displyDate + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValueWithEvent?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -215,6 +216,7 @@ export class DashboardComponent implements OnInit {
           this.tankDeviceHourlyArray = res.responseData[0].tankSensorValues;
           this.valveEventHourlyArray = res.responseData[0].valveEvent;
           this.graphLineChart();
+
         } else {
           this.tankDeviceHourlyArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
