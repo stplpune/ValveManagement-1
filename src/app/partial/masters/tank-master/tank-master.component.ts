@@ -63,16 +63,14 @@ export class TankMasterComponent implements OnInit {
       "tankName": ['', [Validators.required, Validators.maxLength(100)]],
       "tankName_En": ['', [Validators.required, Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
-      "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
-      "networkId": [this.networkArray?.length == 1 && this.getData.userId == 1 ? this.networkArray[0].networkId : '', Validators.required],
+      "yojanaId": ['', [Validators.required]],
+      "networkId": ['', Validators.required],
       "latitude": [''],
       "longitude": [''],
     })
   }
 
-  get f() {
-    return this.tankForm.controls;
-  }
+  get f() { return this.tankForm.controls;}
 
   clearFormDataDropDown(flag?: any) {
     if (flag == 'formYojana') {
@@ -229,10 +227,12 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
-    this.getData.userId == 1 && this.editFlag == true ? this.networkArray[0].networkId : '' ;
     this.submitted = false;
     this.editFlag = false;
     this.getFormData();
+    this.yojanaArray?.length == 1 ?  this.tankForm.controls['yojanaId'].setValue(this.yojanaArray[0].yojanaId) : '';
+    (this.networkArray?.length == 1 && this.tankForm.value.yojanaId) ? this.tankForm.controls['networkId'].setValue(this.networkArray[0].networkId) : '';
+  
   }
 
   getDeleteConfirm(getData?: any) {
