@@ -83,6 +83,7 @@ export class ValveDetailComponent implements OnInit {
     this.valveListForm = this.fb.group({
       Id: [0],
       valveName: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
+      valveName_En: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
       pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9.]*$')],],
       address: ['', [Validators.required],],
       valvelist: ['', [Validators.required],],
@@ -283,6 +284,7 @@ export class ValveDetailComponent implements OnInit {
       let obj = {
         "id": formData.Id,
         "valveName": formData.valveName,
+        "valveName_En": formData.valveName_En,
         "valveId": "",
         "description": formData.description,
         "createdBy": this.localStorage.userId(),
@@ -341,6 +343,7 @@ export class ValveDetailComponent implements OnInit {
     this.valveListForm.patchValue({
       Id: obj.id,
       valveName: obj.valveName,
+      valveName_En: obj.valveName_En,
       description: obj.description,
       pipeDiameter: obj.valvePipeDiameter,
       noOfConnections: obj.noOfConnection,
