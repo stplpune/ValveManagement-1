@@ -229,6 +229,7 @@ export class TankMasterComponent implements OnInit {
   }
 
   clearForm(formDirective?: any) {
+    this.getData.userId == 1 && this.editFlag == true ? this.networkArray[0].networkId : '' ;
     this.submitted = false;
     this.editFlag = false;
     this.getFormData();
