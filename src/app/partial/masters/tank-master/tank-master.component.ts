@@ -61,6 +61,7 @@ export class TankMasterComponent implements OnInit {
     this.tankForm = this.fb.group({
       "id": [0],
       "tankName": ['', [Validators.required, Validators.maxLength(100)]],
+      "tankName_En": ['', [Validators.required, Validators.maxLength(100)]],
       "address": ['', [Validators.required, Validators.maxLength(500)]],
       "yojanaId": [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
       "networkId": [this.networkArray?.length == 1 && this.getData.userId == 1 ? this.networkArray[0].networkId : '', Validators.required],
@@ -207,6 +208,7 @@ export class TankMasterComponent implements OnInit {
     this.tankForm.patchValue({
       id: res.id,
       tankName: res.tankName,
+      tankName_En: res.tankName_En,
       address: res.address,
       latitude: res.latitude,
       longitude: res.longitude,
@@ -236,6 +238,7 @@ export class TankMasterComponent implements OnInit {
     this.delData = {
       "id": getData.id,
       "tankName": getData.tankName,
+      "tankName_En": getData.tankName_En,
       "address": getData.address,
       "isDeleted": true,
       "createdBy": this.local.userId(),
