@@ -69,8 +69,8 @@ export class ValveConnectionComponent implements OnInit {
       "mobileNo": ['', [Validators.required, Validators.pattern('[6-9]\\d{9}')]],
       "remark": [''],
       "createdBy": this.localStorage.userId(),   
-      "yojanaId": [this.yoganaArray?.length == 1 ? this.yoganaArray[0].yojanaId : '', [Validators.required]],
-      "networkId": [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', [Validators.required]],
+      "yojanaId": ['', [Validators.required]],
+      "networkId": ['', [Validators.required]],
       "consumerUserId": [0],
       "totalConnection": [0, [Validators.required]],
       "connectiondetails": this.fb.array([
@@ -342,6 +342,8 @@ export class ValveConnectionComponent implements OnInit {
     formDirective?.resetForm();
     this.defaultValveConnectionForm();
     this.editFlag = false;
+    this.yoganaArray?.length == 1 ?  this.valveConnectionForm.controls['yojanaId'].setValue(this.yoganaArray[0].yojanaId) : '';
+    (this.networkArray?.length == 1 && this.valveConnectionForm.value.yojanaId) ? this.valveConnectionForm.controls['networkId'].setValue(this.networkArray[0].networkId) : '';
   }
 
   clearDropdown(flag: any) {

@@ -58,9 +58,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       "id": [this.editFlag ? this.editObj.id : 0],
       "valveId": ['', Validators.required],
       "segmentId": [''],
-      "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
-      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId : '', Validators.required],
-      "valvesegmet": []
+      "yojanaId": ['', Validators.required],
+      "networkId": ['', Validators.required],
+      "valvesegmet": []  
     })
   }
 
@@ -308,12 +308,14 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     });
   }
 
-  clearForm() {
+  clearForm() {   
     this.formData();
     this.editFlag = false;
     this.editObj = '';
     this.segmentShowArray = [];
     this.submited = false;
+    this.yojanaArr?.length == 1 ?  this.valveRegForm.controls['yojanaId'].setValue(this.yojanaArr[0].yojanaId) : '';
+    (this.networkArr?.length == 1 && this.valveRegForm.value.yojanaId) ? this.valveRegForm.controls['networkId'].setValue(this.networkArr[0].networkId) : '';
   }
   clearDropdown() {
     this.f['segmentId'].setValue('');

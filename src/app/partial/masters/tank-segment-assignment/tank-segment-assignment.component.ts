@@ -56,8 +56,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
       "tankId": ['', Validators.required],
       "segmentId": [''],
       tanksegment: [],
-      "yojanaId": [this.yojanaArr?.length == 1 ? this.yojanaArr[0].yojanaId : '', Validators.required],
-      "networkId": [this.networkArr?.length == 1 ? this.networkArr[0].networkId : '', Validators.required]
+      "yojanaId": ['', Validators.required],
+      "networkId": ['', Validators.required]
     })
   }
 
@@ -293,6 +293,8 @@ export class TankSegmentAssignmentComponent implements OnInit {
     this.editObj = '';
     this.tankSegmentTable = [];
     this.submitted = false;
+    this.yojanaArr?.length == 1 ?  this.tankSegmentForm.controls['yojanaId'].setValue(this.yojanaArr[0].yojanaId) : '';
+    (this.networkArr?.length == 1 && this.tankSegmentForm.value.yojanaId) ? this.tankSegmentForm.controls['networkId'].setValue(this.networkArr[0].networkId) : '';
   }
 
   onChangeDropdown(label: string) {
