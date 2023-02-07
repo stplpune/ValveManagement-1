@@ -136,7 +136,6 @@ export class UserRegistrationComponent implements OnInit {
   //Clear All Data In the Form Fields
   clearForm(formDirective?:any) {
     this.submitted = false;
-    formDirective.resetForm();
     this.defaultForm();
   }
 
@@ -172,9 +171,9 @@ export class UserRegistrationComponent implements OnInit {
             this.spinner.hide();
             this.buttontextFlag='Submit';
             this.toastrService.success(res.statusMessage);
-            this.addUserModel.nativeElement.click();
             this.clearForm();
             this.getUserRegistrationList();
+            this.addUserModel.nativeElement.click();
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
