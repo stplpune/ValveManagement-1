@@ -229,6 +229,8 @@ export class ValveListComponent implements OnInit {
       let obj = {
         "id": this.editFlag ? this.editObj.id : 0,
         "valveName":'',
+        "valveDetailsId": 0,
+        "valveName_En": "",
         "valveId": formData.valveId,
         "companyName": formData.companyName,
         "description": '',

@@ -144,9 +144,9 @@
             <div class="mb-3">
               <label class="form-label">Valve</label>
               <ngx-select [allowClear]="true" [items]="valveDropdownArray" formControlName="valveId"
-                (remove)="clearFormData('valve')" placeholder="Select valve" optionValueField="valveId"
+                (remove)="clearFormData('valve')" placeholder="Select valve" optionValueField="valveDetailsId"
                 (selectionChanges)="clearDropdown()" (click)="valvedropdown('valve')" optionTextField="valveName"
-                [disabled]="!this.valveRegForm.value.networkId  || valveDropdownArray?.length <= 1"
+                [disabled]="!this.valveRegForm.value.networkId"
                 [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
               </ngx-select>
               <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve is Required </div>
@@ -158,7 +158,7 @@
               <div class="d-flex  gap-2">
                 <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  [disabled]="!this.valveRegForm.value.networkId || sgmentDropdownArray?.length <= 1">
+                  [disabled]="!this.valveRegForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId"
                   (click)="addSegment()">Add</button>

@@ -89,14 +89,24 @@
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
-              <label class="form-label">Tank Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Tank Name" formControlName="tankName"
+              <label class="form-label">Tank Marathi Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Tank Marathi Name" formControlName="tankName"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
               <div *ngIf="submitted && f['tankName'].errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f['tankName'].errors?.['required']">Tank Name Is Required.</div>
+                <div class="text-danger" *ngIf="f['tankName'].errors?.['required']">Tank Marathi Name is Required.</div>
               </div>
             </div>
+            <div class="mb-2">
+              <label class="form-label">Tank English Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Tank English Name" formControlName="tankName_En"
+                (keypress)="validation.noFirstSpaceAllow($event)"
+                [ngClass]="{ 'is-invalid': submitted && f['tankName_En'].errors }">
+              <div *ngIf="submitted && f['tankName_En'].errors" class="invalid-feedback">
+                <div class="text-danger" *ngIf="f['tankName_En'].errors?.['required']">Tank English Name is Required.</div>
+              </div>
+            </div>
+
             <div class="mb-2">
               <label class="form-label">Address<span class="text-danger">*</span></label>
               <div class="input-group">
@@ -121,7 +131,7 @@
                   [disabled]="yojanaArray?.length == 1" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                 </ngx-select>
                 <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Is Required.</div>
+                  <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana is Required.</div>
                 </div>
               </div>
 
@@ -134,7 +144,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Is Required.</div>
+                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network is Required.</div>
                   </div>
                   <div class="invalid-feedback">
                   </div>

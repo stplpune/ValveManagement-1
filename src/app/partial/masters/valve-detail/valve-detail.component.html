@@ -48,7 +48,7 @@
       <thead>
         <tr>
           <th>Sr. No.</th>
-          <th>Valve Id</th>
+          <!-- <th>Valve Id</th> -->
           <th>Valve Name</th>
           <th>No. Of Customer</th>
           <th>No. Of Connection</th>
@@ -62,7 +62,7 @@
                       currentPage: pageNumber, totalItems:totalRows}; let i = index "
           [class.active]="valveStatus.id == HighlightRow">
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
-          <td>{{valveStatus?.valveId ? valveStatus?.valveId : '-'}}</td>
+          <!-- <td>{{valveStatus?.valveId ? valveStatus?.valveId : '-'}}</td> -->
           <td>{{valveStatus?.valveName ? valveStatus?.valveName : '-'}}</td>
           <td>{{valveStatus?.noOfCustomer ? valveStatus?.noOfCustomer : '-'}}</td>
           <td>{{valveStatus?.noOfConnection ? valveStatus?.noOfConnection : '-'}}</td>
@@ -150,28 +150,29 @@
             </div>
 
             <div class="row mb-2">
-              <!-- <div class="col-sm-6">
-                <label for="" class="form-label">Valve ID <span class="text-danger">*</span></label>
-                <ngx-select [allowClear]="true" [items]="getAllMasterValveListArray" formControlName="valveMasterId"
-                  placeholder="Valve ID" optionValueField="valveMasterId" optionTextField="valveId"
-                  [disabled]="!this.valveListForm.value.network"
-                  [ngClass]="{ 'is-invalid': submitted && f.valveMasterId.errors }">
-                </ngx-select>
-                <div *ngIf="submitted && f.valveMasterId.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.valveMasterId.errors?.required">Valve ID is
-                    required.</div>
-                </div>
-              </div> -->
-              <div class="col-sm-12">
-                <label class="form-label">Valve Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name"
+              <div class="col-sm-6">
+                <label class="form-label">Valve Marathi Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Marathi Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name is
+                  <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Marathi Name is
                     required.</div>
                   <div class="text-danger" *ngIf="f.valveName.errors?.pattern">Please enter
-                    Valid Valve Name.</div>
+                    Valid Valve Marathi Name.</div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <label class="form-label">Valve English Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="valveName_En" placeholder="Valve English Name"
+                  [ngClass]="{ 'is-invalid': submitted && f.valveName_En.errors }"
+                  (keypress)="validation.noFirstSpaceAllow($event)">
+                <div *ngIf="submitted && f.valveName_En.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.valveName_En.errors?.required">Valve English Name is
+                    required.</div>
+                  <div class="text-danger" *ngIf="f.valveName_En.errors?.pattern">Please enter
+                    Valid Valve English Name.</div>
                 </div>
               </div>
             </div>
@@ -253,7 +254,7 @@
                 <label class="form-label">Description <span class="text-danger">*</span></label>
                 <textarea class="form-control" placeholder="Description" rows="5" formControlName="description"
                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                  (keypress)="validation.noSpacesAtStart($event)"></textarea>
+                  (keypress)="validation.noFirstSpaceAllow($event)"></textarea>
                 <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                   <span class="text-danger" *ngIf="f.description.errors?.required">
                     Job Description is required.</span>

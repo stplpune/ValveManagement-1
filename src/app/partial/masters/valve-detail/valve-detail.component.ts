@@ -82,13 +82,14 @@ export class ValveDetailComponent implements OnInit {
   defaultForm() {
     this.valveListForm = this.fb.group({
       Id: [0],
-      valveName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],
+      valveName: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
+      valveName_En: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
       pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9.]*$')],],
       address: ['', [Validators.required],],
       valvelist: ['', [Validators.required],],
       tankist: ['', [Validators.required],],
-      yojana: [this.yojanaArray?.length == 1 ? this.yojanaArray[0].yojanaId : '', [Validators.required]],
-      network: [this.networkArray?.length == 1 ? this.networkArray[0].networkId : '', [Validators.required]],
+      yojana: ['', [Validators.required]],
+      network: ['', [Validators.required]],
       list: [1],
       // valveMasterId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
       description: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
@@ -173,7 +174,7 @@ export class ValveDetailComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.yoganaArrayFilter = res.responseData : this.yojanaArray = res.responseData;
-          this.yoganaArrayFilter?.length == 1 ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
+          this.yoganaArrayFilter?.length == 1 && this.filterFlag == 'filter' ? (this.searchForm.controls['yojana'].setValue(this.yoganaArrayFilter[0].yojanaId), this.getAllNetwork(this.yoganaArrayFilter[0].yojanaId)) : '';
           this.yojanaArray?.length == 1 ? (this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId), this.getAllNetwork(this.yojanaArray[0].yojanaId)) : '';
 
         } else {
@@ -199,8 +200,9 @@ export class ValveDetailComponent implements OnInit {
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
           (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }), this.getAllValveData()) : '';
           this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
+          this.networkArray?.length == 1 && this.btnText != 'Update Changes' ?  this.getValve_TankList(1,this.searchForm.value.yojana, this.searchForm.value.network) : '';
         } else {
-          this.spinner.hide();
+          this.spinner.hide(); 
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
           this.commonService.checkDataType(res.statusMessage) == false
             ? this.errorSerivce.handelError(res.statusCode)
@@ -217,7 +219,9 @@ export class ValveDetailComponent implements OnInit {
     this.submitted = false;
     this.defaultForm();
     this.btnText = 'Save Changes';
-    this.headingText = 'Add Valve Details';
+    this.headingText = 'Add Valve Details';  
+     this.yojanaArray?.length == 1 ?  this.valveListForm.controls['yojana'].setValue(this.yojanaArray[0].yojanaId) : '';
+    (this.networkArray?.length == 1 && this.valveListForm.value.yojana) ? this.valveListForm.controls['network'].setValue(this.networkArray[0].networkId) : '';
   }
 
   onKeyUpFilter() {
@@ -282,6 +286,7 @@ export class ValveDetailComponent implements OnInit {
       let obj = {
         "id": formData.Id,
         "valveName": formData.valveName,
+        "valveName_En": formData.valveName_En,
         "valveId": "",
         "description": formData.description,
         "createdBy": this.localStorage.userId(),
@@ -340,6 +345,7 @@ export class ValveDetailComponent implements OnInit {
     this.valveListForm.patchValue({
       Id: obj.id,
       valveName: obj.valveName,
+      valveName_En: obj.valveName_En,
       description: obj.description,
       pipeDiameter: obj.valvePipeDiameter,
       noOfConnections: obj.noOfConnection,
