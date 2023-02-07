@@ -298,6 +298,7 @@ export class SegmentMasterComponent implements OnInit{
     polyline: undefined,
   };
   markerArray: any;
+  markerUrlNull = "../../../../assets/images/dot.png";
 
 
   patchSegmentTable(obj: any) {

@@ -136,7 +136,7 @@
                             [iconUrl]="m.iconUrl">
                         </agm-marker>
                         <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
-                            [longitude]="m.longitude || 76.5240298" [label]="m.label">
+                            [longitude]="m.longitude || 76.5240298" [label]="m.label" [iconUrl]="markerUrlNull">
                         </agm-marker>
                     </agm-map>
                 </div>

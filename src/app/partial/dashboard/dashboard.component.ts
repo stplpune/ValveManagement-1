@@ -299,6 +299,7 @@ export class DashboardComponent implements OnInit {
   getAllSegmentArray: any[] = [];
   map: any;
   markerArray: any;
+  markerUrlNull = "../../../../assets/images/dot.png";
 
   getValveSegmentList() { //All Segment 
     this.spinner.show();
