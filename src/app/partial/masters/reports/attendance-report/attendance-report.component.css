@@ -1,0 +1,22 @@
+#bootcomityhdetails .nav-pills .nav-link{
+    color: #aaa;
+    border-bottom:solid 4px #eee ;
+    border-radius: 0;
+    line-height: 16px;
+}
+#bootcomityhdetails .nav-pills .nav-link.active{
+    background-color: transparent;
+    border-bottom: solid 4px var(--main-color);
+    color: #000;
+}
+
+.cardImgOuter {
+    position: absolute;
+    width: 50px;
+    right: 12px;
+    bottom: 8px;
+}
+.cardImgOuter img {
+    width: 100%;
+    opacity: .1;
+}

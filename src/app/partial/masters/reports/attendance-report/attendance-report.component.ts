@@ -24,6 +24,8 @@ export class AttendanceReportComponent implements OnInit {
   maxDate = new Date();
   dateRange: any;
   defaultCloseBtn: boolean = false;
+  dailyAttendanceType = 1;
+  employeelistArray:any;
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +34,7 @@ export class AttendanceReportComponent implements OnInit {
     private toastrService: ToastrService,
     private errorSerivce: ErrorsService,
     private spinner: NgxSpinnerService,
-    private localStorage: LocalstorageService,
+    public localStorage: LocalstorageService,
     private datePipe: DatePipe,
     public dateTimeAdapter: DateTimeAdapter<any>,
   ) { dateTimeAdapter.setLocale('en-IN'); }
@@ -46,7 +48,9 @@ export class AttendanceReportComponent implements OnInit {
 
   defaultFilterForm() {
     this.filterForm = this.fb.group({
-      yojanaId: [''],
+      yojanaId: [this.localStorage.userId() == 1 ? '' : this.getAllLocalStorageData.yojanaId],
+      employee: [''], 
+      singleDate: [this.maxDate],
       fromTo: [this.dateRange],
     })
   }
@@ -77,11 +81,30 @@ export class AttendanceReportComponent implements OnInit {
       })
   }
 
+  getEmployeelist() {
+    this.apiService.setHttp('GET', 'Attendance/GetEmployeelist?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe((res: any) => {
+      if (res.statusCode == "200") {
+        this.employeelistArray = res.responseData;
+     }
+      else {
+        this.employeelistArray = [];
+        this.toastrService.error(res.statusMessage);
+      }
+    },
+      (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      })
+  }
+
   getAttendenceReport(){
     this.spinner.show();
-    let obj = this.localStorage.userId() +  '&YojanaId=' + (this.filterForm.value.yojanaId || this.getAllLocalStorageData.yojanaId) + '&FromDate=' + this.datePipe.transform(this.filterForm.value.fromTo[0], 'yyyy/MM/dd')
-    + '&ToDate=' + this.datePipe.transform(this.filterForm.value.fromTo[1], 'yyyy/MM/dd');
-    this.apiService.setHttp('get', 'Attendance/GetAttendenceReport?UserId=' + obj, false, false, false, 'valvemgt');
+    let formData = this.filterForm.value;  
+    let FromDate = this.dailyAttendanceType == 1 ? this.datePipe.transform(formData.singleDate, 'yyyy/MM/dd') : this.datePipe.transform(formData.fromTo[0], 'yyyy/MM/dd');
+    let ToDate = this.dailyAttendanceType == 1 ? this.datePipe.transform(formData.singleDate, 'yyyy/MM/dd') : this.datePipe.transform(formData.fromTo[1], 'yyyy/MM/dd');
+    let obj = this.localStorage.userId() +  '&YojanaId=' + (formData.yojanaId || this.getAllLocalStorageData.yojanaId) + '&FromDate=' + FromDate
+    + '&ToDate=' + ToDate + '&EmpId=' + (this.dailyAttendanceType == 1 ? 0 : formData.employee);
+    this.apiService.setHttp('get', 'Attendance/GetDatewiseAttendenceReport?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -101,9 +124,8 @@ export class AttendanceReportComponent implements OnInit {
 
   clearFilter(flag: any) {
     if (flag == 'yojana') {
-      // this.filterForm.controls['networkId'].setValue('');
-    } else if (flag == 'network') {
-    }
+      this.filterForm.controls['employee'].setValue(0);
+    } 
     this.getAttendenceReport();
   }
 
