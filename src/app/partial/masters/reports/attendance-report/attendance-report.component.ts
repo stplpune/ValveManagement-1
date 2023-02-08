@@ -112,9 +112,8 @@ export class AttendanceReportComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.attendanceArray = res.responseData.responseData1;
-          this.attendanceCountArray = res.responseData.responseData2;
+          this.attendanceCountArray = res.responseData?.responseData2;
         } else {
-          alert("111")
           this.spinner.hide();
           this.attendanceArray = [];
           this.attendanceCountArray = [];
