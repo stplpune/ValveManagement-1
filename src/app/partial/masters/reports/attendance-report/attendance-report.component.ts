@@ -83,7 +83,7 @@ export class AttendanceReportComponent implements OnInit {
   }
 
   getEmployeelist() {
-    this.apiService.setHttp('GET', 'Attendance/GetEmployeelist?YojanaId=' + this.getAllLocalStorageData.yojanaId + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'Attendance/GetEmployeelist?YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&UserId=' + this.localStorage.userId(), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.employeelistArray = res.responseData;
@@ -128,7 +128,7 @@ export class AttendanceReportComponent implements OnInit {
 
   clearFilter(flag: any) {
     if (flag == 'yojana') {
-      this.filterForm.controls['employee'].setValue(0);
+      // this.filterForm.controls['employee'].setValue(0);
     } 
     this.getAttendenceReport();
   }

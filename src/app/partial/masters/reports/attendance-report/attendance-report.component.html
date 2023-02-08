@@ -31,7 +31,7 @@
             <div class="row g-2 mt-2 justify-content-end" >
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
-                        (select)="dailyAttendanceType == 1 ? getAttendenceReport() : getEmployeelist()" [disabled]="yoganaArray?.length == 1"
+                        (select)="dailyAttendanceType == 1 ? getAttendenceReport() : this.filterForm.controls['employee'].setValue(0);getEmployeelist()" [disabled]="yoganaArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
@@ -46,10 +46,11 @@
                 </div>
                 <div class="col-sm-3" *ngIf="dailyAttendanceType == 2"> 
                     <ngx-select [items]="employeelistArray" (remove)="clearFilter('employee')"
-                        (select)="getAttendenceReport()" [disabled]="!filterForm.value.yojanaId"
+                        (select)="getAttendenceReport()" 
                         optionValueField="userId" optionTextField="employeeName" placeholder="Select Employee"
                         formControlName="employee">
                     </ngx-select>
+                    <!-- [disabled]="!filterForm.value.yojanaId" -->
                 </div>
                 <div class="col-sm-3" *ngIf="dailyAttendanceType == 2">
                     <div class="input-group">
