@@ -20,7 +20,7 @@
                             id="pills-pending-tab" data-bs-toggle="pill" data-bs-target="#pills-pending"
                             type="button" role="tab" [class.active]="dailyAttendanceType == 2" aria-controls="pills-pending" aria-selected="false"
                             (click)="dailyAttendanceType = 2;defaultFilterForm();(dailyAttendanceType == 2 ? this.getEmployeelist() : '')">
-                            DateWise Attendance
+                            Date Wise Attendance
                         </button>
                     </li>
                 </ul>
@@ -104,7 +104,8 @@
                     <th>Sr. No.</th>
                     <th>Employee Name</th>
                     <th>Attendance Date</th>
-                    <th>Start Time - End Time</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
                     <th>Total Hrs</th>
                 </tr>
             </thead>
@@ -113,7 +114,8 @@
                     <td>{{ i + 1}}</td>
                     <td>{{attendance?.employeeName ? attendance?.employeeName : '-'}}</td>
                     <td>{{attendance?.attendanceDate ? attendance?.attendanceDate : '-'}}</td>
-                    <td>{{attendance?.startTime}} - {{attendance?.endTime}}</td>
+                    <td>{{attendance?.startTime ? attendance?.startTime : '-'}}</td>
+                    <td>{{attendance?.endTime ? attendance?.endTime : '-'}}</td>
                     <td>{{attendance?.totalHrs ? attendance?.totalHrs : '-'}}</td>
                 </tr>
             </tbody>
