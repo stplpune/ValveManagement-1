@@ -86,6 +86,7 @@ export class AttendanceReportComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.employeelistArray = res.responseData;
+        // this.employeelistArray?.length == 1 ? (this.filterForm.patchValue({ employee: this.employeelistArray[0].userId })) : '';
      }
       else {
         this.employeelistArray = [];

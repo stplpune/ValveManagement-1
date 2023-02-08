@@ -19,7 +19,7 @@
                         <button class="nav-link"
                             id="pills-pending-tab" data-bs-toggle="pill" data-bs-target="#pills-pending"
                             type="button" role="tab" [class.active]="dailyAttendanceType == 2" aria-controls="pills-pending" aria-selected="false"
-                            (click)="dailyAttendanceType = 2;defaultFilterForm()">
+                            (click)="dailyAttendanceType = 2;defaultFilterForm();(dailyAttendanceType == 2 ? this.getEmployeelist() : '')">
                             DateWise Attendance
                         </button>
                     </li>
