@@ -21,6 +21,7 @@ export class AttendanceReportComponent implements OnInit {
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   yoganaArray:any;
   attendanceArray:any;
+  attendanceCountArray:any;
   maxDate = new Date();
   dateRange: any;
   defaultCloseBtn: boolean = false;
@@ -110,10 +111,13 @@ export class AttendanceReportComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === '200') {
           this.spinner.hide();
-          this.attendanceArray = res.responseData;
+          this.attendanceArray = res.responseData.responseData1;
+          this.attendanceCountArray = res.responseData.responseData2;
         } else {
+          alert("111")
           this.spinner.hide();
           this.attendanceArray = [];
+          this.attendanceCountArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
