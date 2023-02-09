@@ -101,7 +101,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let attendance of attendanceArray; let i = index">
+                <tr *ngFor="let attendance of attendanceArray; let i = index" 
+                [ngClass]="{'text-success' : attendance.isPresent == 1, 'text-warning' : attendance.isPresent == 2 ,'text-danger' : attendance.isPresent == 0}">
                     <td>{{ i + 1}}</td>
                     <td *ngIf="dailyAttendanceType == 1">{{attendance?.employeeName ? attendance?.employeeName : '-'}}</td>
                     <td>{{attendance?.attendanceDate ? attendance?.attendanceDate : '-'}}</td>
