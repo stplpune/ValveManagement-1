@@ -93,7 +93,7 @@
             <thead>
                 <tr>
                     <th>Sr. No.</th>
-                    <th>Employee Name</th>
+                    <th *ngIf="dailyAttendanceType == 1">Employee Name</th>
                     <th>Attendance Date</th>
                     <th>Start Time</th>
                     <th>End Time</th>
@@ -103,7 +103,7 @@
             <tbody>
                 <tr *ngFor="let attendance of attendanceArray; let i = index">
                     <td>{{ i + 1}}</td>
-                    <td>{{attendance?.employeeName ? attendance?.employeeName : '-'}}</td>
+                    <td *ngIf="dailyAttendanceType == 1">{{attendance?.employeeName ? attendance?.employeeName : '-'}}</td>
                     <td>{{attendance?.attendanceDate ? attendance?.attendanceDate : '-'}}</td>
                     <td>{{attendance?.startTime ? attendance?.startTime : '-'}}</td>
                     <td>{{attendance?.endTime ? attendance?.endTime : '-'}}</td>
