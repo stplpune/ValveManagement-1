@@ -79,7 +79,7 @@
     <div *ngIf="dailyAttendanceType == 1 || (filterForm.value.employee && dailyAttendanceType == 2)">
     <div class="row mb-3 m-2">
         <div class="col-sm" *ngFor="let AttenData of attendanceCountArray"> 
-            <div class="card card-body bg-opacity-10 border-0" [ngClass]="AttenData.dayStatus == 'Absent' ? 'bg-danger' : AttenData.dayStatus == 'Present' ? 'bg-success' : AttenData.dayStatus == 'OrangeDay' ? 'bg-primary' : ''">
+            <div class="card card-body bg-opacity-10 border-0" [ngClass]="AttenData.dayStatus == 'Absent' ? 'bg-danger' : AttenData.dayStatus == 'Present' ? 'bg-success' : AttenData.dayStatus == 'OrangeDay' ? 'text-warning' : ''">
                 <p class="fw-bold mb-3 small">{{AttenData?.dayStatus == 'OrangeDay' ? 'Out Punch Missing' : AttenData?.dayStatus}}</p> 
                 <h4 class="mb-0 fw-bold text-success lh-1">{{AttenData.dayCount}}</h4>
                 <div class="cardImgOuter">
