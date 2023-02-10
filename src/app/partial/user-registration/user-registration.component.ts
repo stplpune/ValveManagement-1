@@ -167,7 +167,7 @@ export class UserRegistrationComponent implements OnInit {
       this.apiService.setHttp(urlType,'UserRegistration',false,obj,false,'valvemgt');
       this.apiService.getHttp().subscribe(
         (res: any) => {
-          if (urlType == 'POST'? res.statusCode == '201': res.statusCode == '200') {
+          if (res.statusCode == '200') {
             this.spinner.hide();
             this.buttontextFlag='Submit';
             this.toastrService.success(res.statusMessage);
@@ -225,7 +225,7 @@ export class UserRegistrationComponent implements OnInit {
     this.apiService.setHttp('DELETE','UserRegistration/DeleteUser?' + obj,false,false,false,'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
-        if (res.statusCode === '200') {
+        if (res.statusCode == '200') {
           this.toastrService.success(res.statusMessage);
           this.getUserRegistrationList();
           this.clearForm();
