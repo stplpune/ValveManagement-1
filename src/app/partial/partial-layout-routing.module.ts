@@ -71,6 +71,15 @@ const routes: Routes = [
     path: 'attendance-report', loadChildren: () => import('../partial/masters/reports/attendance-report/attendance-report.module').then(m => m.AttendanceReportModule),
     data: { breadcrumb: [{ title: 'Attendance Report', active: true }] }
   },
+  { 
+    path: 'consumer-water-summery', loadChildren: () => import('../partial/masters/reports/consumer-water-summery/consumer-water-summery.module').then(m => m.ConsumerWaterSummeryModule),
+    data: { breadcrumb: [{ title: 'Consumer Water Summery', active: true }] }
+  },
+  {
+     path: 'valve-water-summery', loadChildren: () => import('../partial/masters/reports/valve-water-summery/valve-water-summery.module').then(m => m.ValveWaterSummeryModule),
+     data: { breadcrumb: [{ title: 'Valve Water Summery', active: true }] } 
+    },
+
 
  
   { path: 'access-denied', component: AccessDeniedComponent, data: { title: 'Access Denied' } },
