@@ -1,1 +1,47 @@
-<p>valve-water-summery works!</p>
+
+<div class="card plain-card">
+    <div class="card-header">
+        <div class="row justify-content-between align-items-center mb-2">
+            <div class="col-sm-4">Valve Water Summery</div>
+        </div>
+
+        <div class="mt-2">
+            <form [formGroup]="filterForm">
+                <div class="row g-2">
+                    <div class="col-sm-3">
+                        <ngx-select [allowClear]="true" [items]="yoganaArray" (select)="getValveWaterSummary();getNetwork()"
+                            [disabled]="yoganaArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
+                            optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
+                        </ngx-select>
+                    </div>
+                    <div class="col-sm-3">
+                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
+                            placeholder="Select Network" (select)="getValveWaterSummary()" 
+                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
+                            optionTextField="networkName">
+                        </ngx-select>
+                    </div>
+                    <div class="col-sm-3" >
+                        <div class="input-group">
+                        <input [owlDateTime]="dt1" formControlName="fromTo" 
+                        (dateTimeChange)="defaultCloseBtn = true;getValveWaterSummary()" class="form-control form-control-sm" [max]="maxDate"
+                        [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
+                        placeholder="Date Time">
+                    <owl-date-time #dt1 [disabled]="!filterForm.value.yojanaId" [pickerType]="'calendar'"></owl-date-time>
+                    <button class="btn btn-light btn-sm" type="button" *ngIf="!defaultCloseBtn"
+                        [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
+                    <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
+                        (click)="clearFilter('date')">
+                        <i class="fas fa-times"></i></button>
+                    </div>
+           </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-body">
+    <div class="chartdiv"></div>
+    </div>
+  
+</div>
