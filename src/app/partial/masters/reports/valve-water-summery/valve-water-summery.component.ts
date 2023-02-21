@@ -23,6 +23,7 @@ export class ValveWaterSummeryComponent implements OnInit {
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
   valveWaterSummaryArray: any;
   maxDate = new Date();
+  defaultFromDate = new Date(Date.now() + -15 * 24 * 60 * 60 * 1000);
   dateRange: any;
   yoganaArray: any;
   networkIdArray: any;
@@ -43,7 +44,7 @@ export class ValveWaterSummeryComponent implements OnInit {
   ) { dateTimeAdapter.setLocale('en-IN'); }
 
   ngOnInit(): void {
-    this.dateRange = [this.maxDate, this.maxDate];
+    this.dateRange = [this.defaultFromDate, this.maxDate];
     this.filter_Form();
     this.getYogana();
     this.localStorage.userId() == 1 ? this.getValveWaterSummary() : '';
@@ -122,7 +123,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     if (flag == 'yojana') {
       this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'date') {
-      this.filterForm.controls['fromTo'].setValue([this.maxDate, this.maxDate]);
+      this.filterForm.controls['fromTo'].setValue([this.defaultFromDate, this.maxDate]);
       this.defaultCloseBtn = false;
     }
     this.waterTimeSumryChartHide = false;
