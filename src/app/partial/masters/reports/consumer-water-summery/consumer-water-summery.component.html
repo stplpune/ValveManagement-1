@@ -1,1 +1,152 @@
-<p>consumer-water-summery works!</p>
+<div class="card plain-card">
+    <div class="card-header">
+        <div class="row justify-content-between align-items-center mb-2">
+            <div class="col-sm-4">Consumer Water Summery</div>
+        </div>
+        <form [formGroup]="filterForm">
+            <div class="row g-2">
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
+                        (select)="pageNumber = 1;getConsumerList();getNetwork()" [disabled]="yoganaArray?.length == 1"
+                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
+                        formControlName="yojanaId">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-3">
+                    <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
+                        placeholder="Select Network" optionValueField="networkId"
+                        [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
+                        (remove)="clearFilter('network')" (select)="pageNumber = 1;getConsumerList()">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-2">
+                    <ngx-select [allowClear]="true" [items]="isHaveTapArray" (remove)="clearFilter('isHaveTap')"
+                        (select)="pageNumber = 1;getConsumerList()"
+                        optionValueField="id" optionTextField="name" placeholder="Select IsHaveTap"
+                        formControlName="IsHaveTap">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-2">
+                    <ngx-select [allowClear]="true" [items]="isHaveMotarArray" formControlName="IsHaveMotar"
+                        placeholder="Select IsHaveMotar" optionValueField="id" optionTextField="name"
+                        (remove)="clearFilter('isHaveMotar')" (select)="pageNumber = 1;getConsumerList()">
+                    </ngx-select>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                      <input type="text" class="form-control" formControlName="Search" placeholder="Search.." (keyup)="onKeyUpFilter()" />
+                      <button type="button" class="btn btn-light btn-sm" (click)="clearFilter('search')" *ngIf="filterForm.value.Search"><i
+                              _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+                      <button type="button" *ngIf="!filterForm.value.Search" class="btn btn-sm btn-light"><i class="fas fa-search"></i></button>
+                  </div>
+                  </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-body">
+        <table class="table align-middle dashboard-table">
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Person Name</th>
+                    <th>Contact No.</th>
+                    <th>Valve Name</th>
+                    <th>Total Connection</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let consumerList of getConsumerListArray | paginate: {itemsPerPage: 10,
+                    currentPage: pageNumber, totalItems:totalRows}; let i = index" [class.active]="valveDetailsId == consumerList.valveDetailsId">
+                    <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                    <td>{{consumerList?.personName ? consumerList?.personName : '-'}}</td>
+                    <td>{{consumerList?.mobileNo ? consumerList?.mobileNo : '-'}}</td>
+                    <td>{{consumerList?.valveName_En ? consumerList?.valveName_En : '-'}}</td>
+                    <td>{{consumerList?.noOfConnection ? consumerList?.noOfConnection : '-'}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" title="Show Date and Time" class="btn btn-sm btn-light text-dark rounded"
+                              (click)="getConsumerWaterSummary(consumerList.valveDetailsId)" data-bs-toggle="modal" data-bs-target="#summaryDateTimeModel"><i class="far fa-eye"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mt-2 text-end" *ngIf="getConsumerListArray?.length == 0 || getConsumerListArray?.length == null">
+            <div class="alert alert-danger text-center py-2">No Data Found..!
+            </div>
+        </div>
+        <div class="mt-2 text-end" *ngIf="getConsumerListArray?.length != 0">
+            <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- DateTime Modal -->
+
+<div class="modal fade" id="summaryDateTimeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="summaryDateTimeModel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-main">
+                <h1 class="modal-title fs-5" id="summaryDateTimeModel">Water Summery Details</h1>
+                <button type="button" class="btn-close btn-close-inverse" (click)="closeModelSummery()" #addSegmentModel data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="mt-2">
+                    <form [formGroup]="summeryFilterForm">
+                        <div class="row justify-content-end">
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                <input [owlDateTime]="dt1" formControlName="fromTo" 
+                                (dateTimeChange)="getConsumerWaterSummary(valveDetailsId)" class="form-control form-control-sm " [max]="maxDate"
+                                [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
+                                placeholder="Date Time" [readonly]="true">
+                            <owl-date-time #dt1 [pickerType]="'calendar'"></owl-date-time>
+                            <button class="btn btn-light btn-sm" type="button" *ngIf="!defaultCloseBtn"
+                                [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
+                            <!-- <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
+                                (click)="clearDate()">
+                                <i class="fas fa-times"></i></button> -->
+                            </div>
+                   </div>
+                        </div>
+                    </form>
+                </div>
+             
+                <table class="table align-middle dashboard-table mt-2">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Day Name</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let waterSummary of consumerWaterSummaryArray; let i = index">
+                            <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                            <td>{{waterSummary?.dayName ? waterSummary?.dayName : '-'}}</td>
+                            <td>{{waterSummary?.statusDate ? waterSummary?.statusDate : '-'}}</td>
+                            <td>{{waterSummary?.startTime ? waterSummary?.startTime : '-'}}</td>
+                            <td>{{waterSummary?.endTime ? waterSummary?.endTime : '-'}}</td>
+                            <td>{{waterSummary?.totalTime ? waterSummary?.totalTime : '-'}}</td>
+                        </tr>
+                        <!-- statusDisDate -->
+                    </tbody>
+                </table>
+                <div class="mt-2 text-end" *ngIf="consumerWaterSummaryArray?.length == 0 || consumerWaterSummaryArray?.length == null">
+                    <div class="alert alert-danger text-center py-2">No Data Found..!
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -39,7 +39,7 @@
                 <div class="col-sm-3" *ngIf="dailyAttendanceType == 1">
                     <div class="input-group">
                     <input [owlDateTime]="dt2" formControlName="singleDate" (dateTimeChange)="getAttendenceReport()" [max]="maxDate"
-                        class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date">
+                        class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date" [readonly]="true">
                     <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
                     <button class="btn btn-light btn-sm" type="button" [owlDateTimeTrigger]="dt2"> <i class="fas fa-calendar-alt"></i></button>
                 </div>
@@ -58,7 +58,7 @@
                             <input [owlDateTime]="dt1" formControlName="fromTo"
                                 (dateTimeChange)="getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"
                                 [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
-                                placeholder="Date Time">
+                                placeholder="Date Time" [readonly]="true">
                             <owl-date-time #dt1 [disabled]="!filterForm.value.employee" [pickerType]="'calendar'"></owl-date-time>
                             <button class="btn btn-light btn-sm" type="button" *ngIf="!defaultCloseBtn"
                                 [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>

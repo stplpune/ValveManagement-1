@@ -96,8 +96,8 @@ export class ValveWaterSummeryComponent implements OnInit {
     let formData = this.filterForm.value;
     let FromDate = this.datePipe.transform(formData.fromTo[0], 'yyyy/MM/dd');
     let ToDate = this.datePipe.transform(formData.fromTo[1], 'yyyy/MM/dd');
-    let obj = this.localStorage.userId() + '&NetworkId=' + (formData.networkId || 0) + '&YojanaId=' + (formData.yojanaId || this.getAllLocalStorageData.yojanaId) + '&FromDate=' + FromDate
-      + '&ToDate=' + ToDate;
+    let obj = this.localStorage.userId() + '&NetworkId=' + (formData.networkId || 0) + '&YojanaId=' + (formData.yojanaId || this.getAllLocalStorageData.yojanaId) 
+    + '&FromDate=' + FromDate + '&ToDate=' + ToDate;
     this.spinner.show();
     this.apiService.setHttp('GET', 'ValveDetails/GetValveWaterSummary?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
@@ -199,6 +199,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     series.columns.template.events.on("hit", (ev: any) => { //ev.target.dataItem._dataContext
       this.waterTimeSumryChartHide = true;
       setTimeout(() => {
+        window.scroll(0, 500);
         this.waterTimeSummariesChart(ev.target.dataItem._dataContext.waterTimeSummaries);
       }, 200);
     });
