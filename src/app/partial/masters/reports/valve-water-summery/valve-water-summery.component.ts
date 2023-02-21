@@ -247,7 +247,7 @@ export class ValveWaterSummeryComponent implements OnInit {
       }
     });
 
-    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    let categoryAxis:any = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "statusDate";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 30;
@@ -255,8 +255,10 @@ export class ValveWaterSummeryComponent implements OnInit {
     categoryAxis.renderer.labels.template.verticalCenter = "middle";
     categoryAxis.renderer.labels.template.rotation = 270;
     categoryAxis.renderer.minHeight = 110;
+    categoryAxis.tooltip.disabled = true;
+    
 
-    categoryAxis.renderer.labels.template.adapter.add("textOutput", function (text) {
+    categoryAxis.renderer.labels.template.adapter.add("textOutput", function (text:any) {
       return text.replace(/ \(.*/, "");
     });
 
@@ -269,10 +271,8 @@ export class ValveWaterSummeryComponent implements OnInit {
     series.sequencedInterpolation = true;
     series.dataFields.valueY = "totalTime1";
     series.dataFields.categoryX = "statusDate";
-    // series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
     series.columns.template.strokeWidth = 0;
     series.tooltip.pointerOrientation = "vertical";
-
     series.columns.template.column.cornerRadiusTopLeft = 10;
     series.columns.template.column.cornerRadiusTopRight = 10;
     series.columns.template.column.fillOpacity = 0.8;
