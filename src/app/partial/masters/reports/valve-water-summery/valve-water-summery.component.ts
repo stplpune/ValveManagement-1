@@ -19,14 +19,15 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 })
 export class ValveWaterSummeryComponent implements OnInit {
 
-  filterForm!:FormGroup | any;
+  filterForm!: FormGroup | any;
   getAllLocalStorageData = this.localStorage.getLoggedInLocalstorageData();
-  valveWaterSummaryArray:any;
+  valveWaterSummaryArray: any;
   maxDate = new Date();
   dateRange: any;
-  yoganaArray:any;
-  networkIdArray:any;
+  yoganaArray: any;
+  networkIdArray: any;
   defaultCloseBtn: boolean = false;
+  waterTimeSumryChartHide: boolean = false;
 
 
   constructor(
@@ -45,7 +46,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     this.dateRange = [this.maxDate, this.maxDate];
     this.filter_Form();
     this.getYogana();
-    this.localStorage.userId() == 1 ? this.getValveWaterSummary() : ''; 
+    this.localStorage.userId() == 1 ? this.getValveWaterSummary() : '';
   }
 
   filter_Form() {
@@ -78,7 +79,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getValveWaterSummary()) : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveWaterSummary()) : '';
         (this.yoganaArray?.length == 1 && this.networkIdArray?.length != 1) ? this.getValveWaterSummary() : '';
       }
       else {
@@ -90,58 +91,76 @@ export class ValveWaterSummeryComponent implements OnInit {
         this.errorSerivce.handelError(error.status);
       })
   }
- 
+
   getValveWaterSummary() {
-    let formData = this.filterForm.value;  
+    let formData = this.filterForm.value;
     let FromDate = this.datePipe.transform(formData.fromTo[0], 'yyyy/MM/dd');
     let ToDate = this.datePipe.transform(formData.fromTo[1], 'yyyy/MM/dd');
     let obj = this.localStorage.userId() + '&NetworkId=' + (formData.networkId || 0) + '&YojanaId=' + (formData.yojanaId || this.getAllLocalStorageData.yojanaId) + '&FromDate=' + FromDate
-    + '&ToDate=' + ToDate;
+      + '&ToDate=' + ToDate;
+    this.spinner.show();
     this.apiService.setHttp('GET', 'ValveDetails/GetValveWaterSummary?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
+        this.spinner.hide();
         this.valveWaterSummaryArray = res.responseData;
-        this.chartData();
-     }
+        this.chartData(this.valveWaterSummaryArray);
+      }
       else {
         this.valveWaterSummaryArray = [];
+        this.spinner.hide();
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
     },
       (error: any) => {
+        this.spinner.hide();
         this.errorSerivce.handelError(error.status);
       })
   }
 
-  // toHoursAndMinutes(totalMinutes:any) {
-  //   const hours = Math.floor(totalMinutes / 60);
-  //   const minutes = totalMinutes % 60;
-  //   let finalString = hours +'h:' + minutes +'m'
-  //   return finalString;
-  // }
-
   clearFilter(flag: any) {
     if (flag == 'yojana') {
       this.filterForm.controls['networkId'].setValue('');
-    } else if(flag == 'date'){
-      this.filterForm.controls['fromTo'].setValue([this.maxDate,this.maxDate]);
+    } else if (flag == 'date') {
+      this.filterForm.controls['fromTo'].setValue([this.maxDate, this.maxDate]);
       this.defaultCloseBtn = false;
     }
+    this.waterTimeSumryChartHide = false;
     this.getValveWaterSummary();
   }
 
-  chartData(){
+  toHoursAndMinutes(totalMinutes: any) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    let finalString = hours + 'h:' + minutes + 'm'
+    return finalString;
+  }
+
+  minutesToSecond(minutes: any) {
+    return minutes * 60;
+  }
+
+  chartData(MyData: any) {
+
+    MyData.map((ele: any) => {
+      ele['inHours_Min'] = this.toHoursAndMinutes(ele?.valveTotalTime || 0);
+      ele['valveTotalTime'] = this.minutesToSecond(ele?.valveTotalTime || 0);
+    })
+
     am4core.useTheme(am4themes_animated);
+    am4core.addLicense("ch-custom-attribution");
     // Themes end
-    
+
     // Create chart instance
     let chart = am4core.create("chartdiv", am4charts.XYChart);
-    chart.scrollbarX = new am4core.Scrollbar();
 
-    chart.data = this.valveWaterSummaryArray;
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.scrollbarX.interactionsEnabled = false;
+
+    chart.data = MyData;
 
     // Create axes
-    let categoryAxis:any = chart.xAxes.push(new am4charts.CategoryAxis());
+    let categoryAxis: any = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "valveName";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 30;
@@ -150,40 +169,130 @@ export class ValveWaterSummeryComponent implements OnInit {
     categoryAxis.renderer.labels.template.rotation = 270;
     categoryAxis.tooltip.disabled = true;
     categoryAxis.renderer.minHeight = 110;
-    
-    let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.renderer.minWidth = 50;
-    
+
+    // let valueAxis:any = chart.yAxes.push(new am4charts.ValueAxis());
+    // valueAxis.renderer.minWidth = 50;
+    // valueAxis.baseUnit = "second";
+    // valueAxis.title.text = "valveTotalTime";
+
+    var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
+    yAxis.baseUnit = "second";
+    yAxis.title.text = "valve Total Time";
+
     // Create series
-    let series:any = chart.series.push(new am4charts.ColumnSeries());
+    let series: any = chart.series.push(new am4charts.ColumnSeries());
     series.sequencedInterpolation = true;
-    series.dataFields.valueY = "totalTime";
+    series.dataFields.valueY = "valveTotalTime";
     series.dataFields.categoryX = "valveName";
     // series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
     series.columns.template.strokeWidth = 0;
     series.tooltip.pointerOrientation = "vertical";
-    
+
     series.columns.template.column.cornerRadiusTopLeft = 10;
     series.columns.template.column.cornerRadiusTopRight = 10;
     series.columns.template.column.fillOpacity = 0.8;
 
-    series.tooltipHTML = `<center><strong>Total Time : {totalTime}</strong></center>
+    series.tooltipHTML = `<center><strong>Total Time : {inHours_Min}</strong></center>
     <div>No Of Connection : {noOfConnection}</div>
     <div>No Of Customer : {noOfCustomer}</div>`;
+
+    series.columns.template.events.on("hit", (ev: any) => { //ev.target.dataItem._dataContext
+      this.waterTimeSumryChartHide = true;
+      setTimeout(() => {
+        this.waterTimeSummariesChart(ev.target.dataItem._dataContext.waterTimeSummaries);
+      }, 200);
+    });
 
     // on hover, make corner radiuses bigger
     let hoverState = series.columns.template.column.states.create("hover");
     hoverState.properties.cornerRadiusTopLeft = 0;
     hoverState.properties.cornerRadiusTopRight = 0;
     hoverState.properties.fillOpacity = 1;
-    
-    series.columns.template.adapter.add("fill", function(fill:any, target:any) {
+
+    series.columns.template.adapter.add("fill", function (fill: any, target: any) {
       return chart.colors.getIndex(target.dataItem.index);
     });
-    
+
     // Cursor
     chart.cursor = new am4charts.XYCursor();
+
+    chart.durationFormatter.durationFormat = "hh ':' mm";
+  }
+
+  waterTimeSummariesChart(ResArray: any) {
+  
+    ResArray.map((ele: any) => {
+      ele['inHours_Min'] = this.toHoursAndMinutes(ele?.totalTime || 0);
+      ele['totalTime1'] = this.minutesToSecond(ele?.totalTime || 0);
+      //  ele['statusDate'] = ele.statusDate.toString();
+    })
+
+    am4core.useTheme(am4themes_animated);
     am4core.addLicense("ch-custom-attribution");
+    // Themes end
+
+    // Create chart instance
+    let chart = am4core.create("waterTimeSummariesChart", am4charts.XYChart);
+
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.scrollbarX.interactionsEnabled = false;
+
+    chart.data = ResArray;
+
+    chart.events.on("beforedatavalidated", function () {
+      for (var i = 0; i < chart.data.length; i++) {
+        chart.data[i].statusDate += " (" + i + ")";
+      }
+    });
+
+    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "statusDate";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 30;
+    categoryAxis.renderer.labels.template.horizontalCenter = "right";
+    categoryAxis.renderer.labels.template.verticalCenter = "middle";
+    categoryAxis.renderer.labels.template.rotation = 270;
+    categoryAxis.renderer.minHeight = 110;
+
+    categoryAxis.renderer.labels.template.adapter.add("textOutput", function (text) {
+      return text.replace(/ \(.*/, "");
+    });
+
+    var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
+    yAxis.baseUnit = "second";
+    yAxis.title.text = "total Time";
+
+
+    // Create series
+    let series: any = chart.series.push(new am4charts.ColumnSeries());
+    series.sequencedInterpolation = true;
+    series.dataFields.valueY = "totalTime1";
+    series.dataFields.categoryX = "statusDate";
+    // series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+    series.columns.template.strokeWidth = 0;
+    series.tooltip.pointerOrientation = "vertical";
+
+    series.columns.template.column.cornerRadiusTopLeft = 10;
+    series.columns.template.column.cornerRadiusTopRight = 10;
+    series.columns.template.column.fillOpacity = 0.8;
+
+    series.tooltipHTML = `<center><strong>Total Time : {inHours_Min}</strong></center>
+    <div>Start Time : {startTime}</div>
+    <div>End Time : {endTime}</div>`;
+
+    // on hover, make corner radiuses bigger
+    let hoverState = series.columns.template.column.states.create("hover");
+    hoverState.properties.cornerRadiusTopLeft = 0;
+    hoverState.properties.cornerRadiusTopRight = 0;
+    hoverState.properties.fillOpacity = 1;
+
+    series.columns.template.adapter.add("fill", function (fill: any, target: any) {
+      return chart.colors.getIndex(target.dataItem.index);
+    });
+
+    // Cursor
+    chart.cursor = new am4charts.XYCursor();
+    chart.durationFormatter.durationFormat = "hh ':' mm";
   }
 
 }

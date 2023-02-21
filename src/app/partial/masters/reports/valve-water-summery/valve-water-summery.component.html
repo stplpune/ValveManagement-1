@@ -9,14 +9,14 @@
             <form [formGroup]="filterForm">
                 <div class="row g-2">
                     <div class="col-sm-3">
-                        <ngx-select [allowClear]="true" [items]="yoganaArray" (select)="getValveWaterSummary();getNetwork()"
+                        <ngx-select [allowClear]="true" [items]="yoganaArray" (select)="getValveWaterSummary();getNetwork();waterTimeSumryChartHide = false;"
                             [disabled]="yoganaArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
                         <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
-                            placeholder="Select Network" (select)="getValveWaterSummary()" 
+                            placeholder="Select Network" (select)="getValveWaterSummary();waterTimeSumryChartHide = false;" 
                             [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
                             optionTextField="networkName">
                         </ngx-select>
@@ -24,10 +24,10 @@
                     <div class="col-sm-3" >
                         <div class="input-group">
                         <input [owlDateTime]="dt1" formControlName="fromTo" 
-                        (dateTimeChange)="defaultCloseBtn = true;getValveWaterSummary()" class="form-control form-control-sm" [max]="maxDate"
+                        (dateTimeChange)="defaultCloseBtn = true;getValveWaterSummary();waterTimeSumryChartHide = false;" class="form-control form-control-sm" [max]="maxDate"
                         [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
-                        placeholder="Date Time">
-                    <owl-date-time #dt1 [disabled]="!filterForm.value.yojanaId" [pickerType]="'calendar'"></owl-date-time>
+                        placeholder="Date Time" [readonly]="true">
+                    <owl-date-time #dt1 [pickerType]="'calendar'"></owl-date-time>
                     <button class="btn btn-light btn-sm" type="button" *ngIf="!defaultCloseBtn"
                         [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
                     <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
@@ -41,7 +41,17 @@
     </div>
 
     <div class="card-body">
+    <!-- <div class="row">
+        <div class="col-sm-6">
+            <div class="chartdiv"></div>
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div> -->
     <div class="chartdiv"></div>
+
+    <div *ngIf="waterTimeSumryChartHide" class="waterTimeSummariesChart"></div>
+
     </div>
-  
+    
 </div>
