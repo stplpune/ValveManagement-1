@@ -106,7 +106,7 @@
                                 [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
                                 placeholder="Date Time" [readonly]="true">
                             <owl-date-time #dt1 [pickerType]="'calendar'"></owl-date-time>
-                            <button class="btn btn-light btn-sm" type="button" *ngIf="!defaultCloseBtn"
+                            <button class="btn btn-light btn-sm border" type="button" *ngIf="!defaultCloseBtn"
                                 [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
                             <!-- <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
                                 (click)="clearDate()">
