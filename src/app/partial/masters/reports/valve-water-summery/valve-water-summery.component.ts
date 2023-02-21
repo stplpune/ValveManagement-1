@@ -218,7 +218,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     // Cursor
     chart.cursor = new am4charts.XYCursor();
 
-    chart.durationFormatter.durationFormat = "hh ':' mm";
+    chart.durationFormatter.durationFormat = "hh':'mm";
   }
 
   waterTimeSummariesChart(ResArray: any) {
@@ -264,7 +264,6 @@ export class ValveWaterSummeryComponent implements OnInit {
     yAxis.baseUnit = "second";
     yAxis.title.text = "total Time";
 
-
     // Create series
     let series: any = chart.series.push(new am4charts.ColumnSeries());
     series.sequencedInterpolation = true;
@@ -294,7 +293,7 @@ export class ValveWaterSummeryComponent implements OnInit {
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
-    chart.durationFormatter.durationFormat = "hh ':' mm";
+    chart.durationFormatter.durationFormat = "hh':'mm";
   }
 
 }
