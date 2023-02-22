@@ -27,6 +27,7 @@ export class ConsumerWaterSummeryComponent implements OnInit {
   pagesize: number = 10;
   totalRows: any;
   valveDetailsId:any;
+  heighLightRow:any;
 
   maxDate = new Date();
   defaultFromDate = new Date(Date.now() + -15 * 24 * 60 * 60 * 1000);

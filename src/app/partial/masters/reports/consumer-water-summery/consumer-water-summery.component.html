@@ -58,7 +58,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let consumerList of getConsumerListArray | paginate: {itemsPerPage: 10,
-                    currentPage: pageNumber, totalItems:totalRows}; let i = index" [class.active]="valveDetailsId == consumerList.valveDetailsId">
+                    currentPage: pageNumber, totalItems:totalRows}; let i = index" (click)="heighLightRow = consumerList.id" [class.active]="heighLightRow == consumerList.id">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{consumerList?.personName ? consumerList?.personName : '-'}}</td>
                     <td>{{consumerList?.mobileNo ? consumerList?.mobileNo : '-'}}</td>
