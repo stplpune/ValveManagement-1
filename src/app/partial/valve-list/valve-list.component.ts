@@ -128,6 +128,7 @@ export class ValveListComponent implements OnInit {
         if (res.statusCode == '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
+          (this.yoganaArrayFilter?.length == 1 && this.networkArrayfilter?.length > 1) ?  this.getAllValveData() : '';
           // this.networkArrayfilter?.length == 1 ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }),this.getAllValveData()) : '';
           // this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId }),this.ToBindSimNumberList()) : '';
           // this.editFlag ? (this.valveListForm.setValue(this.editObj.networkId),this.ToBindSimNumberList()) :'' ;
@@ -191,7 +192,7 @@ export class ValveListComponent implements OnInit {
     let obj = {
       "pageno": this.pageNumber,
       "YojanaId": formdata.yojana || this.getAllLocalStorageData.yojanaId || 0,
-      "NetworkId": formdata.network || this.getAllLocalStorageData.networkId || 0
+      "NetworkId": formdata.network || 0
     }
     this.apiService.setHttp('get', 'ValveMaster?UserId=' + this.localStorage.userId() + '&pageno=' + obj.pageno + '&pagesize=10&YojanaId=' + (obj.YojanaId || this.getAllLocalStorageData.yojanaId) + '&NetworkId=' + obj.NetworkId + '&Search=', false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({

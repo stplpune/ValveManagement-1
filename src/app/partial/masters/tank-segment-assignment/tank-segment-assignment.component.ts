@@ -73,7 +73,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   getTableData() {
-    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 ||  this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0 ||  this.getAllLocalStorageData.networkId), false, false, false, 'valvemgt');
+    this.service.setHttp('get', 'ValveTankSegment/GetAllTanksSegment?pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 ||  this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
     this.service.getHttp().subscribe({
       next: ((res: any) => {
         if (res.statusCode == '200') {

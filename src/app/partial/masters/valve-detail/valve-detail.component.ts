@@ -198,6 +198,7 @@ export class ValveDetailComponent implements OnInit {
         if (res.statusCode === '200') {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = res.responseData : this.networkArray = res.responseData;
+          (this.yoganaArrayFilter?.length == 1 && this.networkArrayfilter?.length > 1) ?  this.getAllValveData() : '';
           (this.filterFlag == 'filter' && this.networkArrayfilter?.length == 1) ? (this.searchForm.patchValue({ network: this.networkArrayfilter[0].networkId }), this.getAllValveData()) : '';
           this.networkArray?.length == 1 ? (this.valveListForm.patchValue({ network: this.networkArray[0].networkId })) : '';
           this.networkArray?.length == 1 && this.btnText != 'Update Changes' ?  this.getValve_TankList(1,this.searchForm.value.yojana, this.searchForm.value.network) : '';

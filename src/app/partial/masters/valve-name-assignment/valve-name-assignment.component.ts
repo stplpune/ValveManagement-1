@@ -94,6 +94,7 @@ export class ValveNameAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkArray = res.responseData;
+        (this.yoganaArray?.length == 1 && this.networkArray?.length > 1) ?  this.getValveNameAssignmentAll() : '';
         this.networkArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkArray[0].networkId }),this.getValveNameAssignmentAll()) : '';
       }
       else {

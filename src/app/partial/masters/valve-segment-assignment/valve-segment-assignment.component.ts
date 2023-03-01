@@ -175,7 +175,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
   getAllValveTableData() {
     this.spinner.show();
-    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo=' + this.pageNumber + '&pageSize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 || this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0 || this.getAllLocalStorageData.networkId), false, false, false, 'valvemgt');
+    this.apiService.setHttp('GET', 'ValveManagement/Valvesegment/GetAllVaveSegments?pageNo=' + this.pageNumber + '&pageSize=' + this.pagesize + '&yojanaId=' + (this.filterForm.value.yojanaId || 0 || this.getAllLocalStorageData.yojanaId) + '&networkId=' + (this.filterForm.value.networkId || 0), false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         this.spinner.hide();
