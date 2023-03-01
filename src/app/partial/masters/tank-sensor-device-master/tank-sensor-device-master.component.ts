@@ -151,6 +151,30 @@ getAllNetwork(flag?:any) {
   })
 }
 
+  // Tank Array Declaration and Initialization
+  getAllTank(flag?:any){
+    let tankFlag = flag;
+    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?(this.tankSensorDeviceFrm.value.yojanaId || 0):(this.searchForm.value.yojana || 0)) +'&NetworkId=' + 
+    (tankFlag?(this.tankSensorDeviceFrm.value.networkId || 0):(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
+    this.apiService.getHttp().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == '200') {
+          tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData);
+          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : '';
+
+          this.getAllFilterTankArray.length == 1 ? (this.searchForm.patchValue({tank: this.getAllFilterTankArray[0].tankId }),this.getAllSensorDeviceTableData()) : '';
+
+          (this.getAllFilterNetworkArray?.length == 1 && this.getAllFilterTankArray?.length > 1) ?  (this.getAllSensorDeviceTableData()) : '';
+          this.getAllTankArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({tankId: this.getAllTankArray[0].tankId }) : '';
+        }else{
+          tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
+        }
+      }, error: (error: any) => {
+        this.errorSerivce.handelError(error.status);
+      },
+    })
+  }
+
 // Sim Array Declaration and Initialization
   getAllSim(flag?:any) {
     let simUpdateId = this.editData ? this.editData.simId : 0 ;
@@ -164,27 +188,6 @@ getAllNetwork(flag?:any) {
           this.getAllSimArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({simId: this.getAllSimArray[0].id}) : '';
         }else{
           this.getAllSimArray = [];
-        }
-      }, error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    })
-  }
-
-  // Tank Array Declaration and Initialization
-  getAllTank(flag?:any){
-    let tankFlag = flag;
-    this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllTank?YojanaId='+ (tankFlag?(this.tankSensorDeviceFrm.value.yojanaId || 0):(this.searchForm.value.yojana || 0)) +'&NetworkId=' + 
-    (tankFlag?(this.tankSensorDeviceFrm.value.networkId || 0):(this.searchForm.value.network || 0)), false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode == '200') {
-          tankFlag ? (this.getAllTankArray = res.responseData) : (this.getAllFilterTankArray = res.responseData)
-          this.editFlag ? this.tankSensorDeviceFrm.controls['tankId'].setValue(this.editData.tankId) : '';
-          this.getAllFilterTankArray.length == 1 ? this.searchForm.patchValue({tank: this.getAllFilterTankArray[0].tankId }) : '';
-          this.getAllTankArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({tankId: this.getAllTankArray[0].tankId }) : '';
-        }else{
-          tankFlag ? (this.getAllTankArray = []) : (this.getAllFilterTankArray = [])
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
