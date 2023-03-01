@@ -53,10 +53,10 @@ export class TankSensorDeviceMasterComponent implements OnInit {
     this.controlForm();
     this.searchFormControl();
     this.getAllYojana();
-    this.getAllSensorDeviceTableData();
-    if(this.getAllLocalStorageData.userId != 1){
-      this.getAllNetwork();
-    }
+    this.localStorage.userId() == 1 ? this.getAllSensorDeviceTableData() : '';
+    // if(this.getAllLocalStorageData.userId != 1){
+    //   this.getAllNetwork();
+    // }
   }
 
   // Get Form Control Values
@@ -73,16 +73,16 @@ export class TankSensorDeviceMasterComponent implements OnInit {
       simId: ['',Validators.required],
       deviceDescription: ['',Validators.required],
       tankId: [(this.getAllTankArray.length == 1 && this.getAllLocalStorageData.userId != 1)? this.getAllTankArray[0].tankId : '',Validators.required],
-      yojanaId: [this.getAllLocalStorageData.yojanaId || '',Validators.required],
-      networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '',Validators.required]
+      yojanaId: ['',Validators.required],
+      networkId: ['',Validators.required]
     })
   }
 
   // Get Controls of Search/Filter Form
   searchFormControl(){
     this.searchForm=this.fb.group({
-      yojana:+[this.getAllLocalStorageData.yojanaId || ''],
-      network:+[this.getAllLocalStorageData.networkId || ''],
+      yojana: [''],
+      network: [''],
       tank:['']
     })
       this.getAllTank(false);
@@ -115,6 +115,8 @@ getAllYojana() {
     next: (res: any) => {
       if (res.statusCode == '200') {
         this.getAllYojanaArray = res.responseData;
+        this.getAllYojanaArray?.length == 1 ? (this.searchForm.patchValue({ yojana: this.getAllYojanaArray[0].yojanaId }), this.getAllNetwork(false)) : '';
+        this.getAllYojanaArray?.length == 1 ? (this.tankSensorDeviceFrm.patchValue({ yojanaId: this.getAllYojanaArray[0].yojanaId }), this.getAllNetwork(true)) : '';
         this.editFlag ? (this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.editData.yojanaId), this.getAllNetwork(true)) : '';
       }else{
         this.getAllYojanaArray = [];
@@ -135,7 +137,8 @@ getAllNetwork(flag?:any) {
   this.apiService.getHttp().subscribe({
     next: (res: any) => {
       if (res.statusCode == '200') {
-        networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData)
+        networkFlag ? (this.getAllNetworkArray = res.responseData) : (this.getAllFilterNetworkArray = res.responseData);
+        (this.getAllYojanaArray?.length == 1 && this.getAllFilterNetworkArray?.length > 1) ?  (this.getAllSensorDeviceTableData()) : '';
           this.editFlag ? (this.tankSensorDeviceFrm.controls['networkId'].setValue(this.editData.networkId),this.getAllSim(true),this.getAllTank(true)) : '';
           this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId },this.getAllTank(false)) : '';
           this.getAllNetworkArray.length == 1 ? this.tankSensorDeviceFrm.patchValue({networkId: this.getAllNetworkArray[0].networkId },this.getAllTank(true),this.getAllSim(true)) : '';
@@ -197,7 +200,11 @@ clearForm(formDirective?:any){
   this.submitted = false;
   this.getAllLocalStorageData.userId == 1 ? 
   this.getAllNetworkArray = [] : '';
+  this.getAllTankArray = [];
   this.controlForm();
+  this.getAllYojanaArray?.length == 1 ?  this.tankSensorDeviceFrm.controls['yojanaId'].setValue(this.getAllYojanaArray[0].yojanaId) : '';
+  (this.getAllNetworkArray?.length == 1 && this.tankSensorDeviceFrm.value.yojanaId) ? this.tankSensorDeviceFrm.controls['networkId'].setValue(this.getAllNetworkArray[0].networkId) : '';
+
 }
 
 // Main Table Array Declaration and Initialization
