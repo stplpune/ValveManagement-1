@@ -67,6 +67,8 @@ export class DashboardComponent implements OnInit {
     } 
     this.tankFilterDrop.setValue('');
     this.dateFilter.setValue('');
+    this.getValveSummary(),
+    this.getValveSegmentList()
     this.getDeviceCurrentSensorValue();
     // this.editPatchShape.setMap(null);
     this.editPatchShape = undefined
@@ -95,7 +97,7 @@ export class DashboardComponent implements OnInit {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
         this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
-        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length != 1) ? this.getValveSummary() : '';
+        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length > 1) ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue())  : '';
       }
       else {
         this.networkIdArray = [];

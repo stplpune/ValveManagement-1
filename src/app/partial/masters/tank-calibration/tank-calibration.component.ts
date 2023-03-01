@@ -67,7 +67,6 @@ export class TankCalibrationComponent implements OnInit {
       networkId: ['']
     })
   }
-
  
   get f() { return this.tankForm.controls }
 
@@ -99,6 +98,7 @@ export class TankCalibrationComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.networkArray = res.responseData;
+          (this.yojanaArray?.length == 1 && this.networkArray?.length > 1) ?  this.getAllTankCalibration() : '';
           this.networkArray.length == 1 ? (this.filterFrm.controls['networkId'].setValue(this.networkArray[0].networkId),this.getAllTankCalibration()) : '';
         } else {
           this.networkArray = [];

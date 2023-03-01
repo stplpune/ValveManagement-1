@@ -50,18 +50,15 @@ export class SimListComponent implements OnInit {
     this.searchFormControl();
     this.getSimOperator();
     this.getAllYojana();
-    if(this.getAllLocalStorageData.userId != 1){
-      this.getAllNetwork();
-    }
-    this.getAllSimData();
+    this.localStorage.userId() == 1 ? this.getAllSimData() : '';
   }
 
   //Form Initialize
   controlForm() {
     this.simFormData = this.fb.group({
       id: +[''],
-      yojanaId:[(this.getAllLocalStorageData.yojanaId || ''), Validators.required],
-      networkId: [(this.getAllLocalStorageData.userId != 1) ? (this.getAllLocalStorageData.networkId) : '', Validators.required],
+      yojanaId:['', Validators.required],
+      networkId: ['', Validators.required],
       simNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{20}$')]],
       imsiNo: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{15}$')]],
       operatorId: ['', [Validators.required,Validators.pattern('[^0]+')]],
@@ -71,8 +68,8 @@ export class SimListComponent implements OnInit {
   // SearchForm Initialize
   searchFormControl(){
     this.searchForm=this.fb.group({
-      yojana:[this.getAllLocalStorageData.yojanaId || ''],
-      network:[this.getAllLocalStorageData.networkId || '']
+      yojana:[''],
+      network:['']
     })
   }
 
@@ -85,6 +82,8 @@ export class SimListComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == '200') {
           this.getAllYojanaArray = res.responseData;
+          this.getAllYojanaArray?.length == 1 ? (this.searchForm.patchValue({ yojana: this.getAllYojanaArray[0].yojanaId }), this.getAllNetwork(false)) : '';
+          this.getAllYojanaArray?.length == 1 ? (this.simFormData.patchValue({ yojanaId: this.getAllYojanaArray[0].yojanaId }), this.getAllNetwork(true)) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -99,9 +98,10 @@ export class SimListComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == '200') { 
-          !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData)
+          !networkFlag ? (this.getAllFilterNetworkArray = res.responseData) : (this.getAllNetworkArray = res.responseData);
+          (this.getAllYojanaArray?.length == 1 && this.getAllFilterNetworkArray?.length > 1) ?  (this.getAllSimData()) : '';
           this.editFlag ? (this.simFormData.controls['networkId'].setValue(this.editData.networkId)) : '';
-          this.getAllFilterNetworkArray.length == 1 ? this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId }) : '';
+          this.getAllFilterNetworkArray.length == 1 ? (this.searchForm.patchValue({network: this.getAllFilterNetworkArray[0].networkId }),this.getAllSimData()) : '';
           this.getAllNetworkArray.length == 1 ? this.simFormData.patchValue({networkId: this.getAllNetworkArray[0].networkId }) : '';
         } else {
           this.getAllNetworkArray = [];
@@ -144,6 +144,8 @@ export class SimListComponent implements OnInit {
     this.editData = '';
     this.submitted = false;
     this.controlForm();
+    this.getAllYojanaArray?.length == 1 ?  this.simFormData.controls['yojanaId'].setValue(this.getAllYojanaArray[0].yojanaId) : '';
+    (this.getAllNetworkArray?.length == 1 && this.simFormData.value.yojanaId) ? this.simFormData.controls['networkId'].setValue(this.getAllNetworkArray[0].networkId) : '';
   }
 
   //To Submit the Data
@@ -271,8 +273,8 @@ export class SimListComponent implements OnInit {
     if(flag == 'yojana'){
       this.searchForm.controls['network'].setValue('')
       this.getAllFilterNetworkArray = [];
-      this.getAllSimData();
     }
+    this.getAllSimData()
   }
 
   clearDropdown() {

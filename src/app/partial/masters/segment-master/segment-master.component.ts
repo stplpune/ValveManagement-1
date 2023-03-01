@@ -97,6 +97,7 @@ export class SegmentMasterComponent implements OnInit{
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
+        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length > 1) ?  this.getAllSegmentMaster() : '';
         this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getAllSegmentMaster()) : '';
       }
       else {
