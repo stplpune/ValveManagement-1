@@ -351,6 +351,13 @@ export class DashboardComponent implements OnInit {
   }
 
   onMapReady(map: any) {
+
+    map.setOptions({ // add satellite view btn
+      mapTypeControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT,
+      }
+    });
+
     this.map = map;
     this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({

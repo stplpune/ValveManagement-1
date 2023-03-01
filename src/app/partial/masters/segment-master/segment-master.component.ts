@@ -365,6 +365,13 @@ export class SegmentMasterComponent implements OnInit{
 
 
   onMapReady(map: any) {
+
+    map.setOptions({ // add satellite view btn
+      mapTypeControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT,
+      }
+    });
+
     this.map = map;
     const options: any = {
       drawingControl: true,
