@@ -307,7 +307,7 @@ export class DashboardComponent implements OnInit {
     this.spinner.show();
     let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
       + '&userId=' + this.localStorage.userId();
-    this.apiService.setHttp('get', 'api/SegmentMaster/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
+    this.apiService.setHttp('get', 'ValveTankSegment/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === '200') {
@@ -327,18 +327,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
   valveSegPatchData(mainArray: any) {
     this.markerArray = mainArray.segmenDetailsModels.map((ele: any) => { //Marker show Code
       return ele = { latitude: ele.startPoints.split(' ')[0], longitude: ele.startPoints.split(' ')[1], label: ele.segmentName };
     })
 
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
-      ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; return ele
+      ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; 
+      ele['flag'] = 'tank'; 
+      return ele
     })
 
     mainArray.valveDetailModels.map((ele: any) => { // Insert valve Img
-      ele['iconUrl'] = "../../../../assets/images/valve.png"; return ele
+      ele['iconUrl'] = "../../../../assets/images/valve.png";
+      ele['flag'] = 'valve'; 
+      return ele
     })
 
     this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels);
@@ -375,5 +378,13 @@ export class DashboardComponent implements OnInit {
     let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
     this.map.setCenter(latLng);
   }
+
+  previous:any;
+  clickedMarker(infowindow:any) {
+    if (this.previous) {
+        this.previous.close();
+    }
+    this.previous = infowindow;
+ }
 
 }
