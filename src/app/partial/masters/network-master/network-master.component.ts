@@ -58,7 +58,11 @@ export class NetworkMasterComponent implements OnInit {
       networkName: ['', Validators.required],
       yojanaId: [this.allYojanaArray?.length == 1 ? this.allYojanaArray[0].yojanaId : '', Validators.required]
     })
+  }
 
+  clearWhiteSpace(){
+    let replaceName=this.networkRegForm.value.networkName.replace(/\s/g, "");
+    this.networkRegForm.controls['networkName'].setValue(replaceName);
   }
 
   getAllYojana() {
