@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   chartObj:any;
   tankDeviceHourlyArray:any;
   dateFilter = new FormControl('');
-  max = new Date();
+  max:any = new Date();
   valveEventHourlyArray: any;
 
   constructor(
@@ -156,7 +156,7 @@ export class DashboardComponent implements OnInit {
   filterTankData(obj:any){ 
     if(obj[0]?.data?.deviceId){
       this.waterTankChartData(obj[0]?.data);
-      this.dateFilter.setValue(new Date()) 
+      this.dateFilter.setValue(this.max) 
       this.getTankDeviceHourlyValue();  
     }
   } 
