@@ -130,7 +130,7 @@
                         class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [fitBounds]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
+                    <agm-map [fitBounds]="true" [fullscreenControl]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
                         (mapReady)="onMapReady($event)">
                         <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
                             [iconUrl]="m.iconUrl">
