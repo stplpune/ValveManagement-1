@@ -65,12 +65,14 @@ export class DashboardComponent implements OnInit {
       this.filterForm.controls['networkId'].setValue('');
     } else if (flag == 'network') {
     } 
-    this.clearMapData();
     this.tankFilterDrop.setValue('');
     this.dateFilter.setValue('');
     this.getValveSummary(),
     this.getValveSegmentList()
     this.getDeviceCurrentSensorValue();
+    // this.editPatchShape.setMap(null);
+    this.editPatchShape = undefined
+    // this.getValveSegmentList();
   }
   getYogana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
@@ -300,7 +302,6 @@ export class DashboardComponent implements OnInit {
   map: any;
   markerArray: any;
   markerUrlNull = "../../../../assets/images/dot.png";
-  Polyline:any[]= [];
 
   getValveSegmentList() { //All Segment 
     this.spinner.show();
@@ -350,6 +351,7 @@ export class DashboardComponent implements OnInit {
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       return ele = finalLatLngArray;
     })
+
     this.onMapReady(this.map);
   }
 
@@ -375,7 +377,6 @@ export class DashboardComponent implements OnInit {
     })
     let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
     this.map.setCenter(latLng);
-    this.Polyline.push(this.editPatchShape);
   }
 
   previous:any;
@@ -385,10 +386,5 @@ export class DashboardComponent implements OnInit {
     }
     this.previous = infowindow;
  }
- 
-clearMapData(){
-   for (let i = 0; i < this.Polyline.length; i++) {this.Polyline[i].setMap(null);}
-   this.editPatchShape = undefined;
-  }
 
 }
