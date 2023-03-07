@@ -130,12 +130,12 @@
                         class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [fitBounds]="fitBounds" [fullscreenControl]="true" [mapTypeControl]='true' [latitude]="lat || 19.0898177" [zoom]="zoom" [longitude]="lng || 76.5240298"
+                    <agm-map [fitBounds]="true" [fullscreenControl]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
                         (mapReady)="onMapReady($event)">
                         <div *ngFor="let m of tank_ValveArray; let i = index"><agm-marker *ngIf="m.latitude != 0 && m.longitude != 0" [latitude]="m.latitude" [longitude]="m.longitude"
                             [iconUrl]="m.iconUrl">
                         </agm-marker></div>
-                        <agm-marker [agmFitBounds]="agmFitBounds" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
+                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
                             [longitude]="m.longitude || 76.5240298" [label]="m.label" [iconUrl]="markerUrlNull">
                         </agm-marker>
                     </agm-map>
