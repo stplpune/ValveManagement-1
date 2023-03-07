@@ -294,18 +294,21 @@ export class SegmentMasterComponent implements OnInit{
   @ViewChild('search') searchElementRef: any;
   centerMarkerLatLng: any;
   isShapeDrawn: boolean = false;
+  patchShapeEditedObj:any;
 
   newRecord: any = {
     polyline: undefined,
   };
   markerArray: any;
   markerUrlNull = "../../../../assets/images/dot.png";
+  Polyline:any[]= [];
 
 
   patchSegmentTable(obj: any) {
     this.onEditFlag = true;
     this.textName = 'Update';
     this.editObj = obj;
+    
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
     this.segmentMasterForm.controls['yojanaId'].setValue(this.editObj.yojanaId);
@@ -323,9 +326,10 @@ export class SegmentMasterComponent implements OnInit{
       this.add_editCommonData(mainArray);
 
       //.........................................  get Edit Object code Start Here.................................//
+
       let stringtoArray = this.editObj?.midpoints.split(',');
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
-
+      
       this.splitedEditObjData = finalLatLngArray;
 
       //.........................................  get Edit Object Segment code End Here.................................//
@@ -361,17 +365,13 @@ export class SegmentMasterComponent implements OnInit{
     // this.getAllSegmentArray = getOtherAllSegment.flat();
     this.getAllSegmentArray = getOtherAllSegment;
 
-    //.........................................  get Edit All Other Segment Array code Start End.................................//
+    //.........................................  get Edit All Other Segment Array code End Here.................................//
   }
 
 
   onMapReady(map: any) {
 
-    map.setOptions({ // add satellite view btn
-      mapTypeControlOptions: {
-        position: google.maps.ControlPosition.TOP_RIGHT,
-      }
-    });
+    map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT,}}); // add satellite view btn
 
     this.map = map;
     const options: any = {
@@ -410,7 +410,7 @@ export class SegmentMasterComponent implements OnInit{
     //............................   Edit Code Start Here ..................  //
 
     // drawingManager.setDrawingMode(null);
-
+   
     this.getAllSegmentArray.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
@@ -421,6 +421,7 @@ export class SegmentMasterComponent implements OnInit{
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.editPatchShape.setMap(this.map);
+      this.Polyline.push(this.editPatchShape);
     })
 
     let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
@@ -433,7 +434,7 @@ export class SegmentMasterComponent implements OnInit{
     if (this.onEditFlag == true) {
       drawingManager.setOptions({ drawingControl: false });
       this.centerMarkerLatLng = this.splitedEditObjData;
-      let patchShapeEditedObj = new google.maps.Polyline({
+      this.patchShapeEditedObj = new google.maps.Polyline({
         path: this.centerMarkerLatLng,
         geodesic: true,
         strokeColor: '#8000FF',
@@ -441,7 +442,7 @@ export class SegmentMasterComponent implements OnInit{
         strokeWeight: 4,
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
-      this.setSelection(patchShapeEditedObj);
+      this.setSelection(this.patchShapeEditedObj);
     } else if (this.onEditFlag == false) {
       drawingManager.setOptions({ drawingControl: false });
     }
@@ -505,10 +506,14 @@ export class SegmentMasterComponent implements OnInit{
   }
 
   clearMapData() {
-    this.editPatchShape && (this.editPatchShape.setMap(null), this.editPatchShape = undefined);
+    this.editPatchShape && (this.editPatchShape = undefined);
+    this.editObj ? this.editObj.midpoints = '' : '';this.patchShapeEditedObj && (this.patchShapeEditedObj.setMap(null), this.patchShapeEditedObj = undefined);
     this.tank_ValveArray = [];
     this.markerArray = [];
     this.removeShape();
+    for (let i = 0; i < this.Polyline.length; i++) {
+      this.Polyline[i].setMap(null);
+    }
   }
 
 }
