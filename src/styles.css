@@ -48,6 +48,9 @@ body {
     color: #fff !important;
 }
 
+.btn-main:active,
+.btn-main.active,
+.btn-main:focus,
 .btn-main:hover {
     background-color: var(--main-dark-color);
     color: #fff;
