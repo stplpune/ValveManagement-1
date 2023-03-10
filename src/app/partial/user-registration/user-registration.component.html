@@ -1,6 +1,6 @@
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center">
+    <div class="row justify-content-between align-items-center  mb-3">
       <div class="col-sm-4">User Registration</div>
       <div class="col-sm-4 text-end">
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
@@ -8,34 +8,35 @@
           User</button>
       </div>
     </div>
-  </div>
-  <form [formGroup]="searchForm">
-    <div class="row">
-      <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="yoganaIdArray" formControlName="yojana" placeholder="Select Yojana"
-          optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
-          (select)="networkFlag='filter';getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
-        </ngx-select>
-      </div>
-      <div class="col-sm-3">
-        <ngx-select [allowClear]="true" [items]="networkFilterArray" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
-          optionTextField="networkName" (remove)="clearSerach('network')" (select)="getUserRegistrationList()">
-        </ngx-select>
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="form-control" formControlName="searchField"
-            placeholder="Search By Name / Mobile No." (keyup)="onKeyUpFilter()" />
-          <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
-            *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
-              class="fas fa-search"></i></button>
+    <form [formGroup]="searchForm">
+      <div class="row form-container">
+        <div class="col-sm-3">
+          <ngx-select [allowClear]="true" [items]="yoganaIdArray" formControlName="yojana" placeholder="Select Yojana"
+            optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
+            (select)="networkFlag='filter';getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
+          </ngx-select>
         </div>
+        <div class="col-sm-3">
+          <ngx-select [allowClear]="true" [items]="networkFilterArray" formControlName="network"
+            placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
+            optionTextField="networkName" (remove)="clearSerach('network')" (select)="getUserRegistrationList()">
+          </ngx-select>
+        </div>
+        <div class="col-sm-3">
+          <div class="input-group">
+            <input type="text" class="form-control" formControlName="searchField"
+              placeholder="Search By Name / Mobile No." (keyup)="onKeyUpFilter()" />
+            <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
+              *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+            <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
+                class="fas fa-search"></i></button>
+          </div>
 
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
+
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
