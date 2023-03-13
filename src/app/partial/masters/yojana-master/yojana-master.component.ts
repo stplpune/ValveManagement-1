@@ -60,7 +60,7 @@ export class YojanaMasterComponent implements OnInit {
 
   defaultForm() {
     this.yojanaForm = this.fb.group({
-      yojanaName: ['', [Validators.required]],
+      yojanaName: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
       districtId: ['', [Validators.required]],
       talukaId: ['', [Validators.required]],
       villageId: ['', [Validators.required]]
