@@ -1,63 +1,87 @@
 @import '~ngx-toastr/toastr';
 @import "~ng-pick-datetime/assets/style/picker.min.css";
 
-body{
+body {
     font-family: 'Inter', sans-serif;
 }
-:root{
-    --main-color:rgb(74,72,240);
-    --main-dark-color:rgb(59,57,192);
-    --main-light-color:rgb(223, 223, 248);
+
+:root {
+    --main-color: rgb(74, 72, 240);
+    --main-dark-color: rgb(59, 57, 192);
+    --main-light-color: rgb(223, 223, 248);
 }
-.text-main{
+
+.text-main {
     color: var(--main-color);
 }
-.btn-main, .bg-main{
+
+.btn-main,
+.bg-main {
     background-color: var(--main-color);
     color: #fff;
 }
-.text-dark-main{
+
+.text-dark-main {
     color: var(--main-dark-color);
 }
-.btn-dark-main, .bg-dark-main{
+
+.btn-dark-main,
+.bg-dark-main {
     background-color: var(--main-dark-color);
     color: #fff;
 }
-.text-light-main{
+
+.text-light-main {
     color: var(--main-light-color);
 }
-.btn-light-main, .bg-light-main{
+
+.btn-light-main,
+.bg-light-main {
     background-color: var(--main-light-color);
 }
-.btn-light-main:hover{
-    background-color: var(--main-color);
-    color: #fff;
+
+.btn-light-main:active,
+.btn-light-main.active,
+.btn-light-main:focus,
+.btn-light-main:hover {
+    background-color: var(--main-color) !important;
+    color: #fff !important;
 }
-.btn-main:hover{
+
+.btn-main:active,
+.btn-main.active,
+.btn-main:focus,
+.btn-main:hover {
     background-color: var(--main-dark-color);
     color: #fff;
 }
-.plain-card{
+
+.plain-card {
     font-size: 0.85rem;
     border: none;
 }
-.plain-card .card-header{
-    background-color:transparent;
+
+.plain-card .card-header {
+    background-color: transparent;
     border-bottom: none;
     font-weight: 600;
 }
-.plain-card .card-header .btn{
+
+.plain-card .card-header .btn {
     font-size: 0.8rem;
     box-shadow: none;
     border: none;
 }
-.dashboard-table{
+
+.dashboard-table {
     font-size: 0.85rem;
 }
-.dashboard-table thead th{
+
+.dashboard-table thead th {
     background-color: #eee;
 }
-.dashboard-table tbody td .btn{
+
+.dashboard-table tbody td .btn {
     font-size: 0.8rem;
     box-shadow: none;
     border: none;
@@ -66,24 +90,47 @@ body{
     text-align: center;
     padding: 0;
 }
-.form-container{
+
+.form-container {
     font-size: 0.85rem;
 }
-.form-container .form-label{
+
+.form-container .form-label {
     font-size: 0.75rem;
     color: #999;
     margin-bottom: 2px;
 }
+
 .form-container .btn,
-.form-container .form-control{
+.form-container .form-control {
     font-size: 0.85rem;
     box-shadow: none;
 }
-.btn-close-inverse{
+
+.form-container .input-group {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+}
+
+.form-container .input-group .form-control {
+    border: none;
+    box-shadow: none;
+    font-size: 0.85rem;
+}
+
+.form-container .input-group .btn {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    font-size: 0.85rem;
+}
+
+.btn-close-inverse {
     filter: invert(1);
 }
-.form-check-input:checked{
-    background-color:var(--main-color);
+
+.form-check-input:checked {
+    background-color: var(--main-color);
     border-color: var(--main-color);
 }
 
@@ -94,25 +141,25 @@ ngx-select.ng-untouched.ng-invalid.is-invalid .ngx-select__toggle {
 .ngx-pagination {
     padding: 0 !important;
     margin-top: 10px;
-    display:flex;
+    display: flex;
     justify-content: end;
-    margin-bottom:0 !important;
+    margin-bottom: 0 !important;
 }
 
 .ngx-pagination .current {
-    padding: 6px 12px !important; 
-    background: var(--main-color)!important;
+    padding: 6px 12px !important;
+    background: var(--main-color) !important;
     border: solid 1px var(--main-color) !important;
-    font-size: .7rem; 
+    font-size: .7rem;
 }
 
 .ngx-pagination .disabled,
 .ngx-pagination a,
 .ngx-pagination button {
-    padding: 6px 12px !important; 
+    padding: 6px 12px !important;
     text-decoration: none;
-    font-size: .7rem; 
-    
+    font-size: .7rem;
+
 }
 
 .ngx-pagination li {
@@ -142,7 +189,8 @@ ngx-select.ng-untouched.ng-invalid.is-invalid .ngx-select__toggle {
 tr.active {
     background: #f5f5f5;
 }
-.invalid-feedback{
+
+.invalid-feedback {
     font-size: 0.65rem;
 }
 
@@ -151,9 +199,11 @@ tr.active {
     display: block !important;
     margin: 0px auto !important;
 }
-.pac-container{
+
+.pac-container {
     z-index: 9999 !important;
 }
+
 .ngx-select__toggle,
 .ngx-select input,
 .ngx-select__toggle {
