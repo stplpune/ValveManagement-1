@@ -5,7 +5,7 @@
             <div class="col-sm-4 text-end">
                 <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
                         class="fas fa-sync-alt"></i></button> -->
-                <button type="button" class="btn  btn-main text-main btn-sm me-2" data-bs-toggle="modal"
+                <button type="button" class="btn  btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
                     data-bs-target="#YojanaModal">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Yojana
@@ -98,14 +98,14 @@
                     <div class="form-container">
                         <div class="mb-3">
                             <label class="form-label">Yojana Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" placeholder="Name" formControlName="yojanaName" 
-                            (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"
+                            <input type="text" class="form-control" placeholder="Name" formControlName="yojanaName"
+                                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"
                                 [ngClass]="{ 'is-invalid': submitted && f.yojanaName.errors }" />
                             <div *ngIf="submitted && f.yojanaName.errors" class="invalid-feedback">
-                                <div class="text-danger" *ngIf="f.yojanaName.errors?.required">  Yojana Name is
+                                <div class="text-danger" *ngIf="f.yojanaName.errors?.required"> Yojana Name is
                                     Required.</div>
-                            <div class="text-danger" *ngIf="f.yojanaName.errors?.pattern">Please Enter
-                                        Valid Yojna Name.</div>
+                                <div class="text-danger" *ngIf="f.yojanaName.errors?.pattern">Please Enter
+                                    Valid Yojna Name.</div>
                             </div>
                         </div>
                         <div class="mb-3">
