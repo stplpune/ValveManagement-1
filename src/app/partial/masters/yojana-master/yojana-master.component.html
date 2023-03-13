@@ -5,7 +5,7 @@
             <div class="col-sm-4 text-end">
                 <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
                         class="fas fa-sync-alt"></i></button> -->
-                <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
+                <button type="button" class="btn  btn-main text-main btn-sm me-2" data-bs-toggle="modal"
                     data-bs-target="#YojanaModal">
                     <i class="fa-solid fa-plus me-2"></i>
                     Add Yojana
@@ -17,31 +17,29 @@
             <div class="row">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
-                    placeholder="Select District" optionValueField="id"
-                    (select)="clearfilter('district');getTaluka('tal');filterData()"
-                    optionTextField="districtName" (remove)="clearfilter('district');filterData()">
-                </ngx-select>
+                        placeholder="Select District" optionValueField="id"
+                        (select)="clearfilter('district');getTaluka('tal');filterData()" optionTextField="districtName"
+                        (remove)="clearfilter('district');filterData()">
+                    </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
-                                placeholder="Select Taluka" optionValueField="id"
-                                [disabled]="!this.filterForm.value.districtId"
-                                (select)="clearfilter('taluka');getVillage('vil');filterData();"
-                                optionTextField="talukaName" (remove)="clearfilter('taluka');filterData()">
+                        placeholder="Select Taluka" optionValueField="id" [disabled]="!this.filterForm.value.districtId"
+                        (select)="clearfilter('taluka');getVillage('vil');filterData();" optionTextField="talukaName"
+                        (remove)="clearfilter('taluka');filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="villageFilterArray" formControlName="villageId"
-                                placeholder="Select Village" optionValueField="id" 
-                                [disabled]="!this.filterForm.value.talukaId" optionTextField="villageName"
-                                (select)="filterData();" (remove)="filterData()">
+                        placeholder="Select Village" optionValueField="id" [disabled]="!this.filterForm.value.talukaId"
+                        optionTextField="villageName" (select)="filterData();" (remove)="filterData()">
                     </ngx-select>
                 </div>
             </div>
         </form>
     </div>
 
-   
+
 
     <div class="card-body">
         <table class="table align-middle dashboard-table">
@@ -53,8 +51,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    *ngFor="let yojana of yojanaListArray |  paginate: {itemsPerPage: pagesize,
+                <tr *ngFor="let yojana of yojanaListArray |  paginate: {itemsPerPage: pagesize,
                         currentPage: pageNumber, totalItems:totalRows}; let i=index"
                     [class.active]="yojana.id == highlitedRow">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
@@ -80,18 +77,19 @@
             </div>
         </div>
         <div class="mt-2 text-end" *ngIf="yojanaListArray?.length != 0">
-            <pagination-controls previousLabel="" nextLabel=""
-            (pageChange)="onClickPagintion($event)"> </pagination-controls>
+            <pagination-controls previousLabel="" nextLabel="" (pageChange)="onClickPagintion($event)">
+            </pagination-controls>
         </div>
     </div>
 </div>
 
 <!-- Network Modal -->
-<div class="modal fade " id="YojanaModal" tabindex="-1" aria-labelledby="YojanaModal" aria-hidden="true"  data-dismiss="modal" data-bs-keyboard="false" data-bs-backdrop="static">
+<div class="modal fade " id="YojanaModal" tabindex="-1" aria-labelledby="YojanaModal" aria-hidden="true"
+    data-dismiss="modal" data-bs-keyboard="false" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main">
-                <h1 class="modal-title fs-5" id="YojanaModal">Yojana Master</h1>
+                <h1 class="modal-title fs-5" id="YojanaModal">Add Yojana </h1>
                 <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
                     #yojanaModal (click)="clearForm();highlitedRow=0;"></button>
             </div>
@@ -127,8 +125,7 @@
                             <label class="form-label">Taluka <span class="text-danger">*</span></label>
                             <ngx-select [allowClear]="true" [items]="talukaListArray" formControlName="talukaId"
                                 placeholder="Select Taluka" optionValueField="id"
-                                [disabled]="!this.yojanaForm.value.districtId"
-                                (select)="getVillage()"
+                                [disabled]="!this.yojanaForm.value.districtId" (select)="getVillage()"
                                 optionTextField="talukaName" (remove)="clearDropdown('taluka')"
                                 [ngClass]="{ 'is-invalid': submitted && f.talukaId.errors}">
                             </ngx-select>
@@ -139,7 +136,7 @@
                         <div class="mb-3">
                             <label class="form-label">Village <span class="text-danger">*</span></label>
                             <ngx-select [allowClear]="true" [items]="villageListArray" formControlName="villageId"
-                                placeholder="Select Village" optionValueField="id" 
+                                placeholder="Select Village" optionValueField="id"
                                 [disabled]="!this.yojanaForm.value.talukaId" optionTextField="villageName"
                                 [ngClass]="{ 'is-invalid': submitted && f.villageId.errors}">
                             </ngx-select>
@@ -165,8 +162,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
-                    aria-label="Close" (click)="highlitedRow=0;"></button>
+                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="highlitedRow=0;"></button>
             </div>
             <div class="modal-body text-center pb-5">
                 <h3 class="my-3">Are You Sure?</h3>

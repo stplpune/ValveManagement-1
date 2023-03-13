@@ -90,7 +90,7 @@
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
-                                (select)="getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1"
+                                (select)="clearMapData();getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
@@ -100,7 +100,7 @@
                         <div class="col-sm">
                                 <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length <= 1"
-                                optionTextField="networkName" (remove)="clearMapData()"
+                                optionTextField="networkName" (remove)="clearMapData();"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                             </ngx-select>
                             <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required
@@ -130,11 +130,11 @@
                         class="closebtn">
                         <i class="fas fa-times"></i>
                     </a>
-                    <agm-map [fitBounds]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
+                    <agm-map [fitBounds]="true" [fullscreenControl]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
                         (mapReady)="onMapReady($event)">
-                        <agm-marker *ngFor="let m of tank_ValveArray; let i = index" [latitude]="m.latitude" [longitude]="m.longitude"
+                        <div *ngFor="let m of tank_ValveArray; let i = index"><agm-marker *ngIf="m.latitude != 0 && m.longitude != 0" [latitude]="m.latitude" [longitude]="m.longitude"
                             [iconUrl]="m.iconUrl">
-                        </agm-marker>
+                        </agm-marker></div>
                         <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
                             [longitude]="m.longitude || 76.5240298" [label]="m.label" [iconUrl]="markerUrlNull">
                         </agm-marker>

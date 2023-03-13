@@ -16,7 +16,8 @@
             <div class="col-sm-3">
                 <ngx-select [allowClear]="true" [items]="allYojanaFilterArray" [formControl]="yojana"
                     placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
-                    (select)="this.filterFlag == 'filter';defaultPageNo()" [disabled]="allYojanaArray?.length == 1" (remove)="defaultPageNo()">
+                    (select)="this.filterFlag == 'filter';defaultPageNo()" [disabled]="allYojanaArray?.length == 1"
+                    (remove)="defaultPageNo()">
                 </ngx-select>
             </div>
         </div>
@@ -72,7 +73,7 @@
         <div class="modal-content">
             <form [formGroup]="networkRegForm" (ngSubmit)="onSubmit()" #formDirective="ngForm">
                 <div class="modal-header bg-main">
-                    <h1 class="modal-title fs-5" id="NetworkModal">Network Master</h1>
+                    <h1 class="modal-title fs-5" id="NetworkModal">Add Network </h1>
                     <button type="button" (click)="clearForm(formDirective);highlitedRow=0" #closebutton
                         class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -81,7 +82,7 @@
                         <div class="mb-3">
                             <label class="form-label">Network Name</label>
                             <input type="text" class="form-control" formControlName="networkName"
-                                placeholder="Network Name"
+                                placeholder="Network Name" (blur)="clearWhiteSpace()"
                                 [ngClass]="{ 'is-invalid': submitted && f.networkName.errors }"
                                 (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)">
                             <div *ngIf="submitted && f.networkName.errors" class="invalid-feedback">
@@ -97,7 +98,7 @@
                                 [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }">
                             </ngx-select>
                             <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
-                                <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is
+                                <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Name is
                                     Required.</div>
                             </div>
                         </div>
