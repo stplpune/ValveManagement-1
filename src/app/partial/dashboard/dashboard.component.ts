@@ -125,16 +125,9 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode === "200") {
           this.DeviceCurrentSensorArray = res.responseData;   
-          
-          //////////////////////////////////////////////
           this.tankFilterDrop.setValue(res.responseData[0]?.tankId); 
           this.waterTankChartData(res.responseData[0]);
-          // this.dateFilter.setValue(res.responseData[0]?.lastStatusDate?.split('.')?.join('-')) 
-          // this.getTankDeviceHourlyValue();
-          /////////////////////////////////////////////
-
           this.DeviceCurrentSensorArray?.length == 0 ? (this.tankDeviceHourlyArray = [],this.graphLineChart()) : '';
-
         } else {
           this.DeviceCurrentSensorArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
@@ -361,8 +354,6 @@ export class DashboardComponent implements OnInit {
       this.editPatchShape.setMap(this.map);
       this.Polyline.push(this.editPatchShape);
     })
-    // let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
-    // this.map.setCenter(latLng);
   }
 
   previous:any;
