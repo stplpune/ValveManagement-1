@@ -4,42 +4,44 @@
             <div class="col-sm-4">Consumer Water Summery</div>
         </div>
         <form [formGroup]="filterForm">
-            <div class="row g-2">
-                <div class="col-sm-3">
+            <div class="row form-container g-2">
+                <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                         (select)="pageNumber = 1;getConsumerList();getNetwork()" [disabled]="yoganaArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
                         formControlName="yojanaId">
                     </ngx-select>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
                         (remove)="clearFilter('network')" (select)="pageNumber = 1;getConsumerList()">
                     </ngx-select>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="isHaveTapArray" (remove)="clearFilter('isHaveTap')"
                         (select)="pageNumber = 1;getConsumerList()"
                         optionValueField="id" optionTextField="name" placeholder="Select IsHaveTap"
                         formControlName="IsHaveTap">
                     </ngx-select>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="isHaveMotarArray" formControlName="IsHaveMotar"
                         placeholder="Select IsHaveMotar" optionValueField="id" optionTextField="name"
                         (remove)="clearFilter('isHaveMotar')" (select)="pageNumber = 1;getConsumerList()">
                     </ngx-select>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm">
                     <div class="input-group">
-                      <input type="text" class="form-control" formControlName="Search" placeholder="Search.." (keyup)="onKeyUpFilter()" />
-                      <button type="button" class="btn btn-light btn-sm" (click)="clearFilter('search')" *ngIf="filterForm.value.Search"><i
-                              _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-                      <button type="button" *ngIf="!filterForm.value.Search" class="btn btn-sm btn-light"><i class="fas fa-search"></i></button>
-                  </div>
-                  </div>
+                        <input type="text" class="form-control" formControlName="Search" placeholder="Search.."
+                            (keyup)="onKeyUpFilter()" />
+                        <button type="button" class="btn btn-light btn-sm" (click)="clearFilter('search')"
+                            *ngIf="filterForm.value.Search"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+                        <button type="button" *ngIf="!filterForm.value.Search" class="btn btn-sm btn-light"><i
+                                class="fas fa-search"></i></button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
