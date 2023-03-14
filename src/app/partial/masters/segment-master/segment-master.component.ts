@@ -280,6 +280,8 @@ export class SegmentMasterComponent implements OnInit{
 
   editObj: any;
   zoom = 6;
+  latitude:number = 19.0898177;
+  logitude:number = 76.5240298;
   editPatchShape: undefined | any;
   onEditFlag!: boolean;
   splitedEditObjData: any;
@@ -307,7 +309,7 @@ export class SegmentMasterComponent implements OnInit{
   patchSegmentTable(obj: any) {
     this.onEditFlag = true;
     this.textName = 'Update';
-    this.editObj = obj;
+    this.editObj = JSON.parse(JSON.stringify(obj));
     
     this.segmentMasterForm.controls['id'].setValue(this.editObj.id);
     this.segmentMasterForm.controls['segmentName'].setValue(this.editObj.segmentName);
@@ -368,11 +370,8 @@ export class SegmentMasterComponent implements OnInit{
     //.........................................  get Edit All Other Segment Array code End Here.................................//
   }
 
-
   onMapReady(map: any) {
-
     map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT,}}); // add satellite view btn
-
     this.map = map;
     const options: any = {
       drawingControl: true,
@@ -381,9 +380,7 @@ export class SegmentMasterComponent implements OnInit{
       drawingMode: google.maps.drawing.OverlayType.POLYLINE,
       map: map,
     };
-
     let drawingManager = new google.maps.drawing.DrawingManager(options);
-    //  drawingManager.setMap(this.map);
 
     this.mapsAPILoader.load().then(() => { //search Field Code Here
       let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef?.nativeElement);
@@ -409,9 +406,10 @@ export class SegmentMasterComponent implements OnInit{
 
     //............................   Edit Code Start Here ..................  //
 
-    // drawingManager.setDrawingMode(null);
-   
     this.getAllSegmentArray.map((ele: any) => {
+      // first = this.getAllSegmentArray
+      // map.setZoom(10);map.setCenter({ lat: ele[0].lat, lng: ele[ele.length - 1].lng }) 
+      map.setZoom(10);map.setCenter({ lat: this.getAllSegmentArray[0][0]?.lat, lng: this.getAllSegmentArray[this.getAllSegmentArray?.length - 1][this.getAllSegmentArray?.length - 1]?.lng }) 
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
         geodesic: true,
@@ -423,15 +421,9 @@ export class SegmentMasterComponent implements OnInit{
       this.editPatchShape.setMap(this.map);
       this.Polyline.push(this.editPatchShape);
     })
-
-    let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
-    this.map.setCenter(latLng);
-
-    //         var OBJ_fitBounds = new google.maps.LatLngBounds();
-    //  this.map.fitBounds(OBJ_fitBounds);
-
-
+   
     if (this.onEditFlag == true) {
+      map.setZoom(12);map.setCenter({ lat: this.splitedEditObjData[0].lat, lng: this.splitedEditObjData[this.splitedEditObjData?.length - 1].lng })
       drawingManager.setOptions({ drawingControl: false });
       this.centerMarkerLatLng = this.splitedEditObjData;
       this.patchShapeEditedObj = new google.maps.Polyline({
@@ -514,6 +506,7 @@ export class SegmentMasterComponent implements OnInit{
     for (let i = 0; i < this.Polyline.length; i++) {
       this.Polyline[i].setMap(null);
     }
+    this.map.setZoom(6);this.map.setCenter({ lat: this.latitude, lng: this.logitude })
   }
 
 }
