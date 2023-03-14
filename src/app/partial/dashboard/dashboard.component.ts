@@ -50,7 +50,6 @@ export class DashboardComponent implements OnInit {
     this.getYogana();
     this.waterTankChartData();
     this.localStorage.userId() == 1 ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
-    // this.getTankDeviceHourlyValue();
   }
 
   defaultFilterForm() {
@@ -61,9 +60,7 @@ export class DashboardComponent implements OnInit {
   }
 
   clearFilter(flag: any) {
-    if (flag == 'yojana') {
-      this.filterForm.controls['networkId'].setValue('');
-    } else if (flag == 'network') {} 
+    flag == 'yojana' ? this.filterForm.controls['networkId'].setValue('') : '';
     this.tankFilterDrop.setValue('');
     this.dateFilter.setValue('');
     this.getValveSummary(),
@@ -71,6 +68,7 @@ export class DashboardComponent implements OnInit {
     this.getDeviceCurrentSensorValue();
     this.editPatchShape = undefined;
   }
+
   getYogana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
@@ -132,9 +130,7 @@ export class DashboardComponent implements OnInit {
           this.DeviceCurrentSensorArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
-      },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
-    });
+      }, error: ((error: any) => { this.errorSerivce.handelError(error.status) })});
   }
 
   filterTankData(obj:any){ 
@@ -305,10 +301,7 @@ export class DashboardComponent implements OnInit {
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
       },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
+      error: (error: any) => {this.errorSerivce.handelError(error.status)}});
   }
 
   valveSegPatchData(mainArray: any) {
@@ -335,7 +328,6 @@ export class DashboardComponent implements OnInit {
       let finalLatLngArray = stringtoArray.map((ele: any) => { return ele = { lat: Number(ele.split(' ')[0]), lng: Number(ele.split(' ')[1]) } });
       return ele = finalLatLngArray;
     })
-
     this.onMapReady(this.map);
   }
 
