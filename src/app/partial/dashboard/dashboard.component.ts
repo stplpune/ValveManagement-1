@@ -63,16 +63,13 @@ export class DashboardComponent implements OnInit {
   clearFilter(flag: any) {
     if (flag == 'yojana') {
       this.filterForm.controls['networkId'].setValue('');
-    } else if (flag == 'network') {
-    } 
+    } else if (flag == 'network') {} 
     this.tankFilterDrop.setValue('');
     this.dateFilter.setValue('');
     this.getValveSummary(),
     this.getValveSegmentList()
     this.getDeviceCurrentSensorValue();
-    // this.editPatchShape.setMap(null);
-    this.editPatchShape = undefined
-    // this.getValveSegmentList();
+    this.editPatchShape = undefined;
   }
   getYogana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
@@ -85,10 +82,7 @@ export class DashboardComponent implements OnInit {
         this.yoganaIdArray = [];
         this.toastrService.error(res.statusMessage);
       }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
+    },(error: any) => {this.errorSerivce.handelError(error.status)})
   }
 
   getNetwork() {
@@ -103,10 +97,7 @@ export class DashboardComponent implements OnInit {
         this.networkIdArray = [];
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
+    },(error: any) => {this.errorSerivce.handelError(error.status)})
   }
 
   getValveSummary() {
@@ -212,7 +203,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getTankDeviceHourlyValue() {
-
     let obj:any = this.chartObj?.deviceId  + '&DisplayDate=' + this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValueWithEvent?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
@@ -302,6 +292,7 @@ export class DashboardComponent implements OnInit {
   map: any;
   markerArray: any;
   markerUrlNull = "../../../../assets/images/dot.png";
+  Polyline:any[]= [];
 
   getValveSegmentList() { //All Segment 
     this.spinner.show();
@@ -356,13 +347,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onMapReady(map: any) {
-
-    map.setOptions({ // add satellite view btn
-      mapTypeControlOptions: {
-        position: google.maps.ControlPosition.TOP_RIGHT,
-      }
-    });
-
+    map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT}});// add satellite view btn
     this.map = map;
     this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
@@ -374,17 +359,22 @@ export class DashboardComponent implements OnInit {
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
       this.editPatchShape.setMap(this.map);
+      this.Polyline.push(this.editPatchShape);
     })
-    let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
-    this.map.setCenter(latLng);
+    // let latLng = this.commonService.FN_CN_poly2latLang(this.editPatchShape);
+    // this.map.setCenter(latLng);
   }
 
   previous:any;
   clickedMarker(infowindow:any) {
-    if (this.previous) {
-        this.previous.close();
-    }
+    if (this.previous) {this.previous.close()}
     this.previous = infowindow;
  }
+
+ clearMapData() {
+  for (let i = 0; i < this.Polyline.length; i++) {
+    this.Polyline[i].setMap(null);
+  }
+}
 
 }
