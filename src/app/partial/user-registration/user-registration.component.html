@@ -59,17 +59,17 @@
           <td>
             <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox"
-                (change)="blockUserDetails(userData.id,userData.isUserBlock,$event)"
+                (change)="blockUserDetails(userData.id,userData.isUserBlock,$event)" [title]="getBlockUser(userData.isUserBlock) ? 'Unblock' : 'Block'"
                 [checked]="getBlockUser(userData.isUserBlock)" role="switch" id="flexSwitchCheckDefault">
             </div>
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
+              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit User" data-bs-toggle="modal"
                 data-bs-target="#AddUserModal" (click)="networkFlag='add';updateUserData(userData)">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
-              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete User"
                 data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(userData.id)">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
@@ -126,7 +126,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">User Type</label>
+              <label for="" class="form-label">User Type <span class="text-danger">*</span></label>
               <ngx-select [items]="userTypeArray" formControlName="userTypeId" placeholder="Select User Type"
                 optionValueField="id" optionTextField="userTypeName"
                 [ngClass]="{ 'is-invalid': submitted && f.userTypeId.errors }">
@@ -137,7 +137,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">Yojana</label>
+              <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
               <ngx-select [items]="yoganaIdArray" formControlName="yojanaId" placeholder="Select Yojana"
                 optionValueField="yojanaId" optionTextField="yojanaName"
                 [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
@@ -149,7 +149,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label for="" class="form-label">Network</label>
+              <label for="" class="form-label">Network <span class="text-danger">*</span></label>
               <ngx-select [items]="networkIdArray" formControlName="networkId" placeholder="Select Network"
                 optionValueField="networkId" [disabled]="!this.userDetails.value.yojanaId" optionTextField="networkName"
                 [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }" [multiple]="true">
@@ -160,7 +160,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Address</label>
+              <label class="form-label">Address <span class="text-danger">*</span></label>
               <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
