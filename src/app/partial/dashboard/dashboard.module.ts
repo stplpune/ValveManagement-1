@@ -22,7 +22,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
       language: 'en',
-      libraries: ['places', 'geometry'],
+      libraries: ['places', 'drawing', 'geometry'],
     }),
   ]
 })

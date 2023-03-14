@@ -32,7 +32,6 @@ export class SegmentMasterComponent implements OnInit{
   networkIdArray: any;
   networkIdAddArray: any;
 
-
   constructor(
     private mapsAPILoader: MapsAPILoader,
     public commonService: CommonService,
@@ -86,10 +85,7 @@ export class SegmentMasterComponent implements OnInit{
         this.yoganaIdArray = [];
         this.toastrService.error(res.statusMessage);
       }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
+    },(error: any) => {this.errorSerivce.handelError(error.status);})
   }
 
   getNetworkId() {
@@ -104,10 +100,7 @@ export class SegmentMasterComponent implements OnInit{
         this.networkIdArray = [];
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
+    },(error: any) => {this.errorSerivce.handelError(error.status)})
   }
 
   getNetworkIdAdd(flag?:any) { // For Filter
@@ -122,10 +115,7 @@ export class SegmentMasterComponent implements OnInit{
         this.networkIdAddArray = [];
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
-    },
-      (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      })
+    },(error: any) => {this.errorSerivce.handelError(error.status)})
   }
 
   clearFilter(flag: any) {
@@ -155,11 +145,7 @@ export class SegmentMasterComponent implements OnInit{
           this.segmentMasterArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
+      },error: (error: any) => {this.errorSerivce.handelError(error.status)}});
   }
 
   getValveSegmentList() { //All Segment 
@@ -179,11 +165,7 @@ export class SegmentMasterComponent implements OnInit{
           this.valveSegmentList = '';
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
         }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
+      },error: (error: any) => {this.errorSerivce.handelError(error.status)}});
   }
 
   onClickPagintion(pageNo: number) {
@@ -232,12 +214,7 @@ export class SegmentMasterComponent implements OnInit{
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
           }
-        },
-        (error: any) => {
-          this.errorSerivce.handelError(error.status);
-          this.spinner.hide();
-        }
-      );
+        },(error: any) => {this.errorSerivce.handelError(error.status);this.spinner.hide()});
     }
   }
 
@@ -269,11 +246,7 @@ export class SegmentMasterComponent implements OnInit{
         } else {
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
-      },
-      error: (error: any) => {
-        this.errorSerivce.handelError(error.status);
-      },
-    });
+      },error: (error: any) => {this.errorSerivce.handelError(error.status)},});
   }
 
   //............................................... Agm Map Code Start Here ..................................//

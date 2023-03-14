@@ -11,8 +11,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AgmDrawingModule } from '@agm/drawing';
-import { AgmCoreModule } from '@agm/core';
 import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
@@ -36,12 +34,6 @@ import { NgxSelectModule } from 'ngx-select-ex';
       preventDuplicates: true,
     }),
     NgxSpinnerModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAkNBALkBX7trFQFCrcHO2I85Re2MmzTo8',
-      language: 'en',
-      libraries: ['places', 'drawing', 'geometry'],
-    }),
-    AgmDrawingModule
   ],
   providers: [DatePipe,TitleCasePipe],
   bootstrap: [AppComponent]

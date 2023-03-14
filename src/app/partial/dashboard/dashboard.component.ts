@@ -11,7 +11,6 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { DateTimeAdapter } from 'ng-pick-datetime';
-declare var google: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -284,24 +283,26 @@ export class DashboardComponent implements OnInit {
   Polyline:any[]= [];
 
   getValveSegmentList() { //All Segment 
-    this.spinner.show();
-    let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
-      + '&userId=' + this.localStorage.userId();
-    this.apiService.setHttp('get', 'ValveTankSegment/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
-    this.apiService.getHttp().subscribe({
-      next: (res: any) => {
-        if (res.statusCode === '200') {
-          this.spinner.hide();
-          this.valveSegmentList = res.responseData[0];
-          this.valveSegPatchData(this.valveSegmentList);
-        } else {
-          this.spinner.hide();
-          this.valveSegmentList = [];
-          this.valveSegmentList = '';
-          this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
-        }
-      },
-      error: (error: any) => {this.errorSerivce.handelError(error.status)}});
+setTimeout(() => {
+  this.spinner.show();
+  let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    + '&userId=' + this.localStorage.userId();
+  this.apiService.setHttp('get', 'ValveTankSegment/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
+  this.apiService.getHttp().subscribe({
+    next: (res: any) => {
+      if (res.statusCode === '200') {
+        this.spinner.hide();
+        this.valveSegmentList = res.responseData[0];
+        this.valveSegPatchData(this.valveSegmentList);
+      } else {
+        this.spinner.hide();
+        this.valveSegmentList = [];
+        this.valveSegmentList = '';
+        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+      }
+    },
+    error: (error: any) => {this.errorSerivce.handelError(error.status)}});
+}, 100);
   }
 
   valveSegPatchData(mainArray: any) {
@@ -332,7 +333,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onMapReady(map: any) {
-    map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT}});// add satellite view btn
+    map?.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT}});// add satellite view btn
     this.map = map;
     this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
