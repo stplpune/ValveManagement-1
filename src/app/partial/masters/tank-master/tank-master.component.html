@@ -92,7 +92,7 @@
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
-              <label class="form-label">Tank Marathi Name <span class="text-danger">*</span></label>
+              <label class="form-label">Tank Name(Marathi) <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank Marathi Name" formControlName="tankName"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
@@ -101,7 +101,7 @@
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">Tank English Name <span class="text-danger">*</span></label>
+              <label class="form-label">Tank Name(English) <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank English Name" formControlName="tankName_En"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName_En'].errors }">
