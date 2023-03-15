@@ -1,6 +1,6 @@
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center">
+    <div class="row justify-content-between align-items-center mb-3">
       <div class="col-sm-4">Tank Master
       </div>
       <div class="col-sm-4 text-end">
@@ -8,11 +8,14 @@
           data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Tank Master
         </button>
       </div>
+    </div>
+    <div class="row">
+
       <form [formGroup]="filterFrm">
         <div class="form-container">
           <div class="row">
             <div class="col-sm-3">
-              <label class="form-label">Yojana Name</label>
+              <!-- <label class="form-label">Yojana Name</label> -->
               <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                 (select)="filterFrm.controls['networkId'].setValue('');  getNetworkFilter();pageNumber = 1;getTableData()"
@@ -20,7 +23,7 @@
               </ngx-select>
             </div>
             <div class="col-sm-3">
-              <label class="form-label">Network Name</label>
+              <!-- <label class="form-label">Network Name</label> -->
               <ngx-select [allowClear]="true" [items]="filterNetworkArray" formControlName="networkId"
                 placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
                 [disabled]="!this.filterFrm.value.yojanaId || filterNetworkArray?.length == 1"
@@ -49,11 +52,11 @@
           <td>{{data.tankName}}</td>
           <td>{{data.address}}</td>
           <td> <button type="button" (click)="onEditData(data)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2"
-              title="Edit Valve" data-bs-toggle="modal" data-bs-target="#AddValveModal">
+              title="Edit Tank" data-bs-toggle="modal" data-bs-target="#AddValveModal">
               <i class="fa-regular fa-pen-to-square"></i>
             </button>
             <button type="button" (click)="getDeleteConfirm(data)"
-              class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve" data-bs-toggle="modal"
+              class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Tank" data-bs-toggle="modal"
               data-bs-target="#deleteModel">
               <i class="fa-solid fa-trash-can"></i>
             </button>
@@ -89,7 +92,7 @@
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-2">
-              <label class="form-label">Tank Marathi Name <span class="text-danger">*</span></label>
+              <label class="form-label">Tank Name(Marathi) <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank Marathi Name" formControlName="tankName"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
@@ -98,12 +101,13 @@
               </div>
             </div>
             <div class="mb-2">
-              <label class="form-label">Tank English Name <span class="text-danger">*</span></label>
+              <label class="form-label">Tank Name(English) <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank English Name" formControlName="tankName_En"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName_En'].errors }">
               <div *ngIf="submitted && f['tankName_En'].errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f['tankName_En'].errors?.['required']">Tank English Name is Required.</div>
+                <div class="text-danger" *ngIf="f['tankName_En'].errors?.['required']">Tank English Name is Required.
+                </div>
               </div>
             </div>
 
