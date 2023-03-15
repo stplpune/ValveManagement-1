@@ -1,6 +1,6 @@
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center">
+    <div class="row justify-content-between align-items-center mb-3">
       <div class="col-sm-4">Tank Calibration
       </div>
       <!-- <div class="col-sm-4 text-end">
@@ -19,14 +19,16 @@
           <!-- <label class="form-label">Yojana Name</label> -->
           <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
             optionValueField="yojanaId" optionTextField="yojanaName" [disabled]="yojanaArray.length == 1"
-            (select)="clearfilter('yojana');filterData();getNetworkByYojanaId();" (remove)="clearfilter('yojana');filterData()">
+            (select)="clearfilter('yojana');filterData();getNetworkByYojanaId();"
+            (remove)="clearfilter('yojana');filterData()">
           </ngx-select>
         </div>
         <div class="col-sm">
           <!-- <label class="form-label">Network Name</label> -->
           <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
             placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
-            [disabled]="!this.filterFrm.value.yojanaId || networkArray.length == 1" (select)="filterData()" (remove)="filterData()">
+            [disabled]="!this.filterFrm.value.yojanaId || networkArray.length == 1" (select)="filterData()"
+            (remove)="filterData()">
           </ngx-select>
         </div>
       </div>
