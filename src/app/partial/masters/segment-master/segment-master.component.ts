@@ -31,6 +31,7 @@ export class SegmentMasterComponent implements OnInit{
   yoganaIdArray: any;
   networkIdArray: any;
   networkIdAddArray: any;
+  heighLightRow:any;
 
   constructor(
     private mapsAPILoader: MapsAPILoader,
@@ -271,15 +272,14 @@ export class SegmentMasterComponent implements OnInit{
   isShapeDrawn: boolean = false;
   patchShapeEditedObj:any;
 
-  newRecord: any = {
-    polyline: undefined,
-  };
+  newRecord: any = {polyline: undefined};
   markerArray: any;
   markerUrlNull = "../../../../assets/images/dot.png";
   Polyline:any[]= [];
 
 
   patchSegmentTable(obj: any) {
+    this.heighLightRow = obj?.id;
     this.onEditFlag = true;
     this.textName = 'Update';
     this.editObj = JSON.parse(JSON.stringify(obj));
@@ -344,7 +344,7 @@ export class SegmentMasterComponent implements OnInit{
   }
 
   onMapReady(map: any) {
-    map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT,}}); // add satellite view btn
+    map.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT},streetViewControl: false}); // add satellite view btn
     this.map = map;
     const options: any = {
       drawingControl: true,
@@ -380,9 +380,7 @@ export class SegmentMasterComponent implements OnInit{
     //............................   Edit Code Start Here ..................  //
 
     this.getAllSegmentArray.map((ele: any) => {
-      // first = this.getAllSegmentArray
-      // map.setZoom(10);map.setCenter({ lat: ele[0].lat, lng: ele[ele.length - 1].lng }) 
-      map.setZoom(10);map.setCenter({ lat: this.getAllSegmentArray[0][0]?.lat, lng: this.getAllSegmentArray[this.getAllSegmentArray?.length - 1][this.getAllSegmentArray?.length - 1]?.lng }) 
+      // map.setZoom(10);map.setCenter({ lat: this.getAllSegmentArray[0][0]?.lat, lng: this.getAllSegmentArray[this.getAllSegmentArray?.length - 1][this.getAllSegmentArray?.length - 1]?.lng }) 
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
         geodesic: true,
@@ -391,12 +389,19 @@ export class SegmentMasterComponent implements OnInit{
         strokeWeight: 4,
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
+
+      if (this.onEditFlag == false) {
+      const bounds = new google.maps.LatLngBounds();
+      ele.forEach((marker:any) => {bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))});
+      this.map.fitBounds(bounds);
+      }
+
       this.editPatchShape.setMap(this.map);
       this.Polyline.push(this.editPatchShape);
     })
    
     if (this.onEditFlag == true) {
-      map.setZoom(12);map.setCenter({ lat: this.splitedEditObjData[0].lat, lng: this.splitedEditObjData[this.splitedEditObjData?.length - 1].lng })
+      // map.setZoom(12);map.setCenter({ lat: this.splitedEditObjData[0].lat, lng: this.splitedEditObjData[this.splitedEditObjData?.length - 1].lng })
       drawingManager.setOptions({ drawingControl: false });
       this.centerMarkerLatLng = this.splitedEditObjData;
       this.patchShapeEditedObj = new google.maps.Polyline({
@@ -407,26 +412,33 @@ export class SegmentMasterComponent implements OnInit{
         strokeWeight: 4,
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
-      this.setSelection(this.patchShapeEditedObj);
-    } else if (this.onEditFlag == false) {
-      drawingManager.setOptions({ drawingControl: false });
-    }
+
+      this.setSelection(this.patchShapeEditedObj,'editFlag');
+
+      setTimeout(() => {
+        let bounds:any = new google.maps.LatLngBounds();
+        this.centerMarkerLatLng.forEach((marker:any) => {
+            bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))
+        })
+        this.map.fitBounds(bounds)
+      }, 150);
+ 
+    } else if (this.onEditFlag == false) { 
+      drawingManager.setOptions({ drawingControl: false })
+     }
+
     //............................   Edit Code End Here ..................  //
 
     google.maps.event.addListener(drawingManager, 'polylinecomplete', (newShape: any) => {
-      // this.insertNewLineFlag = true;
       this.setSelection(newShape);
       this.isShapeDrawn = true;
       google.maps.event.addListener(newShape, 'dragend', (e: any) => {
-        this.ngZone.run(() => {
-          this.setSelection(newShape);
-        })
-      });
-    }
-    );
+        this.ngZone.run(() => { this.setSelection(newShape) })
+      })
+    });
   }
 
-  setSelection(shape: any) {
+  setSelection(shape: any,flag?:any) {
     if (this.newRecord.polyline) { // new polyline Add then before polyline map data clear 
       this.newRecord.polyline.setMap(null);
     }

@@ -43,7 +43,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let segMaster of segmentMasterArray | paginate: {itemsPerPage: 10,
-                    currentPage: pageNumber, totalItems:totalRows}; let i = index">
+                    currentPage: pageNumber, totalItems:totalRows}; let i = index" [class.active]="heighLightRow == segMaster.id">
                     <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
                     <td>{{segMaster?.segmentName}}</td>
                     <td>
@@ -90,7 +90,7 @@
                         <div class="col-sm">
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
-                                (select)="clearMapData();getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1"
+                                (select)="clearMapData();getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1 || onEditFlag == true"
                                 optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-sm">
                                 <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
-                                placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length <= 1"
+                                placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length <= 1 || onEditFlag == true"
                                 optionTextField="networkName" (remove)="clearMapData();"
                                 [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                             </ngx-select>
