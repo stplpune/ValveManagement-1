@@ -7,8 +7,8 @@
           data-bs-toggle="modal" data-bs-target="#AddSIMModal"><i class="fa-solid fa-plus me-2"></i>Add SIM</button>
       </div>
     </div>
-    <div class="row">
-      <form class="ms-3" [formGroup]="searchForm">
+    <form class="" [formGroup]="searchForm">
+      <div class="row">
         <div class="row">
           <div class="col-sm-3">
             <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana"
@@ -25,8 +25,8 @@
             </ngx-select>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
   <div class="card-body">
     <table class="table align-middle dashboard-table">
@@ -53,8 +53,8 @@
                 data-bs-target="#AddSIMModal" (click)="updateSimData(simData)">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
-              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete SIM"
-                data-bs-toggle="modal" data-bs-target="#deleteModel" (click)="deleteConformation(simData.id)">
+              <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete SIM" data-bs-toggle="modal"
+                data-bs-target="#deleteModel" (click)="deleteConformation(simData.id)">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
