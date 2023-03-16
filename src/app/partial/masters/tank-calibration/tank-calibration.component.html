@@ -111,7 +111,7 @@
             <div class="mb-3">
               <label class="form-label">Tank Min Level(in CM.)</label>
               <input type="text" class="form-control" placeholder="Tank Min Level" formControlName="tankMinLevel"
-                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" 
                 [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel?.errors}">
               <div *ngIf="submitted && f.tankMinLevel.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMinLevel.errors?.required">Tank Min Level Is Required
@@ -121,7 +121,7 @@
             <div class="mb-3">
               <label class="form-label">Tank Max Level(in CM.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel"
-                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" (blur)="checkLevel()"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
               <div *ngIf="submitted && f.tankMaxLevel.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMaxLevel.errors?.required">Tank Max Level Is Required
@@ -142,7 +142,7 @@
             <div class="mb-3">
               <label class="form-label">Tank Max Quantity(in Ltr.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Quality" formControlName="tankMaxQty"
-                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" (blur)="checkLevel()"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxQty.errors}">
               <div *ngIf="submitted && f.tankMaxQty.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.tankMaxQty.errors?.required">Tank Max Qty Is Required

@@ -184,12 +184,31 @@ export class TankCalibrationComponent implements OnInit {
     
   }
 
+  checkLevel(){
+    let formData=this.tankForm.value;
+    if(+formData.tankMinLevel > +formData.tankMaxLevel){
+      this.toastrService.error('Tank Min Level is not Greater than Max Level');
+      return;
+    }
+    if(+formData.tankMinQty > +formData.tankMaxQty){
+      this.toastrService.error('Tank Min Quantity is not Greater than Max Quantity');
+      return;
+    }
+  }
+
   onSubmit() {
     this.submitted = true;
+   let formdata = this.tankForm.value
     if (this.tankForm.invalid) {
       return;
-    } else {
-      let formdata = this.tankForm.value;
+    }else if(+formdata.tankMinLevel > +formdata.tankMaxLevel) {
+      this.toastrService.error('Tank Min Level is not Greater than Max Level');
+      return;
+    }else if(+formdata.tankMinQty > +formdata.tankMaxQty){
+      this.toastrService.error('Tank Min Quantity is not Greater than Max Quantity');
+      return;
+    }else {
+      //  formdata = this.tankForm.value;
       let obj = {
         "tankId": formdata.tankId,
         "tankName": '',

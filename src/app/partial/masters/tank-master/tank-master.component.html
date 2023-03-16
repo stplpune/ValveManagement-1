@@ -94,7 +94,7 @@
             <div class="mb-2">
               <label class="form-label">Tank Name(Marathi) <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Tank Marathi Name" formControlName="tankName"
-                (keypress)="validation.noFirstSpaceAllow($event)"
+                (keypress)="validation.noFirstSpaceAllow($event);validation.unicodeMarathiValidation($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
               <div *ngIf="submitted && f['tankName'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f['tankName'].errors?.['required']">Tank Marathi Name is Required.</div>
