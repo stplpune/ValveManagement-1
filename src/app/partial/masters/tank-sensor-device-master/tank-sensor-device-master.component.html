@@ -97,7 +97,7 @@
         <div class="modal-body">
           <div class="form-container">
             <div class="mb-3">
-              <label class="form-label">Device Id</label>
+              <label class="form-label">Device Id  <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
@@ -107,7 +107,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Device Name</label>
+              <label class="form-label">Device Name  <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="deviceName" placeholder="Device Name"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceName.errors }"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
@@ -119,7 +119,7 @@
             <div class="row">
               <div class="col-6">
                 <div class="mb-3">
-                  <label class="form-label">Yojana</label>
+                  <label class="form-label">Yojana  <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojanaId" (select)="getAllNetwork(true)"
                     placeholder="Select Yojana" (remove)="clearDropdown('yojana')" optionValueField="yojanaId" optionTextField="yojanaName"
                     [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }" [disabled]="getAllYojanaArray.length == 1">
@@ -132,7 +132,7 @@
               </div>
               <div class="col-6">
                 <div class="mb-3">
-                  <label class="form-label">Network</label>
+                  <label class="form-label">Network  <span class="text-danger">*</span></label>
                   <ngx-select [allowClear]="true" [items]="getAllNetworkArray" formControlName="networkId" (select)="getAllTank(true);getAllSim(true)"
                     placeholder="Select Network" (remove)="clearDropdown('network')" optionValueField="networkId" optionTextField="networkName"
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!tankSensorDeviceFrm.value.yojanaId || getAllNetworkArray.length < 2">
@@ -145,7 +145,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">SIM No</label>
+              <label class="form-label">SIM No  <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="getAllSimArray" formControlName="simId"
                 placeholder="Select Sim Number" optionValueField="id" optionTextField="simNo"
                 [ngClass]="{ 'is-invalid': submitted && f.simId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllSimArray.length < 2">
@@ -156,7 +156,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank</label>
+              <label class="form-label">Tank  <span class="text-danger">*</span></label>
               <ngx-select [allowClear]="true" [items]="getAllTankArray" formControlName="tankId"
                 placeholder="Select Tank" optionValueField="tankId" optionTextField="tankName"
                 [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllTankArray.length < 2">
@@ -167,7 +167,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Description</label>
+              <label class="form-label">Description  <span class="text-danger">*</span></label>
               <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceDescription.errors }"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"></textarea>
