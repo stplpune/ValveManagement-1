@@ -333,7 +333,7 @@ setTimeout(() => {
   }
 
   onMapReady(map: any) {
-    map?.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT}});// add satellite view btn
+    map?.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT},streetViewControl: false});// add satellite view btn
     this.map = map;
     this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
