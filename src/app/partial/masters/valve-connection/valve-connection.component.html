@@ -62,11 +62,11 @@
                             <td>{{data.totalConnection}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded"
+                                    <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded" title="Edit"
                                         data-bs-toggle="modal" data-bs-target="#addconnectionModal"
                                         (click)="this.filterFlag = 'add';onClickEdit(data);editChangeFlag = 1">
                                         <i class="far fa-edit"></i></button>
-                                    <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete Valve"
+                                    <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
                                         data-bs-toggle="modal" data-bs-target="#deleteModel"
                                         (click)="deleteConformation(data)">
                                         <i class="fas fa-trash-alt"></i></button>

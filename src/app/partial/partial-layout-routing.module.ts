@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'sim-list', loadChildren: () => import('../partial/sim-list/sim-list.module').then(m => m.SimListModule),
-    data: { breadcrumb: [{ title: 'SIM List', active: true }] }
+    data: { breadcrumb: [{ title: 'SIM Master', active: true }] }
   },
   {
     path: 'user-registration', loadChildren: () => import('../partial/user-registration/user-registration.module').then(m => m.UserRegistrationModule),

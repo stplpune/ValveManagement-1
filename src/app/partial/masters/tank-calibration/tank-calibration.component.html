@@ -58,7 +58,7 @@
           <td>{{tankCal.tankMaxQty}}</td>
           <td>
             <div class="btn-group">
-              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit Valve" data-bs-toggle="modal"
+              <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit" data-bs-toggle="modal"
                 data-bs-target="#AddValveModal" (click)="updateTankCal(tankCal)">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
@@ -109,7 +109,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank Min Level(in CM.)</label>
+              <label class="form-label">Tank Min Level (in CM.)</label>
               <input type="text" class="form-control" placeholder="Tank Min Level" formControlName="tankMinLevel"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" 
                 [ngClass]="{ 'is-invalid': submitted && f.tankMinLevel?.errors}">
@@ -118,8 +118,8 @@
                 </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Tank Max Level(in CM.)</label>
+            <div class="mb-3"> 
+              <label class="form-label">Tank Max Level (in CM.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Level" formControlName="tankMaxLevel"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" (blur)="checkLevel()"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxLevel.errors}">
@@ -130,7 +130,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Tank Min Quantity(in Ltr.)</label>
+              <label class="form-label">Tank Min Quantity (in Ltr.)</label>
               <input type="text" class="form-control" placeholder="Tank Min Quality" formControlName="tankMinQty"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMinQty.errors}">
@@ -140,7 +140,7 @@
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Tank Max Quantity(in Ltr.)</label>
+              <label class="form-label">Tank Max Quantity (in Ltr.)</label>
               <input type="text" class="form-control" placeholder="Tank Max Quality" formControlName="tankMaxQty"
                 (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)" (blur)="checkLevel()"
                 [ngClass]="{ 'is-invalid': submitted && f.tankMaxQty.errors}">
