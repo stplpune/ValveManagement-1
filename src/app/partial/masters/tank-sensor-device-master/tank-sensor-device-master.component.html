@@ -125,7 +125,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }" [disabled]="getAllYojanaArray.length == 1">
                   </ngx-select>
                   <div *ngIf="submitted && f['yojanaId'].errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana Type is
+                    <div class="text-danger" *ngIf="f['yojanaId'].errors?.['required']">Yojana  is
                       Required.</div>
                   </div>
                 </div>
@@ -138,7 +138,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f['networkId'].errors }" [disabled]="!tankSensorDeviceFrm.value.yojanaId || getAllNetworkArray.length < 2">
                   </ngx-select>
                   <div *ngIf="submitted && f['networkId'].errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network Type is
+                    <div class="text-danger" *ngIf="f['networkId'].errors?.['required']">Network  is
                       Required.</div>
                   </div>
                 </div>
@@ -162,7 +162,7 @@
                 [ngClass]="{ 'is-invalid': submitted && f.tankId.errors }"  [disabled]="!tankSensorDeviceFrm.value.networkId || getAllTankArray.length < 2">
               </ngx-select>
               <div *ngIf="submitted && f.tankId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank Type is
+                <div class="text-danger" *ngIf="f.tankId.errors?.required">Tank  is
                   Required.</div>
               </div>
             </div>
