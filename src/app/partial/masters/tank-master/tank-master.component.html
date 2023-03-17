@@ -93,7 +93,7 @@
           <div class="form-container">
             <div class="mb-2">
               <label class="form-label">Tank Name(Marathi) <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Tank Marathi Name" formControlName="tankName"
+              <input type="text" class="form-control" placeholder="Tank Name(Marathi) " formControlName="tankName"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.unicodeMarathiValidation($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName'].errors }">
               <div *ngIf="submitted && f['tankName'].errors" class="invalid-feedback">
@@ -102,7 +102,7 @@
             </div>
             <div class="mb-2">
               <label class="form-label">Tank Name(English) <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Tank English Name" formControlName="tankName_En"
+              <input type="text" class="form-control" placeholder="Tank Name(English)" formControlName="tankName_En"
                 (keypress)="validation.noFirstSpaceAllow($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['tankName_En'].errors }">
               <div *ngIf="submitted && f['tankName_En'].errors" class="invalid-feedback">
