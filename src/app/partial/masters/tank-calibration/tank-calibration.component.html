@@ -10,10 +10,9 @@
         </button>
       </div> -->
     </div>
-  </div>
 
-  <div class="col-sm-4 float-end ms-4">
-    <form [formGroup]="filterFrm">
+  <form [formGroup]="filterFrm">
+  <div class="col-sm-4">
       <div class="row g-2">
         <div class="col-sm">
           <!-- <label class="form-label">Yojana Name</label> -->
@@ -32,8 +31,10 @@
           </ngx-select>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>
+
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
