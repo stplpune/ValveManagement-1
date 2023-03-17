@@ -39,7 +39,7 @@
         <tr>
           <th>Sr. No.</th>
           <th>Device Id</th>
-          <th>Deivce Name</th>
+          <th>Device Name</th>
           <th>Description</th>
           <th>Tank</th>
           <th>Actions</th>
@@ -98,7 +98,7 @@
           <div class="form-container">
             <div class="mb-3">
               <label class="form-label">Device Id  <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" formControlName="deviceId" placeholder="Deivce Id"
+              <input type="text" class="form-control" formControlName="deviceId" placeholder="Device Id"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
               <div *ngIf="submitted && f['deviceId'].errors" class="invalid-feedback">
