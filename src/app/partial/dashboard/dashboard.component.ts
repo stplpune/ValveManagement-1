@@ -24,12 +24,12 @@ export class DashboardComponent implements OnInit {
   filterForm: FormGroup | any;
   yoganaIdArray: any;
   networkIdArray: any;
-  DeviceCurrentSensorArray:any;
+  DeviceCurrentSensorArray: any;
   tankFilterDrop = new FormControl();
-  chartObj:any;
-  tankDeviceHourlyArray:any;
+  chartObj: any;
+  tankDeviceHourlyArray: any;
   dateFilter = new FormControl('');
-  max:any = new Date();
+  max: any = new Date();
   valveEventHourlyArray: any;
 
   constructor(
@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
     this.defaultFilterForm();
     this.getYogana();
     this.waterTankChartData();
-    this.localStorage.userId() == 1 ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
+    this.localStorage.userId() == 1 ? (this.getValveSummary(), this.getValveSegmentList(), this.getDeviceCurrentSensorValue()) : '';
   }
 
   defaultFilterForm() {
@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
     this.tankFilterDrop.setValue('');
     this.dateFilter.setValue('');
     this.getValveSummary(),
-    this.getValveSegmentList()
+      this.getValveSegmentList()
     this.getDeviceCurrentSensorValue();
     this.editPatchShape = undefined;
   }
@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
         this.yoganaIdArray = [];
         this.toastrService.error(res.statusMessage);
       }
-    },(error: any) => {this.errorSerivce.handelError(error.status)})
+    }, (error: any) => { this.errorSerivce.handelError(error.status) })
   }
 
   getNetwork() {
@@ -87,14 +87,14 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe((res: any) => {
       if (res.statusCode == "200") {
         this.networkIdArray = res.responseData;
-        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }),this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue()) : '';
-        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length > 1) ? (this.getValveSummary(),this.getValveSegmentList(),this.getDeviceCurrentSensorValue())  : '';
+        this.networkIdArray?.length == 1 ? (this.filterForm.patchValue({ networkId: this.networkIdArray[0].networkId }), this.getValveSummary(), this.getValveSegmentList(), this.getDeviceCurrentSensorValue()) : '';
+        (this.yoganaIdArray?.length == 1 && this.networkIdArray?.length > 1) ? (this.getValveSummary(), this.getValveSegmentList(), this.getDeviceCurrentSensorValue()) : '';
       }
       else {
         this.networkIdArray = [];
         this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
       }
-    },(error: any) => {this.errorSerivce.handelError(error.status)})
+    }, (error: any) => { this.errorSerivce.handelError(error.status) })
   }
 
   getValveSummary() {
@@ -121,28 +121,29 @@ export class DashboardComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
-          this.DeviceCurrentSensorArray = res.responseData;   
-          this.tankFilterDrop.setValue(res.responseData[0]?.tankId); 
+          this.DeviceCurrentSensorArray = res.responseData;
+          this.tankFilterDrop.setValue(res.responseData[0]?.tankId);
           this.waterTankChartData(res.responseData[0]);
-          this.DeviceCurrentSensorArray?.length == 0 ? (this.tankDeviceHourlyArray = [],this.graphLineChart()) : '';
+          this.DeviceCurrentSensorArray?.length == 0 ? (this.tankDeviceHourlyArray = [], this.graphLineChart()) : '';
         } else {
           this.DeviceCurrentSensorArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
-      }, error: ((error: any) => { this.errorSerivce.handelError(error.status) })});
+      }, error: ((error: any) => { this.errorSerivce.handelError(error.status) })
+    });
   }
 
-  filterTankData(obj:any){ 
-    if(obj[0]?.data?.deviceId){
+  filterTankData(obj: any) {
+    if (obj[0]?.data?.deviceId) {
       this.waterTankChartData(obj[0]?.data);
-      this.dateFilter.setValue(this.max) 
-      this.getTankDeviceHourlyValue();  
+      this.dateFilter.setValue(this.max)
+      this.getTankDeviceHourlyValue();
     }
-  } 
+  }
 
   waterTankChartData(data?: any) {
     this.chartObj = data;
-    let chartData = data ? [{"category": data.tankName,"value1": data.percentage,"value2": 100}] :  [{"category": "","value1": 0,"value2": 100}];
+    let chartData = data ? [{ "category": data.tankName, "value1": data.percentage, "value2": 100 }] : [{ "category": "", "value1": 0, "value2": 100 }];
 
     am4core.useTheme(am4themes_animated);
     am4core.addLicense("ch-custom-attribution");
@@ -157,18 +158,18 @@ export class DashboardComponent implements OnInit {
     categoryAxis.dataFields.category = "category";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.grid.template.strokeOpacity = 0;
-    
+
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.grid.template.strokeOpacity = 0;
     valueAxis.min = -10;
     valueAxis.max = 100;
     valueAxis.strictMinMax = true;
     valueAxis.renderer.baseGrid.disabled = true;
-    valueAxis.renderer.labels.template.adapter.add("text", function(text:any) {
-      if ((text > 100) || (text < 0)) { return "";}
-      else { return text + "%";}
+    valueAxis.renderer.labels.template.adapter.add("text", function (text: any) {
+      if ((text > 100) || (text < 0)) { return ""; }
+      else { return text + "%"; }
     })
-    
+
     // Create series
     let series1 = chart.series.push(new am4charts.ConeSeries());
     series1.dataFields.valueY = "value1";
@@ -177,7 +178,7 @@ export class DashboardComponent implements OnInit {
     series1.columns.template.fillOpacity = 0.9;
     series1.columns.template.strokeOpacity = 1;
     series1.columns.template.strokeWidth = 2;
-    
+
     let series2 = chart.series.push(new am4charts.ConeSeries());
     series2.dataFields.valueY = "value2";
     series2.dataFields.categoryX = "category";
@@ -191,20 +192,24 @@ export class DashboardComponent implements OnInit {
   }
 
   getTankDeviceHourlyValue() {
-    let obj:any = this.chartObj?.deviceId  + '&DisplayDate=' + this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+    let obj: any = this.chartObj?.deviceId + '&DisplayDate=' + this.datePipe.transform(this.dateFilter.value, 'yyyy/MM/dd') + '&YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
     this.apiService.setHttp('get', "DeviceInfo/GetTankDeviceHourlyValueWithEvent?DeviceId=" + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode === "200") {
+          // percent hourValue
           this.tankDeviceHourlyArray = res.responseData[0].tankSensorValues;
+          this.tankDeviceHourlyArray.map((ele: any) => { ele['value1'] = ele.percent})
           this.valveEventHourlyArray = res.responseData[0].valveEvent;
+          this.valveEventHourlyArray.map((ele: any) => {  ele['value2'] = ele.percent })
+
           this.graphLineChart();
         } else {
           this.tankDeviceHourlyArray = [];
           this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toastrService.error(res.statusMessage);
         }
       },
-      error: ((error: any) => { this.errorSerivce.handelError(error.status)})
+      error: ((error: any) => { this.errorSerivce.handelError(error.status) })
     });
   }
 
@@ -213,20 +218,21 @@ export class DashboardComponent implements OnInit {
     let chart = am4core.create("chartdiv", am4charts.XYChart);
     chart.colors.step = 2;
 
-    chart.data = this.tankDeviceHourlyArray;  // Add data
+    let mainArray = this.tankDeviceHourlyArray.concat(this.valveEventHourlyArray);
+    
+    chart.data = mainArray;  // Add data
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "hourValue";
     categoryAxis.title.text = "Time";
     categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 45;
-
+    categoryAxis.renderer.minGridDistance = 100;
     categoryAxis.startLocation = 0.5;
     categoryAxis.endLocation = 0.5;
 
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.title.text = "Percent";
+    valueAxis.title.text = "Water Percentage";
     valueAxis.calculateTotals = true;
     valueAxis.min = 0;
     valueAxis.max = 100;
@@ -236,43 +242,51 @@ export class DashboardComponent implements OnInit {
     });
 
     let series: any = chart.series.push(new am4charts.LineSeries()); // Create series
-
-    series.dataFields.valueY = "percent";
+    series.dataFields.valueY = "value1";
     series.dataFields.dateX = "totalPercent";
     series.dataFields.categoryX = "hourValue";
     series.name = "Percent";
     series.strokeWidth = 3;
-    series.fillOpacity = 0.5;
+    series.fillOpacity = 0.85;
+    // series.stacked = true;
+    series.tooltip.getFillFromObject = false;
+    series.tooltip.background.fill = am4core.color("#FFF");
+    series.tooltip.getStrokeFromObject = true;
+    series.tooltip.background.strokeWidth = 3;
 
     var bullet = series.bullets.push(new am4charts.CircleBullet());
     bullet.circle.radius = 6;
     bullet.circle.fill = am4core.color("#fff");
     bullet.circle.strokeWidth = 3;
 
-    series.tooltip.getFillFromObject = false;
-    series.tooltip.background.fill = am4core.color("#FFF");
+    var series2 = chart.series.push(new am4charts.LineSeries());
+    series2.dataFields.valueY = "value2";
+    series2.dataFields.dateX = "totalPercent";
+    series2.dataFields.categoryX = "hourValue";
+    series2.strokeWidth = 0;
+    series2.fillOpacity = 0;
+    series2.stroke = am4core.color("white");
 
-    series.tooltip.getStrokeFromObject = true;
-    series.tooltip.background.strokeWidth = 3;
+    let bullet2:any = series2.bullets.push(new am4charts.CircleBullet());
+    bullet2.circle.radius = 6;
+    bullet2.circle.fill = am4core.color("red");
+    bullet2.circle.strokeWidth = 3;
 
-    series.fillOpacity = 0.85;
-    series.stacked = true;
+    // // static
+    // series.legendSettings.labelText = "Water Level:";
+    // series.legendSettings.valueText = "{valueY.close}";
 
-    // static
-    series.legendSettings.labelText = "Water Level:";
-    series.legendSettings.valueText = "{valueY.close}";
-
-    // hovering
-    series.legendSettings.itemLabelText = "Water:";
-    series.legendSettings.itemValueText = "{valueY}";
+    // // hovering
+    // series.legendSettings.itemLabelText = "Water:";
+    // series.legendSettings.itemValueText = "{valueY}";
 
     chart.cursor = new am4charts.XYCursor(); // Add cursor
-    chart.legend = new am4charts.Legend(); // add legend
+    // chart.legend = new am4charts.Legend(); // add legend
   }
 
   //..................................................... new Code StartHere ..................... ...............//
 
-  valveSegmentList:any;
+  valveSegmentList: any;
   zoom = 6;
   editPatchShape: undefined | any;
   tank_ValveArray: any;
@@ -280,29 +294,32 @@ export class DashboardComponent implements OnInit {
   map: any;
   markerArray: any;
   markerUrlNull = "../../../../assets/images/dot.png";
-  Polyline:any[]= [];
+  Polyline: any[] = [];
+  latitude:number = 19.0898177;
+  logitude:number = 76.5240298;
 
   getValveSegmentList() { //All Segment 
-setTimeout(() => {
-  this.spinner.show();
-  let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
-    + '&userId=' + this.localStorage.userId();
-  this.apiService.setHttp('get', 'ValveTankSegment/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
-  this.apiService.getHttp().subscribe({
-    next: (res: any) => {
-      if (res.statusCode === '200') {
-        this.spinner.hide();
-        this.valveSegmentList = res.responseData[0];
-        this.valveSegPatchData(this.valveSegmentList);
-      } else {
-        this.spinner.hide();
-        this.valveSegmentList = [];
-        this.valveSegmentList = '';
-        this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
-      }
-    },
-    error: (error: any) => {this.errorSerivce.handelError(error.status)}});
-}, 100);
+    setTimeout(() => {
+      this.spinner.show();
+      let obj: any = 'YojanaId=' + (this.filterForm.value.yojanaId || 0) + '&NetworkId=' + (this.filterForm.value.networkId || 0)
+        + '&userId=' + this.localStorage.userId();
+      this.apiService.setHttp('get', 'ValveTankSegment/GetValveSegmentList?' + obj, false, false, false, 'valvemgt');
+      this.apiService.getHttp().subscribe({
+        next: (res: any) => {
+          if (res.statusCode === '200') {
+            this.spinner.hide();
+            this.valveSegmentList = res.responseData[0];
+            this.valveSegPatchData(this.valveSegmentList);
+          } else {
+            this.spinner.hide();
+            this.valveSegmentList = [];
+            this.valveSegmentList = '';
+            this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : '';
+          }
+        },
+        error: (error: any) => { this.errorSerivce.handelError(error.status) }
+      });
+    }, 100);
   }
 
   valveSegPatchData(mainArray: any) {
@@ -311,14 +328,14 @@ setTimeout(() => {
     })
 
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
-      ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; 
-      ele['flag'] = 'tank'; 
+      ele['iconUrl'] = "../../../../assets/images/waterTank2.png";
+      ele['flag'] = 'tank';
       return ele
     })
 
     mainArray.valveDetailModels.map((ele: any) => { // Insert valve Img
       ele['iconUrl'] = "../../../../assets/images/valve.png";
-      ele['flag'] = 'valve'; 
+      ele['flag'] = 'valve';
       return ele
     })
 
@@ -333,8 +350,10 @@ setTimeout(() => {
   }
 
   onMapReady(map: any) {
-    map?.setOptions({mapTypeControlOptions: {position: google.maps.ControlPosition.TOP_RIGHT},streetViewControl: false});// add satellite view btn
+    map?.setOptions({ mapTypeControlOptions: { position: google.maps.ControlPosition.TOP_RIGHT }, streetViewControl: false });// add satellite view btn
     this.map = map;
+
+    const bounds = new google.maps.LatLngBounds();
     this.getAllSegmentArray?.map((ele: any) => {
       this.editPatchShape = new google.maps.Polyline({
         path: ele,
@@ -344,21 +363,25 @@ setTimeout(() => {
         strokeWeight: 4,
         icons: [{ icon: this.commonService.lineSymbol, offset: '25px', repeat: '100px' }]
       });
+      ele.forEach((marker:any) => {bounds.extend(new google.maps.LatLng(marker.lat, marker.lng))});
+      this.map.fitBounds(bounds);
       this.editPatchShape.setMap(this.map);
       this.Polyline.push(this.editPatchShape);
     })
+    
   }
 
-  previous:any;
-  clickedMarker(infowindow:any) {
-    if (this.previous) {this.previous.close()}
+  previous: any;
+  clickedMarker(infowindow: any) {
+    if (this.previous) { this.previous.close() }
     this.previous = infowindow;
- }
-
- clearMapData() {
-  for (let i = 0; i < this.Polyline.length; i++) {
-    this.Polyline[i].setMap(null);
   }
-}
+
+  clearMapData() {
+    this.map.setZoom(6);this.map.setCenter({ lat: this.latitude, lng: this.logitude })
+    for (let i = 0; i < this.Polyline.length; i++) {
+      this.Polyline[i].setMap(null);
+    }
+  }
 
 }
