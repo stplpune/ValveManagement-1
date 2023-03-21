@@ -92,10 +92,12 @@
                     </ngx-select>
                 </div>
                 <ul class="cylenderLabel" *ngIf="chartObj">
+                    <div class="card p-1">
                     <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
                     <li><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
                     <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
                     <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
+                </div>
                 </ul>
                     <!-- <div class="card-header">Pie Chart</div> -->
                     <div class="card-body text-center valveCylenderChart">
