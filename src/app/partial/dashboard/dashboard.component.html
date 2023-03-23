@@ -92,10 +92,12 @@
                     </ngx-select>
                 </div>
                 <ul class="cylenderLabel" *ngIf="chartObj">
+                    <div class="card p-1">
                     <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
                     <li><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
                     <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
                     <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
+                </div>
                 </ul>
                     <!-- <div class="card-header">Pie Chart</div> -->
                     <div class="card-body text-center valveCylenderChart">
@@ -107,10 +109,10 @@
                 <div class="card dashboardChart">
                     <div class="card-header">Location</div>
                     <div class="card-body text-center pt-0">
-                        <!-- <agm-map [latitude]="lat" [longitude]="lng" [fullscreenControl]="true">
-                            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+                        <!-- <agm-map [latitude]="lat" [longitude]="lng" [fullscreenControl]="true" [fitBounds]="true">
+                            <agm-marker [latitude]="lat" [longitude]="lng" [agmFitBounds]="true"></agm-marker>
                         </agm-map> -->
-                        <agm-map [fitBounds]="true" [mapTypeControl]='true' [latitude]="19.0898177" [zoom]="zoom" [longitude]="76.5240298"
+                        <agm-map [mapTypeControl]='true' [latitude]="latitude" [zoom]="zoom" [longitude]="logitude"
                         (mapReady)="onMapReady($event)" [fullscreenControl]="true">
                         <div *ngFor="let m of tank_ValveArray; let i = index">
                             <agm-marker *ngIf="m.latitude != 0 && m.longitude != 0"
@@ -130,7 +132,7 @@
                                 </agm-info-window>
                             </agm-marker>
                         </div>
-                        <agm-marker [agmFitBounds]="true" *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
+                        <agm-marker *ngFor="let m of markerArray; let i = index" [latitude]="m.latitude || 19.0898177"
                             [longitude]="m.longitude || 76.5240298" [label]="m.label" [iconUrl]="markerUrlNull">
                         </agm-marker>
                     </agm-map>

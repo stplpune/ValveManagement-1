@@ -171,14 +171,10 @@ export class ValveWaterSummeryComponent implements OnInit {
     categoryAxis.tooltip.disabled = true;
     categoryAxis.renderer.minHeight = 110;
 
-    // let valueAxis:any = chart.yAxes.push(new am4charts.ValueAxis());
-    // valueAxis.renderer.minWidth = 50;
-    // valueAxis.baseUnit = "second";
-    // valueAxis.title.text = "valveTotalTime";
-
     var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
     yAxis.baseUnit = "second";
     yAxis.title.text = "valve Total Time";
+    yAxis.min = 0;
 
     // Create series
     let series: any = chart.series.push(new am4charts.ColumnSeries());
@@ -265,6 +261,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
     yAxis.baseUnit = "second";
     yAxis.title.text = "total Time";
+    yAxis.min = 0;
 
     // Create series
     let series: any = chart.series.push(new am4charts.ColumnSeries());
