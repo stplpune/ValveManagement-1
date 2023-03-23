@@ -130,7 +130,7 @@
                   [ngClass]="{ 'is-invalid': submitted && f.yojana.errors }">
                 </ngx-select>
                 <div *ngIf="submitted && f.yojana.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.yojana.errors?.required">Yojana is
+                  <div class="text-danger" *ngIf="f.yojana.errors?.required">Yojana
                     Required.</div>
                 </div>
               </div>
@@ -144,7 +144,7 @@
                   [ngClass]="{ 'is-invalid': submitted && f.network.errors }">
                 </ngx-select>
                 <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.network.errors?.required">Network is required.</div>
+                  <div class="text-danger" *ngIf="f.network.errors?.required">Network  Required.</div>
                 </div>
               </div>
             </div>
@@ -157,7 +157,7 @@
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name (Marathi) is
-                    required.</div>
+                    Required.</div>
                   <div class="text-danger" *ngIf="f.valveName.errors?.pattern">Please enter
                     Valid Valve Marathi Name.</div>
                 </div>
@@ -170,7 +170,7 @@
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName_En.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.valveName_En.errors?.required">Valve Name (English) is
-                    required.</div>
+                    Required.</div>
                   <div class="text-danger" *ngIf="f.valveName_En.errors?.pattern">Please enter
                     Valid Valve English Name.</div>
                 </div>
@@ -186,7 +186,7 @@
                   (keypress)="validation.noSpacesAtStart($event)">
                 <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
-                    required.</div>
+                    Required.</div>
                   <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.pattern">Please enter
                     Valid Pipe Diameter Value.</div>
                 </div>
@@ -202,7 +202,7 @@
                     <i class="fa-solid fa-location-dot"></i>
                   </button>
                   <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f.address.errors?.required">Address is required.</div>
+                    <div class="text-danger" *ngIf="f.address.errors?.required">Address is Required.</div>
                   </div>
                 </div>
               </div>
@@ -234,7 +234,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f.valvelist.errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f.valvelist.errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f.valvelist.errors?.required">Valve List is required</div>
+                    <div class="text-danger" *ngIf="f.valvelist.errors?.required">Valve List is Required</div>
                   </div>
                 </div>
                 <div *ngIf="valveListForm.controls['list'].value=='2'">
@@ -245,7 +245,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f.tankist.errors }">
                   </ngx-select>
                   <div *ngIf="submitted && f.tankist.errors" class="invalid-feedback">
-                    <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is required</div>
+                    <div class="text-danger" *ngIf="f.tankist.errors?.required">Tank List is Required</div>
                   </div>
                 </div>
               </div>
