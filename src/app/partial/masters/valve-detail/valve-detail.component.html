@@ -151,12 +151,12 @@
 
             <div class="row mb-2">
               <div class="col-sm-6">
-                <label class="form-label">Valve Marathi Name <span class="text-danger">*</span></label>
+                <label class="form-label">Valve Name (Marathi)<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Marathi Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Marathi Name is
+                  <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name (Marathi) is
                     required.</div>
                   <div class="text-danger" *ngIf="f.valveName.errors?.pattern">Please enter
                     Valid Valve Marathi Name.</div>
@@ -164,12 +164,12 @@
               </div>
 
               <div class="col-sm-6">
-                <label class="form-label">Valve English Name <span class="text-danger">*</span></label>
+                <label class="form-label">Valve Name (English)<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName_En" placeholder="Valve English Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName_En.errors }"
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName_En.errors" class="invalid-feedback">
-                  <div class="text-danger" *ngIf="f.valveName_En.errors?.required">Valve English Name is
+                  <div class="text-danger" *ngIf="f.valveName_En.errors?.required">Valve Name (English) is
                     required.</div>
                   <div class="text-danger" *ngIf="f.valveName_En.errors?.pattern">Please enter
                     Valid Valve English Name.</div>
