@@ -171,10 +171,10 @@
               <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceDescription.errors }"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"></textarea>
-              <div *ngIf="submitted && f.deviceDescription.errors" class="invalid-feedback">
+              <!-- <div *ngIf="submitted && f.deviceDescription.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.deviceDescription.errors?.required">Device Description is
                   Required.</div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="modal-footer px-0 pb-0">
