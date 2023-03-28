@@ -154,7 +154,7 @@
                 <label class="form-label">Valve Name (Marathi)<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Marathi Name"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
-                  (keypress)="validation.noFirstSpaceAllow($event)">
+                  (keypress)="validation.noFirstSpaceAllow($event)" maxlength="30">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.valveName.errors?.required">Valve Name (Marathi) is
                     Required.</div>
@@ -183,7 +183,7 @@
                 <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
                   [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }"
-                  (keypress)="validation.noSpacesAtStart($event)">
+                  (keypress)="validation.noSpacesAtStart($event)" maxlength="8">
                 <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf=" f.pipeDiameter.errors?.required">Pipe Diameter is
                     Required.</div>
@@ -196,11 +196,11 @@
                 <div class="input-group">
                   <input type="text" class="form-control" formControlName="address" placeholder="Address"
                     [ngClass]="{ 'is-invalid': submitted && f.address.errors }"
-                    (keypress)="validation.noSpacesAtStart($event)">
+                    (keypress)="validation.noFirstSpaceAllow($event)">
                   <button class="btn btn-success" type="button" data-bs-toggle="modal"
                     data-bs-target="#MapSelectModalForAddress" (click)="openAddressModel()">
                     <i class="fa-solid fa-location-dot"></i>
-                  </button>
+                  </button>               
                   <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
                     <div class="text-danger" *ngIf="f.address.errors?.required">Address is Required.</div>
                   </div>
