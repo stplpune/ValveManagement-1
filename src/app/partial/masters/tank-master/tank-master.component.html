@@ -39,7 +39,7 @@
     <table class="table align-middle dashboard-table">
       <thead>
         <tr>
-          <th>Sr. No.</th>
+          <th>Sr.No.</th>
           <th>Tank Name</th>
           <th>Tank Address</th>
           <th>Actions</th>
@@ -51,15 +51,18 @@
           <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
           <td>{{data.tankName}}</td>
           <td>{{data.address}}</td>
-          <td> <button type="button" (click)="onEditData(data)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2"
-              title="Edit" data-bs-toggle="modal" data-bs-target="#AddValveModal">
-              <i class="fa-regular fa-pen-to-square"></i>
-            </button>
-            <button type="button" (click)="getDeleteConfirm(data)"
-              class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete" data-bs-toggle="modal"
-              data-bs-target="#deleteModel">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
+          <td>
+            <div class="d-flex gap-2">
+              <button type="button" (click)="onEditData(data)" class="btn bg-dark bg-opacity-10 text-dark rounded me-2"
+                title="Edit" data-bs-toggle="modal" data-bs-target="#AddValveModal">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button type="button" (click)="getDeleteConfirm(data)"
+                class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete" data-bs-toggle="modal"
+                data-bs-target="#deleteModel">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
