@@ -60,10 +60,10 @@ export class NetworkMasterComponent implements OnInit {
     })
   }
 
-  clearWhiteSpace(){
-    let replaceName=this.networkRegForm.value.networkName.replace(/\s/g, "");
-    this.networkRegForm.controls['networkName'].setValue(replaceName);
-  }
+  // clearWhiteSpace(){
+  //   let replaceName=this.networkRegForm.value.networkName.replace(/\s/g, "");
+  //   this.networkRegForm.controls['networkName'].setValue(replaceName);
+  // }
 
   getAllYojana() {
     this.apiService.setHttp('GET', 'api/MasterDropdown/GetAllYojana?YojanaId=' + this.getAllLocalStorageData.yojanaId, false, false, false, 'valvemgt');
