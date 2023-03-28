@@ -194,32 +194,32 @@
 
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                <label class="form-label">Person Marathi Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Person Name(Marathi) <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Person Marathi Name"
                                     formControlName="personName"
                                     (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
                                 <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName.errors?.required">
-                                        Person Marathi Name is Required</div>
+                                        Person Name (Marathi) is Required</div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <label class="form-label">Person English Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Person Name (English)<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Person English Name"
                                     formControlName="personName_En"
                                     (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
                                     [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }">
                                 <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
                                     <div class="text-danger" *ngIf="f.personName_En.errors?.required">
-                                        Person English Name is Required</div>
+                                        Person Name (English) is Required</div>
                                 </div>
                             </div>
                             </div>
 
                             <div class="row mb-2 gx-1">
                                 <div class="col-sm-6">
-                                <label class="form-label">is Have Tap</label>
+                                <label class="form-label">Is Have Tap ?</label>
                                 <div class="d-block">
                                     <div class="form-check form-check-inline"
                                         *ngFor="let haveTap of isHaveTapArray; let i=index">
@@ -234,7 +234,7 @@
                             </div>
 
                             <div class="col-sm-6">
-                                <label class="form-label">is Have Motar</label>
+                                <label class="form-label">Is Have Motar ?</label>
                                 <div class="d-block">
                                     <div class="form-check form-check-inline"
                                         *ngFor="let haveMotar of isHaveMotarArray; let i=index">

@@ -25,7 +25,7 @@ export class ValveDetailComponent implements OnInit {
   iseditbtn = false;
   editObj: any;
   readioSelected: any;
-  btnText = 'Save Changes';
+  btnText = 'Submit';
   headingText = 'Add Valve Details';
   valveStatusArray: any;
   pageNumber: number = 1;

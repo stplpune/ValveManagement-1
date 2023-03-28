@@ -180,8 +180,8 @@
 
             <div class="row mb-2">
               <div class="col-sm-6">
-                <label class="form-label">Pipe Diameter <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter"
+                <label class="form-label">Pipe Diameter ( Inch )<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="pipeDiameter" placeholder="Pipe Diameter ( Inch )"
                   [ngClass]="{ 'is-invalid': submitted && f.pipeDiameter.errors }"
                   (keypress)="validation.noSpacesAtStart($event)" maxlength="8">
                 <div *ngIf="submitted &&  f.pipeDiameter.errors" class="invalid-feedback">
