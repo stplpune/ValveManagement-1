@@ -79,7 +79,7 @@ export class ValveListComponent implements OnInit {
       yojana: ['', [Validators.required],],
       network: ['', [Validators.required],],     
       valveId: ['', [Validators.required, Validators.pattern('^[^[ ]+|[ ][gm]+$')],],
-      companyName: ['', [Validators.required, Validators.pattern('^[^\\s0-9\\[\\[`&._@#%*!+"\'/\\]\\]{}][a-zA-Z.\\s]+$'),],],    
+      companyName: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9\s]*$')],],    
 
     });
   }

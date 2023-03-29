@@ -90,7 +90,7 @@
               <label class="form-label">Valve ID<span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="valveId" placeholder="Valve ID"
                 [ngClass]="{ 'is-invalid': submitted && f.valveId.errors }"
-                (keypress)="validation.noSpacesAtStart($event)">
+                (keypress)="validation.noSpacesAtStart($event)" maxlength="20">
               <div *ngIf="submitted && f.valveId.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.valveId.errors?.required">Valve ID is
                   required.</div>
