@@ -88,6 +88,7 @@
                 <form [formGroup]="segmentMasterForm">
                     <div class="row g-2 form-container">
                         <div class="col-sm">
+                            <label for="" class="form-label">Yogana <span class="text-danger">*</span></label>
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
                                 (select)="clearMapData();getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaIdArray?.length == 1 || onEditFlag == true"
@@ -98,6 +99,7 @@
                             </div>
                         </div>
                         <div class="col-sm">
+                            <label for="" class="form-label">Network <span class="text-danger">*</span></label>
                                 <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="clearMapData();getValveSegmentList()"
                                 placeholder="Select Network" optionValueField="networkId" [disabled]="!this.segmentMasterForm.value.yojanaId || networkIdAddArray?.length <= 1 || onEditFlag == true"
                                 optionTextField="networkName" (remove)="clearMapData();"
@@ -108,6 +110,7 @@
                         </div>
 
                         <div class="col-sm">
+                            <label for="" class="form-label">Segment Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" formControlName="segmentName"
                                 placeholder="Segment Name"
                                 [ngClass]="{ 'is-invalid': submited && f.segmentName.errors }">
