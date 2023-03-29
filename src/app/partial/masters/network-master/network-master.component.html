@@ -82,9 +82,10 @@
                         <div class="mb-3">
                             <label class="form-label">Network Name</label>
                             <input type="text" class="form-control" formControlName="networkName"
-                                placeholder="Network Name" (blur)="clearWhiteSpace()"
+                                placeholder="Network Name"
                                 [ngClass]="{ 'is-invalid': submitted && f.networkName.errors }"
-                                (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)">
+                                (keypress)="this.validation.noFirstSpaceAllow($event);this.validation.alphaNumericWithSpacesAndSpecChars($event)"
+                                minlength="2" maxlength="50">
                             <div *ngIf="submitted && f.networkName.errors" class="invalid-feedback">
                                 <div class="text-danger" *ngIf="f.networkName.errors?.required">Network Name is
                                     Required.</div>

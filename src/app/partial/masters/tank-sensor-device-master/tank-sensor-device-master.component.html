@@ -100,7 +100,8 @@
               <label class="form-label">Device Id  <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="deviceId" placeholder="Device Id"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
+                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"
+                minlength="2" maxlength="50">
               <div *ngIf="submitted && f['deviceId'].errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.deviceId.errors?.required">Device Id is
                   Required.</div>
@@ -170,7 +171,8 @@
               <label class="form-label">Description  <span class="text-danger">*</span></label>
               <textarea class="form-control" formControlName="deviceDescription" placeholder="Description" rows="5"
                 [ngClass]="{ 'is-invalid': submitted && f.deviceDescription.errors }"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"></textarea>
+                (keypress)="validation.noFirstSpaceAllow($event);validation.alphaNumericWithSpacesAndSpecChars($event)"
+                minlength="2" maxlength="200"></textarea>
               <!-- <div *ngIf="submitted && f.deviceDescription.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.deviceDescription.errors?.required">Device Description is
                   Required.</div>
