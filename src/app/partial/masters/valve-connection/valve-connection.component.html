@@ -20,16 +20,17 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.searchForm.value.yojana || networkArrayFilter?.length == 1" optionTextField="networkName"
-                        (remove)="clearSearch('network');filterData()"
+                        [disabled]="!this.searchForm.value.yojana || networkArrayFilter?.length == 1"
+                        optionTextField="networkName" (remove)="clearSearch('network');filterData()"
                         (select)="this.filterFlag = 'filter';clearSearch('network');getValveConnectionDropdown();filterData()">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
-                        placeholder="Select Valve Connection" optionValueField="valveDetailsId" optionTextField="valveName"
-                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter?.length <=1" (remove)="clearSearch('valveMaster');filterData()"
-                        (select)="filterData()">
+                        placeholder="Select Valve Connection" optionValueField="valveDetailsId"
+                        optionTextField="valveName"
+                        [disabled]="!this.searchForm.value.network || valveConnectionArrayFilter?.length <=1"
+                        (remove)="clearSearch('valveMaster');filterData()" (select)="filterData()">
                     </ngx-select>
 
                 </div>
@@ -40,41 +41,43 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-12">
-                <table class="table align-middle dashboard-table">
-                    <thead>
-                        <tr>
-                            <th>Sr. No.</th>
-                            <th>Person Name</th>
-                            <th>Mobile Number</th>
-                            <th>Valve Name</th>
-                            <th>Total Connection</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let data of dataSource |  paginate: {itemsPerPage: pagesize,
+                <div class="table-responsive">
+                    <table class="table align-middle dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Person Name</th>
+                                <th>Mobile Number</th>
+                                <th>Valve Name</th>
+                                <th>Total Connection</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of dataSource |  paginate: {itemsPerPage: pagesize,
                             currentPage: pageNumber, totalItems:totalRows}; let i=index"
-                            [class.active]="data.id == highlitedRow">
-                            <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
-                            <td>{{data.personName}}</td>
-                            <td>{{data.mobileNo}}</td>
-                            <td>{{data.valveName}}</td>
-                            <td>{{data.totalConnection}}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded" title="Edit"
-                                        data-bs-toggle="modal" data-bs-target="#addconnectionModal"
-                                        (click)="this.filterFlag = 'add';onClickEdit(data);editChangeFlag = 1">
-                                        <i class="far fa-edit"></i></button>
-                                    <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
-                                        data-bs-toggle="modal" data-bs-target="#deleteModel"
-                                        (click)="deleteConformation(data)">
-                                        <i class="fas fa-trash-alt"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                [class.active]="data.id == highlitedRow">
+                                <td>{{((pageNumber + 1) * 10 + i + 1)-20}}</td>
+                                <td>{{data.personName}}</td>
+                                <td>{{data.mobileNo}}</td>
+                                <td>{{data.valveName}}</td>
+                                <td>{{data.totalConnection}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-light text-edit me-1 rounded"
+                                            title="Edit" data-bs-toggle="modal" data-bs-target="#addconnectionModal"
+                                            (click)="this.filterFlag = 'add';onClickEdit(data);editChangeFlag = 1">
+                                            <i class="far fa-edit"></i></button>
+                                        <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModel"
+                                            (click)="deleteConformation(data)">
+                                            <i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="mt-2 text-end" *ngIf="dataSource?.length == 0">
                     <div class="alert alert-danger text-center py-2">No Data Found..!
                     </div>
@@ -96,13 +99,9 @@
     aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="highlitedRow=0;"></button>
-            </div>
-            <div class="modal-body text-center pb-5">
-                <h3 class="my-3">Are You Sure?</h3>
-                <p class="mb-4">Do you really want to This process can not be undone.</p>
+            <div class="modal-body text-center">
+                <img src="assets/images/trash.gif" alt="" height="100px">
+                <p class="mb-4">Do You Want To Delete</p>
                 <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
                     aria-label="Close" (click)="highlitedRow=0">Cancel</button>
                 <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
@@ -133,10 +132,11 @@
                             <div class="row mb-2">
                                 <div class="col-sm-6">
                                     <label for="" class="form-label"> Yojana<span class="text-danger">*</span></label>
-                                    <ngx-select [items]="yoganaArray" formControlName="yojanaId" [allowClear]="true" placeholder="Select Yojana"
-                                        optionValueField="yojanaId" optionTextField="yojanaName"
-                                        [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }" (remove)="clearDropdown('yojanaId')"
-                                        [disabled]="this.yoganaArray?.length == 1"
+                                    <ngx-select [items]="yoganaArray" formControlName="yojanaId" [allowClear]="true"
+                                        placeholder="Select Yojana" optionValueField="yojanaId"
+                                        optionTextField="yojanaName"
+                                        [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
+                                        (remove)="clearDropdown('yojanaId')" [disabled]="this.yoganaArray?.length == 1"
                                         (select)="this.filterFlag = 'add';clearDropdown('yojanaId');getNetworkDropdown();editChangeFlag = 0">
                                     </ngx-select>
                                     <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
@@ -146,10 +146,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="" class="form-label">Network <span class="text-danger">*</span></label>
-                                    <ngx-select [items]="networkArray" formControlName="networkId" [allowClear]="true" placeholder="Select Network"
-                                        optionValueField="networkId"
+                                    <ngx-select [items]="networkArray" formControlName="networkId" [allowClear]="true"
+                                        placeholder="Select Network" optionValueField="networkId"
                                         [disabled]="!this.valveConnectionForm.value.yojanaId || networkArray?.length <=1"
-                                        optionTextField="networkName" [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
+                                        optionTextField="networkName"
+                                        [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }"
                                         (remove)="clearDropdown('networkId')"
                                         (select)="this.filterFlag = 'add';clearDropdown('networkId');getValveConnectionDropdown();editChangeFlag = 0">
                                         <!-- [disabled]="networkArray.length==1" -->
@@ -163,90 +164,90 @@
 
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                <label class="form-label">Valve Name <span class="text-danger">*</span></label>
-                                <ngx-select [allowClear]="true" [items]="valveConnectionArray"
-                                    formControlName="valveDetailsId" placeholder="Select Valve"
-                                    optionValueField="valveDetailsId" optionTextField="valveName"
-                                    [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray?.length==1"
-                                    [ngClass]="{ 'is-invalid': submitted && f.valveDetailsId.errors }"
-                                    (remove)="clearDropdown('valveDetailsId')">
-                                </ngx-select>
-                                <!-- [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1" -->
-                                <div *ngIf="submitted && f.valveDetailsId.errors" class="invalid-feedback">
-                                    <div class="text-danger" *ngIf="f.valveDetailsId.errors?.required">
-                                        Valve is Required</div>
+                                    <label class="form-label">Valve Name <span class="text-danger">*</span></label>
+                                    <ngx-select [allowClear]="true" [items]="valveConnectionArray"
+                                        formControlName="valveDetailsId" placeholder="Select Valve"
+                                        optionValueField="valveDetailsId" optionTextField="valveName"
+                                        [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray?.length==1"
+                                        [ngClass]="{ 'is-invalid': submitted && f.valveDetailsId.errors }"
+                                        (remove)="clearDropdown('valveDetailsId')">
+                                    </ngx-select>
+                                    <!-- [disabled]="!this.valveConnectionForm.value.networkId || valveConnectionArray.length==1" -->
+                                    <div *ngIf="submitted && f.valveDetailsId.errors" class="invalid-feedback">
+                                        <div class="text-danger" *ngIf="f.valveDetailsId.errors?.required">
+                                            Valve is Required</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Mobile Number"
-                                    formControlName="mobileNo"
-                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
-                                    [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
-                                <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
-                                    <div *ngIf="f.mobileNo.errors?.required" class="text-danger">Mobile Number is
-                                        Required</div>
-                                    <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid
-                                        Mobile Number</div>
+                                <div class="col-sm-6">
+                                    <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Mobile Number"
+                                        formControlName="mobileNo"
+                                        (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)"
+                                        [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" maxlength="10">
+                                    <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
+                                        <div *ngIf="f.mobileNo.errors?.required" class="text-danger">Mobile Number is
+                                            Required</div>
+                                        <div *ngIf="f.mobileNo.errors?.pattern" class="text-danger">Please Enter Valid
+                                            Mobile Number</div>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
 
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                <label class="form-label">Person Name(Marathi) <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Person Marathi Name"
-                                    formControlName="personName"
-                                    (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                    [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
-                                <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
-                                    <div class="text-danger" *ngIf="f.personName.errors?.required">
-                                        Person Name (Marathi) is Required</div>
+                                    <label class="form-label">Person Name(Marathi) <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Person Marathi Name"
+                                        formControlName="personName"
+                                        (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                    <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
+                                        <div class="text-danger" *ngIf="f.personName.errors?.required">
+                                            Person Name (Marathi) is Required</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label class="form-label">Person Name (English)<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="Person English Name"
-                                    formControlName="personName_En"
-                                    (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                    [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }">
-                                <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
-                                    <div class="text-danger" *ngIf="f.personName_En.errors?.required">
-                                        Person Name (English) is Required</div>
+                                <div class="col-sm-6">
+                                    <label class="form-label">Person Name (English)<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Person English Name"
+                                        formControlName="personName_En"
+                                        (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }">
+                                    <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
+                                        <div class="text-danger" *ngIf="f.personName_En.errors?.required">
+                                            Person Name (English) is Required</div>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
 
                             <div class="row mb-2 gx-1">
                                 <div class="col-sm-6">
-                                <label class="form-label">Is Have Tap ?</label>
-                                <div class="d-block">
-                                    <div class="form-check form-check-inline"
-                                        *ngFor="let haveTap of isHaveTapArray; let i=index">
-                                        <input class="form-check-input" type="radio"
-                                            formControlName="isHaveTap" name="isHaveTap"
-                                            [checked]="haveTap?.id == editObj?.isHaveTap"
-                                            id="inlineRadio4{{i}}" [value]="haveTap?.id">
-                                        <label class="form-check-label"
-                                            for="inlineRadio4{{i}}">{{haveTap?.name}}</label>
+                                    <label class="form-label">Is Have Tap ?</label>
+                                    <div class="d-block">
+                                        <div class="form-check form-check-inline"
+                                            *ngFor="let haveTap of isHaveTapArray; let i=index">
+                                            <input class="form-check-input" type="radio" formControlName="isHaveTap"
+                                                name="isHaveTap" [checked]="haveTap?.id == editObj?.isHaveTap"
+                                                id="inlineRadio4{{i}}" [value]="haveTap?.id">
+                                            <label class="form-check-label"
+                                                for="inlineRadio4{{i}}">{{haveTap?.name}}</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <label class="form-label">Is Have Motar ?</label>
-                                <div class="d-block">
-                                    <div class="form-check form-check-inline"
-                                        *ngFor="let haveMotar of isHaveMotarArray; let i=index">
-                                        <input class="form-check-input" type="radio"
-                                            formControlName="isHaveMotar" name="isHaveMotar"
-                                            [checked]="haveMotar?.id == editObj?.isHaveMotar"
-                                            id="inlineRadio2{{i}}" [value]="haveMotar?.id">
-                                        <label class="form-check-label"
-                                            for="inlineRadio2{{i}}">{{haveMotar?.name}}</label>
+                                <div class="col-sm-6">
+                                    <label class="form-label">Is Have Motar ?</label>
+                                    <div class="d-block">
+                                        <div class="form-check form-check-inline"
+                                            *ngFor="let haveMotar of isHaveMotarArray; let i=index">
+                                            <input class="form-check-input" type="radio" formControlName="isHaveMotar"
+                                                name="isHaveMotar" [checked]="haveMotar?.id == editObj?.isHaveMotar"
+                                                id="inlineRadio2{{i}}" [value]="haveMotar?.id">
+                                            <label class="form-check-label"
+                                                for="inlineRadio2{{i}}">{{haveMotar?.name}}</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             </div>
 
