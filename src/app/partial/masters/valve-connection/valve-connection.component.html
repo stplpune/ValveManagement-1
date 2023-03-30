@@ -1,6 +1,6 @@
 <div class="card plain-card">
     <div class="card-header">
-        <div class="d-flex justify-content-between w-100 mb-3">
+        <div class="d-flex justify-content-between w-100 mb-1">
             Valve Connection
             <button type="button" class="btn btn-light-main text-main btn-sm me-2" data-bs-toggle="modal"
                 data-bs-target="#addconnectionModal" (click)="this.filterFlag = 'add';this.getYoganaDropdown()">
@@ -9,7 +9,7 @@
         </div>
 
         <form [formGroup]="searchForm">
-            <div class="row">
+            <div class="row gx-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana"
                         placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
