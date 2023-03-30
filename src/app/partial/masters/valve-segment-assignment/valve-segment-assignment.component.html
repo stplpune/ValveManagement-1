@@ -153,15 +153,20 @@
             </div>
             <div class="mb-3">
               <!-- <div> -->
-              <label class="form-label">Segment</label>
+
               <!-- </div> -->
-              <div class="d-flex  gap-2">
-                <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
-                  placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  [disabled]="!this.valveRegForm.value.networkId">
-                </ngx-select>
-                <button type="button" class="btn btn-main" [disabled]="!this.valveRegForm.value.segmentId"
-                  (click)="addSegment()">Add</button>
+              <div class="row ">
+                <div class="col-sm-8">
+                  <label class="form-label">Segment</label>
+                  <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
+                    placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
+                    [disabled]="!this.valveRegForm.value.networkId">
+                  </ngx-select>
+                </div>
+                <div class="col-sm-4 mt-3 pt-1">
+                  <button type="button" class="btn btn-main " [disabled]="!this.valveRegForm.value.segmentId"
+                    (click)="addSegment()">Add</button>
+                </div>
               </div>
             </div>
             <div class="mb-0">
