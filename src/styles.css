@@ -234,3 +234,12 @@ tr.active {
     color: #fff !important;
     box-shadow: none;
 }
+.dashboard-table tbody td:first-child {
+    min-width: 80px !important;
+    width: 80px !important;
+  }
+  
+  .dashboard-table tbody td:last-child {
+    min-width: 120px !important;
+    width: 120px !important;
+  }
