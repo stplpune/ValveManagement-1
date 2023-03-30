@@ -90,15 +90,15 @@
                 <form [formGroup]="segmentMasterForm">
                     <div class="row g-2 form-container">
                         <div class="col-sm">
-                            <label for="" class="form-label">Yogana <span class="text-danger">*</span></label>
+                            <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
                             <ngx-select [allowClear]="true" [items]="yoganaIdArray"
                                 (remove)="clearMapData();segmentMasterForm.controls['networkId'].setValue('')"
                                 (select)="clearMapData();getNetworkIdAdd()" optionValueField="yojanaId"
                                 [disabled]="yoganaIdArray?.length == 1 || onEditFlag == true"
-                                optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId"
+                                optionTextField="yojanaName" placeholder="Select Yojana" formControlName="yojanaId"
                                 [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                             </ngx-select>
-                            <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required
+                            <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yojana is Required
                             </div>
                         </div>
                         <div class="col-sm">
