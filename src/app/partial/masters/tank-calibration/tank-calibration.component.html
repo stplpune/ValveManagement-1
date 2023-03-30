@@ -1,8 +1,7 @@
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center mb-3">
-      <div class="col-sm-4">Tank Calibration
-      </div>
+    <div class=" mb-3">
+      Tank Calibration
       <!-- <div class="col-sm-4 text-end">
         <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end"><i class="fas fa-sync-alt"></i></button>
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
@@ -12,9 +11,8 @@
     </div>
 
   <form [formGroup]="filterFrm">
-  <div class="col-sm-4">
-      <div class="row g-2">
-        <div class="col-sm">
+      <div class="row w-100 g-2">
+        <div class="col-sm-3">
           <!-- <label class="form-label">Yojana Name</label> -->
           <ngx-select [allowClear]="true" [items]="yojanaArray" formControlName="yojanaId" placeholder="Select Yojana"
             optionValueField="yojanaId" optionTextField="yojanaName" [disabled]="yojanaArray.length == 1"
@@ -22,7 +20,7 @@
             (remove)="clearfilter('yojana');filterData()">
           </ngx-select>
         </div>
-        <div class="col-sm">
+        <div class="col-sm-3">
           <!-- <label class="form-label">Network Name</label> -->
           <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
             placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
@@ -31,7 +29,6 @@
           </ngx-select>
         </div>
       </div>
-    </div>
   </form>
 </div>
 
