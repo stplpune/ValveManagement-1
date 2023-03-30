@@ -1,5 +1,9 @@
 .navbar{
     font-size: 0.85rem;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 9999999 !important;
 }
 
 .modal-sm {
