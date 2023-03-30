@@ -1,16 +1,14 @@
-<div class="col-sm-4">Valve Segment Assignment</div>
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4 text-end">
-        <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
-          data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve Segment
-          Assignment
-        </button>
-      </div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>Valve Segment Assignment</div>
+      <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
+        data-bs-target="#AddValveModal" #addValveModal><i class="fa-solid fa-plus me-2"></i>Add Valve Segment
+        Assignment
+      </button>
+    </div>
       <form [formGroup]="filterForm">
-        <div class="row">
+        <div class="row gx-2">
           <div class="col-3">
             <!-- <label class="form-label">Yojna</label> -->
             <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId"
@@ -34,7 +32,7 @@
           </div> -->
         </div>
       </form>
-    </div>
+    
 
     <!-- <form [formGroup]="filterForm">
       <div class="row">
@@ -222,7 +220,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center px-0">
-       <img src="../../../../assets/images/trash.gif" alt="" height="100px">
+        <img src="../../../../assets/images/trash.gif" alt="" height="100px">
         <p class="mb-4">Do You Want To Delete</p>
         <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
           aria-label="Close">Cancel</button>
