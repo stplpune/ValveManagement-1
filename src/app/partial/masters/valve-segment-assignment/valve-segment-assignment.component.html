@@ -122,9 +122,9 @@
           <div class="form-container">
             <div class="row">
               <div class="col-6">
-                <label class="form-label">Yojna</label>
+                <label class="form-label">Yojana</label>
                 <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
-                  (remove)="clearFormData('yojana')" placeholder="Select Yojna" optionValueField="yojanaId"
+                  (remove)="clearFormData('yojana')" placeholder="Select Yojana" optionValueField="yojanaId"
                   (select)="getAllNetwork();" optionTextField="yojanaName" [disabled]="yojanaArr?.length == 1"
                   [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
