@@ -88,7 +88,7 @@
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
         <p class="modal-title mb-0" id="AddValveModalLabel">
-          Add Tank Segment Assignment
+         {{editFlag ?' Update': 'Add'}}  Tank Segment Assignment
         </p>
         <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal" aria-label="Close"
           (click)="clearForm()" #closebutton></button>
