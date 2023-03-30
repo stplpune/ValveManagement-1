@@ -14,16 +14,17 @@
             <div class="row g-2">
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
-                        (select)="pageNumber = 1;getValveNameAssignmentAll();getNetworkId()" [disabled]="yoganaArray?.length == 1"
-                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
-                        formControlName="yojanaId">
+                        (select)="pageNumber = 1;getValveNameAssignmentAll();getNetworkId()"
+                        [disabled]="yoganaArray?.length == 1" optionValueField="yojanaId" optionTextField="yojanaName"
+                        placeholder="Select Yojana" formControlName="yojanaId">
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
-                        [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
-                        (remove)="clearFilter('network')" (select)="pageNumber = 1;getValveNameAssignmentAll()">
+                        [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1"
+                        optionTextField="networkName" (remove)="clearFilter('network')"
+                        (select)="pageNumber = 1;getValveNameAssignmentAll()">
                     </ngx-select>
                 </div>
             </div>
@@ -55,7 +56,8 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn bg-dark bg-opacity-10 text-dark rounded me-2" title="Edit"
-                                data-bs-toggle="modal" data-bs-target="#valveNameAssModal" (click)="patchFormData(valveNameAssignment)">
+                                data-bs-toggle="modal" data-bs-target="#valveNameAssModal"
+                                (click)="patchFormData(valveNameAssignment)">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </button>
                             <button class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
@@ -68,7 +70,8 @@
                 </tr>
             </tbody>
         </table>
-        <div class="mt-2 text-end" *ngIf="valveNameAssignmentArray?.length == 0 || valveNameAssignmentArray?.length == null">
+        <div class="mt-2 text-end"
+            *ngIf="valveNameAssignmentArray?.length == 0 || valveNameAssignmentArray?.length == null">
             <div class="alert alert-danger text-center py-2">No Data Found..!
             </div>
         </div>
@@ -81,71 +84,80 @@
 
 <!-- Modal for adding new valve -->
 <div class="modal fade" id="valveNameAssModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="valveNameAssModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0">
-      <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="valveNameAssModalLabel">Valve Name Assignment</p>
-        <button type="button" class="btn-close btn-close-inverse" (click)="clearForm()" #valveNameAssignmtModel data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="valveNameAssignmtForm">
-          <div class="form-container">
-            <div class="mb-3">
-              <div class="row">
-                <div class="col-md-6">
-                    <ngx-select [allowClear]="true" [items]="yoganaArray"
-                    (select)="getNetworkIdAdd()" optionValueField="yojanaId" [disabled]="yoganaArray?.length == 1"
-                    optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId" (remove)="clearFormDrop('yojana')"
-                    [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
-                </ngx-select>
-                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required
-                </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <ngx-select [allowClear]="true" [items]="networkIdAddArray" formControlName="networkId" (select)="this.getValveNameList();this.getAllMasterValveList()"
-                    placeholder="Select Network" optionValueField="networkId" [disabled]="!this.valveNameAssignmtForm.value.yojanaId || networkIdAddArray?.length <= 1"
-                    optionTextField="networkName" (remove)="clearFormDrop('network')"
-                    [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
-                </ngx-select>
-                <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required
-                </div>
-                  </div>
-                </div>
-              </div>
+    aria-labelledby="valveNameAssModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-main">
+                <p class="modal-title mb-0" id="valveNameAssModalLabel">Valve Name Assignment</p>
+                <button type="button" class="btn-close btn-close-inverse" (click)="clearForm()" #valveNameAssignmtModel
+                    data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-3">
-                <ngx-select [allowClear]="true" [items]="masterValveListArray"
-                 optionValueField="valveMasterId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
-                optionTextField="valveId" placeholder="Select Valve Name" formControlName="valveNameId"
-                [ngClass]="{ 'is-invalid': submited && f.valveNameId.errors }">
-            </ngx-select>
-            <div *ngIf="submited && f.valveNameId.errors" class="invalid-feedback"> Valve Name is Required
+            <div class="modal-body">
+                <form [formGroup]="valveNameAssignmtForm">
+                    <div class="form-container">
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ngx-select [allowClear]="true" [items]="yoganaArray" (select)="getNetworkIdAdd()"
+                                        optionValueField="yojanaId" [disabled]="yoganaArray?.length == 1"
+                                        optionTextField="yojanaName" placeholder="Select Yogana"
+                                        formControlName="yojanaId" (remove)="clearFormDrop('yojana')"
+                                        [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
+                                    </ngx-select>
+                                    <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is
+                                        Required
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <ngx-select [allowClear]="true" [items]="networkIdAddArray"
+                                            formControlName="networkId"
+                                            (select)="this.getValveNameList();this.getAllMasterValveList()"
+                                            placeholder="Select Network" optionValueField="networkId"
+                                            [disabled]="!this.valveNameAssignmtForm.value.yojanaId || networkIdAddArray?.length <= 1"
+                                            optionTextField="networkName" (remove)="clearFormDrop('network')"
+                                            [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
+                                        </ngx-select>
+                                        <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is
+                                            Required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <ngx-select [allowClear]="true" [items]="masterValveListArray"
+                                optionValueField="valveMasterId"
+                                [disabled]="!this.valveNameAssignmtForm.value.networkId" optionTextField="valveId"
+                                placeholder="Select Valve Name" formControlName="valveNameId"
+                                [ngClass]="{ 'is-invalid': submited && f.valveNameId.errors }">
+                            </ngx-select>
+                            <div *ngIf="submited && f.valveNameId.errors" class="invalid-feedback"> Valve Name is
+                                Required
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <ngx-select [allowClear]="true" [items]="ValveNameListArray"
+                                optionValueField="valveDetailsId"
+                                [disabled]="!this.valveNameAssignmtForm.value.networkId" optionTextField="valveName"
+                                placeholder="Select Valve Id" formControlName="valveId"
+                                [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
+                            </ngx-select>
+                            <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve Id is Required
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer px-0 pb-0">
+                        <div class="d-flex justify-content-between align-items-center w-100 form-container">
+                            <button type="button" class="btn btn-light-main" (click)="clearForm()">Clear</button>
+                            <button class="btn btn-main" type="submit" (click)="onSubmit()">{{textName}}</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            </div>
-            <div class="mb-3">
-                <ngx-select [allowClear]="true" [items]="ValveNameListArray"
-                 optionValueField="valveDetailsId" [disabled]="!this.valveNameAssignmtForm.value.networkId"
-                optionTextField="valveName" placeholder="Select Valve Id" formControlName="valveId"
-                [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
-            </ngx-select>
-            <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve Id is Required
-            </div>
-            </div>
-           
-          </div>
-          <div class="modal-footer px-0 pb-0">
-            <div class="d-flex justify-content-between align-items-center w-100 form-container">
-              <button type="button" class="btn btn-light-main" (click)="clearForm()">Clear</button>
-              <button class="btn btn-main" type="submit" (click)="onSubmit()">{{textName}}</button>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
@@ -154,13 +166,9 @@
     aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center pb-5">
-                <h3 class="my-3">Are You Sure?</h3>
-                <p class="mb-4">Do you really want to This process can not be undone.</p>
+            <div class="modal-body text-center">
+                <img src="assets/images/trash.gif" alt="" height="100px">
+                <p class="mb-4">Do You Want To Delete</p>
                 <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
                     aria-label="Close">Cancel</button>
                 <button class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" type="button"
