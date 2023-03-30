@@ -122,13 +122,9 @@
     aria-labelledby="ProgramStatusModal1Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-main border-bottom-0">
-                <button type="button" class="btn-close btn-close-inverse" (click)="highlitedRow=0"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center pb-5">
-                <h3 class="my-3">Are You Sure?</h3>
-                <p class="mb-4">Do you really want to This process can not be undone.</p>
+            <div class="modal-body text-center px-0">
+                <img src="assets/images/trash.gif" alt="" height="100px">
+                <p class="mb-4">Do You Want To Delete</p>
                 <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" data-bs-dismiss="modal"
                     aria-label="Close">Cancel</button>
                 <button class="btn btn-danger" type="button" (click)="deleteNetworkMaster()" data-bs-dismiss="modal"
