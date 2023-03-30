@@ -234,6 +234,9 @@ tr.active {
     color: #fff !important;
     box-shadow: none;
 }
+.delete-modal{
+    width: 350px;
+}
 .dashboard-table tbody td:first-child {
     min-width: 80px !important;
     width: 80px !important;
