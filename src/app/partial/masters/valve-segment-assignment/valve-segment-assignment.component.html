@@ -128,7 +128,7 @@
                   (select)="getAllNetwork();" optionTextField="yojanaName" [disabled]="yojanaArr?.length == 1"
                   [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
-                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yogana is Required </div>
+                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yojana is Required </div>
               </div>
               <div class="col-6">
                 <label class="form-label">Network</label>
