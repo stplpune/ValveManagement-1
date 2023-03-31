@@ -99,9 +99,9 @@
 
             <div class="row">
               <div class="col-6">
-                <label class="form-label">Yojna</label>
+                <label class="form-label">Yojana</label>
                 <ngx-select [allowClear]="true" [items]="yojanaArr" formControlName="yojanaId"
-                  placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
+                  placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                   (select)="getNetwork();" [ngClass]="{ 'is-invalid': submitted && f['yojanaId'].errors }"
                   (remove)="onChangeDropdown('Yojna');" [disabled]="yojanaArr?.length <= 1">
                 </ngx-select>
