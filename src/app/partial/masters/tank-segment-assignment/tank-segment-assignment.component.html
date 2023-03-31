@@ -143,7 +143,7 @@
               <div class="d-flex  gap-2">
                 <ngx-select [allowClear]="true" [items]="segmentArr" formControlName="segmentId"
                   placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                  class="form-control" aria-label="Default select example"
+                  class="form-control border-0" aria-label="Default select example"
                   [disabled]="!tankSegmentForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()"
