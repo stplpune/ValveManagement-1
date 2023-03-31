@@ -15,7 +15,7 @@
           <div class="col-sm-3">
             <!-- <label class="form-label">Yojna</label> -->
             <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
-              placeholder="Select Yojna" optionValueField="yojanaId" optionTextField="yojanaName"
+              placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
               (select)="pageNumber = 1; getAllFilterNetwork(); getTableData()"
               (remove)="clearfilter('Yojana')" [disabled]="filterYojanaArray?.length == 1">
             </ngx-select>
