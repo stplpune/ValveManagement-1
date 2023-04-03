@@ -291,6 +291,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   clearForm() {
+    this.getTableData();
     this.formField();
     this.editFlag = false;
     this.editObj = '';
