@@ -80,7 +80,7 @@
                 <div class="modal-body">
                     <div class="form-container ">
                         <div class="mb-3">
-                            <label class="form-label">Network Name</label>
+                            <label class="form-label">Network Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" formControlName="networkName"
                                 placeholder="Network Name"
                                 [ngClass]="{ 'is-invalid': submitted && f.networkName.errors }"
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Select Yojana</label>
+                            <label class="form-label">Select Yojana <span class="text-danger">*</span></label>
                             <ngx-select [allowClear]="true" [items]="allYojanaArray" formControlName="yojanaId"
                                 placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                                 (remove)="clearDropdown('yojana')" [disabled]="allYojanaArray?.length == 1"
