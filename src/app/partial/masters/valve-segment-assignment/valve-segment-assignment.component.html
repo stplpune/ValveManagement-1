@@ -126,7 +126,7 @@
                   (select)="getAllNetwork();" optionTextField="yojanaName" [disabled]="yojanaArr?.length == 1"
                   [ngClass]="{ 'is-invalid': submited && f.yojanaId.errors }">
                 </ngx-select>
-                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yojana is Required </div>
+                <div *ngIf="submited && f.yojanaId.errors" class="invalid-feedback"> Yojana Is Required </div>
               </div>
               <div class="col-6">
                 <label class="form-label">Network</label>
@@ -136,7 +136,7 @@
                   [disabled]="!this.valveRegForm.value.yojanaId || networkArr?.length <= 1"
                   [ngClass]="{ 'is-invalid': submited && f.networkId.errors }">
                 </ngx-select>
-                <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network is Required </div>
+                <div *ngIf="submited && f.networkId.errors" class="invalid-feedback"> Network Is Required </div>
               </div>
             </div>
             <div class="mb-3">
@@ -147,7 +147,7 @@
                 [disabled]="!this.valveRegForm.value.networkId"
                 [ngClass]="{ 'is-invalid': submited && f.valveId.errors }">
               </ngx-select>
-              <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve is Required </div>
+              <div *ngIf="submited && f.valveId.errors" class="invalid-feedback"> Valve Is Required </div>
             </div>
             <div class="mb-3">
               <!-- <div> -->
@@ -158,8 +158,10 @@
                   <label class="form-label">Segment</label>
                   <ngx-select [allowClear]="true" [items]="sgmentDropdownArray" formControlName="segmentId"
                     placeholder="Select Segment" optionValueField="segmentId" optionTextField="segmentName"
-                    [disabled]="!this.valveRegForm.value.networkId">
+                    [disabled]="!this.valveRegForm.value.networkId"
+                    [ngClass]="{ 'is-invalid': submited && f.segmentId.errors }">
                   </ngx-select>
+                  <div *ngIf="submited && f.segmentId.errors" class="invalid-feedback"> Segment Is Required </div>
                 </div>
                 <div class="col-sm-4 mt-3 pt-1">
                   <button type="button" class="btn btn-main " [disabled]="!this.valveRegForm.value.segmentId"

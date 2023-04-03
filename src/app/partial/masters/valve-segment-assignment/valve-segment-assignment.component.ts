@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { log } from 'console';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -33,6 +34,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   valvelabel: any;
   getAllLocalStorageData: any;
   valveId: any;
+  segDropdown = new Array();
 
   @ViewChild('closebutton') closebutton: any;
 
@@ -57,7 +59,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.valveRegForm = this.fb.group({
       "id": [this.editFlag ? this.editObj.id : 0],
       "valveId": ['', Validators.required],
-      "segmentId": [''],
+      "segmentId": ['', Validators.required],
       "yojanaId": ['', Validators.required],
       "networkId": ['', Validators.required],
       "valvesegmet": []  
@@ -165,6 +167,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       next: (res: any) => {
         if (res.statusCode == 200) {
           this.sgmentDropdownArray = res.responseData;
+          console.log("sgmentDropdownArray",this.sgmentDropdownArray);   
           this.editObj ? (this.f['segmentId'].setValue(this.editObj.segmentId)) : '';
         }
       }, error: (error: any) => {
@@ -172,6 +175,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       },
     })
   }
+
+
 
   getAllValveTableData() {
     this.spinner.show();
@@ -217,17 +222,26 @@ export class ValveSegmentAssignmentComponent implements OnInit {
 
     for (var i = 0; i < this.segmentShowArray.length; i++) {
       if (this.segmentShowArray[i].segmentId == this.valveRegForm.value.segmentId) {
-        this.toastrService.success("Dublicate");
+        this.toastrService.success("Record Already Exists");
         return
       }
     }
     this.segmentShowArray.push(data);
     this.f['segmentId'].setValue(0);
+
+    
+    for(let i =0 ; i<= this.sgmentDropdownArray.length ; i++){
+      for(let j=i+1 ; j <= this.segmentShowArray.length ;j++){
+        this.sgmentDropdownArray.splice(i, 1);               
+      }
+    }
+   
+    
   }
 
   onSubmit() {
     this.submited = true;
-    if (this.valveRegForm.invalid) {
+    if (this.valveRegForm.invalid ||this.segmentShowArray.length == 0) {
       return;
     } else {
       let formValue = this.valveRegForm.value
@@ -255,8 +269,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
           if (res.statusCode == 200) {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
-            this.getAllValveTableData();
             this.closebutton.nativeElement.click();
+            this.getAllValveTableData();
+           
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
@@ -279,14 +294,17 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   deleteSegment(index: any) {
-    this.segmentShowArray.splice(index, 1);
+    this.segmentShowArray.splice(index, 1);  
+    this.getAllSegment(); 
   }
 
 
   deleteConformation(id: any) {
     this.valveId = id;
   }
-  onDeleteValve() {
+  onDeleteValve() {   
+    console.log("valvearray",this.valveArray);
+    console.log("valveId",this.valveId);    
     let obj = {
       id: this.valveId,
       deletedBy: this.localStorage.userId(),
@@ -309,6 +327,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   }
 
   clearForm() {   
+    this.getAllValveTableData();
     this.formData();
     this.editFlag = false;
     this.editObj = '';
@@ -334,11 +353,14 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       this.valveRegForm.controls['networkId'].setValue('');
       this.valveRegForm.controls['valveId'].setValue('');
       this.valveRegForm.controls['segmentId'].setValue('');
+      this.segmentShowArray = [];
     } else if (flag == 'network') {
       this.valveRegForm.controls['valveId'].setValue('');
       this.valveRegForm.controls['segmentId'].setValue('');
+      this.segmentShowArray = [];
     } else if (flag == 'valve') {
       this.valveRegForm.controls['segmentId'].setValue('');
+      this.segmentShowArray = [];
     }
   }
 
