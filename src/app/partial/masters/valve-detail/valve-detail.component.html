@@ -258,7 +258,7 @@
                   (keypress)="validation.noFirstSpaceAllow($event)"></textarea>
                 <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                   <span class="text-danger" *ngIf="f.description.errors?.required">
-                    Job Description is Required.</span>
+                     Description is Required.</span>
                   <span class="text-danger" *ngIf="f.description.errors?.pattern">
                     Please enter Valid Description.</span>
                 </div>
