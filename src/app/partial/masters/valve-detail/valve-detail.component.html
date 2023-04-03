@@ -195,8 +195,8 @@
               </div>
               <div class="col-sm-6">
                 <label class="form-label">Address <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <input type="text" class="form-control" formControlName="address" placeholder="Address"
+                <div class="input-group border-0">
+                  <input type="text" class="form-control border" formControlName="address" placeholder="Address"
                     [ngClass]="{ 'is-invalid': submitted && f.address.errors }"
                     (keypress)="validation.noFirstSpaceAllow($event)">
                   <button class="btn btn-success" type="button" data-bs-toggle="modal"
