@@ -117,7 +117,7 @@
                         <div class="col-sm">
                             <label for="" class="form-label">Segment Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" formControlName="segmentName"
-                                placeholder="Segment Name"
+                                placeholder="Segment Name" (keypress)="validation.noFirstSpaceAllow($event)"
                                 [ngClass]="{ 'is-invalid': submited && f.segmentName.errors }">
                             <div *ngIf="submited && f.segmentName.errors" class="invalid-feedback">
                                 <div *ngIf="f.segmentName.errors.required">Segment Name is Required</div>

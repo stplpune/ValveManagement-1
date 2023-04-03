@@ -136,6 +136,7 @@ export class UserRegistrationComponent implements OnInit {
   //Clear All Data In the Form Fields
   clearForm(formDirective?:any) {
     this.submitted = false;
+    formDirective?.resetForm();
     this.defaultForm();
   }
 

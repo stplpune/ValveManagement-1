@@ -7,6 +7,7 @@ import { ErrorsService } from 'src/app/core/services/errors.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidationService } from 'src/app/core/services/validation.service';
 
 @Component({
   selector: 'app-segment-master',
@@ -37,6 +38,7 @@ export class SegmentMasterComponent implements OnInit{
     private mapsAPILoader: MapsAPILoader,
     public commonService: CommonService,
     public apiService: ApiService,
+    public validation: ValidationService,
     private toastrService: ToastrService,
     private errorSerivce: ErrorsService,
     private spinner: NgxSpinnerService,

@@ -94,19 +94,19 @@
 <div class="modal fade" id="AddUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="AddUserModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0">
-      <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddUserModalLabel">User Registration</p>
-        <button type="button" #addUserModel class="btn-close btn-close-inverse" #addSimData (click)="defaultForm()"
-          data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+    <div class="modal-content">
+      <!-- <div class="modal-body"> -->
         <form [formGroup]="userDetails" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
-          <div class="form-container">
+          <div class="modal-header bg-main">
+            <p class="modal-title mb-0" id="AddUserModalLabel">User Registration</p>
+            <button type="button" #addUserModel class="btn-close btn-close-inverse" #addSimData (click)="clearForm()"
+              data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="form-container p-3">
             <div class="mb-3">
               <label class="form-label">Full Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
-                [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }"
+                [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }" maxlength="50"
                 (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)" />
               <div *ngIf="submitted && f.fullName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.fullName.errors?.required">Full Name is
@@ -162,7 +162,7 @@
             <div class="mb-3">
               <label class="form-label">Address <span class="text-danger">*</span></label>
               <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"
-                (keypress)="validation.noFirstSpaceAllow($event)"
+                (keypress)="validation.noFirstSpaceAllow($event)" maxlength="200"
                 [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
               <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.address.errors?.required">Address is
@@ -170,14 +170,14 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer px-0 pb-0">
+          <div class="modal-footer">
             <div class="d-flex justify-content-between align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
               <button type="submit" class="btn btn-main">{{this.buttontextFlag}}</button>
             </div>
           </div>
         </form>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </div>
