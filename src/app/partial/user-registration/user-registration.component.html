@@ -162,7 +162,7 @@
             <div class="mb-3">
               <label class="form-label">Address <span class="text-danger">*</span></label>
               <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"
-                (keypress)="validation.noFirstSpaceAllow($event)"
+                (keypress)="validation.noFirstSpaceAllow($event)" maxlength="200"
                 [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
               <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.address.errors?.required">Address is
