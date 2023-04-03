@@ -201,7 +201,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
     for (var i = 0; i < this.tankSegmentTable.length; i++) {
       if (this.tankSegmentTable[i].segmentId == this.tankSegmentForm.value.segmentId) {
-        this.toastrService.success("Dublicate");
+        this.toastrService.success("Record Already Exists");
         return
       }
     }
@@ -220,7 +220,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
     // console.log("Submit : ", this.tankSegmentForm.value);
 
     let formValue = this.tankSegmentForm.value;
-    if (!this.tankSegmentForm.valid) {
+    if (!this.tankSegmentForm.valid || this.tankSegmentTable.length == 0) {
       return
     }
     else {
@@ -267,6 +267,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   deleteSegMaster() {
+    console.log("seg arr", this.tankSegmentTable);
+    
+    console.log("deleteTankSegId", this.deleteTankSegId)
     let obj = {
       id: parseInt(this.deleteTankSegId),
       deletedBy: this.localStorage.userId(),
@@ -288,6 +291,7 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   clearForm() {
+    this.getTableData();
     this.formField();
     this.editFlag = false;
     this.editObj = '';
@@ -302,13 +306,16 @@ export class TankSegmentAssignmentComponent implements OnInit {
       this.f['networkId'].setValue('');
       this.f['tankId'].setValue('');
       this.f['segmentId'].setValue('');
+      this.tankSegmentTable = [];
     }
     else if (label == 'Network') {
       this.f['tankId'].setValue('');
       this.f['segmentId'].setValue('');
+      this.tankSegmentTable = [];
     }
     else if (label == 'Tank') {
       this.f['segmentId'].setValue('');
+      this.tankSegmentTable = [];
     }
   }
 

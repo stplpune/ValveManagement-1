@@ -154,7 +154,7 @@
             <div class="row mb-2">
               <div class="col-sm-6">
                 <label class="form-label">Valve Name (Marathi)<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Marathi Name"
+                <input type="text" class="form-control" formControlName="valveName" placeholder="Valve Name (Marathi)"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName.errors }"
                   (keypress)="validation.noFirstSpaceAllow($event)" maxlength="30">
                 <div *ngIf="submitted && f.valveName.errors" class="invalid-feedback">
@@ -167,7 +167,7 @@
 
               <div class="col-sm-6">
                 <label class="form-label">Valve Name (English)<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" formControlName="valveName_En" placeholder="Valve English Name"
+                <input type="text" class="form-control" formControlName="valveName_En" placeholder="Valve Name (English)"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName_En.errors }"
                   (keypress)="validation.noFirstSpaceAllow($event)">
                 <div *ngIf="submitted && f.valveName_En.errors" class="invalid-feedback">
@@ -195,8 +195,8 @@
               </div>
               <div class="col-sm-6">
                 <label class="form-label">Address <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <input type="text" class="form-control" formControlName="address" placeholder="Address"
+                <div class="input-group border-0">
+                  <input type="text" class="form-control border" formControlName="address" placeholder="Address"
                     [ngClass]="{ 'is-invalid': submitted && f.address.errors }"
                     (keypress)="validation.noFirstSpaceAllow($event)">
                   <button class="btn btn-success" type="button" data-bs-toggle="modal"
@@ -258,7 +258,7 @@
                   (keypress)="validation.noFirstSpaceAllow($event)"></textarea>
                 <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                   <span class="text-danger" *ngIf="f.description.errors?.required">
-                    Job Description is Required.</span>
+                     Description is Required.</span>
                   <span class="text-danger" *ngIf="f.description.errors?.pattern">
                     Please enter Valid Description.</span>
                 </div>

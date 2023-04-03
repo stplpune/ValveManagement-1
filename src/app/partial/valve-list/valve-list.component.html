@@ -105,7 +105,7 @@
               <label class="form-label">Company Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name"
                 [ngClass]="{ 'is-invalid': submitted && f.companyName.errors }"
-                (keypress)="validation.noSpacesAtStart($event)">
+                (keypress)="validation.noFirstSpaceAllow($event)">
               <div *ngIf="submitted && f.companyName.errors" class="invalid-feedback">
                 <div class="text-danger" *ngIf="f.companyName.errors?.required">Company Name is
                   required.</div>
