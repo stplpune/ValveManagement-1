@@ -4,74 +4,78 @@
             <div class="col-sm-4">Attendance Report</div>
         </div>
 
-        <div class="card-header pb-0">
-            <div class="row col-sm-12 p-0 pb-2 mt-2" id="bootcomityhdetails">
-                <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" [class.active]="dailyAttendanceType == 1"
-                            id="pills-BCommmitee-tab" data-bs-toggle="pill" data-bs-target="#pills-migrated"
-                            type="button" role="tab" aria-controls="pills-migrated" aria-selected="true" 
-                            (click)="dailyAttendanceType = 1;defaultFilterForm();getAttendenceReport()">
-                            Daily Attendance
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link"
-                            id="pills-pending-tab" data-bs-toggle="pill" data-bs-target="#pills-pending"
-                            type="button" role="tab" [class.active]="dailyAttendanceType == 2" aria-controls="pills-pending" aria-selected="false"
-                            (click)="dailyAttendanceType = 2;defaultFilterForm();(dailyAttendanceType == 2 ? this.getEmployeelist() : '')">
-                            Date Wise Attendance
-                        </button>
-                    </li>
-                </ul>
+        <div class="card-header p-0 pb-0">
+            <div class="container">
+                <div class="row col-sm-12 p-0 pb-2 mt-2" id="bootcomityhdetails">
+                    <ul class="nav nav-pills w-100 nav-fill" id="pills-tab" role="tablist">
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link" [class.active]="dailyAttendanceType == 1"
+                                id="pills-BCommmitee-tab" data-bs-toggle="pill" data-bs-target="#pills-migrated"
+                                type="button" role="tab" aria-controls="pills-migrated" aria-selected="true" 
+                                (click)="dailyAttendanceType = 1;defaultFilterForm();getAttendenceReport()">
+                                Daily Attendance
+                            </button>
+                        </li>
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link"
+                                id="pills-pending-tab" data-bs-toggle="pill" data-bs-target="#pills-pending"
+                                type="button" role="tab" [class.active]="dailyAttendanceType == 2" aria-controls="pills-pending" aria-selected="false"
+                                (click)="dailyAttendanceType = 2;defaultFilterForm();(dailyAttendanceType == 2 ? this.getEmployeelist() : '')">
+                                Date Wise Attendance
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <form [formGroup]="filterForm">
-            <div class="row form-container g-2 mt-2 justify-content-end" >
-                <div class="col-sm-3">
-                    <label for="" class="form-label">Yojana</label>
-                    <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
-                        (select)="dailyAttendanceType == 1 ? getAttendenceReport() : this.filterForm.controls['employee'].setValue(0);getEmployeelist()" [disabled]="yoganaArray?.length == 1"
-                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
-                        formControlName="yojanaId">
-                    </ngx-select>
-                </div>
-                <div class="col-sm-3" *ngIf="dailyAttendanceType == 1">
-                    <label for="" class="form-label">Select Date</label>
-                    <div class="input-group">
-                    <input [owlDateTime]="dt2" formControlName="singleDate" (dateTimeChange)="getAttendenceReport()" [max]="maxDate"
-                        class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date" [readonly]="true">
-                    <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
-                    <button class="btn btn-light btn-sm border" type="button" [owlDateTimeTrigger]="dt2"> <i class="fas fa-calendar-alt"></i></button>
-                </div>
-                </div>
-                <div class="col-sm-3" *ngIf="dailyAttendanceType == 2"> 
-                    <label for="" class="form-label">Select Employee</label>
-                    <ngx-select [items]="employeelistArray" (remove)="clearFilter('employee')"
-                        (select)="getAttendenceReport()" 
-                        optionValueField="userId" optionTextField="employeeName" placeholder="Select Employee"
-                        formControlName="employee">
-                    </ngx-select>
-                    <!-- [disabled]="!filterForm.value.yojanaId" -->
-                </div>
-                <div class="col-sm-3" *ngIf="dailyAttendanceType == 2">
-                    <label for="" class="form-label">Select Date</label>
+        <div class="container">
+            <form [formGroup]="filterForm">
+                <div class="row form-container me-2 mt-2 justify-content-end" >
+                    <div class="col-sm-3">
+                        <label for="" class="form-label">Yojana</label>
+                        <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
+                            (select)="dailyAttendanceType == 1 ? getAttendenceReport() : this.filterForm.controls['employee'].setValue(0);getEmployeelist()" [disabled]="yoganaArray?.length == 1"
+                            optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
+                            formControlName="yojanaId">
+                        </ngx-select>
+                    </div>
+                    <div class="col-sm-3" *ngIf="dailyAttendanceType == 1">
+                        <label for="" class="form-label">Select Date</label>
                         <div class="input-group">
-                            <input [owlDateTime]="dt1" formControlName="fromTo"
-                                (dateTimeChange)="getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"
-                                [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
-                                placeholder="Date Time" [readonly]="true">
-                            <owl-date-time #dt1 [disabled]="!filterForm.value.employee" [pickerType]="'calendar'"></owl-date-time>
-                            <button class="btn btn-light btn-sm border" type="button" *ngIf="!defaultCloseBtn"
-                                [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
-                            <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
-                                (click)="clearFilter('dateValue')">
-                                <i class="fas fa-times"></i></button>
-                        </div>
+                        <input [owlDateTime]="dt2" formControlName="singleDate" (dateTimeChange)="getAttendenceReport()" [max]="maxDate"
+                            class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date" [readonly]="true">
+                        <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
+                        <button class="btn btn-light btn-sm border" type="button" [owlDateTimeTrigger]="dt2"> <i class="fas fa-calendar-alt"></i></button>
+                    </div>
+                    </div>
+                    <div class="col-sm-3" *ngIf="dailyAttendanceType == 2"> 
+                        <label for="" class="form-label">Select Employee</label>
+                        <ngx-select [items]="employeelistArray" (remove)="clearFilter('employee')"
+                            (select)="getAttendenceReport()" 
+                            optionValueField="userId" optionTextField="employeeName" placeholder="Select Employee"
+                            formControlName="employee">
+                        </ngx-select>
+                        <!-- [disabled]="!filterForm.value.yojanaId" -->
+                    </div>
+                    <div class="col-sm-3" *ngIf="dailyAttendanceType == 2">
+                        <label for="" class="form-label">Select Date</label>
+                            <div class="input-group">
+                                <input [owlDateTime]="dt1" formControlName="fromTo"
+                                    (dateTimeChange)="getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"
+                                    [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
+                                    placeholder="Date Time" [readonly]="true">
+                                <owl-date-time #dt1 [disabled]="!filterForm.value.employee" [pickerType]="'calendar'"></owl-date-time>
+                                <button class="btn btn-light btn-sm border" type="button" *ngIf="!defaultCloseBtn"
+                                    [owlDateTimeTrigger]="dt1"> <i class="fas fa-calendar-alt"></i></button>
+                                <button class="btn btn-light border btn-sm" type="button" *ngIf="defaultCloseBtn"
+                                    (click)="clearFilter('dateValue')">
+                                    <i class="fas fa-times"></i></button>
+                            </div>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <ng-container *ngIf="(!filterForm.value.employee && dailyAttendanceType == 2)">
