@@ -32,7 +32,7 @@
                 <div class="col-sm-3">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                         (select)="dailyAttendanceType == 1 ? getAttendenceReport() : this.filterForm.controls['employee'].setValue(0);getEmployeelist()" [disabled]="yoganaArray?.length == 1"
-                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
+                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
                         formControlName="yojanaId">
                     </ngx-select>
                 </div>
