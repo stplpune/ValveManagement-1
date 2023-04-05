@@ -11,7 +11,7 @@ agm-map {
 
 .cardImgOuter img {
     width: 100%;
-    opacity: .1;
+   opacity: .5;
 }
 
 .valveCylenderChart {
@@ -34,3 +34,12 @@ ul.cylenderLabel {
     width: 1050px;
     height: 400px;
 }
+/* .blue-card {
+    background-color: #a4d4ff;
+}
+.blue-card:hover {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+   margin-top: -15px;
+   transition: 1s ease-out 1ms !important;
+   cursor: pointer;
+} */
