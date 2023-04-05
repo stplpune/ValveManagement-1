@@ -22,13 +22,13 @@
                 <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="isHaveTapArray" (remove)="clearFilter('isHaveTap')"
                         (select)="pageNumber = 1;getConsumerList()"
-                        optionValueField="id" optionTextField="name" placeholder="Select IsHaveTap"
+                        optionValueField="id" optionTextField="name" placeholder="Select Is Have Tap"
                         formControlName="IsHaveTap">
                     </ngx-select>
                 </div>
                 <div class="col-sm">
-                    <ngx-select [allowClear]="true" [items]="isHaveMotarArray" formControlName="IsHaveMotar"
-                        placeholder="Select IsHaveMotar" optionValueField="id" optionTextField="name"
+                    <ngx-select [allowClear]="true" [items]="isHaveMotarArray" formControlName="Is Have Motor"
+                        placeholder="Select Is Have Motor" optionValueField="id" optionTextField="name"
                         (remove)="clearFilter('isHaveMotar')" (select)="pageNumber = 1;getConsumerList()">
                     </ngx-select>
                 </div>
