@@ -246,3 +246,21 @@ tr.active {
     min-width: 120px !important;
     width: 120px !important;
   }
+  .table-md{
+    height:65vh;
+    overflow: auto;
+}
+.scrollbar::-webkit-scrollbar {
+    width: 7px;
+   
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    background: none;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 20px;
+    border: none;
+}
