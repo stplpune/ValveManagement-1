@@ -90,19 +90,17 @@
 
 <div class="modal fade" id="summaryDateTimeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="summaryDateTimeModel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-main">
                 <h1 class="modal-title fs-5" id="summaryDateTimeModel">Water Summary Details</h1>
                 <button type="button" class="btn-close btn-close-inverse" (click)="closeModelSummery()" #addSegmentModel data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-
-                <div class="mt-2">
+            <div class="modal-body pt-0">
                     <form [formGroup]="summeryFilterForm">
-                        <div class="row justify-content-end">
-                            <div class="col-sm-3">
-                                <div class="input-group">
+                        <div class="row mt-2 mb-2 justify-content-end">
+                            <div class="col-sm-3 ">
+                                <div class="input-group ">
                                 <input [owlDateTime]="dt1" formControlName="fromTo" 
                                 (dateTimeChange)="getConsumerWaterSummary(valveDetailsId)" class="form-control form-control-sm " [max]="maxDate"
                                 [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
@@ -117,10 +115,11 @@
                    </div>
                         </div>
                     </form>
-                </div>
+                
              
-                <table class="table align-middle dashboard-table mt-2">
-                    <thead>
+             <div class="table-md" >
+                <table class="table align-middle dashboard-table ">
+                    <thead class="sticky-top">
                         <tr>
                             <th>Sr. No.</th>
                             <th>Day</th>
@@ -142,6 +141,7 @@
                         <!-- statusDisDate -->
                     </tbody>
                 </table>
+             </div>
                 <div class="mt-2 text-end" *ngIf="consumerWaterSummaryArray?.length == 0 || consumerWaterSummaryArray?.length == null">
                     <div class="alert alert-danger text-center py-2">No Data Found..!
                     </div>

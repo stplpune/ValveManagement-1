@@ -6,3 +6,21 @@
 ::ng-deep div#summaryDateTimeModel {
     z-index: 1058!important;
 }
+.table-md{
+    height:65vh;
+    overflow: auto;
+}
+.table-md::-webkit-scrollbar {
+    width: 5px;
+   
+}
+
+.table-md::-webkit-scrollbar-track {
+    background: none;
+}
+
+.table-md::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 20px;
+    border: none;
+}
