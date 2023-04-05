@@ -8,7 +8,7 @@
                 <div class="col-sm">
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                         (select)="pageNumber = 1;getConsumerList();getNetwork()" [disabled]="yoganaArray?.length == 1"
-                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yogana"
+                        optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
                         formControlName="yojanaId">
                     </ngx-select>
                 </div>
