@@ -171,7 +171,7 @@
                 <label class="form-label">Valve Name (English)<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="valveName_En" placeholder="Valve Name (English)"
                   [ngClass]="{ 'is-invalid': submitted && f.valveName_En.errors }"
-                  (keypress)="validation.noFirstSpaceAllow($event)">
+                  (keypress)="validation.noFirstSpaceAllow($event)" maxlength="30">
                 <div *ngIf="submitted && f.valveName_En.errors" class="invalid-feedback">
                   <div class="text-danger" *ngIf="f.valveName_En.errors?.required">Valve Name (English) is
                     Required.</div>

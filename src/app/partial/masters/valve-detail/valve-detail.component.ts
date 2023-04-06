@@ -84,7 +84,7 @@ export class ValveDetailComponent implements OnInit {
       Id: [0],
       valveName: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
       valveName_En: ['', [Validators.required,Validators.pattern('^[^[ ]+|[ ][gm]+$')]],
-      pipeDiameter: ['', [Validators.required, Validators.pattern('^[1-9]+(.[0-9]{0,2})?$')]],
+      pipeDiameter: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')]],
       address: ['', [Validators.required]],
       valvelist: ['', [Validators.required]],
       tankist: ['', [Validators.required]],
