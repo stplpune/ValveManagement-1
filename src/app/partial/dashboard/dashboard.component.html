@@ -6,7 +6,7 @@
 
         <div class="mt-2">
             <form [formGroup]="filterForm">
-                <div class="row g-2">
+                <div class="row g-2 form-container">
                     <div class="col-sm-3">
                         <label for="" class="form-label">Yojana</label>
                         <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="clearMapData();getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getValveSummary();getNetwork();getDeviceCurrentSensorValue()"
