@@ -11,9 +11,9 @@
   </div>
     <form [formGroup]="filterForm">
       <div class="container-fluid">
-        <div class="row gx-2">
+        <div class="row form-container gx-2">
           <div class="col-sm-3">
-            <!-- <label class="form-label">Yojna</label> -->
+            <label class="form-label">Yojna</label>
             <ngx-select [allowClear]="true" [items]="filterYojanaArray" formControlName="yojanaId"
               placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
               (select)="pageNumber = 1; getAllFilterNetwork(); getTableData()"
@@ -22,7 +22,7 @@
           </div>
   
           <div class="col-sm-3">
-            <!-- <label class="form-label">Network</label> -->
+            <label class="form-label">Network</label>
             <ngx-select [allowClear]="true" [items]="filterNetworkArr" formControlName="networkId"
               placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
               (select)="pageNumber = 1; getTableData();" (remove)="clearfilter('Network')"
