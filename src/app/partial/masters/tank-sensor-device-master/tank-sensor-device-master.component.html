@@ -13,20 +13,23 @@
   </div>
   <form [formGroup]="searchForm">
   <div class="container-fluid">
-    <div class="row gx-2">
+    <div class="row form-container gx-2">
       <div class="col-sm-3">
+        <label for="" class="form-label fw-bold">Yojana</label>
         <ngx-select [allowClear]="true" [items]="getAllYojanaArray" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')" [disabled]="getAllYojanaArray.length == 1"
           (select)="getAllSensorDeviceTableData();getAllNetwork(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
+        <label for="" class="form-label fw-bold">Network</label>
         <ngx-select [allowClear]="true" [items]="getAllFilterNetworkArray" formControlName="network"
           placeholder="Select Network" optionValueField="networkId" optionTextField="networkName" [disabled]="!searchForm.value.yojana || getAllFilterNetworkArray.length < 2"
           (remove)="clearSerach('network')" (select)="getAllSensorDeviceTableData();getAllTank(false)">
         </ngx-select>
       </div>
       <div class="col-sm-3">
+        <label for="" class="form-label fw-bold">Tank</label>
         <ngx-select [allowClear]="true" [items]="getAllFilterTankArray" formControlName="tank" placeholder="Select Tank"
           optionValueField="tankId" optionTextField="tankName" [disabled]="!searchForm.value.network || getAllFilterTankArray.length < 2"
           (select)="getAllSensorDeviceTableData()" (remove)="getAllSensorDeviceTableData()">
