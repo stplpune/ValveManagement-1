@@ -140,9 +140,9 @@ export class ValveListComponent implements OnInit {
         } else {
           this.spinner.hide();
           this.filterFlag == 'filter' ? this.networkArrayfilter = [] : this.networkArray = [];
-          this.commonService.checkDataType(res.statusMessage) == false
-            ? this.errorSerivce.handelError(res.statusCode) 
-            : this.toastrService.error(res.statusMessage);
+          // this.commonService.checkDataType(res.statusMessage) == false
+          //   ? this.errorSerivce.handelError(res.statusCode) 
+          //   : this.toastrService.error(res.statusMessage);
         }
       },
       error: (error: any) => {
