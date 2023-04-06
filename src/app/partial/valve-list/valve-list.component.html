@@ -14,8 +14,9 @@
 
   <form [formGroup]="searchForm">
    <div class="container-fluid">
-    <div class="row">
+    <div class="row form-container">
       <div class="col-sm-3">
+        <label for="" class="form-label fw-bold">Yojana</label>
         <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
           optionValueField="yojanaId" optionTextField="yojanaName"
           (select)="this.filterFlag = 'filter';clearSerach('yojana');getAllNetwork();defaultPageNo()" (remove)="clearSerach('yojana');defaultPageNo()"
@@ -23,6 +24,7 @@
         </ngx-select>
       </div>
       <div class="col-sm-3">
+        <label for="" class="form-label fw-bold">Network</label>
         <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network" placeholder="Select Network"
           optionValueField="networkId" [disabled]="this.networkArrayfilter?.length == 1 || searchForm.controls['yojana'].value==0" optionTextField="networkName"
           (remove)="defaultPageNo()" (select)="this.filterFlag = 'filter';defaultPageNo()">
