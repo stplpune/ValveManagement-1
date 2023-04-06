@@ -16,6 +16,7 @@
         <form [formGroup]="filterForm">
             <div class="row">
                 <div class="col-sm-3">
+                    <label for="" class="form-label">District</label>
                     <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
                         placeholder="Select District" optionValueField="id"
                         (select)="clearfilter('district');getTaluka('tal');filterData()" optionTextField="districtName"
@@ -23,6 +24,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Taluka</label>
                     <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
                         placeholder="Select Taluka" optionValueField="id" [disabled]="!this.filterForm.value.districtId"
                         (select)="clearfilter('taluka');getVillage('vil');filterData();" optionTextField="talukaName"
@@ -30,6 +32,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Village</label>
                     <ngx-select [allowClear]="true" [items]="villageFilterArray" formControlName="villageId"
                         placeholder="Select Village" optionValueField="id" [disabled]="!this.filterForm.value.talukaId"
                         optionTextField="villageName" (select)="filterData();" (remove)="filterData()">
