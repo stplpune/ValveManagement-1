@@ -190,8 +190,8 @@ export class ValveWaterSummeryComponent implements OnInit {
     series.columns.template.column.fillOpacity = 0.8;
 
     series.tooltipHTML = `<center><strong>Total Time : {inHours_Min}</strong></center>
-    <div>No Of Connection : {noOfConnection}</div>
-    <div>No Of Customer : {noOfCustomer}</div>`;
+    <div>No. Of Connections : {noOfConnection}</div>
+    <div>No. of Consumers : {noOfCustomer}</div>`;
 
     series.columns.template.events.on("hit", (ev: any) => { //ev.target.dataItem._dataContext
       this.waterTimeSumryChartHide = true;
