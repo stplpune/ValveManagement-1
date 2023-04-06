@@ -9,8 +9,9 @@
         </div>
 
         <form [formGroup]="searchForm">
-            <div class="row gx-2">
+            <div class="row form-container gx-2">
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Yojana</label>
                     <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana"
                         placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
                         (remove)="clearSearch('yojana');filterData()" [disabled]="yoganaArrayFilter?.length == 1"
@@ -18,6 +19,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Yojana</label>
                     <ngx-select [allowClear]="true" [items]="networkArrayFilter" formControlName="network"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.searchForm.value.yojana || networkArrayFilter?.length == 1"
@@ -26,6 +28,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Yojana</label>
                     <ngx-select [allowClear]="true" [items]="valveConnectionArrayFilter" formControlName="valveMaster"
                         placeholder="Select Valve Connection" optionValueField="valveDetailsId"
                         optionTextField="valveName"
