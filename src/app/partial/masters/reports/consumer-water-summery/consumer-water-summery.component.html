@@ -6,6 +6,7 @@
         <form [formGroup]="filterForm">
             <div class="row form-container g-2">
                 <div class="col-sm">
+                    <label for="" class="form-label">Yojana</label>
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                         (select)="pageNumber = 1;getConsumerList();getNetwork()" [disabled]="yoganaArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
@@ -13,6 +14,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm">
+                    <label for="" class="form-label">Network</label>
                     <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
@@ -20,6 +22,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm">
+                    <label for="" class="form-label">Is Have Tap</label>
                     <ngx-select [allowClear]="true" [items]="isHaveTapArray" (remove)="clearFilter('isHaveTap')"
                         (select)="pageNumber = 1;getConsumerList()"
                         optionValueField="id" optionTextField="name" placeholder="Select Is Have Tap"
@@ -27,12 +30,14 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm">
+                    <label for="" class="form-label">Is Have Motor</label>
                     <ngx-select [allowClear]="true" [items]="isHaveMotarArray" formControlName="Is Have Motor"
                         placeholder="Select Is Have Motor" optionValueField="id" optionTextField="name"
                         (remove)="clearFilter('isHaveMotar')" (select)="pageNumber = 1;getConsumerList()">
                     </ngx-select>
                 </div>
                 <div class="col-sm">
+                    <label for="" class="form-label">Search</label>
                     <div class="input-group">
                         <input type="text" class="form-control" formControlName="Search" placeholder="Search.."
                             (keyup)="onKeyUpFilter()" />
