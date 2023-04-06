@@ -11,8 +11,9 @@
             </div>
         </div>
         <form [formGroup]="filterForm">
-            <div class="row g-2">
+            <div class="row form-container g-2">
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Yojana</label>
                     <ngx-select [allowClear]="true" [items]="yoganaIdArray" (remove)="clearFilter('yojana')"
                         (select)="pageNumber = 1;getAllSegmentMaster();getNetworkId()"
                         [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" optionTextField="yojanaName"
@@ -20,6 +21,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm-3">
+                    <label for="" class="form-label">Network</label>
                     <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1"
