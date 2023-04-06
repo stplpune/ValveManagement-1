@@ -8,9 +8,9 @@
       </button>
     </div>
       <form [formGroup]="filterForm">
-        <div class="row gx-2">
-          <div class="col-3">
-            <!-- <label class="form-label">Yojna</label> -->
+        <div class="row form-container gx-2">
+          <div class="col-sm-3">
+            <label class="form-label">Yojna</label>
             <ngx-select [allowClear]="true" [items]="filterYojanaArr" formControlName="yojanaId"
               placeholder="Select Yojana" optionValueField="yojanaId" optionTextField="yojanaName"
               [disabled]="filterYojanaArr?.length == 1"
@@ -18,8 +18,8 @@
               (remove)="clearfilter('yojana')">
             </ngx-select>
           </div>
-          <div class="col-3">
-            <!-- <label class="form-label">Network</label> -->
+          <div class="col-sm-3">
+            <label class="form-label">Network</label>
             <ngx-select [allowClear]="true" [items]="FilterNetworkArr" formControlName="networkId"
               placeholder="Select Network" optionValueField="networkId" optionTextField="networkName"
               [disabled]="!this.filterForm.value.yojanaId || FilterNetworkArr?.length == 1"
