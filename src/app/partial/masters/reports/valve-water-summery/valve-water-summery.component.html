@@ -7,14 +7,16 @@
 
         <div class="mt-2">
             <form [formGroup]="filterForm">
-                <div class="row g-2">
+                <div class="row form-container g-2">
                     <div class="col-sm-3">
+                        <label for="" class="form-label">Yojana</label>
                         <ngx-select [allowClear]="true" [items]="yoganaArray" (select)="getValveWaterSummary();getNetwork();waterTimeSumryChartHide = false;"
                             [disabled]="yoganaArray?.length == 1" optionValueField="yojanaId" (remove)="clearFilter('yojana')"
                             optionTextField="yojanaName" placeholder="Select Yogana" formControlName="yojanaId">
                         </ngx-select>
                     </div>
                     <div class="col-sm-3">
+                        <label for="" class="form-label">Network</label>
                         <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
                             placeholder="Select Network" (select)="getValveWaterSummary();waterTimeSumryChartHide = false;" 
                             [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearFilter('network')"
@@ -22,6 +24,7 @@
                         </ngx-select>
                     </div>
                     <div class="col-sm-3" >
+                        <label for="" class="form-label">Date</label>
                         <div class="input-group">
                         <input [owlDateTime]="dt1" formControlName="fromTo" 
                         (dateTimeChange)="defaultCloseBtn = true;getValveWaterSummary();waterTimeSumryChartHide = false;" class="form-control form-control-sm" [max]="maxDate"
