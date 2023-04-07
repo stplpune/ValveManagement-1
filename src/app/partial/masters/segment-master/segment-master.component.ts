@@ -320,12 +320,12 @@ export class SegmentMasterComponent implements OnInit{
       return ele = { latitude: ele.startPoints.split(' ')[0], longitude: ele.startPoints.split(' ')[1], label: ele.segmentName };
     })
 
-    mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
-      ele['iconUrl'] = "../../../../assets/images/waterTank2.png"; return ele
+    mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img 
+      ele['iconUrl'] = "../../../../assets/images/tank2.png"; return ele
     })
 
     mainArray.valveDetailModels.map((ele: any) => { // Insert valve Img
-      ele['iconUrl'] = "../../../../assets/images/valve.png"; return ele
+      ele['iconUrl'] = "../../../../assets/images/valve2.png"; return ele
     })
 
     this.tank_ValveArray = mainArray.tankDetailsModels.concat(mainArray.valveDetailModels);
