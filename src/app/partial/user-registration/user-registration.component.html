@@ -45,6 +45,7 @@
       <thead>
         <tr>
           <th>Sr.No.</th>
+          <th>User Type</th>
           <th>Full Name</th>
           <th>Mobile No.</th>
           <th>Address</th>
@@ -56,6 +57,7 @@
         <tr
           *ngFor="let userData of userListArray| paginate: { itemsPerPage: pageSize, currentPage: pageNumber, totalItems:listCount};let i = index">
           <td>{{(+(pageNumber-1+"0")+i+1)}}</td>
+          <td>{{userData.userTypeName}}</td>
           <td>{{userData.fullName}}</td>
           <td>{{userData.mobileNo}}</td>
           <td>{{userData.address}}</td>

@@ -122,14 +122,14 @@
                                 (markerClick)="clickedMarker(infowindow)">
                                 <agm-info-window #infowindow>
                                     <ng-container *ngIf="m?.flag == 'valve'">
-                                        <div>Valve Name - {{m?.valveName}}</div>
-                                        <div>Valve Status - {{m?.valveStatus}}</div>
-                                        <div>No Of Connection & No Of Customer - {{m?.noOfConnection}}/{{m?.noOfCustomer}}</div>
-                                        <div>Address - {{m?.valveAddress}}</div>
+                                        <div><b>Valve Name -</b> {{m?.valveName}}</div>
+                                        <div><b>Valve Status -</b> {{m?.valveStatus}}</div>
+                                        <div><b>No Of Connection & No Of Customer -</b> {{m?.noOfConnection}}/{{m?.noOfCustomer}}</div>
+                                        <div><b>Address -</b> {{m?.valveAddress}}</div>
                                     </ng-container>
                                     <ng-container *ngIf="m?.flag == 'tank'">
-                                        <div>Tank Name - {{m?.tankName_En}}</div>
-                                        <div>Address - {{m?.address}}</div>
+                                        <div><b>Tank Name -</b> {{m?.tankName_En}}</div>
+                                        <div><b>Address -</b> {{m?.address}}</div>
                                     </ng-container>
                                 </agm-info-window>
                             </agm-marker>

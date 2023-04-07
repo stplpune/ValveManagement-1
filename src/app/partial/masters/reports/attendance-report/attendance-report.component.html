@@ -62,7 +62,7 @@
                         <label for="" class="form-label">Select Date</label>
                             <div class="input-group">
                                 <input [owlDateTime]="dt1" formControlName="fromTo"
-                                    (dateTimeChange)="getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"
+                                    (dateTimeChange)="defaultCloseBtn = true;getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"
                                     [(ngModel)]="dateRange" [selectMode]="'range'" [owlDateTimeTrigger]="dt1"
                                     placeholder="Date Time" [readonly]="true">
                                 <owl-date-time #dt1 [disabled]="!filterForm.value.employee" [pickerType]="'calendar'"></owl-date-time>
@@ -85,7 +85,7 @@
     <div *ngIf="dailyAttendanceType == 1 || (filterForm.value.employee && dailyAttendanceType == 2)">
     <div class="row mb-3 m-2">
         <div class="col-sm" *ngFor="let AttenData of attendanceCountArray"> 
-            <div class="card card-body bg-opacity-10 border-0" [ngClass]="AttenData.dayStatus == 'Absent' ? 'bg-danger' : AttenData.dayStatus == 'Present' ? 'bg-success' : AttenData.dayStatus == 'OrangeDay' ? 'bg-warning' : AttenData.dayStatus == 'Week Offs' ? 'bg-info' : ''">
+            <div class="card card-body bg-opacity-10 border-0" [ngClass]="AttenData.dayStatus == 'Absent' ? 'bg-danger' : AttenData.dayStatus == 'Present' ? 'bg-success' : AttenData.dayStatus == 'OrangeDay' ? 'bg-warning' : AttenData.dayStatus == 'WOFF' ? 'bg-info' : ''">
                 <p class="fw-bold mb-3 small">{{AttenData?.dayStatus == 'OrangeDay' ? 'Out Punch Missing' : AttenData?.dayStatus}}</p> 
                 <h4 class="mb-0 fw-bold text-success lh-1">{{AttenData.dayCount}}</h4>
                 <div class="cardImgOuter">

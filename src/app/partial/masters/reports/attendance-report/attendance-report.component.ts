@@ -127,8 +127,9 @@ export class AttendanceReportComponent implements OnInit {
   }
 
   clearFilter(flag: any) {
-    if (flag == 'yojana') {
-      // this.filterForm.controls['employee'].setValue(0);
+    if (flag == 'dateValue') {
+      this.filterForm.controls['fromTo'].setValue([this.maxDate, this.maxDate]);
+      this.defaultCloseBtn = false;
     } 
     this.getAttendenceReport();
   }

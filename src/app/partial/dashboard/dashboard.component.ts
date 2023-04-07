@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
   }
 
   filterTankData(obj: any) {
-    if (obj[0]?.data?.deviceId) {
+    if (obj[0]?.data?.tankId) {
       this.waterTankChartData(obj[0]?.data);
       this.dateFilter.setValue(this.max)
       this.getTankDeviceHourlyValue();
@@ -226,6 +226,8 @@ export class DashboardComponent implements OnInit {
     let mainArray = this.tankDeviceHourlyArray.concat(this.valveEventHourlyArray);
     
     chart.data = mainArray;  // Add data
+    chart.scrollbarX = new am4core.Scrollbar();
+    chart.scrollbarX.interactionsEnabled = false;
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -333,13 +335,13 @@ export class DashboardComponent implements OnInit {
     })
 
     mainArray.tankDetailsModels.map((ele: any) => { // Insert Tank Img
-      ele['iconUrl'] = "../../../../assets/images/waterTank2.png";
+      ele['iconUrl'] = "../../../../assets/images/tank2.png";
       ele['flag'] = 'tank';
       return ele
     })
 
     mainArray.valveDetailModels.map((ele: any) => { // Insert valve Img
-      ele['iconUrl'] = "../../../../assets/images/valve.png";
+      ele['iconUrl'] = "../../../../assets/images/valve2.png";
       ele['flag'] = 'valve';
       return ele
     })
