@@ -66,8 +66,8 @@ export class ConsumerWaterSummeryComponent implements OnInit {
     this.filterForm = this.fb.group({
       yojanaId: [''],
       networkId: [''],
-      IsHaveTap: [''],
-      IsHaveMotar: [''],
+      IsHaveTap: [2],
+      IsHaveMotar: [2],
       Search: [''],
     })
   }
@@ -110,7 +110,7 @@ export class ConsumerWaterSummeryComponent implements OnInit {
   getConsumerList() {
     let formData = this.filterForm.value;
     let obj = this.localStorage.userId() + '&NetworkId=' + (formData.networkId || 0) + '&YojanaId=' + (formData.yojanaId || this.getAllLocalStorageData.yojanaId)
-    + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&ValveDetailsId=' + 0 + '&IsHaveTap=' + (formData.IsHaveTap || 2) + '&IsHaveMotar=' + (formData.IsHaveMotar || 2) + '&Search=' + formData.Search?.trim();
+    + '&pageno=' + this.pageNumber + '&pagesize=' + this.pagesize + '&ValveDetailsId=' + 0 + '&IsHaveTap=' + (formData.IsHaveTap) + '&IsHaveMotar=' + (formData.IsHaveMotar) + '&Search=' + formData.Search?.trim();
     this.spinner.show();
     this.apiService.setHttp('GET', 'ValveConnection/GetConsumerList?UserId=' + obj, false, false, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res: any) => {
