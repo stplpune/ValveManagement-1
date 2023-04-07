@@ -76,8 +76,8 @@ const routes: Routes = [
     data: { breadcrumb: [{ title: 'Consumer Water Summery', active: true }] }
   },
   {
-     path: 'valve-water-summery', loadChildren: () => import('../partial/masters/reports/valve-water-summery/valve-water-summery.module').then(m => m.ValveWaterSummeryModule),
-     data: { breadcrumb: [{ title: 'Valve Water Summery', active: true }] } 
+     path: 'valve-water-summary', loadChildren: () => import('../partial/masters/reports/valve-water-summery/valve-water-summery.module').then(m => m.ValveWaterSummeryModule),
+     data: { breadcrumb: [{ title: 'Valve Water Summary', active: true }] } 
     },
 
 

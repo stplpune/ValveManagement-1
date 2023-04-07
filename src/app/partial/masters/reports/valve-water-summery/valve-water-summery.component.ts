@@ -165,6 +165,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     categoryAxis.dataFields.category = "valveName";
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 30;
+    categoryAxis.title.text = "Valve Name";
     categoryAxis.renderer.labels.template.horizontalCenter = "right";
     categoryAxis.renderer.labels.template.verticalCenter = "middle";
     categoryAxis.renderer.labels.template.rotation = 270;
@@ -173,7 +174,7 @@ export class ValveWaterSummeryComponent implements OnInit {
 
     var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
     yAxis.baseUnit = "second";
-    yAxis.title.text = "valve Total Time";
+    yAxis.title.text = "Valve Total Time";
     yAxis.min = 0;
 
     // Create series
@@ -246,6 +247,7 @@ export class ValveWaterSummeryComponent implements OnInit {
     let categoryAxis:any = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "statusDate";
     categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.title.text = "Time";
     categoryAxis.renderer.minGridDistance = 30;
     categoryAxis.renderer.labels.template.horizontalCenter = "right";
     categoryAxis.renderer.labels.template.verticalCenter = "middle";
@@ -260,7 +262,7 @@ export class ValveWaterSummeryComponent implements OnInit {
 
     var yAxis = chart.yAxes.push(new am4charts.DurationAxis());
     yAxis.baseUnit = "second";
-    yAxis.title.text = "total Time";
+    yAxis.title.text = "Total Time";
     yAxis.min = 0;
 
     // Create series
