@@ -238,6 +238,9 @@ export class DashboardComponent implements OnInit {
     categoryAxis.startLocation = 0.5;
     categoryAxis.endLocation = 0.5;
 
+    categoryAxis.startLocation = 0;
+    categoryAxis.endLocation = 1;
+
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.title.text = "Water Level In Percentage";
     valueAxis.calculateTotals = true;
