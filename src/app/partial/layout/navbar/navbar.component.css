@@ -7,15 +7,17 @@
     max-width: 350px !important;
 }
 
-.login-btn{
-    background-color: #EDEDED;
-    border: #EDEDED;
+.logout-btn{
+    /* background-color: #EDEDED; */
+    background-color: #f8f9fa;
+    border:1px solid #a4a4a4;
     border-radius: 5px;
 }
 
-.login-btn:active,
-.login-btn:hover{
-    background-color: #D9D9D9;
-    border:#EDEDED !important;
+.logout-btn:active,
+.logout-btn:hover{
+    /* background-color: #D9D9D9; */
+    background-color: #dee2e6;
+    border:1px solid #a4a4a4;
     border-radius: 5px;
 }
