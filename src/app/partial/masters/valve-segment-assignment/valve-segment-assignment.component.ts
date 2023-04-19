@@ -166,9 +166,9 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == 200) {
-          this.sgmentDropdownArray = res.responseData;
+          this.sgmentDropdownArray = res.responseData;     
           console.log("sgmentDropdownArray",this.sgmentDropdownArray);   
-          this.editObj ? (this.f['segmentId'].setValue(this.editObj.segmentId)) : '';
+          // this.editObj ? (this.f['segmentId'].setValue(this.editObj.segmentId)) : '';
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -223,25 +223,26 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     for (var i = 0; i < this.segmentShowArray.length; i++) {
       if (this.segmentShowArray[i].segmentId == this.valveRegForm.value.segmentId) {
         this.toastrService.success("Record Already Exists");
-        return
+        return;
       }
     }
     this.segmentShowArray.push(data);
-    this.f['segmentId'].setValue(0);
+    this.f['segmentId'].setValue('');
 
     
     for(let i =0 ; i<= this.sgmentDropdownArray.length ; i++){
       for(let j=i+1 ; j <= this.segmentShowArray.length ;j++){
-        this.sgmentDropdownArray.splice(i, 1);               
+        this.sgmentDropdownArray.splice(i, 1);                  
       }
     }
    
-    
   }
 
   onSubmit() {
     this.submited = true;
+    this.clearvalidation();
     if (this.valveRegForm.invalid ||this.segmentShowArray.length == 0) {
+      console.log("submit....");     
       return;
     } else {
       let formValue = this.valveRegForm.value
@@ -284,6 +285,12 @@ export class ValveSegmentAssignmentComponent implements OnInit {
       );
     }
   }
+
+  clearvalidation(){
+    this.f['segmentId'].clearValidators();   
+    this.f['segmentId'].updateValueAndValidity();
+  }
+
 
   onEdit(obj: any) {   
     this.editFlag = true
