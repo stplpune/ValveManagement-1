@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { log } from 'console';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
@@ -166,9 +165,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.apiService.getHttp().subscribe({
       next: (res: any) => {
         if (res.statusCode == 200) {
-          this.sgmentDropdownArray = res.responseData;     
-          console.log("sgmentDropdownArray",this.sgmentDropdownArray);   
-          // this.editObj ? (this.f['segmentId'].setValue(this.editObj.segmentId)) : '';
+          this.sgmentDropdownArray = res.responseData;        
         }
       }, error: (error: any) => {
         this.errorSerivce.handelError(error.status);
@@ -229,11 +226,8 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.segmentShowArray.push(data);
     this.f['segmentId'].setValue('');
 
-    
     for(let i =0 ; i<= this.sgmentDropdownArray.length ; i++){
-      for(let j=i+1 ; j <= this.segmentShowArray.length ;j++){
-        this.sgmentDropdownArray.splice(i, 1);                  
-      }
+          this.sgmentDropdownArray.splice(i, 1);    
     }
    
   }
@@ -241,10 +235,13 @@ export class ValveSegmentAssignmentComponent implements OnInit {
   onSubmit() {
     this.submited = true;
     this.clearvalidation();
-    if (this.valveRegForm.invalid ||this.segmentShowArray.length == 0) {
-      console.log("submit....");     
+    if (this.valveRegForm.invalid) {       
       return;
-    } else {
+    } else if(this.segmentShowArray.length == 0){
+      this.toastrService.error("Please Add At Least One Segment");     
+      return;
+    }
+    else {
       let formValue = this.valveRegForm.value
       formValue.valvesegmet = this.segmentShowArray;
       let obj = {
@@ -271,8 +268,7 @@ export class ValveSegmentAssignmentComponent implements OnInit {
             this.spinner.hide();
             this.toastrService.success(res.statusMessage);
             this.closebutton.nativeElement.click();
-            this.getAllValveTableData();
-           
+            this.getAllValveTableData();           
           } else {
             this.toastrService.error(res.statusMessage);
             this.spinner.hide();
@@ -300,18 +296,18 @@ export class ValveSegmentAssignmentComponent implements OnInit {
     this.segmentShowArray = this.editObj.valvesegmet;
   }
 
-  deleteSegment(index: any) {
+  deleteSegment(index: any ,data:any) {   
     this.segmentShowArray.splice(index, 1);  
-    this.getAllSegment(); 
+    this.sgmentDropdownArray.push(data)
+    // this.getAllSegment(); 
   }
 
 
   deleteConformation(id: any) {
     this.valveId = id;
   }
-  onDeleteValve() {   
-    console.log("valvearray",this.valveArray);
-    console.log("valveId",this.valveId);    
+
+  onDeleteValve() {  
     let obj = {
       id: this.valveId,
       deletedBy: this.localStorage.userId(),
