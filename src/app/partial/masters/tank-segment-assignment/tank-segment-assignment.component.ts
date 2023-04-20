@@ -15,9 +15,9 @@ import { LocalstorageService } from 'src/app/core/services/localstorage.service'
 export class TankSegmentAssignmentComponent implements OnInit {
   tankSegmentForm: FormGroup | any;
   filterForm: FormGroup | any;
-  responseArray : any;
-  tankArr : any;
-  segmentArr : any;
+  responseArray = new Array();
+  tankArr = new Array();
+  segmentArr = new Array();
   yojanaArr : any;
   networkArr : any;
   tankSegmentTable = new Array();
@@ -28,8 +28,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
   editFlag: boolean = false;
   tankLabel !: string;
   submitted: boolean = false;
-  filterYojanaArray : any;
-  filterNetworkArr : any;
+  filterYojanaArray = new Array();
+  filterNetworkArr = new Array();
+  storeSegmentArr = new Array();
   deleteTankSegId : any;
   @ViewChild('closebutton') closebutton: any;
   getAllLocalStorageData:any
@@ -153,6 +154,10 @@ export class TankSegmentAssignmentComponent implements OnInit {
       next: ((res: any) => {
         if (res.statusCode == '200') {
           this.tankArr = res.responseData;
+          console.log("tankArr : ", this.tankArr);
+          console.log("responseArray : ", this.responseArray);
+          
+          
           this.editObj ? (this.f['tankId'].setValue(this.editObj.tankId)) : '';
         } else {
           this.tankArr = [];
@@ -181,8 +186,6 @@ export class TankSegmentAssignmentComponent implements OnInit {
   }
 
   addTankSegment() {
-    console.log("SegmentID : ", this.tankSegmentForm.value.segmentId);
-    
     if (this.tankSegmentForm.value.segmentId == '') {
       return
     }
@@ -199,48 +202,58 @@ export class TankSegmentAssignmentComponent implements OnInit {
       this.tankLabel = '';
     }
 
-    for (var i = 0; i < this.tankSegmentTable.length; i++) {
-      if (this.tankSegmentTable[i].segmentId == this.tankSegmentForm.value.segmentId) {
-        this.toastrService.success("Record Already Exists");
-        return
-      }
-    }
+    // for (var i = 0; i < this.tankSegmentTable.length; i++) {
+    //   if (this.tankSegmentTable[i].segmentId == this.tankSegmentForm.value.segmentId) {
+    //     this.toastrService.success("Record Already Exists");
+    //     return
+    //   }
+    // }
+    // this.f['segmentId'].setValue('');
+
     this.tankSegmentTable.push(array);
-    this.f['segmentId'].setValue('');
+    this.storeSegmentArr.push(array);
+    
+    for(var i=0; i < this.segmentArr.length; i++){
+      this.segmentArr.splice(i, 1);
+    }
   }
 
-  deleteTankSegment(index: number) {
+  deleteTankSegment(index: number, data : any) {
+    console.log("ondelete data : ", data);
+    
     this.tankSegmentTable.splice(index, 1);
+    this.segmentArr.push(data);
   }
 
   onSubmit() {
     this.submitted = true;
     this.tankSegmentForm.value.tanksegment = this.tankSegmentTable;
-    this.tankSegmentForm.value.segmentId = 0;
-    // console.log("Submit : ", this.tankSegmentForm.value);
 
     let formValue = this.tankSegmentForm.value;
-    if (!this.tankSegmentForm.valid || this.tankSegmentTable.length == 0) {
+    if (!this.tankSegmentForm.valid) {
       return
+    }
+    else if(this.tankSegmentTable.length == 0){
+      this.toastrService.error("At Least Add One Segment");
     }
     else {
       let obj = {
-        "id": [formValue.id],
-        "tankId": [formValue.tankId],
-        "segmentId": [formValue.segmentId],
+        "id": formValue.id,
+        "tankId": formValue.tankId,
+        "segmentId": 0,
         "isDeleted": true,
         "createdBy": this.localStorage.userId(),
         "createdDate": new Date(),
         "modifiedBy": this.localStorage.userId(),
         "modifiedDate": new Date(),
         "timestamp": new Date(),
-        "yojanaId": [formValue.yojanaId],
-        "networkId": [formValue.networkId],
+        "yojanaId": formValue.yojanaId,
+        "networkId": formValue.networkId,
         tanksegment: this.tankSegmentTable
       }
 
       this.spinner.show();
-      this.service.setHttp('put', 'ValveTankSegment/Updatetanksegmentassignment', false, formValue, false, 'valvemgt');
+      this.service.setHttp('put', 'ValveTankSegment/Updatetanksegmentassignment', false, obj, false, 'valvemgt');
       this.service.getHttp().subscribe({
         next: ((res: any) => {
           if (res.statusCode == '200') {
@@ -325,11 +338,9 @@ export class TankSegmentAssignmentComponent implements OnInit {
 
   onEdit(obj: any) {
     this.editFlag = true;
-    // console.log("onEdit : ", obj);
     this.editObj = obj;
     this.formField();
     this.getAllYojana();
-
     this.tankSegmentTable = this.editObj.tanksegmet;
   }
 

@@ -147,7 +147,7 @@
                   [disabled]="!tankSegmentForm.value.networkId">
                 </ngx-select>
                 <button type="button" class="btn btn-main" (click)="addTankSegment()"
-                  [disabled]="!tankSegmentForm.value.segmentId ">Add</button>
+                  [disabled]="!tankSegmentForm.value.segmentId">Add</button>
               </div>
             </div>
             <div class="mb-0">
@@ -165,7 +165,7 @@
                     <td>{{seg?.segmentName}}</td>
                     <td  class="text-center">
                       <button type="button" class="btn bg-danger bg-opacity-10 text-danger rounded" title="Delete"
-                        (click)="deleteTankSegment(i)">
+                        (click)="deleteTankSegment(i, seg)">
                         <i class="fa-solid fa-trash-can"></i>
                       </button>
                     </td>
