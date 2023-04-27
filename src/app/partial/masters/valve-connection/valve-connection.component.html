@@ -203,7 +203,7 @@
                                     <input type="text" class="form-control" placeholder="Person Marathi Name"
                                         formControlName="personName"
                                         (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                        [ngClass]="{ 'is-invalid': submitted && f.personName.errors }">
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName.errors }" minlength="8" maxlength="35">
                                     <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                         <div class="text-danger" *ngIf="f.personName.errors?.required">
                                             Person Name (Marathi) is Required</div>
@@ -215,7 +215,7 @@
                                     <input type="text" class="form-control" placeholder="Person English Name"
                                         formControlName="personName_En"
                                         (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                        [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }">
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }" minlength="8" maxlength="35">
                                     <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
                                         <div class="text-danger" *ngIf="f.personName_En.errors?.required">
                                             Person Name (English) is Required</div>
