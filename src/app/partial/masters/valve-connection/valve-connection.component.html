@@ -202,11 +202,17 @@
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control" placeholder="Person Marathi Name"
                                         formControlName="personName"
-                                        (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                        [ngClass]="{ 'is-invalid': submitted && f.personName.errors }" minlength="8" maxlength="35">
-                                    <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
+                                        (keypress)="validation.noFirstSpaceAllow($event);validation.unicodeMarathiValidation($event)"
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName.errors }" minlength="2" maxlength="20">
+                                    <!-- <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
                                         <div class="text-danger" *ngIf="f.personName.errors?.required">
                                             Person Name (Marathi) is Required</div>
+                                    </div> -->
+                                    <div *ngIf="submitted && f.personName.errors" class="invalid-feedback">
+                                        <span class="text-danger" *ngIf="f.personName.errors?.required">
+                                            Person Name(Marathi) is Required.</span>
+                                        <span class="text-danger" *ngIf="f.personName.errors?.pattern">
+                                          Please Enter Valid  Person Name</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -215,10 +221,16 @@
                                     <input type="text" class="form-control" placeholder="Person English Name"
                                         formControlName="personName_En"
                                         (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)"
-                                        [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }" minlength="8" maxlength="35">
-                                    <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
+                                        [ngClass]="{ 'is-invalid': submitted && f.personName_En.errors }" minlength="2" maxlength="20">
+                                    <!-- <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
                                         <div class="text-danger" *ngIf="f.personName_En.errors?.required">
                                             Person Name (English) is Required</div>
+                                    </div> -->
+                                    <div *ngIf="submitted && f.personName_En.errors" class="invalid-feedback">
+                                        <span class="text-danger" *ngIf="f.personName_En.errors?.required">
+                                            Person Name(English) is Required.</span>
+                                        <span class="text-danger" *ngIf="f.personName_En.errors?.pattern">
+                                          Please Enter Valid  Person Name</span>
                                     </div>
                                 </div>
                             </div>
@@ -280,12 +292,16 @@
                                                         class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
                                                     formControlName="pipeDiameter"
-                                                    (keypress)="validation.noSpacesAtStart($event)">
+                                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
                                                 <div class="text-danger"
                                                     *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['required']">
                                                     Pipe Diameter is Required.
                                                 </div>
+                                                <div class="text-danger"
+                                                *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['pattern']">
+                                                Please enter Valid Pipe Diameter Value
                                             </div>
+                                           </div>
 
                                             <!-- <div class="mb-3">
                                                 <label class="form-label">Connection No. <span
@@ -323,7 +339,7 @@
                             <div class="mb-3">
                                 <label for="floatingTextarea" class="form-label">Comments</label>
                                 <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"
-                                    formControlName="remark" (keypress)="validation.noSpacesAtStart($event)">
+                                    formControlName="remark" (keypress)="validation.noSpacesAtStart($event);validation.alphaNumericWithSpacesAndSpecChars($event)">
                         </textarea>
                             </div>
                         </div>

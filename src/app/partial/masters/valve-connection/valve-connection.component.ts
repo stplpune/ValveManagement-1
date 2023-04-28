@@ -62,9 +62,9 @@ export class ValveConnectionComponent implements OnInit {
     this.valveConnectionForm = this.fb.group({
       "id": [0],
       "valveDetailsId": ['', [Validators.required]],
-      "personName": ['', [Validators.required]],
-      "personName_En": ['', [Validators.required]],
-      "valveName": [''],
+      "personName": ['', [Validators.required,Validators.pattern('^[\u0900-\u0965 ]+$')]],
+      "personName_En": ['', [Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      "valveName": [''],   
       "valveName_En": [''],
       "mobileNo": ['', [Validators.required, Validators.pattern('[6-9]\\d{9}')]],
       "remark": [''],
@@ -112,7 +112,7 @@ export class ValveConnectionComponent implements OnInit {
 
   addConnection() {
     let arrayData = this.fb.group({
-      pipeDiameter: ['', Validators.required],
+      pipeDiameter: ['', [Validators.required,Validators.pattern('^[0-9]+(.[0-9]{0,7})?$')]],
       connectionNo: ['']
     });
     if (this.valveConnectionForm.value.connectiondetails?.length > 0) {
@@ -293,8 +293,14 @@ export class ValveConnectionComponent implements OnInit {
 
   onClickSubmit() {
     this.submitted = true;
+    // if (!this.valveConnectionForm.valid) {
+    //   if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
+    //     return;
+    //   }
+    //   return;
+    // }
     if (!this.valveConnectionForm.valid) {
-      if (this.connectionForm.controls[this.connectionForm?.length - 1].status == 'INVALID') {
+      if (this.connectionForm.controls[this.connectionForm.length - 1].status == 'INVALID') {
         return;
       }
       return;
@@ -322,10 +328,12 @@ export class ValveConnectionComponent implements OnInit {
             this.clearForm();
           }
           else {
+            this.spinner.hide();
             this.commonService.checkDataType(res.statusMessage) == false ? this.errorSerivce.handelError(res.statusCode) : this.toasterService.error(res.statusMessage);
           }
         }),
         error: (error: any) => {
+          this.spinner.hide();
           this.errorSerivce.handelError(error.status);
         }
       })
