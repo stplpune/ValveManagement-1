@@ -50,7 +50,7 @@
                     </div>
                     </div>
                     <div class="col-sm-3" *ngIf="dailyAttendanceType == 2"> 
-                        <label for="" class="form-label">Select Employee</label>
+                        <label for="" class="form-label">Employee</label>
                         <ngx-select [items]="employeelistArray" (remove)="clearFilter('employee')"
                             (select)="getAttendenceReport()" 
                             optionValueField="userId" optionTextField="employeeName" placeholder="Select Employee"
