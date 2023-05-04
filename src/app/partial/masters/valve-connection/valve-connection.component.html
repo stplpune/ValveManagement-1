@@ -293,26 +293,15 @@
                                                 <input type="text" class="form-control" placeholder="Pipe Diameter"
                                                     formControlName="pipeDiameter"
                                                     (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
-                                                <div class="text-danger"
+                                                <div class="text-danger " style="font-size: 0.65rem"
                                                     *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['required']">
                                                     Pipe Diameter is Required.
                                                 </div>
-                                                <div class="text-danger"
+                                                <div class="text-danger " style="font-size: 0.65rem"
                                                 *ngIf="submitted && connectionForm.controls[i]?.get('pipeDiameter')?.errors?.['pattern']">
                                                 Please enter Valid Pipe Diameter Value
                                             </div>
                                            </div>
-
-                                            <!-- <div class="mb-3">
-                                                <label class="form-label">Connection No. <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Connection No."
-                                                    formControlName="connectionNo"
-                                                    (keypress)="validation.noSpacesAtStart($event);validation.onlyDigits($event)">
-                                                <div class="text-danger"
-                                                    *ngIf="submitted && connectionForm.controls[i]?.get('connectionNo')?.errors?.['required']">
-                                                    Connection Number Is Required.</div>
-                                            </div> -->
 
                                             <ng-container *ngIf="valveConnectionForm.value.totalConnection >= 0">
                                                 <div class="text-end mb-2">
