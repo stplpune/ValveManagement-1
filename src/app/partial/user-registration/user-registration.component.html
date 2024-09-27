@@ -1,6 +1,6 @@
 <div class="card plain-card">
   <div class="card-header">
-    <div class="row justify-content-between align-items-center  mb-3">
+    <div class="row justify-content-between align-items-center">
       <div class="col-sm-4">User Registration</div>
       <div class="col-sm-4 text-end">
         <button class="btn btn-light-main text-main btn-sm me-2" type="submit" data-bs-toggle="modal"
@@ -8,38 +8,40 @@
           User</button>
       </div>
     </div>
-    <form [formGroup]="searchForm">
-      <div class="row form-container">
-        <div class="col-sm-3">
-          <label for="" class="form-label">Yojana</label>
-          <ngx-select [allowClear]="true" [items]="yoganaIdArray" formControlName="yojana" placeholder="Select Yojana"
-            optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
-            (select)="networkFlag='filter';getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
-          </ngx-select>
-        </div>
-        <div class="col-sm-3">
-          <label for="" class="form-label">Network</label>
-          <ngx-select [allowClear]="true" [items]="networkFilterArray" formControlName="network"
-            placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
-            optionTextField="networkName" (remove)="clearSerach('network')" (select)="getUserRegistrationList()">
-          </ngx-select>
-        </div>
-        <div class="col-sm-3">
-          <label for="" class="form-label">Search</label>
-          <div class="input-group">
-            <input type="text" class="form-control" formControlName="searchField"
-              placeholder="Search By Name / Mobile No." (keyup)="onKeyUpFilter()" />
-            <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
-              *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-            <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
-                class="fas fa-search"></i></button>
-          </div>
-
-        </div>
-      </div>
-    </form>
+  
   </div>
+<div class="card-header">
+  <form [formGroup]="searchForm">
+    <div class="row gx-2 form-container">
+      <div class="col-sm-3">
+        <!-- <label for="" class="form-label">Yojana</label> -->
+        <ngx-select [allowClear]="true" [items]="yoganaIdArray" formControlName="yojana" placeholder="Select Yojana"
+          optionValueField="yojanaId" optionTextField="yojanaName" (remove)="clearSerach('yojana')"
+          (select)="networkFlag='filter';getNetworkID(searchForm.value.yojana);getUserRegistrationList()">
+        </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <!-- <label for="" class="form-label">Network</label> -->
+        <ngx-select [allowClear]="true" [items]="networkFilterArray" formControlName="network"
+          placeholder="Select Network" optionValueField="networkId" [disabled]="!this.searchForm.value.yojana"
+          optionTextField="networkName" (remove)="clearSerach('network')" (select)="getUserRegistrationList()">
+        </ngx-select>
+      </div>
+      <div class="col-sm-3">
+        <!-- <label for="" class="form-label">Search</label> -->
+        <div class="input-group">
+          <input type="text" class="form-control" formControlName="searchField"
+            placeholder="Search By Name / Mobile No." (keyup)="onKeyUpFilter()" />
+          <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
+            *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+          <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
+              class="fas fa-search"></i></button>
+        </div>
 
+      </div>
+    </div>
+  </form>
+</div>
   <div class="card-body">
     <table class="table align-middle dashboard-table">
       <thead>
@@ -98,7 +100,7 @@
 <!-- Modal for adding new valve -->
 <div class="modal fade" id="AddUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="AddUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered ">
     <div class="modal-content">
       <!-- <div class="modal-body"> -->
         <form [formGroup]="userDetails" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
@@ -107,76 +109,78 @@
             <button type="button" #addUserModel class="btn-close btn-close-inverse" #addSimData (click)="clearForm()"
               data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="form-container p-3">
-            <div class="mb-3">
-              <label class="form-label">Full Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
-                [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }" maxlength="50"
-                (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)" />
-              <div *ngIf="submitted && f.fullName.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.fullName.errors?.required">Full Name is
-                  Required.</div>
+          <div class="modal-body scrollbar">
+            <div class="form-container ">
+              <div class="mb-3">
+                <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
+                  [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }" maxlength="50"
+                  (keypress)="validation.noFirstSpaceAllow($event);validation.alphabetsWithSpaces($event)" />
+                <div *ngIf="submitted && f.fullName.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.fullName.errors?.required">Full Name is
+                    Required.</div>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Mobile No.<span class="text-danger">*</span></label>
-              <input type="text" class="form-control" placeholder="Mobile No." maxlength="10" formControlName="mobileNo"
-                [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }"
-                (keypress)="validation.noSpaceAllow($event);validation.onlyDigits($event)" maxlength="10" />
-              <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.mobileNo.errors?.required">Mobile No is
-                  Required.</div>
-                <div class="text-danger" *ngIf="f.mobileNo.errors?.pattern">Please Enter
-                  Valid Mobile No.</div>
+              <div class="mb-3">
+                <label class="form-label">Mobile No.<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Mobile No." maxlength="10" formControlName="mobileNo"
+                  [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }"
+                  (keypress)="validation.noSpaceAllow($event);validation.onlyDigits($event)" maxlength="10" />
+                <div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.mobileNo.errors?.required">Mobile No is
+                    Required.</div>
+                  <div class="text-danger" *ngIf="f.mobileNo.errors?.pattern">Please Enter
+                    Valid Mobile No.</div>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label for="" class="form-label">User Type <span class="text-danger">*</span></label>
-              <ngx-select [items]="userTypeArray" formControlName="userTypeId" placeholder="Select User Type"
-                optionValueField="id" optionTextField="userTypeName"
-                [ngClass]="{ 'is-invalid': submitted && f.userTypeId.errors }">
-              </ngx-select>
-              <div *ngIf="submitted && f.userTypeId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.userTypeId.errors?.required">User Type is
-                  Required.</div>
+              <div class="mb-3">
+                <label for="" class="form-label">User Type <span class="text-danger">*</span></label>
+                <ngx-select [items]="userTypeArray" formControlName="userTypeId" placeholder="Select User Type"
+                  optionValueField="id" optionTextField="userTypeName"
+                  [ngClass]="{ 'is-invalid': submitted && f.userTypeId.errors }">
+                </ngx-select>
+                <div *ngIf="submitted && f.userTypeId.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.userTypeId.errors?.required">User Type is
+                    Required.</div>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
-              <ngx-select [items]="yoganaIdArray" formControlName="yojanaId" placeholder="Select Yojana"
-                optionValueField="yojanaId" optionTextField="yojanaName"
-                [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
-                (select)="networkFlag='add';getNetworkID(userDetails.value.yojanaId)">
-              </ngx-select>
-              <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
-                  Required.</div>
+              <div class="mb-3">
+                <label for="" class="form-label">Yojana <span class="text-danger">*</span></label>
+                <ngx-select [items]="yoganaIdArray" formControlName="yojanaId" placeholder="Select Yojana"
+                  optionValueField="yojanaId" optionTextField="yojanaName"
+                  [ngClass]="{ 'is-invalid': submitted && f.yojanaId.errors }"
+                  (select)="networkFlag='add';getNetworkID(userDetails.value.yojanaId)">
+                </ngx-select>
+                <div *ngIf="submitted && f.yojanaId.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.yojanaId.errors?.required">Yojana is
+                    Required.</div>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label for="" class="form-label">Network <span class="text-danger">*</span></label>
-              <ngx-select [items]="networkIdArray" formControlName="networkId" placeholder="Select Network"
-                optionValueField="networkId" [disabled]="!this.userDetails.value.yojanaId" optionTextField="networkName"
-                [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }" [multiple]="true">
-              </ngx-select>
-              <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
-                  Required.</div>
+              <div class="mb-3">
+                <label for="" class="form-label">Network <span class="text-danger">*</span></label>
+                <ngx-select [items]="networkIdArray" formControlName="networkId" placeholder="Select Network"
+                  optionValueField="networkId" [disabled]="!this.userDetails.value.yojanaId" optionTextField="networkName"
+                  [ngClass]="{ 'is-invalid': submitted && f.networkId.errors }" [multiple]="true">
+                </ngx-select>
+                <div *ngIf="submitted && f.networkId.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.networkId.errors?.required">Network is
+                    Required.</div>
+                </div>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Address <span class="text-danger">*</span></label>
-              <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"
-                (keypress)="validation.noFirstSpaceAllow($event)" maxlength="200"
-                [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
-              <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
-                <div class="text-danger" *ngIf="f.address.errors?.required">Address is
-                  Required.</div>
+              <div class="mb-3">
+                <label class="form-label">Address <span class="text-danger">*</span></label>
+                <textarea class="form-control" placeholder="Address" rows="4" formControlName="address"
+                  (keypress)="validation.noFirstSpaceAllow($event)" maxlength="200"
+                  [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
+                <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                  <div class="text-danger" *ngIf="f.address.errors?.required">Address is
+                    Required.</div>
+                </div>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <div class="d-flex justify-content-between align-items-center w-100 form-container">
+            <div class="d-flex justify-content-end gap-2 align-items-center w-100 form-container">
               <button type="button" class="btn btn-light-main" (click)="clearForm(formDirective)">Clear</button>
               <button type="submit" class="btn btn-main">{{this.buttontextFlag}}</button>
             </div>

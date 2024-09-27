@@ -11,41 +11,41 @@
       </div>
     </div>
   </div>
-
+<div class="card-header">
   <form [formGroup]="searchForm">
-   <div class="container-fluid">
-    <div class="row form-container">
-      <div class="col-sm-3">
-        <label for="" class="form-label">Yojana</label>
-        <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
-          optionValueField="yojanaId" optionTextField="yojanaName"
-          (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo();getAllValveData()"
-          (remove)="clearSerach('yojana')" [disabled]="yoganaArrayFilter?.length == 1">
-        </ngx-select>
-      </div>
-      <div class="col-sm-3">
-        <label for="" class="form-label">Network</label>
-        <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network"
-          placeholder="Select Network" optionValueField="networkId"
-          [disabled]="searchForm.controls['yojana'].value==0 || networkArrayfilter?.length <= 1"
-          optionTextField="networkName" (remove)="clearSerach('network')"
-          (select)="this.filterFlag = 'filter';defaultPageNo();getAllValveData()">
-        </ngx-select>
-      </div>
-      <!-- <div class="col-sm-3">
-          <div class="input-group">
-            <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Valve Name"
-              (keyup)="onKeyUpFilter()" />
-            <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
-              *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
-            <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
-                class="fas fa-search"></i></button>
-          </div>
-  
-        </div> -->
-    </div>
-   </div>
-  </form>
+     <div class="row form-container">
+       <div class="col-sm-3">
+         <!-- <label for="" class="form-label">Yojana</label> -->
+         <ngx-select [allowClear]="true" [items]="yoganaArrayFilter" formControlName="yojana" placeholder="Select Yojana"
+           optionValueField="yojanaId" optionTextField="yojanaName"
+           (select)="this.filterFlag = 'filter';getAllNetwork(searchForm.controls['yojana'].value);defaultPageNo();getAllValveData()"
+           (remove)="clearSerach('yojana')" [disabled]="yoganaArrayFilter?.length == 1">
+         </ngx-select>
+       </div>
+       <div class="col-sm-3">
+         <!-- <label for="" class="form-label">Network</label> -->
+         <ngx-select [allowClear]="true" [items]="networkArrayfilter" formControlName="network"
+           placeholder="Select Network" optionValueField="networkId"
+           [disabled]="searchForm.controls['yojana'].value==0 || networkArrayfilter?.length <= 1"
+           optionTextField="networkName" (remove)="clearSerach('network')"
+           (select)="this.filterFlag = 'filter';defaultPageNo();getAllValveData()">
+         </ngx-select>
+       </div>
+       <!-- <div class="col-sm-3">
+           <div class="input-group">
+             <input type="text" class="form-control" formControlName="searchField" placeholder="Search By Valve Name"
+               (keyup)="onKeyUpFilter()" />
+             <button type="button" class="btn btn-light btn-sm" (click)="clearSerach('search')"
+               *ngIf="searchForm.value.searchField"><i _ngcontent-tbl-c102="" class="fas fa-times"></i></button>
+             <button type="button" *ngIf="!searchForm.value.searchField" class="btn btn-sm btn-light"><i
+                 class="fas fa-search"></i></button>
+           </div>
+   
+         </div> -->
+     </div>
+   </form>
+</div>
+
 
   <div class="card-body">
     <table class="table align-middle dashboard-table">

@@ -1,6 +1,6 @@
 <div class="card plain-card">
     <div class="card-header">
-        <div class="row justify-content-between align-items-center mb-3">
+        <div class="row justify-content-between align-items-center">
             <div class="col-sm-4">Yojana Master</div>
             <div class="col-sm-4 text-end">
                 <!-- <button title="Refresh Valve" class="btn btn-sm btn-main float-sm-end" (click)="refreshData()"><i
@@ -13,36 +13,38 @@
             </div>
         </div>
 
-        <form [formGroup]="filterForm">
-            <div class="row form-container">
-                <div class="col-sm-3">
-                    <label for="" class="form-label">District</label>
-                    <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
-                        placeholder="Select District" optionValueField="id"
-                        (select)="clearfilter('district');getTaluka('tal');filterData()" optionTextField="districtName"
-                        (remove)="clearfilter('district');filterData()">
-                    </ngx-select>
-                </div>
-                <div class="col-sm-3">
-                    <label for="" class="form-label">Taluka</label>
-                    <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
-                        placeholder="Select Taluka" optionValueField="id" [disabled]="!this.filterForm.value.districtId"
-                        (select)="clearfilter('taluka');getVillage('vil');filterData();" optionTextField="talukaName"
-                        (remove)="clearfilter('taluka');filterData()">
-                    </ngx-select>
-                </div>
-                <div class="col-sm-3">
-                    <label for="" class="form-label">Village</label>
-                    <ngx-select [allowClear]="true" [items]="villageFilterArray" formControlName="villageId"
-                        placeholder="Select Village" optionValueField="id" [disabled]="!this.filterForm.value.talukaId"
-                        optionTextField="villageName" (select)="filterData();" (remove)="filterData()">
-                    </ngx-select>
-                </div>
-            </div>
-        </form>
+      
     </div>
 
-
+<div class="card-header">
+    <form [formGroup]="filterForm">
+        <div class="row gx-2 form-container">
+            <div class="col-sm-3">
+                <!-- <label for="" class="form-label">District</label> -->
+                <ngx-select [allowClear]="true" [items]="districtFilterArray" formControlName="districtId"
+                    placeholder="Select District" optionValueField="id"
+                    (select)="clearfilter('district');getTaluka('tal');filterData()" optionTextField="districtName"
+                    (remove)="clearfilter('district');filterData()">
+                </ngx-select>
+            </div>
+            <div class="col-sm-3">
+                <!-- <label for="" class="form-label">Taluka</label> -->
+                <ngx-select [allowClear]="true" [items]="talukaFilterArray" formControlName="talukaId"
+                    placeholder="Select Taluka" optionValueField="id" [disabled]="!this.filterForm.value.districtId"
+                    (select)="clearfilter('taluka');getVillage('vil');filterData();" optionTextField="talukaName"
+                    (remove)="clearfilter('taluka');filterData()">
+                </ngx-select>
+            </div>
+            <div class="col-sm-3">
+                <!-- <label for="" class="form-label">Village</label> -->
+                <ngx-select [allowClear]="true" [items]="villageFilterArray" formControlName="villageId"
+                    placeholder="Select Village" optionValueField="id" [disabled]="!this.filterForm.value.talukaId"
+                    optionTextField="villageName" (select)="filterData();" (remove)="filterData()">
+                </ngx-select>
+            </div>
+        </div>
+    </form>
+</div>
 
     <div class="card-body">
         <table class="table align-middle dashboard-table">

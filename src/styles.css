@@ -72,24 +72,36 @@ body {
     box-shadow: none;
     border: none;
 }
+.table>:not(caption)>*>* {
+    padding: 0.3rem .3rem;
 
+}
 .dashboard-table {
     font-size: 0.85rem;
+   border: 1px solid var(--main-light-color);
 }
 
 .dashboard-table thead th {
-    background-color: #eee;
+    background-color: var(--main-light-color);
+    color: #1b1b1b;
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .dashboard-table tbody td .btn {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     box-shadow: none;
     border: none;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     text-align: center;
     padding: 0;
+    padding-left: 2px;
 }
+.dashboard-table tbody tr:hover {
+  background-color:rgb(241, 241, 241);
+}
+
 
 .form-container {
     font-size: 0.85rem;

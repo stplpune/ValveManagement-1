@@ -41,4 +41,7 @@
       stroke-dashoffset: -260.75219025px;
     }
   }
-  
+  #AddUserModal .modal-dialog .modal-body {
+    height: 400px !important;
+    overflow: auto !important;
+  }
