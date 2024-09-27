@@ -1,7 +1,9 @@
 #loginbox{
     padding: 3rem;
     border-radius: 10px;
-    box-shadow: 2px 3px 7px rgb(203 203 203);
+    box-shadow: 5px 8px 10px 7px rgb(203 203 203);
+    background-color: #ffffff00;
+    border: none;
 }
 #loginbox h4{
     text-align: center;
@@ -36,4 +38,24 @@
 
 .input-group .form-control.is-invalid {
     border: solid 1px #dc3545 !important;
+}
+
+#left-side .left-image{
+    background-image: url('../../../assets/images/login-left-banner.png');
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#left-side {
+    width:calc(100% - 70%) ;
+}
+#right-side{
+    width: calc(100% - 30%);
+    background-image: url('https://img.freepik.com/free-photo/blue-abstract-gradient-wave-wallpaper_53876-108364.jpg?w=1060&t=st=1672926101~exp=1672926701~hmac=4aaeb6e760640496244c70faefbef63dbd42df6815228709890b8390f185c6a4');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left;
+    display: flex;
 }

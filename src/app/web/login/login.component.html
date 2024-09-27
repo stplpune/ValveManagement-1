@@ -1,40 +1,49 @@
-<div class="container pt-5">
-    <div class="row justify-content-center">
-        <div class="col-sm-4">
-            <div class="card card-body" id="loginbox">
-                <h4>Admin Login</h4>
-                <div class="form-container">
-                    <form [formGroup]="loginForm">
-                    <div class="mb-3">
-                        <label class="form-label">User Name</label>
-                            <input type="text" class="form-control" formControlName="UserName" placeholder="User Name" autocomplete="off"
-                            (keypress)="validation.noFirstSpaceAllow($event)" [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
-                        <!-- <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
-                            <div class="text-danger" *ngIf="f.UserName.errors?.required">User Name is required.
+    <div class="d-flex   h-100" >
+    <div id="left-side">
+    <div class="left-image">
+
+    </div>
+    </div>
+            <div id="right-side">
+                <div class="container pt-5">
+                    <div class="row align-items-center h-100 justify-content-center">
+                        <div class="col-sm-6">
+                            <div class="card card-body" id="loginbox">
+                                <h4>Admin Login</h4>
+                                <div class="form-container">
+                                    <form [formGroup]="loginForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">User Name</label>
+                                            <input type="text" class="form-control" formControlName="UserName" placeholder="User Name" autocomplete="off"
+                                            (keypress)="validation.noFirstSpaceAllow($event)" [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
+                                        <!-- <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
+                                            <div class="text-danger" *ngIf="f.UserName.errors?.required">User Name is required.
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <input autocomplete="off" [type]="show_button ? 'text' : 'password'" class="form-control"
+                                            placeholder="Password" formControlName="Password" (keypress)="validation.noFirstSpaceAllow($event)" 
+                                            [ngClass]="{ 'is-invalid': submitted && f.Password.errors }">
+                                        <button type="button" class="btn btn-light bg-transparent border-0 btn-sm"
+                                            (click)="showPassword()">
+                                            <i class="eye-icon-pos" [class]="show_eye ? 'fa fa-eye' : 'fa fa-eye-slash'"> </i>
+                                        </button>
+                                        </div>  
+                                        <!-- <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
+                                            <div class="text-danger" *ngIf="f.Password.errors.required">Password is required.</div>
+                                        </div>                       -->
+                                    </div>
+                                    <div class="mb-0">
+                                        <button type="submit" class="btn btn-main w-100" (click)="loginFormSubmit()"> LOGIN </button>
+                                    </div>
+                                </form>
+                                </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label">Password</label>
-                        <div class="input-group">
-                            <input autocomplete="off" [type]="show_button ? 'text' : 'password'" class="form-control"
-                            placeholder="Password" formControlName="Password" (keypress)="validation.noFirstSpaceAllow($event)" 
-                            [ngClass]="{ 'is-invalid': submitted && f.Password.errors }">
-                        <button type="button" class="btn btn-light bg-transparent border-0 btn-sm"
-                            (click)="showPassword()">
-                            <i class="eye-icon-pos" [class]="show_eye ? 'fa fa-eye' : 'fa fa-eye-slash'"> </i>
-                        </button>
-                        </div>  
-                        <!-- <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
-                            <div class="text-danger" *ngIf="f.Password.errors.required">Password is required.</div>
-                        </div>                       -->
-                    </div>
-                    <div class="mb-0">
-                        <button type="submit" class="btn btn-main w-100" (click)="loginFormSubmit()"> LOGIN </button>
-                    </div>
-                </form>
                 </div>
             </div>
-        </div>
     </div>
-</div>
