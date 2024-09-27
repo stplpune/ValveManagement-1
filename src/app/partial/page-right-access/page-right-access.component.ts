@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { log } from 'console';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/core/services/api.service';
 import { ErrorsService } from 'src/app/core/services/errors.service';
@@ -67,6 +68,7 @@ export class PageRightAccessComponent implements OnInit {
       "userTypeId":this.userTypeId.value?this.userTypeId.value:0,
       "userId": this.getLoginData.userId
     }
+
     this.apiService.setHttp('POST', 'UserRegistration/SaveUserRights', false, obj, false, 'valvemgt');
     this.apiService.getHttp().subscribe((res:any)=>{
       if(res.statusCode=="200"){
