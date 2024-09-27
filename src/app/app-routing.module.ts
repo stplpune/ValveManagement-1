@@ -17,6 +17,7 @@ const routes: Routes = [
     component: PartialLayoutComponent,
     loadChildren: () => import('./partial/partial-layout.module').then(m => m.PartialLayoutModule)
   },
+  { path: 'privacy-policy', loadChildren: () => import('./web/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule) },
 
   { path: '**', component: PageNotFoundComponent},
   
