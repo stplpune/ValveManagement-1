@@ -3,38 +3,36 @@
         <div class="row justify-content-between align-items-center">
             <div class="col-sm-4">Dashboard</div>
         </div>
-
-        <div class="mt-2">
-            <form [formGroup]="filterForm">
-                <div class="row g-2 form-container">
-                    <div class="col-sm-3">
-                        <label for="" class="form-label">Yojana</label>
-                        <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="clearMapData();getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getValveSummary();getNetwork();getDeviceCurrentSensorValue()"
-                            [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearMapData();clearFilter('yojana')"
-                            optionTextField="yojanaName" placeholder="Select Yojana" formControlName="yojanaId">
-                        </ngx-select>
-                    </div>
-                    <div class="col-sm-3">
-                        <label for="" class="form-label">Network</label>
-                        <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
-                            placeholder="Select Network" (select)="clearMapData();editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getValveSummary();getDeviceCurrentSensorValue()" 
-                            [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearMapData();clearFilter('network')"
-                            optionTextField="networkName">
-                        </ngx-select>
-                    </div>
+    </div>
+    <div class="card-header">
+        <form [formGroup]="filterForm">
+            <div class="row g-2 form-container">
+                <div class="col-sm-3">
+                    <!-- <label for="" class="form-label">Yojana</label> -->
+                    <ngx-select [allowClear]="true" [items]="yoganaIdArray" (select)="clearMapData();getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getValveSummary();getNetwork();getDeviceCurrentSensorValue()"
+                        [disabled]="yoganaIdArray?.length == 1" optionValueField="yojanaId" (remove)="clearMapData();clearFilter('yojana')"
+                        optionTextField="yojanaName" placeholder="Select Yojana" formControlName="yojanaId">
+                    </ngx-select>
                 </div>
-            </form>
-        </div>
-
+                <div class="col-sm-3">
+                    <!-- <label for="" class="form-label">Network</label> -->
+                    <ngx-select [allowClear]="true" [items]="networkIdArray" formControlName="networkId" optionValueField="networkId" 
+                        placeholder="Select Network" (select)="clearMapData();editPatchShape?.setMap(null);getValveSegmentList();tankFilterDrop.setValue('');dateFilter.setValue('');getValveSummary();getDeviceCurrentSensorValue()" 
+                        [disabled]="!this.filterForm.value.yojanaId || networkIdArray?.length <= 1" (remove)="clearMapData();clearFilter('network')"
+                        optionTextField="networkName">
+                    </ngx-select>
+                </div>
+            </div>
+        </form>
     </div>
     <div class="card-body">
-        <div class="row mb-3">
+        <div class="row gx-2 mb-3">
             <div class="col-sm">
                 <div class="card card-body bg-primary bg-opacity-10 border-0">
                     <p class="fw-bold mb-3 small">Total Tanks</p>
                     <h4 class="mb-0 fw-bold text-primary lh-1">{{valveSummaryArray?.totalTank}}</h4>
                     <div class="cardImgOuter">
-                        <img src="../../../assets/images/waterTank2.png" alt="valve-icon">
+                        <img src="../../../assets/images/total-tank.png" alt="valve-icon">
                     </div>
                 </div>
             </div>
@@ -87,24 +85,35 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="card dashboardChart">
-                    <div class="p-2 offset-6">     
-                        <ngx-select [items]="DeviceCurrentSensorArray" (selectionChanges)="dateFilter.setValue('');filterTankData($event)"
-                        [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId"
-                        optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
-                    </ngx-select>
-                </div>
-                <ul class="cylenderLabel" *ngIf="chartObj">
-                    <div class="card p-1">
-                    <li><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
-                    <li><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
-                    <li><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
-                    <li><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
-                </div>
-                </ul>
-                    <!-- <div class="card-header">Pie Chart</div> -->
-                    <div class="card-body text-center valveCylenderChart">
-                        
+                    <div class="card-header">
+                        <div class="p-2 offset-6">     
+                            <ngx-select [items]="DeviceCurrentSensorArray" (selectionChanges)="dateFilter.setValue('');filterTankData($event)"
+                            [disabled]="DeviceCurrentSensorArray?.length == 0" optionValueField="tankId"
+                            optionTextField="tankName" placeholder="Select Water Tanks" [formControl]="tankFilterDrop">
+                        </ngx-select>
                     </div>
+                    </div>
+                   <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class=" text-center valveCylenderChart">
+                        
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <ul class="cylenderLabel list-group list-group-flush" *ngIf="chartObj">
+                                <li class="list-group-item"><span class="fw-bold">Percentage : </span><span>{{chartObj?.percentage}}%</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Liters : </span><span>{{chartObj?.totalLiters}}/{{chartObj?.tankCapcityInLiter}}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Area : </span><span>{{chartObj?.address}}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Last Update : </span><span>{{chartObj?.lastUpdatedDateTime}}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                   
+                   </div>
+              
+                    <!-- <div class="card-header">Pie Chart</div> -->
+                   
                 </div>
             </div>
             <div class="col-sm-6">
