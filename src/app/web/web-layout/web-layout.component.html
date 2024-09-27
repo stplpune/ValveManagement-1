@@ -1,1 +1,13 @@
-<router-outlet></router-outlet>
+<div class="wrapper">
+    <div id="content">
+        <header *ngIf="!hideHeaderFooter">
+            <app-header></app-header>
+        </header>
+        <div class="main-content scrollbar">
+            <router-outlet></router-outlet>
+        </div>
+        <footer *ngIf="!hideHeaderFooter">
+            <app-footer></app-footer>
+        </footer>
+    </div>
+</div>
