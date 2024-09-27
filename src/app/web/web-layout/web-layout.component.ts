@@ -13,7 +13,7 @@ export class WebLayoutComponent implements OnInit {
   constructor(private router: Router) {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
-        if (event.url === '/login') {
+        if (event.url === '/login' || event.url == '/') {
           this.hideHeaderFooter = true;
         } else {
           this.hideHeaderFooter = false;
