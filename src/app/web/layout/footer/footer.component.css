@@ -1,0 +1,23 @@
+footer {
+    font-size: 0.75rem;
+    color: #fff;
+    padding-block: 7px;
+    position: relative;
+    background-color: var(--bs-secondary);
+}
+
+footer a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+footer a:hover {
+    color: var(--main-color) !important;
+    text-decoration: underline;
+}
+
+footer img {
+    height: 24px;
+}

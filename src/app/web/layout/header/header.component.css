@@ -1,0 +1,42 @@
+.navbar {
+    box-shadow: 1px 1px 2px #aaa;
+    margin-bottom: 25px;
+}
+
+.navbar .navbar-brand span {
+    font-size: 2rem;
+    font-weight: 800;
+    background: #0095F8;
+    background: linear-gradient(to right, #0095F8 0%, #3c33f0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar .navbar-brand img {
+    height: 45px;
+}
+
+.navbar img.govt-logo {
+    height: 45px;
+}
+
+.navbar .navbar-nav .nav-link {
+    font-size: 0.85rem;
+    border-bottom: solid 3px transparent;
+    font-weight: 600;
+}
+
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link:active,
+.navbar .navbar-nav .nav-link.active {
+    border-bottom: solid 3px var(--main-color);
+    color: var(--main-color);
+    font-weight: 600;
+}
+
+.navbar .navbar-toggler {
+    padding: 5px;
+    font-size: 0.85rem;
+    box-shadow: none;
+}
