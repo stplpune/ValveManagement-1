@@ -83,6 +83,9 @@ body {
     box-shadow: none;
     border: none;
 }
+.plain-card .card-body{
+    padding-top: 10px !important;
+}
 .table>:not(caption)>*>* {
     padding: 0.3rem .3rem;
 
