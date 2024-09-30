@@ -33,7 +33,7 @@
             <form [formGroup]="filterForm">
                 <div class="row form-container me-2 mt-2 justify-content-end" >
                     <div class="col-sm-3">
-                        <label for="" class="form-label">Yojana</label>
+                        <!-- <label for="" class="form-label">Yojana</label> -->
                         <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                             (select)="dailyAttendanceType == 1 ? getAttendenceReport() : this.filterForm.controls['employee'].setValue(0);getEmployeelist()" [disabled]="yoganaArray?.length == 1"
                             optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
@@ -41,16 +41,16 @@
                         </ngx-select>
                     </div>
                     <div class="col-sm-3" *ngIf="dailyAttendanceType == 1">
-                        <label for="" class="form-label">Date</label>
+                        <!-- <label for="" class="form-label">Date</label> -->
                         <div class="input-group">
                         <input [owlDateTime]="dt2" formControlName="singleDate" (dateTimeChange)="getAttendenceReport()" [max]="maxDate"
-                            class="form-control" [owlDateTimeTrigger]="dt2" placeholder="select Date" [readonly]="true">
+                            class="form-control"  [owlDateTimeTrigger]="dt2" placeholder="select Date" [readonly]="true">
                         <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time>
                         <button class="btn btn-light btn-sm border" type="button" [owlDateTimeTrigger]="dt2"> <i class="fas fa-calendar-alt"></i></button>
                     </div>
                     </div>
                     <div class="col-sm-3" *ngIf="dailyAttendanceType == 2"> 
-                        <label for="" class="form-label">Employee</label>
+                        <!-- <label for="" class="form-label">Employee</label> -->
                         <ngx-select [items]="employeelistArray" (remove)="clearFilter('employee')"
                             (select)="getAttendenceReport()" 
                             optionValueField="userId" optionTextField="employeeName" placeholder="Select Employee"
@@ -59,7 +59,7 @@
                         <!-- [disabled]="!filterForm.value.yojanaId" -->
                     </div>
                     <div class="col-sm-3" *ngIf="dailyAttendanceType == 2">
-                        <label for="" class="form-label">Date</label>
+                        <!-- <label for="" class="form-label">Date</label> -->
                             <div class="input-group">
                                 <input [owlDateTime]="dt1" formControlName="fromTo"
                                     (dateTimeChange)="defaultCloseBtn = true;getAttendenceReport()" class="form-control form-control-sm" [max]="maxDate"

@@ -1,12 +1,15 @@
 <div class="card plain-card">
     <div class="card-header">
-        <div class="row justify-content-between align-items-center mb-2">
+        <div class="row justify-content-between align-items-center ">
             <div class="col-sm-4">Consumer Water Summary</div>
         </div>
+    </div>
+
+       <div class="card-header">
         <form [formGroup]="filterForm">
             <div class="row form-container g-2">
                 <div class="col-sm">
-                    <label for="" class="form-label">Yojana</label>
+                    <!-- <label for="" class="form-label">Yojana</label> -->
                     <ngx-select [allowClear]="true" [items]="yoganaArray" (remove)="clearFilter('yojana')"
                         (select)="pageNumber = 1;getConsumerList();getNetwork()" [disabled]="yoganaArray?.length == 1"
                         optionValueField="yojanaId" optionTextField="yojanaName" placeholder="Select Yojana"
@@ -14,7 +17,7 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm">
-                    <label for="" class="form-label">Network</label>
+                    <!-- <label for="" class="form-label">Network</label> -->
                     <ngx-select [allowClear]="true" [items]="networkArray" formControlName="networkId"
                         placeholder="Select Network" optionValueField="networkId"
                         [disabled]="!this.filterForm.value.yojanaId || networkArray?.length <= 1" optionTextField="networkName"
@@ -22,21 +25,21 @@
                     </ngx-select>
                 </div>
                 <div class="col-sm">
-                    <label for="" class="form-label">Is Have Tap</label>
+                    <!-- <label for="" class="form-label">Is Have Tap</label> -->
                     <ngx-select  [items]="isHaveTapArray" (select)="pageNumber = 1;getConsumerList()"
                         optionValueField="id" optionTextField="name" placeholder="Select Is Have Tap"
                         formControlName="IsHaveTap">
                     </ngx-select>
                 </div>
                 <div class="col-sm">
-                    <label for="" class="form-label">Is Have Motor</label>
+                    <!-- <label for="" class="form-label">Is Have Motor</label> -->
                     <ngx-select  [items]="isHaveMotarArray" formControlName="IsHaveMotar"
                         placeholder="Select Is Have Motor" optionValueField="id" optionTextField="name"
                         (select)="pageNumber = 1;getConsumerList()">
                     </ngx-select>
                 </div>
                 <div class="col-sm">
-                    <label for="" class="form-label">Search</label>
+                    <!-- <label for="" class="form-label">Search</label> -->
                     <div class="input-group">
                         <input type="text" class="form-control" formControlName="Search" placeholder="Search.."
                             (keyup)="onKeyUpFilter()" />
@@ -48,7 +51,7 @@
                 </div>
             </div>
         </form>
-    </div>
+       </div>
 
     <div class="card-body">
         <table class="table align-middle dashboard-table">

@@ -49,10 +49,10 @@
     background-repeat: no-repeat;
 }
 #left-side {
-    width:calc(100% - 70%) ;
+    width:calc(100% - 65%) ;
 }
 #right-side{
-    width: calc(100% - 30%);
+    width: calc(100% - 35%);
     background-image: url('https://img.freepik.com/free-photo/blue-abstract-gradient-wave-wallpaper_53876-108364.jpg?w=1060&t=st=1672926101~exp=1672926701~hmac=4aaeb6e760640496244c70faefbef63dbd42df6815228709890b8390f185c6a4');
     background-repeat: no-repeat;
     background-size: cover;

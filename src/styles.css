@@ -43,10 +43,21 @@ body {
 .btn-light-main:active,
 .btn-light-main.active,
 .btn-light-main:focus,
-.btn-light-main:hover {
+.btn-light-main:hover,
+.btn-light-main.show {
     background-color: var(--main-color) !important;
     color: #fff !important;
 }
+
+.btn-add:active,
+.btn-add:focus,
+.btn-add:hover,
+.btn-add.shwo,
+.btn-add{
+    background-color: var(--main-light-color);
+    color: var(--main-color);
+}
+
 
 .btn-main:active,
 .btn-main.active,
@@ -71,6 +82,9 @@ body {
     font-size: 0.8rem;
     box-shadow: none;
     border: none;
+}
+.plain-card .card-body{
+    padding-top: 10px !important;
 }
 .table>:not(caption)>*>* {
     padding: 0.3rem .3rem;

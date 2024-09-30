@@ -35,8 +35,8 @@ export class ConsumerWaterSummeryComponent implements OnInit {
   defaultCloseBtn: boolean = false;
   subject: Subject<any> = new Subject();
 
-  isHaveTapArray = [{'id':2,'name':'All'},{'id':1,'name':'Yes'},{'id':0,'name':'No'}];
-  isHaveMotarArray = [{'id':2,'name':'All'},{'id':1,'name':'Yes'},{'id':0,'name':'No'}];
+  isHaveTapArray = [{'id':2,'name':' Is Have Tap'},{'id':1,'name':'Yes'},{'id':0,'name':'No'}];
+  isHaveMotarArray = [{'id':2,'name':' Is Have Motor'},{'id':1,'name':'Yes'},{'id':0,'name':'No'}];
 
   summeryFilterForm!: FormGroup | any;
   consumerWaterSummaryArray:any;
