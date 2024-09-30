@@ -4,14 +4,16 @@
             <div class="col-sm-4">Page Right Access</div>
         </div>
     </div>
-    <div class="row form-container mx-2">
-       <div class="col-sm-3">
-        <label for="" class="form-label">User Type</label>
-        <ngx-select [items]="userTypeArray" [formControl]="userTypeId"
-        placeholder="Select User Type" optionValueField="id"
-        optionTextField="userTypeName" (select)="pageNumber = 1;getAllPages()">
-   </ngx-select>
-       </div>
+    <div class="card-header">
+        <div class="row form-container ">
+            <div class="col-sm-3">
+             <!-- <label for="" class="form-label">User Type</label> -->
+             <ngx-select [items]="userTypeArray" [formControl]="userTypeId"
+             placeholder="Select User Type" optionValueField="id"
+             optionTextField="userTypeName" (select)="pageNumber = 1;getAllPages()">
+        </ngx-select>
+            </div>
+         </div>
     </div>
     <div class="card-body">
         <table class="table align-middle dashboard-table">
