@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { log } from 'console';
+import { filter } from 'rxjs';
 import { LocalstorageService } from 'src/app/core/services/localstorage.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class SidebarComponent implements OnInit{
   }
 
   ngOnInit(): void{
+    this.breadCrumbOnNavigationEnd();
   }
 
   sideBarMenu(data: any){
@@ -49,13 +51,22 @@ export class SidebarComponent implements OnInit{
       }
     });
 
-    console.log( this.loginPages );
-    
+    this.defaultSelIndex();
+  }
 
-   this.loginPages?.map((ele:any , i:any)=>{ ele.pageURL?.map((res:any)=> {  // for default open selected menu
-    (res == this.currentPageUrl) ? this.selectedIndex = i : '';
-   }) })
- 
+  defaultSelIndex(){
+    this.loginPages?.map((ele:any , i:any)=>{ ele.pageURL?.map((res:any)=> {  // for default open selected menu
+      (res == this.currentPageUrl) ? this.selectedIndex = i : '';
+     }) })
+  }
+
+  breadCrumbOnNavigationEnd() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.currentPageUrl = this.router.url?.split('/')[1];
+      this.defaultSelIndex();
+    });
   }
 
   }
