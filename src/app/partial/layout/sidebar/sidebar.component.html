@@ -3,6 +3,46 @@
     Admin Panel
   </div>
   <ul class="list-unstyled components">
+    <ng-container *ngFor="let pages of loginPages let i = index">
+      <ng-container *ngIf="pages.pageURL.length <= 1">
+        <li routerLinkActive="active">
+          <a routerLinkActive="active" routerLink="/{{pages.pageURL}}" (click)="selectedIndex = i">
+            <i [class]="pages.menuIcon"></i> {{pages.pageName}}
+          </a>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="pages.pageURL.length > 1">
+
+        <li routerLinkActive="active" [ngClass]="{'dropup': selectedIndex == i}"> 
+          <a href="#homeSubmenu" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse'+i" [attr.aria-expanded]="selectedIndex == i ? true : false" class="dropdown-toggle" (click)="selectedIndex = i"> 
+            <i [class]="pages.menuIcon"></i>{{pages.module}}
+          </a>
+          <ul id="collapse{{i}}" class="collapse list-unstyled" id="homeSubmenu" [ngClass]="{'show': selectedIndex == i}">
+            <li *ngFor="let page of pages.pageURL; let pageUrlIndex = index" routerLinkActive="active">
+              <a routerLink="/{{page}}" routerLinkActive="active">
+                <ng-container>
+                  <ng-container *ngFor="let pageName of pages.pageName; let pageNameIndex = index">
+                    <ng-container *ngIf="pageNameIndex == pageUrlIndex">{{pageName}}</ng-container>
+                  </ng-container>
+                </ng-container>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ng-container>
+    </ng-container>
+  </ul>
+</nav>
+
+
+
+
+<!-- <nav id="sidebar">
+  <div class="sidebar-header">
+    Admin Panel
+  </div>
+  <ul class="list-unstyled components">
     <li>
       <a routerLink="dashboard" routerLinkActive="active">
         <i class="fa-solid fa-house-user"></i>Dashboard
@@ -24,7 +64,6 @@
         </li>
         <li>
           <a routerLink="sim-list">Sim Master</a>
-            <!-- <i class="fa-solid fa-sim-card"></i> -->
         </li>
         <li>
           <a routerLink="tank-master">Tank Master</a>
@@ -85,4 +124,4 @@
       </ul>
     </li>
   </ul>
-</nav>
+</nav> -->

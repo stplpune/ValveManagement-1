@@ -49,7 +49,7 @@ export class LocalstorageService {
 
   getAllPageName() {
     let getAllPageName = this.getLoggedInLocalstorageData();
-    return getAllPageName.pageUrls;
+    return getAllPageName.pageList;
   }
 
   redirectToDashborad() {

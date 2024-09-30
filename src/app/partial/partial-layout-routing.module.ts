@@ -72,7 +72,7 @@ const routes: Routes = [
     data: { breadcrumb: [{ title: 'Attendance Report', active: true }] }
   },
   { 
-    path: 'consumer-water-summery', loadChildren: () => import('../partial/masters/reports/consumer-water-summery/consumer-water-summery.module').then(m => m.ConsumerWaterSummeryModule),
+    path: 'consumer-water-summary', loadChildren: () => import('../partial/masters/reports/consumer-water-summery/consumer-water-summery.module').then(m => m.ConsumerWaterSummeryModule),
     data: { breadcrumb: [{ title: 'Consumer Water Summery', active: true }] }
   },
   {
