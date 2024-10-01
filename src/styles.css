@@ -295,7 +295,7 @@ tr.active {
 .modal-dialog .modal-content .modal-header{
     padding: 10px;
 }
-.modal-dialog .modal-content .modal-header h1{
+.modal-dialog .modal-content .modal-header .modal-title{
   font-size: 0.85rem;
 }
 .modal-dialog .modal-content .modal-header .btn-close:focus{
