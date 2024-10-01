@@ -93,8 +93,8 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0">
       <div class="modal-header bg-main">
-        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="!editData">Add Tank Sensor Device Master</p>
-        <p class="modal-title mb-0" id="AddValveModalLabel" *ngIf="editData">Update Tank Sensor Device Master</p>
+        <h1 class="modal-title mb-0" id="AddValveModalLabel" *ngIf="!editData">Add Tank Sensor Device Master</h1>
+        <h1 class="modal-title mb-0" id="AddValveModalLabel" *ngIf="editData">Update Tank Sensor Device Master</h1>
         <button type="button" class="btn-close btn-close-inverse" (click)="clearForm(formDirective);highlitedRow=0;getAllNetwork(false)"
           #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
       </div>

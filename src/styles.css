@@ -291,3 +291,9 @@ tr.active {
     border-radius: 20px;
     border: none;
 }
+.modal-dialog .modal-content .modal-header{
+    padding: 10px;
+}
+.modal-dialog .modal-content .modal-header h1{
+  font-size: 0.85rem;
+}
